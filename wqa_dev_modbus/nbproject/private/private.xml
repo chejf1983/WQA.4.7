@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/test/OSADeviceTest.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/devmock/AMMODevMock.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/model/PrintLog.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/modebus/register/REG.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/devmock/DODevMock.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/wqa/adapter/factory/ModBusDevFactory.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/test/AMMODeviceTest.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/devmock/PHDevMock.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/devmock/DevMock.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/modebus/register/DREG.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/devmock/OSADevMock.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/modebus/register/FREG.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/wqa/adapter/ESA/DODevice.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/wqa/adapter/OSA/OSADevice.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/modebus/register/BREG.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/test/ECDeviceTest.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/modebus/pro/ModeBusNode.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/test/DODeviceTest.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/model/ModbusClient.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/modebus/register/SREG.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/modebus/register/IREG.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/wqa/adapter/factory/AbsDevice.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/wqa/adapter/ESA/PHDevice.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/test/wqa/adapter/test/PHDeviceTest.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/wqa/adapter/ESA/ECDevice.java</file>
+            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_modbus/src/wqa/adapter/ISA/AMMODevice.java</file>
+        </group>
+    </open-files>
+</project-private>
