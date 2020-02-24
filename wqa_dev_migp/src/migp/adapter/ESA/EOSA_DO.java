@@ -6,6 +6,7 @@
 package migp.adapter.ESA;
 
 import base.migp.mem.NVPA;
+import base.migp.mem.VPA;
 import base.migp.reg.*;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ public class EOSA_DO extends ESADEV {
     public EOSA_DO(ShareIO io, byte addr) {
         super(io, addr);
     }
+    
+    // <editor-fold defaultstate="collapsed" desc="VPA"> 
+    IMEG VVATOKEN = new IMEG(new VPA(0x14, 2), "内部版本标志");
+    // </editor-fold> 
     
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     FMEG NA = new FMEG(new NVPA(16, 4), "定标参数A");
@@ -55,7 +60,7 @@ public class EOSA_DO extends ESADEV {
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
-        this.ReadMEG(VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX, VVATOKEN);
+        this.ReadMEG(VVATOKEN);
         if (this.VVATOKEN.GetValue() > 0) {
             this.VDEVTYPE.SetValue(this.VDEVTYPE.GetValue() + 0xA000);
         }

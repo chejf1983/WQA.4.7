@@ -24,7 +24,6 @@ public abstract class ESADEV extends AbsDevice{
     FMEG VDRANGE_MAX = new FMEG(new VPA(0x06, 4), "主参数量程上限");
     FMEG VTRANGE_MIN = new FMEG(new VPA(0x0C, 4), "温度参数量程下限");
     FMEG VTRANGE_MAX = new FMEG(new VPA(0x10, 4), "温度参数量程上限");
-    IMEG VVATOKEN = new IMEG(new VPA(0x14, 2), "内部版本标志");
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="MDA"> 
@@ -47,6 +46,14 @@ public abstract class ESADEV extends AbsDevice{
     public ESADEV(ShareIO io, byte addr) {
         super(io, addr);
     }    
+    
+    @Override
+    public void InitDevice() throws Exception {
+        super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
+        
+        
+        this.ReadMEG(VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX);
+    }
     
     public String GetMainRangeString() {
         return "(" + this.VDRANGE_MIN.GetValue() + "-" + this.VDRANGE_MAX.GetValue() + ")"; //量程
