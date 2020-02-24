@@ -25,6 +25,7 @@ public class EOSA_DO extends ESADEV {
     public EOSA_DO(ShareIO io, byte addr) {
         super(io, addr);
     }
+    
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     FMEG NA = new FMEG(new NVPA(16, 4), "定标参数A");
     FMEG NB = new FMEG(new NVPA(20, 4), "定标参数B");
@@ -49,7 +50,8 @@ public class EOSA_DO extends ESADEV {
     FMEG NDO100 = new FMEG(new NVPA(128, 4), "饱和相位");
     FMEG NDO0 = new FMEG(new NVPA(132, 4), "无氧相位");
 
-    // </editor-fold> 
+    // </editor-fold>
+    
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.

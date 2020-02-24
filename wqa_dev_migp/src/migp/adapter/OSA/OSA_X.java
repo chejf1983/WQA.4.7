@@ -230,10 +230,10 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
         SConfigItem[] list = par.mode == SMotorParameter.CleanMode.Auto ? par.auto_config : par.manu_config;
         for (SConfigItem item : list) {
             if (item.IsKey(NCTIME.toString())) {
-                this.SetConfigREG(NCINTERVAL, item.value);
+                this.SetConfigREG(NCTIME, item.value);
             }
             if (item.IsKey(NCINTERVAL.toString())) {
-                this.SetConfigREG(NCTIME, item.value);
+                this.SetConfigREG(NCINTERVAL, item.value);
             }
             if (item.IsKey(NCBRUSH.toString())) {
                 this.SetConfigREG(NCBRUSH, item.value);

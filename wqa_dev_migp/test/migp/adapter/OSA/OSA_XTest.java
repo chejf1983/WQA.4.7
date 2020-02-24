@@ -192,24 +192,24 @@ public class OSA_XTest {
         PrintLog.println("SetMotoPara");
         SMotorParameter result = instance.GetMotoPara();
         assertEquals(dev_mock.NCMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
-        for (SConfigItem item : result.auto_config) {
+        for (SConfigItem item : result.manu_config) {
             if (item.IsKey(dev_mock.NCTIME.toString())) {
                 item.value = dev_mock.NCTIME.GetValue() + 1 + "";
             }
             if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                item.value = dev_mock.NCINTERVAL.GetValue() + 1 + "";
+                item.value = dev_mock.NCINTERVAL.GetValue() + 2 + "";
             }
             if (item.IsKey(dev_mock.NCBRUSH.toString())) {
-                item.value = dev_mock.NCBRUSH.GetValue() + 1 + "";
+                item.value = dev_mock.NCBRUSH.GetValue() + 3 + "";
             }
         }
 
         instance.SetMotoPara(result);
         dev_mock.ReadREGS();
 
-        result = instance.GetMotoPara();
+//        result = instance.GetMotoPara();
         assertEquals(dev_mock.NCMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
-        for (SConfigItem item : result.auto_config) {
+        for (SConfigItem item : result.manu_config) {
             if (item.IsKey(dev_mock.NCTIME.toString())) {
                 assertEquals(item.value, dev_mock.NCTIME.GetValue() + "");
             }

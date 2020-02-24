@@ -2,33 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/factory/MIGPDevFactory.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/ISA/ISA_XTest.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/OSA/OSA_X.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/ISA/ISA_X.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/wqa/adapter/model/MigpClient.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/mock/ECMock.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/ESA/ESA_PHTest.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/wqa/adapter/model/MOCKIO.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/factory/AbsDevice.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/mock/OSAMock.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/mock/ISAMock.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/ESA/EOSA_DOTest.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/ESA/ESA_ORP.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/ESA/ESADEV.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/ESA/ESA_ECTest.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/mock/PHMock.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/mock/DOMock.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/ESA/ESA_PH.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/wqa/adapter/model/PrintLog.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/mock/ORPMock.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/ESA/ESA_EC.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/OSA/OSA_XTest.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/ESA/EOSA_DO.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/mock/DevMock.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/test/migp/adapter/ESA/ESA_ORPTest.java</file>
-            <file>file:/D:/Git/code/java_app/singlebranch6.0/WQA/WQA_OSA/wqa_dev_migp/src/migp/adapter/factory/TemperCalibrateCalculate.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

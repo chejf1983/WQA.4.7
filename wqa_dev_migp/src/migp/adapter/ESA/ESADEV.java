@@ -22,8 +22,8 @@ public abstract class ESADEV extends AbsDevice{
     // <editor-fold defaultstate="collapsed" desc="VPA"> 
     FMEG VDRANGE_MIN = new FMEG(new VPA(0x02, 4), "主参数量程下限");
     FMEG VDRANGE_MAX = new FMEG(new VPA(0x06, 4), "主参数量程上限");
-    FMEG VTRANGE_MIN = new FMEG(new VPA(0x22, 4), "温度参数量程下限");
-    FMEG VTRANGE_MAX = new FMEG(new VPA(0x26, 4), "温度参数量程上限");
+    FMEG VTRANGE_MIN = new FMEG(new VPA(0x0C, 4), "温度参数量程下限");
+    FMEG VTRANGE_MAX = new FMEG(new VPA(0x10, 4), "温度参数量程上限");
     IMEG VVATOKEN = new IMEG(new VPA(0x14, 2), "内部版本标志");
     // </editor-fold> 
 
