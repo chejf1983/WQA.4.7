@@ -54,7 +54,6 @@ public class ECDevice extends AbsDevice {
     }
 
     private boolean IsOverVersion(int version_threshold) {
-
         if (this.SWVER.GetValue().startsWith("D")) {
             try {
                 int version = Integer.valueOf(this.SWVER.GetValue().substring(1));
@@ -83,6 +82,10 @@ public class ECDevice extends AbsDevice {
 
         if (this.is_newVersion) {
             disdata.datas[0].unit = EC_UNIT_STRING[this.ECRANG.GetValue()];
+            int max_range = 500;
+            if(ECRANG.GetValue() == 0x00){max_range = (max_range * 1000);}
+            if(ECRANG.GetValue() == 0x02){max_range = (max_range * 100);}
+            disdata.datas[0].range_info = "(0-" + max_range + ")";
             disdata.datas[4].unit = SALT_UNIT_STRING[this.SALTRANGE.GetValue()];
         }
 
