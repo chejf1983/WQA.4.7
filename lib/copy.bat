@@ -11,7 +11,7 @@ copy ..\..\..\lib\jexcelapi\jxl.jar .\
 echo copy jyloo皮肤开发包
 copy ..\..\..\lib\jyloo\synthetica_2.17.1_eval\synthetica.jar .\
 echo copy 自定义jyloo皮肤开发包
-copy ..\..\..\myjyloo\syntheticaAluOxide0\syntheticaAluOxide.jar .\
+copy ..\..\myjyloo\syntheticaAluOxide0\syntheticaAluOxide.jar .\
 
 echo copy jfreechart图表开发包
 copy ..\..\..\lib\jfreechart-1.0.19\lib\jcommon-1.0.23.jar .\
