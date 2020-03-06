@@ -6,17 +6,16 @@
 package migp.adapter.ESA;
 
 import base.migp.reg.MEG;
-import java.util.ArrayList;
 import migp.adapter.factory.MIGPDevFactory;
 import migp.adapter.mock.DOMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import wqa.adapter.io.ShareIO;
+import wqa.adapter.model.ABS_Test;
 import wqa.adapter.model.MOCKIO;
 import wqa.adapter.model.PrintLog;
 import wqa.control.common.CDevDataTable;
 import wqa.control.common.IDevice;
-import wqa.control.config.SConfigItem;
 import wqa.control.dev.collect.SDataElement;
 import wqa.control.dev.collect.SDisplayData;
 
@@ -24,12 +23,12 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class EOSA_DOTest {
+public class EOSA_DOTest extends ABS_Test {
 
     public EOSA_DOTest() throws Exception {
-        if (instance == null) {
-//            PrintLog.PintSwitch = true;
-            this.InitDevice();
+        super();
+        if (dev_mock == null) {
+            this.InitDevice(new DOMock());
         }
     }
 
@@ -37,8 +36,8 @@ public class EOSA_DOTest {
     public static EOSA_DO instance;
     public static DOMock dev_mock;
 
-    private void InitDevice() throws Exception {
-        dev_mock = new DOMock();
+    private void InitDevice(DOMock mock) throws Exception {
+        dev_mock = mock;
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
@@ -47,117 +46,46 @@ public class EOSA_DOTest {
             instance = (EOSA_DO) devs;
             instance.InitDevice();
         }
+        super.InitDevice(instance, dev_mock);
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="检查配置">
-    private void PrintConfigItem(ArrayList<SConfigItem> result) {
-        result.forEach(item -> {
-            PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
-        });
+    /**
+     * Test of SetConfigList method, of class EOSA_DO.
+     */
+    @Test
+    public void testSetConfigList() throws Exception {
+        PrintLog.println("*****************************************");
+        PrintLog.println("SetConfigList");
+        this.check_config_item(dev_mock.NPASCA, "2.0");
+        this.check_config_item(dev_mock.NSALT, "3.0");
+        this.check_config_item(dev_mock.NTEMPER_COM, "44.0");
+        if (dev_mock.VVATOKEN.GetValue() > 0) {
+            this.check_config_item(dev_mock.NAVR, "33");
+        }
     }
 
-    private void check_config() throws Exception {
-        PrintLog.println("ConfigList:");
-        dev_mock.ReadREGS();
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.NPASCA.toString())) {
-                assertEquals(dev_mock.NPASCA.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NSALT.toString())) {
-                assertEquals(dev_mock.NSALT.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NTEMPER_COM.toString())) {
-                assertEquals(dev_mock.NTEMPER_COM.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NAVR.toString())) {
-                assertEquals(dev_mock.NAVR.GetValue().toString(), item.value);
-            }
-        });
-        PrintConfigItem(result);
-    }
-
-    private void checkcal_par() throws Exception {
-        PrintLog.println("CalList:");
-        dev_mock.ReadREGS();
-        ArrayList<SConfigItem> result = instance.GetCalParList();
-        PrintConfigItem(result);
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.NPTEMPER.toString())) {
-                assertEquals(dev_mock.NPTEMPER.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NA.toString())) {
-                assertEquals(dev_mock.NA.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NB.toString())) {
-                assertEquals(dev_mock.NB.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NCLTEMPER.toString())) {
-                assertEquals(dev_mock.NCLTEMPER.GetValue().toString(), item.value);
-            }
-
-            if (item.IsKey(dev_mock.NPA.toString())) {
-                assertEquals(dev_mock.NPA.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NPB.toString())) {
-                assertEquals(dev_mock.NPB.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NPC.toString())) {
-                assertEquals(dev_mock.NPC.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NPD.toString())) {
-                assertEquals(dev_mock.NPD.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NPE.toString())) {
-                assertEquals(dev_mock.NPE.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NPF.toString())) {
-                assertEquals(dev_mock.NPF.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NPG.toString())) {
-                assertEquals(dev_mock.NPG.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NDO100.toString())) {
-                assertEquals(dev_mock.NDO100.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NDO0.toString())) {
-                assertEquals(dev_mock.NDO0.GetValue().toString(), item.value);
-            }
-        });
-    }
-
-    // </editor-fold> 
     /**
      * Test of SetCalParList method, of class EOSA_DO.
      */
     @Test
     public void testSetCalParList() throws Exception {
         PrintLog.println("*****************************************");
-        ArrayList<SConfigItem> info_list = instance.GetConfigList();
-        info_list.forEach(info -> {
-            for (int i = 0; i < dev_mock.list.length; i++) {
-                if (info.IsKey(dev_mock.list[i].toString())) {
-                    //reg.GetValue()
-                    info.SetValue(i + 5 + "");
-                }
-            }
-        });
-        instance.SetConfigList(info_list);
-        this.check_config();
-
-        info_list = instance.GetCalParList();
-        info_list.forEach(info -> {
-            for (int i = 0; i < dev_mock.list.length; i++) {
-                if (info.IsKey(dev_mock.list[i].toString())) {
-                    //reg.GetValue()
-                    info.SetValue(i + 5 + "");
-                }
-            }
-        });
-        instance.SetCalParList(info_list);
-        this.checkcal_par();
+        this.check_cal_item(dev_mock.NPTEMPER, "12.0");
+        this.check_cal_item(dev_mock.NA, "13.0");
+        this.check_cal_item(dev_mock.NB, "24.0");
+        this.check_cal_item(dev_mock.NCLTEMPER, "25.0");
+        if (dev_mock.VVATOKEN.GetValue() > 0) {
+            this.check_cal_item(dev_mock.NPA, "33.01");
+            this.check_cal_item(dev_mock.NPB, "33.02");
+            this.check_cal_item(dev_mock.NPC, "33.03");
+            this.check_cal_item(dev_mock.NPD, "33.04");
+            this.check_cal_item(dev_mock.NPE, "33.05");
+            this.check_cal_item(dev_mock.NPF, "33.06");
+            this.check_cal_item(dev_mock.NPG, "33.07");
+            this.check_cal_item(dev_mock.NDO100, "333.03");
+            this.check_cal_item(dev_mock.NDO0, "133.01");
+        }
     }
 
     /**
@@ -195,7 +123,7 @@ public class EOSA_DOTest {
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{34f}, new float[]{32f});
-                this.checkcal_par();
+                printREG(dev_mock.NPTEMPER);
             } else {
                 for (int i = 1; i <= info.cal_num; i++) {
                     float[] oradata = new float[i];
@@ -204,11 +132,16 @@ public class EOSA_DOTest {
                         oradata[j] = 32f + j;
                         testdata[j] = 30f - j;
                     }
+                    PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
-                    this.checkcal_par();
+                    printREG(dev_mock.NA);
+                    printREG(dev_mock.NB);
+                    printREG(dev_mock.NCLTEMPER);
                 }
             }
         }
     }
+
+   
 
 }

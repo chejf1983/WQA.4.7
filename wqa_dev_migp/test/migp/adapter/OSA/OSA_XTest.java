@@ -5,11 +5,10 @@
  */
 package migp.adapter.OSA;
 
+import wqa.adapter.model.ABS_Test;
 import base.migp.mem.VPA;
 import base.migp.reg.FMEG;
 import base.migp.reg.MEG;
-import java.util.ArrayList;
-import static migp.adapter.OSA.OSA_X.AMPPAR;
 import migp.adapter.factory.MIGPDevFactory;
 import migp.adapter.mock.OSAMock;
 import org.junit.Test;
@@ -28,21 +27,21 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class OSA_XTest {
-
-    public OSA_XTest() throws Exception {
-        if (instance == null) {
-            PrintLog.SetPrintlevel(PrintLog.PRINTLOG);
-            this.InitDevice();
+public class OSA_XTest extends ABS_Test {
+    
+    public OSA_XTest() throws Exception{
+        super();
+        if(dev_mock == null){
+            this.InitDevice(new OSAMock());
         }
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static OSA_X instance;
     public static OSAMock dev_mock;
 
-    private void InitDevice() throws Exception {
-        dev_mock = new OSAMock();
+    protected void InitDevice(OSAMock mock) throws Exception {
+        dev_mock = mock;
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
@@ -51,45 +50,12 @@ public class OSA_XTest {
             instance = (OSA_X) devs;
             instance.InitDevice();
         }
-        PrintLog.println("\r\n打印设置列表");
-        PrintConfigItem(instance.GetConfigList());
-        PrintLog.println("\r\n打印系数列表");
-        PrintConfigItem(instance.GetCalParList());
-        PrintLog.println("\r\n打印信息列表");
-        PrintConfigItem(instance.GetInfoList());
+        super.InitDevice(instance, dev_mock);
     }
-        
-    private void PrintConfigItem(ArrayList<SConfigItem> result) {
-        result.forEach(item -> {
-            PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
-        });
-    }
+
     // </editor-fold> 
-
+    
     // <editor-fold defaultstate="collapsed" desc="测试设置功能">
-    private void check_config_item(MEG reg, String testvalue) throws Exception {
-        //设置寄存器
-        ArrayList<SConfigItem> list = instance.GetConfigList();
-        for (SConfigItem item : list) {
-            if (item.IsKey(reg.toString())) {
-                item.SetValue(testvalue);
-                instance.SetConfigList(list);
-                break;
-            }
-        }
-        //比较测试结果
-        list = instance.GetConfigList();
-        for (SConfigItem item : list) {
-            if (item.IsKey(reg.toString())) {
-                assertEquals(item.value, testvalue);
-                dev_mock.ReadREGS();
-                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + testvalue + "[读取结果]:" + item.value + "[设备值]:" + reg.GetValue().toString());
-                return;
-            }
-        }
-        fail("没有找到配置项" + reg.toString());
-    }
-
     private String get_range_string(int index) {
         return "(" + dev_mock.VDRANGE_MIN[index].GetValue() + "-" + dev_mock.NRANGE_MAX[index].GetValue() + ")";
     }
@@ -108,28 +74,6 @@ public class OSA_XTest {
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="检查定标系数">
-    private void check_cal_item(MEG reg, String testvalue) throws Exception {
-        //设置寄存器
-        ArrayList<SConfigItem> list = instance.GetCalParList();
-        for (SConfigItem item : list) {
-            if (item.IsKey(reg.toString())) {
-                item.SetValue(testvalue);
-                instance.SetCalParList(list);
-            }
-        }
-        //比较测试结果
-        list = instance.GetCalParList();
-        for (SConfigItem item : list) {
-            if (item.IsKey(reg.toString())) {
-                assertEquals(item.value, testvalue);
-                dev_mock.ReadREGS();
-                PrintLog.println(item.inputtype + "-" + item.data_name + "设置值:" + testvalue + "读取结果:" + item.value + "设备值:" + reg.GetValue().toString());
-                return;
-            }
-        }
-        fail("没有找到配置项" + reg.toString());
-    }
-
     /**
      * Test of SetCalParList method, of class OSA_X.
      */
@@ -264,11 +208,6 @@ public class OSA_XTest {
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="定标测试">
-    private void printREG(MEG reg) throws Exception {
-        dev_mock.ReadREGS();
-        PrintLog.println("寄存器[" + reg.toString() + "]:" + reg.GetValue().toString());
-    }
-
     /**
      * Test of CalParameter method, of class OSA_X.
      */
