@@ -72,6 +72,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
     FMEG NTEMPER_COMP = new FMEG(new NVPA(124, 4), "温度补偿系数");
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
 
+    public static int AMPPAR = 4095;
     IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"),
         new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
 
@@ -156,7 +157,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
     public ArrayList<SConfigItem> GetCalParList() {
         ArrayList<SConfigItem> item = super.GetCalParList(); //To change body of generated methods, choose Tools | Templates.
 
-        item.add(SConfigItem.CreateRWItem(NRANGE_NUM.toString(), NRANGE_NUM.GetValue().toString(), NRANGE_NUM.min + "-" + NRANGE_NUM.max));
+        item.add(SConfigItem.CreateRWItem(NRANGE_NUM.toString(), (NRANGE_NUM.GetValue() + 1) + "", NRANGE_NUM.min + "-" + NRANGE_NUM.max));
         item.add(SConfigItem.CreateRWItem(NTEMPER_PAR.toString(), NTEMPER_PAR.GetValue().toString(), ""));
         item.add(SConfigItem.CreateInfoItem(""));
 
@@ -166,7 +167,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
             item.add(SConfigItem.CreateRWItem(NCLPARA[i].toString(), NCLPARA[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARB[i].toString(), NCLPARB[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARC[i].toString(), NCLPARC[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NAMPLIFY[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int)(AMPPAR / NAMPLIFY[i].GetValue()) + "", ""));
             item.add(SConfigItem.CreateInfoItem(""));
         }
         return item;
@@ -178,7 +179,8 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
         for (SConfigItem item : list) {
             if (item.IsKey(NRANGE_NUM.toString())) {
-                this.SetConfigREG(NRANGE_NUM, item.value);
+                int num = Integer.valueOf(item.value);
+                this.SetConfigREG(NRANGE_NUM, (num - 1) + "");
             }
             if (item.IsKey(NTEMPER_PAR.toString())) {
                 this.SetConfigREG(NTEMPER_PAR, item.value);
@@ -198,8 +200,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
                     this.SetConfigREG(NCLPARC[i], item.value);
                 }
                 if (item.IsKey(NAMPLIFY[i].toString())) {
-                    float amp_const = 4095;
-                    float famply = amp_const / Float.valueOf(item.value);
+                    float famply = AMPPAR / Float.valueOf(item.value);
                     int amply = (int) (famply + 0.5);
                     this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
                 }
