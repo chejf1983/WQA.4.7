@@ -32,7 +32,7 @@ public class OSA_XTest {
 
     public OSA_XTest() throws Exception {
         if (instance == null) {
-            PrintLog.PintSwitch = true;
+            PrintLog.SetPrintlevel(PrintLog.PRINTLOG);
             this.InitDevice();
         }
     }
@@ -51,73 +51,21 @@ public class OSA_XTest {
             instance = (OSA_X) devs;
             instance.InitDevice();
         }
+        PrintLog.println("\r\n打印设置列表");
+        PrintConfigItem(instance.GetConfigList());
+        PrintLog.println("\r\n打印系数列表");
+        PrintConfigItem(instance.GetCalParList());
+        PrintLog.println("\r\n打印信息列表");
+        PrintConfigItem(instance.GetInfoList());
     }
-    // </editor-fold> 
-
-    // <editor-fold defaultstate="collapsed" desc="检查配置">
+        
     private void PrintConfigItem(ArrayList<SConfigItem> result) {
         result.forEach(item -> {
             PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
         });
     }
-
-
-    private void check_config() throws Exception {
-        PrintLog.println("ConfigList:");
-        dev_mock.ReadREGS();
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.NRANGE.toString())) {
-                assertEquals(get_range_string(dev_mock.NRANGE.GetValue()), item.value);
-            }
-            if (item.IsKey(dev_mock.NAVR.toString())) {
-                assertEquals(dev_mock.NAVR.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NTEMPER_COMP.toString())) {
-                assertEquals(dev_mock.NTEMPER_COMP.GetValue().toString(), item.value);
-            }
-        });
-        PrintConfigItem(result);
-    }
-
-    private void checkcal_par() throws Exception {
-        PrintLog.println("CalList:");
-        dev_mock.ReadREGS();
-        ArrayList<SConfigItem> result = instance.GetCalParList();
-//        PrintConfigItem(result);
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.NRANGE_NUM.toString())) {
-                assertEquals(dev_mock.NRANGE_NUM.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NTEMPER_PAR.toString())) {
-                assertEquals(dev_mock.NTEMPER_PAR.GetValue().toString(), item.value);
-            }
-            for (int i = 0; i < dev_mock.NAMPLIFY.length; i++) {
-                if (item.IsKey(dev_mock.NRANGE_MAX[i].toString())) {
-                    assertEquals(dev_mock.NRANGE_MAX[i].GetValue().toString(), item.value);
-                }
-                if (item.IsKey(dev_mock.NCLTEMPER[i].toString())) {
-                    assertEquals(dev_mock.NCLTEMPER[i].GetValue().toString(), item.value);
-                }
-                if (item.IsKey(dev_mock.NCLPARA[i].toString())) {
-                    assertEquals(dev_mock.NCLPARA[i].GetValue().toString(), item.value);
-                }
-                if (item.IsKey(dev_mock.NCLPARB[i].toString())) {
-                    assertEquals(dev_mock.NCLPARB[i].GetValue().toString(), item.value);
-                }
-                if (item.IsKey(dev_mock.NCLPARC[i].toString())) {
-                    assertEquals(dev_mock.NCLPARC[i].GetValue().toString(), item.value);
-                }
-                if (item.IsKey(dev_mock.NAMPLIFY[i].toString())) {
-                    assertEquals(dev_mock.NAMPLIFY[i].GetValue().toString(), item.value);
-                }
-            }
-        });
-    }
-
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="测试设置功能">
     private void check_config_item(MEG reg, String testvalue) throws Exception {
         //设置寄存器
@@ -141,11 +89,11 @@ public class OSA_XTest {
         }
         fail("没有找到配置项" + reg.toString());
     }
-    
+
     private String get_range_string(int index) {
         return "(" + dev_mock.VDRANGE_MIN[index].GetValue() + "-" + dev_mock.NRANGE_MAX[index].GetValue() + ")";
     }
-    
+
     /**
      * Test of SetConfigList method, of class OSA_X.
      */
@@ -203,6 +151,44 @@ public class OSA_XTest {
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="电机测试">
+    private void check_moto_par(SMotorParameter result) throws Exception {
+        dev_mock.ReadREGS();
+        assertEquals(dev_mock.NCMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
+        PrintLog.println("当前模式" + result.mode.toString());
+
+        if (result.mode == SMotorParameter.CleanMode.Auto) {
+            for (SConfigItem item : result.auto_config) {
+                if (item.IsKey(dev_mock.NCTIME.toString())) {
+                    assertEquals(item.value, dev_mock.NCTIME.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
+                }
+                if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
+                    assertEquals(item.value, dev_mock.NCINTERVAL.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
+                }
+                if (item.IsKey(dev_mock.NCBRUSH.toString())) {
+                    assertEquals(item.value, dev_mock.NCBRUSH.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
+                }
+            }
+        } else {
+            for (SConfigItem item : result.manu_config) {
+                if (item.IsKey(dev_mock.NCTIME.toString())) {
+                    assertEquals(item.value, dev_mock.NCTIME.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
+                }
+                if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
+                    assertEquals(item.value, dev_mock.NCINTERVAL.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
+                }
+                if (item.IsKey(dev_mock.NCBRUSH.toString())) {
+                    assertEquals(item.value, dev_mock.NCBRUSH.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
+                }
+            }
+        }
+    }
+
     /**
      * Test of SetMotoPara method, of class OSA_X.
      */
@@ -211,44 +197,34 @@ public class OSA_XTest {
         PrintLog.println("***********************************");
         PrintLog.println("SetMotoPara");
         SMotorParameter result = instance.GetMotoPara();
-        assertEquals(dev_mock.NCMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
+
         for (SConfigItem item : result.manu_config) {
             if (item.IsKey(dev_mock.NCTIME.toString())) {
-                item.value = dev_mock.NCTIME.GetValue() + 1 + "";
+                item.value = "100";
             }
             if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                item.value = dev_mock.NCINTERVAL.GetValue() + 2 + "";
+                item.value = "60";
             }
             if (item.IsKey(dev_mock.NCBRUSH.toString())) {
-                item.value = dev_mock.NCBRUSH.GetValue() + 3 + "";
+                item.value = "3";
             }
         }
-
+        for (SConfigItem item : result.auto_config) {
+            if (item.IsKey(dev_mock.NCTIME.toString())) {
+                item.value = "99";
+            }
+            if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
+                item.value = "61";
+            }
+            if (item.IsKey(dev_mock.NCBRUSH.toString())) {
+                item.value = "4";
+            }
+        }
+        result.mode = SMotorParameter.CleanMode.Auto;
         instance.SetMotoPara(result);
-        dev_mock.ReadREGS();
-
-//        result = instance.GetMotoPara();
-        assertEquals(dev_mock.NCMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
-        for (SConfigItem item : result.manu_config) {
-            if (item.IsKey(dev_mock.NCTIME.toString())) {
-                assertEquals(item.value, dev_mock.NCTIME.GetValue() + "");
-            }
-            if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                assertEquals(item.value, dev_mock.NCINTERVAL.GetValue() + "");
-            }
-            if (item.IsKey(dev_mock.NCBRUSH.toString())) {
-                assertEquals(item.value, dev_mock.NCBRUSH.GetValue() + "");
-            }
-        }
-        for (SConfigItem item : result.manu_config) {
-            if (item.IsKey(dev_mock.NCTIME.toString())) {
-                assertEquals(item.value, dev_mock.NCTIME.GetValue() + "");
-            }
-            if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                assertEquals(item.value, dev_mock.NCINTERVAL.GetValue() + "");
-            }
-        }
-//        assertEquals(result.manu_config.length, 0);
+        result.mode = SMotorParameter.CleanMode.Manu;
+        instance.SetMotoPara(result);
+        check_moto_par(result);
     }
 
     /**
@@ -292,6 +268,7 @@ public class OSA_XTest {
         dev_mock.ReadREGS();
         PrintLog.println("寄存器[" + reg.toString() + "]:" + reg.GetValue().toString());
     }
+
     /**
      * Test of CalParameter method, of class OSA_X.
      */
@@ -301,6 +278,7 @@ public class OSA_XTest {
         PrintLog.println("CalParameter");
         CDevDataTable.DataInfo[] cal_infos = instance.GetCalDataList();
         for (CDevDataTable.DataInfo info : cal_infos) {
+            PrintLog.println("");
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{134f}, new float[]{132f});
@@ -313,6 +291,7 @@ public class OSA_XTest {
                         oradata[j] = 132f + (float) Math.random() * j;
                         testdata[j] = 130f - (float) Math.random() * j;
                     }
+                    PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
                     printREG(dev_mock.NCLTEMPER[dev_mock.NRANGE.GetValue()]);
                     printREG(dev_mock.NCLPARA[dev_mock.NRANGE.GetValue()]);

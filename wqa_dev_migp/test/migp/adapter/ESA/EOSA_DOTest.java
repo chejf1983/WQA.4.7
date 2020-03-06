@@ -28,7 +28,7 @@ public class EOSA_DOTest {
 
     public EOSA_DOTest() throws Exception {
         if (instance == null) {
-            PrintLog.PintSwitch = true;
+//            PrintLog.PintSwitch = true;
             this.InitDevice();
         }
     }

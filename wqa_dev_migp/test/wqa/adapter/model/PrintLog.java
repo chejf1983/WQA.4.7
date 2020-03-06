@@ -10,21 +10,36 @@ package wqa.adapter.model;
  * @author chejf
  */
 public class PrintLog {
-    public static boolean PintSwitch = false;
+    public static int NOPRINT = 0x00;
+    public static int IOLOG = 0x01;
+    public static int PRINTLOG = 0x02;
+    
+    private static int PRINTTAG = 0x00;
 
+    public static void SetPrintlevel(int level){
+        PRINTTAG = level;
+    }
+    
     public static void println(String info) {
-        if (PintSwitch) {
+        if ((PRINTTAG & PRINTLOG) > 0) {
             System.out.println(info);
         }
     }
 
     public static void print(String info) {
-        if (PintSwitch) {
+        if((PRINTTAG & PRINTLOG) > 0) {
             System.out.print(info);
         }
     }
 
-//    public static void PrintLog(String info) {
-//        
-//    }
+    public static void PrintIO(String info) {
+        if ((PRINTTAG & IOLOG) > 0) {
+            System.out.print(info);
+        }
+    }
+    public static void PrintlnIO(String info) {
+        if ((PRINTTAG & IOLOG) > 0) {
+            System.out.println(info);
+        }
+    }
 }

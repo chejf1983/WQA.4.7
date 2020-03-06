@@ -38,11 +38,11 @@ public class MOCKIO implements IAbstractIO {
 
     @Override
     public void SendData(byte[] data) throws Exception {
-        PrintLog.print("SEN:");
+        PrintLog.PrintIO("SEN:");
         for (int i = 0; i < data.length; i++) {
-            PrintLog.print(String.format("%02X ", data[i]));
+            PrintLog.PrintIO(String.format("%02X ", data[i]));
         }
-        PrintLog.println("");
+        PrintLog.PrintlnIO("");
         this.client.ReceiveCmd(data);
     }
 
@@ -51,11 +51,11 @@ public class MOCKIO implements IAbstractIO {
         byte[] mem = this.client.Reply();
         System.arraycopy(mem, 0, data, 0, mem.length);        
         if (mem.length > 0) {
-            PrintLog.print("REC:");
+            PrintLog.PrintIO("REC:");
             for (int i = 0; i < mem.length; i++) {
-                PrintLog.print(String.format("%02X ", mem[i]));
+                PrintLog.PrintIO(String.format("%02X ", mem[i]));
             }
-            PrintLog.println("");
+            PrintLog.PrintlnIO("");
         }
         return mem.length;
     }

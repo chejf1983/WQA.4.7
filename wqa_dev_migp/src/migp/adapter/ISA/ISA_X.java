@@ -173,10 +173,10 @@ public class ISA_X extends AbsDevice {
                     this.SetConfigREG(NAS[i], item.value);
                 }
                 if (item.IsKey(datanames[i] + NES[i].toString())) {
-                    this.SetConfigREG(NAS[i], item.value);
+                    this.SetConfigREG(NES[i], item.value);
                 }
                 if (item.IsKey(datanames[i] + NFS[i].toString())) {
-                    this.SetConfigREG(NAS[i], item.value);
+                    this.SetConfigREG(NFS[i], item.value);
                 }
             }
             if (item.IsKey(NTEMP_CAL.toString())) {
