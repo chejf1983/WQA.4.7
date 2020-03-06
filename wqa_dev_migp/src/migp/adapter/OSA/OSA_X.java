@@ -76,7 +76,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
     IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"),
         new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
 
-    IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "量程数量", 1, 4);
+    IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "量程数量", 0, 3);
     FMEG[] NRANGE_MAX = new FMEG[]{new FMEG(new NVPA(141, 4), "主参数1量程上限"), new FMEG(new NVPA(145, 4), "主参数2量程上限"),
         new FMEG(new NVPA(149, 4), "主参数3量程上限"), new FMEG(new NVPA(153, 4), "主参数4量程上限")};
     // </editor-fold> 
