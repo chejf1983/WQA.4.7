@@ -5,11 +5,8 @@
  */
 package migp.adapter.ESA;
 
-import base.migp.mem.MDA;
-import base.migp.mem.SRA;
-import base.migp.mem.VPA;
-import base.migp.reg.FMEG;
-import base.migp.reg.IMEG;
+import base.migp.mem.*;
+import base.migp.reg.*;
 import migp.adapter.factory.AbsDevice;
 import wqa.adapter.io.ShareIO;
 

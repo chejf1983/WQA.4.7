@@ -5,8 +5,7 @@
  */
 package migp.adapter.ESA;
 
-import base.migp.mem.NVPA;
-import base.migp.mem.VPA;
+import base.migp.mem.*;
 import base.migp.reg.*;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;

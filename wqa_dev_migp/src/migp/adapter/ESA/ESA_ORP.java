@@ -15,7 +15,6 @@ import wqa.bill.log.LogNode;
 import wqa.control.dev.collect.SDisplayData;
 import wqa.control.common.CErrorTable;
 import wqa.control.config.SConfigItem;
-import static migp.adapter.factory.AbsDevice.DEF_TIMEOUT;
 
 /**
  *

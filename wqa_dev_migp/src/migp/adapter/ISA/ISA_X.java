@@ -5,13 +5,8 @@
  */
 package migp.adapter.ISA;
 
-import base.migp.mem.MDA;
-import base.migp.mem.NVPA;
-import base.migp.mem.SRA;
-import base.migp.mem.VPA;
-import base.migp.reg.DMEG;
-import base.migp.reg.FMEG;
-import base.migp.reg.IMEG;
+import base.migp.mem.*;
+import base.migp.reg.*;
 import migp.adapter.factory.AbsDevice;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;

@@ -5,7 +5,6 @@
  */
 package migp.adapter.ESA;
 
-import migp.adapter.factory.AbsDevice;
 import base.migp.mem.NVPA;
 import base.migp.reg.FMEG;
 import base.pro.convert.NahonConvert;
@@ -16,7 +15,6 @@ import wqa.bill.log.LogNode;
 import wqa.control.dev.collect.SDisplayData;
 import wqa.control.common.CErrorTable;
 import wqa.control.config.SConfigItem;
-import static migp.adapter.factory.AbsDevice.DEF_TIMEOUT;
 
 /**
  *
