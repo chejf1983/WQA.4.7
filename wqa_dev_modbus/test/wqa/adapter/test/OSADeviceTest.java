@@ -6,13 +6,11 @@
 package wqa.adapter.test;
 
 import java.util.ArrayList;
-import modebus.pro.NahonConvert;
 import modebus.register.REG;
 import org.junit.Test;
 import wqa.adapter.OSA.OSADevice;
 import static org.junit.Assert.*;
 import wqa.adapter.devmock.OSADevMock;
-import wqa.adapter.factory.AbsDevice;
 import wqa.adapter.factory.ModBusDevFactory;
 import wqa.adapter.io.ShareIO;
 import wqa.adapter.model.MOCKIO;
@@ -28,10 +26,10 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class OSADeviceTest {
+public class OSADeviceTest extends ABS_Test {
 
     public OSADeviceTest() throws Exception {
-//        PrintLog.PintSwitch = true;
+        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -54,116 +52,115 @@ public class OSADeviceTest {
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="配置测试">
-    private void PrintConfigItem(ArrayList<SConfigItem> result) {
-        result.forEach(item -> {
-            PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
-        });
-    }
-
-    private void CheckConfigInfo() throws Exception {
-        PrintLog.println("ConfigList:");
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        PrintConfigItem(result);
-
-        dev_mock.ReadREGS();
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.RANGE.toString())) {
-                assertEquals(item.range[dev_mock.RANGE.GetValue()], item.value);
-            }
-            if (item.IsKey(dev_mock.AVR.toString())) {
-                assertEquals(dev_mock.AVR.GetValue().toString(), item.value);
-            }
-        });
-    }
-
-    /**
-     * Test of GetConfigList method, of class OSADevice.
-     */
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testGetConfigList() throws Exception {
+    public void testInfoConfigList() throws Exception {
         PrintLog.println("***********************************");
-        this.CheckConfigInfo();
+        PrintLog.println("ReadInfoList");
+        super.testreadinfo(instance.GetInfoList(), dev_mock);
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
+    @Test
+    public void testReadConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadConfigList");
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testreadconfig(config, dev_mock);
+        
+        this.check_item(config, dev_mock.RANGE, instance.range_info[dev_mock.RANGE.GetValue()]);
+        this.check_item(config, dev_mock.AVR, dev_mock.AVR.GetValue().toString());
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
     /**
-     * Test of SetConfigList method, of class OSADevice.
+     * Test of SetConfigList method, of class DODevice.
+     *
+     * @throws java.lang.Exception
      */
     @Test
     public void testSetConfigList() throws Exception {
         PrintLog.println("***********************************");
         PrintLog.println("SetConfigList");
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        //修改值都增加1
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.RANGE.toString())) {
-                item.value = dev_mock.RANGE.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.AVR.toString())) {
-                item.value = dev_mock.AVR.GetValue() + 1 + "";
-            }
-        });
-        instance.SetConfigList(result);
-        this.CheckConfigInfo();
+
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testsetconfig(config, dev_mock);
+        this.set_item(config, dev_mock.RANGE, instance.range_info[1]);
+        this.set_item(config, dev_mock.AVR, "3");
+
+        instance.SetConfigList(config);
+        dev_mock.ReadREGS();
+        config = instance.GetConfigList();
+
+        this.testcheckconfig(config, dev_mock);
+        this.check_item(config, dev_mock.RANGE, instance.range_info[1]);
+        this.check_item(config, dev_mock.AVR, "3");
     }
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="电机刷测试">
+    
+    private void check_moto_par(SMotorParameter result) throws Exception {
+        dev_mock.ReadREGS();
+        assertEquals(dev_mock.CMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
+        PrintLog.println("当前模式" + result.mode.toString());
+
+        if (result.mode == SMotorParameter.CleanMode.Auto) {
+            for (SConfigItem item : result.auto_config) {
+                if (item.IsKey(dev_mock.CTIME.toString())) {
+                    assertEquals(item.value, dev_mock.CTIME.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CTIME.GetValue());
+                }
+                if (item.IsKey(dev_mock.CINTVAL.toString())) {
+                    assertEquals(item.value, dev_mock.CINTVAL.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CINTVAL.GetValue());
+                }
+            }
+        } else {
+            for (SConfigItem item : result.manu_config) {
+                if (item.IsKey(dev_mock.CTIME.toString())) {
+                    assertEquals(item.value, dev_mock.CTIME.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CTIME.GetValue());
+                }
+                if (item.IsKey(dev_mock.CINTVAL.toString())) {
+                    assertEquals(item.value, dev_mock.CINTVAL.GetValue() + "");
+                    PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CINTVAL.GetValue());
+                }
+            }
+        }
+    }
     /**
      * Test of GetMotoPara method, of class OSADevice.
      */
     @Test
-    public void testGetMotoPara() {
+    public void testGetMotoPara() throws Exception {
         PrintLog.println("***********************************");
         PrintLog.println("GetMotoPara");
         SMotorParameter result = instance.GetMotoPara();
-        assertEquals(dev_mock.CMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
-        for (SConfigItem item : result.auto_config) {
+
+        for (SConfigItem item : result.manu_config) {
             if (item.IsKey(dev_mock.CTIME.toString())) {
-                assertEquals(item.value, dev_mock.CTIME.GetValue() + "");
+                item.value = "100";
             }
             if (item.IsKey(dev_mock.CINTVAL.toString())) {
-                assertEquals(item.value, dev_mock.CINTVAL.GetValue() + "");
+                item.value = "60";
             }
         }
-
-        assertEquals(result.manu_config.length, 0);
-    }
-
-    /**
-     * Test of SetMotoPara method, of class OSADevice.
-     */
-    @Test
-    public void testSetMotoPara() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("SetMotoPara");
-        SMotorParameter result = instance.GetMotoPara();
-        assertEquals(dev_mock.CMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
         for (SConfigItem item : result.auto_config) {
             if (item.IsKey(dev_mock.CTIME.toString())) {
-                item.value = dev_mock.CTIME.GetValue() + 1 + "";
+                item.value = "99";
             }
             if (item.IsKey(dev_mock.CINTVAL.toString())) {
-                item.value = dev_mock.CINTVAL.GetValue() + 1 + "";
+                item.value = "61";
             }
         }
-
+        result.mode = SMotorParameter.CleanMode.Auto;
         instance.SetMotoPara(result);
-        dev_mock.ReadREGS();
-        
-        result = instance.GetMotoPara();
-        assertEquals(dev_mock.CMODE.GetValue() + "", result.mode == SMotorParameter.CleanMode.Auto ? "0" : "1");
-        for (SConfigItem item : result.auto_config) {
-            if (item.IsKey(dev_mock.CTIME.toString())) {
-                assertEquals(item.value, dev_mock.CTIME.GetValue() + "");
-            }
-            if (item.IsKey(dev_mock.CINTVAL.toString())) {
-                assertEquals(item.value, dev_mock.CINTVAL.GetValue() + "");
-            }
-        }
-
-        assertEquals(result.manu_config.length, 0);
+        result.mode = SMotorParameter.CleanMode.Manu;
+        instance.SetMotoPara(result);
+        check_moto_par(result);
     }
 
     /**
@@ -178,6 +175,7 @@ public class OSADeviceTest {
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class OSADevice.
      */
@@ -197,7 +195,9 @@ public class OSADeviceTest {
         PrintLog.println("报警码" + result.alarm + "-------" + dev_mock.ALARM.toString() + dev_mock.ALARM.GetValue());
         assertEquals(dev_mock.ALARM.GetValue() + "", result.alarm + "");
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="定标测试">
     /**
      * Test of CalParameter method, of class OSADevice.
      */
@@ -232,4 +232,5 @@ public class OSADeviceTest {
             }
         }
     }
+    // </editor-fold> 
 }

@@ -67,7 +67,7 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
         }
     }
 
-    private String[] range_info = new String[0];
+    public String[] range_info = new String[0];
 
     //初始化量程信息
     private String[] init_range_string() throws Exception {

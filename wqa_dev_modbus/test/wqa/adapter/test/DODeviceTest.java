@@ -5,9 +5,8 @@
  */
 package wqa.adapter.test;
 
-import wqa.adapter.devmock.DODevMock;
 import java.util.ArrayList;
-import modebus.pro.NahonConvert;
+import wqa.adapter.devmock.DODevMock;
 import modebus.register.FREG;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -27,9 +26,10 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class DODeviceTest {
+public class DODeviceTest extends ABS_Test {
 
     public DODeviceTest() throws Exception {
+        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -48,78 +48,34 @@ public class DODeviceTest {
         if (devs != null) {
             instance = (DODevice) devs;
             instance.InitDevice();
-        }
+        }    
     }
-
+    // </editor-fold>         
+    
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
+    @Test
+    public void testInfoConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadInfoList");
+        super.testreadinfo(instance.GetInfoList(), dev_mock);        
+    }
     // </editor-fold> 
     
-    // <editor-fold defaultstate="collapsed" desc="配置测试（包含AbsDev的公共配置选项）">
-    private void PrintConfigItem(ArrayList<SConfigItem> result) {
-        result.forEach(item -> {
-            PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
-        });
-    }
-
-    private void CheckConfigInfo() throws Exception {
-        PrintLog.println("InfoList:");
-        ArrayList<SConfigItem> result = instance.GetInfoList();
-        PrintConfigItem(result);
-        dev_mock.ReadREGS();
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.SERIANUM.toString())) {
-                assertEquals(dev_mock.SERIANUM.GetValue(), item.value);
-            }
-            if (item.IsKey(dev_mock.HWVER.toString())) {
-                assertEquals(dev_mock.HWVER.GetValue(), item.value);
-            }
-            if (item.IsKey(dev_mock.SWVER.toString())) {
-                assertEquals(dev_mock.SWVER.GetValue(), item.value);
-            }
-            if (item.IsKey(dev_mock.DEVTYPE.toString())) {
-                assertEquals(String.format("0X%04X", dev_mock.DEVTYPE.GetValue()), item.value);
-            }
-        });
-        PrintLog.println("ConfigList:");
-        result = instance.GetConfigList();
-        PrintConfigItem(result);
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.DEVADDR.toString())) {
-                assertEquals(dev_mock.DEVADDR.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.BANDRANGEI.toString())) {
-                assertEquals(AbsDevice.SBandRate[dev_mock.BANDRANGEI.GetValue()], item.value);
-            }
-            if (item.IsKey(dev_mock.SDTEMPSWT.toString())) {
-                assertEquals(dev_mock.SDTEMPSWT.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.SDTEMP.toString())) {
-                assertEquals(dev_mock.SDTEMP.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.PASCA.toString())) {
-                assertEquals(NahonConvert.TimData(dev_mock.PASCA.GetValue(), 2) + "", item.value);
-            }
-            if (item.IsKey(dev_mock.SALT.toString())) {
-                assertEquals(NahonConvert.TimData(dev_mock.SALT.GetValue(), 2) + "", item.value);
-            }
-            if (item.IsKey(dev_mock.AVR.toString())) {
-                assertEquals(dev_mock.AVR.GetValue().toString(), item.value);
-            }
-        });
-    }
-
-    /**
-     * Test of GetConfigList method, of class DODevice.
-     *
-     * @throws java.lang.Exception
-     */
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
-    public void testGetConfigList() throws Exception {
+    public void testReadConfigList() throws Exception {
         PrintLog.println("***********************************");
-        this.CheckConfigInfo();
+        PrintLog.println("ReadConfigList");
+        
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testreadconfig(config, dev_mock);
+        this.check_item(config, dev_mock.PASCA, dev_mock.PASCA.GetValue().toString());
+        this.check_item(config, dev_mock.SALT, dev_mock.SALT.GetValue().toString());
+        this.check_item(config, dev_mock.AVR, dev_mock.AVR.GetValue().toString());  
     }
-
+    // </editor-fold> 
+    
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
     /**
      * Test of SetConfigList method, of class DODevice.
      *
@@ -129,36 +85,25 @@ public class DODeviceTest {
     public void testSetConfigList() throws Exception {
         PrintLog.println("***********************************");
         PrintLog.println("SetConfigList");
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        //修改值都增加1
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.DEVADDR.toString())) {
-                item.value = dev_mock.DEVADDR.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.BANDRANGEI.toString())) {
-                item.value = AbsDevice.SBandRate[dev_mock.BANDRANGEI.GetValue() + 1] + "";
-            }
-            if (item.IsKey(dev_mock.SDTEMPSWT.toString())) {
-                item.value = !dev_mock.SDTEMPSWT.GetValue() + "";
-            }
-            if (item.IsKey(dev_mock.SDTEMP.toString())) {
-                item.value = dev_mock.SDTEMP.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.PASCA.toString())) {
-                item.value = dev_mock.PASCA.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.SALT.toString())) {
-                item.value = dev_mock.SALT.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.AVR.toString())) {
-                item.value = dev_mock.AVR.GetValue() + 1 + "";
-            }
-        });
-        instance.SetConfigList(result);
-        this.CheckConfigInfo();
+        
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testsetconfig(config, dev_mock);
+        this.set_item(config, dev_mock.PASCA, "12.0");
+        this.set_item(config, dev_mock.SALT, "112.1");
+        this.set_item(config, dev_mock.AVR, "3");
+        
+        instance.SetConfigList(config);
+        dev_mock.ReadREGS();
+        config = instance.GetConfigList();
+        
+        this.testcheckconfig(config, dev_mock);
+        this.check_item(config, dev_mock.PASCA, "12.0");
+        this.check_item(config, dev_mock.SALT, "112.1");
+        this.check_item(config, dev_mock.AVR, "3");
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="采集测试）">
     /**
      * Test of CollectData method, of class DODevice.
      *
@@ -182,7 +127,9 @@ public class DODeviceTest {
         // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="定标测试）">
     /**
      * Test of CalParameter method, of class DODevice.
      */
@@ -218,4 +165,5 @@ public class DODeviceTest {
             }
         }
     }
+    // </editor-fold> 
 }

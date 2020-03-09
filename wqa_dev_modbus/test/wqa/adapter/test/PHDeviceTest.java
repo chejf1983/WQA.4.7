@@ -5,6 +5,7 @@
  */
 package wqa.adapter.test;
 
+import java.util.ArrayList;
 import modebus.register.FREG;
 import org.junit.Test;
 import wqa.adapter.ESA.PHDevice;
@@ -16,6 +17,7 @@ import wqa.adapter.model.MOCKIO;
 import wqa.adapter.model.PrintLog;
 import wqa.control.common.CDevDataTable;
 import wqa.control.common.IDevice;
+import wqa.control.config.SConfigItem;
 import wqa.control.dev.collect.SDataElement;
 import wqa.control.dev.collect.SDisplayData;
 
@@ -23,10 +25,11 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class PHDeviceTest {
+public class PHDeviceTest extends ABS_Test {
 
     public PHDeviceTest() throws Exception {
 //        PrintLog.PintSwitch = true;
+        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -49,6 +52,48 @@ public class PHDeviceTest {
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
+    @Test
+    public void testInfoConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadInfoList");
+        super.testreadinfo(instance.GetInfoList(), dev_mock);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
+    @Test
+    public void testReadConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadConfigList");
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testreadconfig(config, dev_mock);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
+    /**
+     * Test of SetConfigList method, of class DODevice.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testSetConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("SetConfigList");
+
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testsetconfig(config, dev_mock);
+
+        instance.SetConfigList(config);
+        dev_mock.ReadREGS();
+        config = instance.GetConfigList();
+
+        this.testcheckconfig(config, dev_mock);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class PHDevice.
      */
@@ -69,7 +114,9 @@ public class PHDeviceTest {
         PrintLog.println("报警码" + result.alarm + "-------" + dev_mock.ALARM.toString() + dev_mock.ALARM.GetValue());
         assertEquals(dev_mock.ALARM.GetValue() + "", result.alarm + "");
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="定标测试">
     /**
      * Test of CalParameter method, of class PHDevice.
      */
@@ -104,5 +151,6 @@ public class PHDeviceTest {
             }
         }
     }
+    // </editor-fold> 
 
 }

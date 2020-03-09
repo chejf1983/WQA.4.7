@@ -33,7 +33,7 @@ public class DODevice extends AbsDevice {
     private final FREG PASCA = new FREG(0x09, 2, "大气压力");   //R/W
 //    private final Register TempCompen = new Register(0x0A, 2);   //R/W
     private final FREG SALT = new FREG(0x0B, 2, "盐度");   //R/W
-    private final IREG AVR = new IREG(0x0C, 1, "平均次数");   //R/W
+    private final IREG AVR = new IREG(0x0D, 1, "平均次数");   //R/W
 
     private final FREG[] CLODATA = new FREG[]{new FREG(0x31, 2, "饱和氧原始数据"), new FREG(0x35, 2, "无氧原始数据")};  //R/W
     private final IREG CLSTART = new IREG(0x39, 1, "启动定标"); //R/W

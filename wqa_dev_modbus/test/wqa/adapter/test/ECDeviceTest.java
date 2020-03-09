@@ -26,9 +26,10 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class ECDeviceTest {
+public class ECDeviceTest extends ABS_Test {
 
     public ECDeviceTest() throws Exception {
+        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -51,6 +52,64 @@ public class ECDeviceTest {
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
+    @Test
+    public void testInfoConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadInfoList");
+        super.testreadinfo(instance.GetInfoList(), dev_mock);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
+    @Test
+    public void testReadConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadConfigList");
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testreadconfig(config, dev_mock);
+        
+        this.check_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[dev_mock.ECRANG.GetValue()]);
+        this.check_item(config, dev_mock.PAREC, dev_mock.PAREC.GetValue().toString());
+        this.check_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[dev_mock.SALTRANGE.GetValue()]);
+        this.check_item(config, dev_mock.CMPTDS, NahonConvert.TimData(dev_mock.CMPTDS.GetValue(), 2) + "");
+        this.check_item(config, dev_mock.CMPTEMP, NahonConvert.TimData(dev_mock.CMPTEMP.GetValue(), 2) + "");
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
+    /**
+     * Test of SetConfigList method, of class DODevice.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testSetConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("SetConfigList");
+
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testsetconfig(config, dev_mock);
+        this.set_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[2]);
+        this.set_item(config, dev_mock.PAREC, "3.0");
+        this.set_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[2]);
+        this.set_item(config, dev_mock.CMPTDS, "2.0");
+        this.set_item(config, dev_mock.CMPTEMP, "12.0");
+
+        instance.SetConfigList(config);
+        dev_mock.ReadREGS();
+        config = instance.GetConfigList();
+
+        this.testcheckconfig(config, dev_mock);
+        this.check_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[2]);
+        this.check_item(config, dev_mock.PAREC, "3.0");
+        this.check_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[2]);
+        this.check_item(config, dev_mock.CMPTDS, "2.0");
+        this.check_item(config, dev_mock.CMPTEMP, "12.0");
+    }
+    // </editor-fold> 
+    
+    // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class ECDevice.
      */
@@ -70,86 +129,9 @@ public class ECDeviceTest {
         PrintLog.println("报警码" + result.alarm + "-------" + dev_mock.ALARM.toString() + dev_mock.ALARM.GetValue());
         assertEquals(dev_mock.ALARM.GetValue() + "", result.alarm + "");
     }
-
-    // <editor-fold defaultstate="collapsed" desc="配置测试">
-    private void PrintConfigItem(ArrayList<SConfigItem> result) {
-        result.forEach(item -> {
-            PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
-        });
-    }
-
-    private void CheckConfigInfo() throws Exception {      
-        PrintLog.println("ConfigList:");
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        PrintConfigItem(result);
-
-        dev_mock.ReadREGS();  
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.ECRANG.toString())) {
-                assertEquals(ECDevice.EC_UNIT_STRING[dev_mock.ECRANG.GetValue()], item.value);
-            }
-            if (item.IsKey(dev_mock.PAREC.toString())) {
-                assertEquals(dev_mock.PAREC.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.SALTRANGE.toString())) {
-                assertEquals(ECDevice.SALT_UNIT_STRING[dev_mock.SALTRANGE.GetValue()], item.value);
-            }
-            if (item.IsKey(dev_mock.CMPTDS.toString())) {
-                assertEquals(NahonConvert.TimData(dev_mock.CMPTDS.GetValue(), 2) + "", item.value);
-            }
-            if (item.IsKey(dev_mock.CMPTEMP.toString())) {
-                assertEquals(NahonConvert.TimData(dev_mock.CMPTEMP.GetValue(), 2) + "", item.value);
-            }
-            
-        });
-    }
-
-    /**
-     * Test of GetConfigList method, of class DODevice.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testGetConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        this.CheckConfigInfo();
-    }
-
-    /**
-     * Test of SetConfigList method, of class DODevice.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("SetConfigList");
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        //修改值都增加1
-        result.forEach(item -> {
-            
-            if (item.IsKey(dev_mock.ECRANG.toString())) {
-                item.value = dev_mock.ECRANG.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.PAREC.toString())) {
-                item.value = dev_mock.PAREC.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.SALTRANGE.toString())) {
-                item.value = dev_mock.SALTRANGE.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.CMPTDS.toString())) {
-                item.value = dev_mock.CMPTDS.GetValue() + 1 + "";
-            }
-            if (item.IsKey(dev_mock.CMPTEMP.toString())) {
-                item.value = dev_mock.CMPTEMP.GetValue() + 1 + "";
-            }
-        });
-        instance.SetConfigList(result);
-        this.CheckConfigInfo();
-    }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="定标测试">
     /**
      * Test of CalParameter method, of class ECDevice.
      */
@@ -184,4 +166,5 @@ public class ECDeviceTest {
             }
         }
     }
+    // </editor-fold> 
 }

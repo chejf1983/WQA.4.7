@@ -61,7 +61,7 @@ public class ECDevMock extends DevMock {
     public void ResetREGS() throws Exception {
         super.ResetREGS();
         DEVTYPE.SetValue(0x0202);
-
+        
         ///////////////////////////////////////////////////////////
         ALARM.SetValue(0);
         EC.SetValue((float) EC.RegAddr());

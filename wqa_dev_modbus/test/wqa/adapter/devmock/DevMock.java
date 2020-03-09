@@ -52,7 +52,7 @@ public abstract class DevMock {
         DEVNAME.SetValue("TestDO");
         SERIANUM.SetValue("201912261415DO");
         HWVER.SetValue("H1");
-        SWVER.SetValue("SW01");
+        SWVER.SetValue("D105");
         DEVADDR.SetValue(02);
         BANDRANGEI.SetValue(1);
         DEVTYPE.SetValue(0x0110);

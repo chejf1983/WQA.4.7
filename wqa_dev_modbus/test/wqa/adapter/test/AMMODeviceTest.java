@@ -5,6 +5,7 @@
  */
 package wqa.adapter.test;
 
+import java.util.ArrayList;
 import modebus.register.FREG;
 import org.junit.Test;
 import wqa.adapter.ISA.AMMODevice;
@@ -16,6 +17,7 @@ import wqa.adapter.model.MOCKIO;
 import wqa.adapter.model.PrintLog;
 import wqa.control.common.CDevDataTable;
 import wqa.control.common.IDevice;
+import wqa.control.config.SConfigItem;
 import wqa.control.dev.collect.SDataElement;
 import wqa.control.dev.collect.SDisplayData;
 
@@ -23,11 +25,11 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class AMMODeviceTest {
+public class AMMODeviceTest extends ABS_Test {
 
     public AMMODeviceTest() throws Exception {
+        super();
         if (instance == null) {
-//            PrintLog.PintSwitch = true;
             this.InitDevice();
         }
     }
@@ -49,6 +51,47 @@ public class AMMODeviceTest {
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
+    @Test
+    public void testInfoConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadInfoList");
+        super.testreadinfo(instance.GetInfoList(), dev_mock);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
+    @Test
+    public void testReadConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("ReadConfigList");
+        super.testreadconfig(instance.GetConfigList(), dev_mock);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
+    /**
+     * Test of SetConfigList method, of class DODevice.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testSetConfigList() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("SetConfigList");
+
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        super.testsetconfig(config, dev_mock);
+
+        instance.SetConfigList(config);
+        dev_mock.ReadREGS();
+        config = instance.GetConfigList();
+
+        this.testcheckconfig(config, dev_mock);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class AMMODevice.
      */
@@ -61,8 +104,8 @@ public class AMMODeviceTest {
         FREG[] regs;
         if (dev_mock.DEVTYPE.GetValue() == 0x0301) {
             regs = new FREG[]{dev_mock.PH, dev_mock.OPH, dev_mock.NH4, dev_mock.ONH4, dev_mock.K, dev_mock.OK, dev_mock.TEMPER, dev_mock.OTEMPER};
-        }else{
-            regs = new FREG[]{dev_mock.PH, dev_mock.OPH, dev_mock.NH4, dev_mock.ONH4, dev_mock.TEMPER, dev_mock.OTEMPER};            
+        } else {
+            regs = new FREG[]{dev_mock.PH, dev_mock.OPH, dev_mock.NH4, dev_mock.ONH4, dev_mock.TEMPER, dev_mock.OTEMPER};
         }
         for (int i = 0; i < result.datas.length; i++) {
             SDataElement data = result.datas[i];
@@ -73,7 +116,9 @@ public class AMMODeviceTest {
         PrintLog.println("报警码" + result.alarm + "-------" + dev_mock.ALARM.toString() + dev_mock.ALARM.GetValue());
         assertEquals(dev_mock.ALARM.GetValue() + "", result.alarm + "");
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="定标测试">
     /**
      * Test of CalParameter method, of class AMMODevice.
      */
@@ -108,4 +153,5 @@ public class AMMODeviceTest {
             }
         }
     }
+    // </editor-fold> 
 }
