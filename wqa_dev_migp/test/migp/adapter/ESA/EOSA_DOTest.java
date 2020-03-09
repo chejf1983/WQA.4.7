@@ -50,6 +50,7 @@ public class EOSA_DOTest extends ABS_Test {
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="参数设置">
     /**
      * Test of SetConfigList method, of class EOSA_DO.
      */
@@ -64,7 +65,9 @@ public class EOSA_DOTest extends ABS_Test {
             this.check_config_item(dev_mock.NAVR, "33");
         }
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="定标系数设置">
     /**
      * Test of SetCalParList method, of class EOSA_DO.
      */
@@ -87,7 +90,9 @@ public class EOSA_DOTest extends ABS_Test {
             this.check_cal_item(dev_mock.NDO0, "133.01");
         }
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class EOSA_DO.
      */
@@ -110,7 +115,9 @@ public class EOSA_DOTest extends ABS_Test {
         PrintLog.println("报警码" + result.alarm + "-------" + dev_mock.MALARM.toString() + dev_mock.MALARM.GetValue());
         assertEquals(dev_mock.MALARM.GetValue() + "", result.alarm + "");
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="定标测试">
     /**
      * Test of CalParameter method, of class EOSA_DO.
      */
@@ -141,7 +148,5 @@ public class EOSA_DOTest extends ABS_Test {
             }
         }
     }
-
-   
-
+    // </editor-fold> 
 }
