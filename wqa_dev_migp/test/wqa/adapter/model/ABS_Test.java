@@ -43,6 +43,30 @@ public class ABS_Test {
             PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
         });
     }
+    
+    
+    protected void check_info_item(MEG reg, String testvalue) throws Exception {
+        //设置寄存器
+        ArrayList<SConfigItem> list = absinstance.GetInfoList();
+        for (SConfigItem item : list) {
+            if (item.IsKey(reg.toString())) {
+                item.SetValue(testvalue);
+                absinstance.SetInfoList(list);
+                break;
+            }
+        }
+        //比较测试结果
+        list = absinstance.GetInfoList();
+        for (SConfigItem item : list) {
+            if (item.IsKey(reg.toString())) {
+                assertEquals(item.value, testvalue);
+                absdev_mock.ReadREGS();
+                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + testvalue + "[读取结果]:" + item.value + "[设备值]:" + reg.GetValue().toString());
+                return;
+            }
+        }
+        fail("没有找到配置项" + reg.toString());
+    }
 
     protected void check_config_item(MEG reg, String testvalue) throws Exception {
         //设置寄存器

@@ -6,7 +6,6 @@
 package migp.adapter.ESA;
 
 import base.migp.reg.MEG;
-import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import migp.adapter.factory.AbsDevice;
 import migp.adapter.factory.MIGPDevFactory;
@@ -14,6 +13,7 @@ import migp.adapter.mock.PHMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import wqa.adapter.io.ShareIO;
+import wqa.adapter.model.ABS_Test;
 import wqa.adapter.model.MOCKIO;
 import wqa.adapter.model.PrintLog;
 import wqa.control.common.CDevDataTable;
@@ -26,11 +26,12 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class ESA_PHTest {
+public class ESA_PHTest extends ABS_Test {
 
     public ESA_PHTest() throws Exception {
-        if (instance == null) {
-            this.InitDevice();
+        super();
+        if (dev_mock == null) {
+            this.InitDevice(new PHMock());
         }
     }
 
@@ -38,8 +39,8 @@ public class ESA_PHTest {
     public static ESA_PH instance;
     public static PHMock dev_mock;
 
-    private void InitDevice() throws Exception {
-        dev_mock = new PHMock();
+    private void InitDevice(PHMock mock) throws Exception {
+        dev_mock = mock;
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
@@ -48,91 +49,9 @@ public class ESA_PHTest {
             instance = (ESA_PH) devs;
             instance.InitDevice();
         }
+        super.InitDevice(instance, dev_mock);
     }
     // </editor-fold> 
-
-    // <editor-fold defaultstate="collapsed" desc="检查配置">
-    private void PrintConfigItem(ArrayList<SConfigItem> result) {
-        result.forEach(item -> {
-            PrintLog.println(item.inputtype + "-" + item.data_name + ":" + item.value);
-        });
-    }
-
-    private void check_infolist() throws Exception {
-        PrintLog.println("InfoList:");
-        ArrayList<SConfigItem> result = instance.GetInfoList();
-        PrintConfigItem(result);
-        dev_mock.ReadREGS();
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.EBUILDSER.toString())) {
-                assertEquals(dev_mock.EBUILDSER.GetValue(), item.value);
-            }
-            if (item.IsKey(dev_mock.EHWVER.toString())) {
-                assertEquals(dev_mock.EHWVER.GetValue(), item.value);
-            }
-            if (item.IsKey(dev_mock.ESWVER.toString())) {
-                assertEquals(dev_mock.ESWVER.GetValue(), item.value);
-            }
-            if (item.IsKey(dev_mock.EDEVNAME.toString())) {
-                assertEquals(dev_mock.EDEVNAME.GetValue(), item.value);
-            }
-            if (item.IsKey(dev_mock.VDEVTYPE.toString())) {
-                assertEquals(String.format("0X%04X", dev_mock.VDEVTYPE.GetValue()), item.value);
-            }
-        });
-
-    }
-
-    private void check_config() throws Exception {
-        PrintLog.println("ConfigList:");
-        dev_mock.ReadREGS();
-        ArrayList<SConfigItem> result = instance.GetConfigList();
-        PrintConfigItem(result);
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(AbsDevice.SDevAddr)) {
-                assertEquals(dev_mock.client.addr + "", item.value);
-            }
-
-            if (item.IsKey(AbsDevice.SBandRate)) {
-                assertEquals(AbsDevice.BANDRATE_STRING[dev_mock.client.bandrate], item.value);
-            }
-        });
-    }
-
-    private void checkcal_par() throws Exception {
-        PrintLog.println("CalList:");
-        dev_mock.ReadREGS();
-        ArrayList<SConfigItem> result = instance.GetCalParList();
-        PrintConfigItem(result);
-        //设备读取应该与本地寄存器相同
-        result.forEach(item -> {
-            if (item.IsKey(dev_mock.NE0.toString())) {
-                assertEquals(dev_mock.NE0.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NA.toString())) {
-                assertEquals(dev_mock.NA.GetValue().toString(), item.value);
-            }
-            if (item.IsKey(dev_mock.NTEMP_CAL.toString())) {
-                assertEquals(NahonConvert.TimData(dev_mock.NTEMP_CAL.GetValue(), 2) + "", item.value);
-            }
-        });
-    }
-    // </editor-fold> 
-
-    /**
-     * Test of GetCalParList method, of class ESA_PH.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testGetCalParList() throws Exception {
-        PrintLog.println("*****************************************");
-        this.check_infolist();
-        this.check_config();
-        this.checkcal_par();
-    }
 
     /**
      * Test of SetCalParList method, of class ESA_PH.
@@ -140,59 +59,69 @@ public class ESA_PHTest {
      * @throws java.lang.Exception
      */
     @Test
-    public void testSetCalParList() throws Exception {
+    public void testSetInfoParList() throws Exception {
+        PrintLog.println("*****************************************");
+        PrintLog.println("SetinfoConfig");
+
+        this.check_info_item(dev_mock.EDEVNAME, "TestDO1");
+        this.check_info_item(dev_mock.EBUILDSER, "202002210");
+        this.check_info_item(dev_mock.EBUILDDATE, "20202020");
+    }
+    
+     /**
+     * Test of SetCalParList method, of class ESA_PH.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testSetConfigParList() throws Exception {
 //        System.out.println("SetCalParList");
         PrintLog.println("*****************************************");
         PrintLog.println("SetConfig");
         ArrayList<SConfigItem> info_list = instance.GetInfoList();
-        info_list.forEach(info -> {
-            if (info.IsKey(dev_mock.EDEVNAME.toString())) {
-                info.SetValue("TestDO1");
-            }
-            if (info.IsKey(dev_mock.EBUILDSER.toString())) {
-                info.SetValue("202002210");
-            }
-            if (info.IsKey(dev_mock.EBUILDDATE.toString())) {
-                info.SetValue("20202020");
-            }
-        });
-        instance.SetInfoList(info_list);
-        this.check_infolist();
-
+        String bandrate = AbsDevice.BANDRATE_STRING[dev_mock.client.bandrate + 1];
+        String addr = dev_mock.client.addr + 1 + "";
         info_list = instance.GetConfigList();
-        info_list.forEach(info -> {
-            if (info.IsKey(AbsDevice.SBandRate)) {
-                info.SetValue(AbsDevice.BANDRATE_STRING[dev_mock.client.bandrate + 1]);
+        info_list.forEach(item -> {
+            if (item.IsKey(AbsDevice.SBandRate)) {
+                item.SetValue(bandrate);
+                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + bandrate + "[读取结果]:" + item.value);
             }
-            if (info.IsKey(AbsDevice.SDevAddr)) {
-                info.SetValue(dev_mock.client.addr + 1 + "");
+            if (item.IsKey(AbsDevice.SDevAddr)) {
+                item.SetValue(addr);
+                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + addr + "[读取结果]:" + item.value);
             }
         });
         instance.SetConfigList(info_list);
-        this.check_config();
-        
-        info_list = instance.GetCalParList();
+        info_list = instance.GetConfigList();
         info_list.forEach(info -> {
-            if (info.IsKey(dev_mock.NTEMP_CAL.toString())) {
-                info.SetValue(dev_mock.NTEMP_CAL.GetValue() + 1 + "");
+            if (info.IsKey(AbsDevice.SBandRate)) {
+                assertEquals(info.value, bandrate);
             }
-            if (info.IsKey(dev_mock.NA.toString())) {
-                info.SetValue(dev_mock.NA.GetValue() + 1 + "");
-            }
-            if (info.IsKey(dev_mock.NE0.toString())) {
-                info.SetValue(dev_mock.NE0.GetValue() + 1 + "");
+            if (info.IsKey(AbsDevice.SDevAddr)) {
+                assertEquals(info.value, addr);
             }
         });
-        instance.SetCalParList(info_list);
-        this.checkcal_par();
-//        ArrayList<SConfigItem> list = null;
-//        ESA_PH instance = null;
-//        instance.SetCalParList(list);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//        PrintLog.PintSwitch = false;
+    }
+    
+    // <editor-fold defaultstate="collapsed" desc="定标系数设置">
+
+    /**
+     * Test of SetCalParList method, of class ESA_ORP.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testSetCalParList() throws Exception {
+        PrintLog.println("*****************************************");
+        PrintLog.println("SetConfig");
+        this.check_cal_item(dev_mock.NTEMP_CAL, "122.0");
+        this.check_cal_item(dev_mock.NA, "32.01");
+        this.check_cal_item(dev_mock.NE0, "22.01");
+//        this.check_cal_item(dev_mock.NB, "33.0");
     }
 
+    // </editor-fold> 
     /**
      * Test of CollectData method, of class ESA_PH.
      *
@@ -229,7 +158,7 @@ public class ESA_PHTest {
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{34f}, new float[]{32f});
-                this.checkcal_par();
+                printREG(dev_mock.NTEMP_CAL);
             } else {
                 for (int i = 1; i <= info.cal_num; i++) {
                     float[] oradata = new float[i];
@@ -238,8 +167,10 @@ public class ESA_PHTest {
                         oradata[j] = 32f + j;
                         testdata[j] = 30f - j;
                     }
+                    PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
-                    this.checkcal_par();
+                    printREG(dev_mock.NA);
+                    printREG(dev_mock.NE0);
                 }
             }
         }
