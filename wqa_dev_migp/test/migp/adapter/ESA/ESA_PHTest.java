@@ -53,6 +53,7 @@ public class ESA_PHTest extends ABS_Test {
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="信息设置">
     /**
      * Test of SetCalParList method, of class ESA_PH.
      *
@@ -67,7 +68,9 @@ public class ESA_PHTest extends ABS_Test {
         this.check_info_item(dev_mock.EBUILDSER, "202002210");
         this.check_info_item(dev_mock.EBUILDDATE, "20202020");
     }
+    // </editor-fold> 
     
+    // <editor-fold defaultstate="collapsed" desc="参数设置">
      /**
      * Test of SetCalParList method, of class ESA_PH.
      *
@@ -103,6 +106,7 @@ public class ESA_PHTest extends ABS_Test {
             }
         });
     }
+    // </editor-fold> 
     
     // <editor-fold defaultstate="collapsed" desc="定标系数设置">
 
@@ -122,6 +126,8 @@ public class ESA_PHTest extends ABS_Test {
     }
 
     // </editor-fold> 
+        
+    // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class ESA_PH.
      *
@@ -143,7 +149,9 @@ public class ESA_PHTest extends ABS_Test {
         PrintLog.println("报警码" + result.alarm + "-------" + dev_mock.MALARM.toString() + dev_mock.MALARM.GetValue());
         assertEquals(dev_mock.MALARM.GetValue() + "", result.alarm + "");
     }
-
+    // </editor-fold> 
+    
+    // <editor-fold defaultstate="collapsed" desc="定标测试">
     /**
      * Test of CalParameter method, of class ESA_PH.
      *
@@ -175,5 +183,6 @@ public class ESA_PHTest extends ABS_Test {
             }
         }
     }
+    // </editor-fold> 
 
 }

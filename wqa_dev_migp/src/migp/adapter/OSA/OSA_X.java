@@ -108,7 +108,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
     //获取量程字符串描述
     private String[] get_range_string() {
-        String[] tmp = new String[this.NRANGE_NUM.GetValue()];
+        String[] tmp = new String[this.NRANGE_NUM.GetValue() + 1];
         for (int i = 0; i < tmp.length; i++) {
             tmp[i] = get_range_string(i);
         }
@@ -116,7 +116,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
         return tmp;
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="配置接口"> 
     @Override
     public ArrayList<SConfigItem> GetConfigList() {
@@ -157,7 +157,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
     public ArrayList<SConfigItem> GetCalParList() {
         ArrayList<SConfigItem> item = super.GetCalParList(); //To change body of generated methods, choose Tools | Templates.
 
-        item.add(SConfigItem.CreateRWItem(NRANGE_NUM.toString(), (NRANGE_NUM.GetValue() + 1) + "", NRANGE_NUM.min + "-" + NRANGE_NUM.max));
+        item.add(SConfigItem.CreateRWItem(NRANGE_NUM.toString(), (NRANGE_NUM.GetValue() + 1) + "", (NRANGE_NUM.min + 1) + "-" + (NRANGE_NUM.max + 1)));
         item.add(SConfigItem.CreateRWItem(NTEMPER_PAR.toString(), NTEMPER_PAR.GetValue().toString(), ""));
         item.add(SConfigItem.CreateInfoItem(""));
 
@@ -167,7 +167,11 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
             item.add(SConfigItem.CreateRWItem(NCLPARA[i].toString(), NCLPARA[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARB[i].toString(), NCLPARB[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARC[i].toString(), NCLPARC[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int)(AMPPAR / NAMPLIFY[i].GetValue()) + "", ""));
+            if (NAMPLIFY[i].GetValue() == 0) {
+                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
+            } else {
+                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR / NAMPLIFY[i].GetValue()) + "", ""));
+            }
             item.add(SConfigItem.CreateInfoItem(""));
         }
         return item;
@@ -203,7 +207,11 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
                     this.SetConfigREG(NCLPARC[i], item.value);
                 }
                 if (item.IsKey(NAMPLIFY[i].toString())) {
-                    float famply = AMPPAR / Float.valueOf(item.value);
+                    float tmp = Float.valueOf(item.value);
+                    float famply = AMPPAR;
+                    if (tmp != 0) {
+                        famply = AMPPAR / Float.valueOf(item.value);
+                    }
                     int amply = (int) (famply + 0.5);
                     this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
                 }
@@ -382,7 +390,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
         this.SetConfigREG(this.NCLTEMPER[this.NRANGE.GetValue()], String.valueOf(temper));
         this.SetConfigREG(this.NCLPARA[this.NRANGE.GetValue()], String.valueOf(newA));
         this.SetConfigREG(this.NCLPARB[this.NRANGE.GetValue()], String.valueOf(newB));
-        this.SetConfigREG(this.NCLPARC[this.NRANGE.GetValue()], String.valueOf(newC));                
+        this.SetConfigREG(this.NCLPARC[this.NRANGE.GetValue()], String.valueOf(newC));
     }
     // </editor-fold> 
 
