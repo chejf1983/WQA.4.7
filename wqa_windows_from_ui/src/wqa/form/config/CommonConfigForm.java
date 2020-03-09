@@ -28,7 +28,7 @@ public class CommonConfigForm extends ConfigForm{
     private ArrayList<ConfigTablePane> pane = new ArrayList();
     private JTabbedPane TabbedPane = new JTabbedPane();
 
-    public boolean InitModel(DevConfigBean config) {
+    public boolean InitModel(DevConfigBean config) throws Exception{
 //        this.config = config;
 
         config.SetMessageImple((String msg) -> {
@@ -67,7 +67,7 @@ public class CommonConfigForm extends ConfigForm{
         return true;
     }
     
-    public void InitViewConfig(DataVector viewConfig) {
+    public void InitViewConfig(DataVector viewConfig) throws Exception{
         TabbedPane.add("界面配置", new ViewConfigPane(viewConfig));
     }
 }
