@@ -9,6 +9,7 @@ import wqa.adapter.model.ABS_Test;
 import base.migp.mem.VPA;
 import base.migp.reg.FMEG;
 import base.migp.reg.MEG;
+import java.util.ArrayList;
 import migp.adapter.factory.MIGPDevFactory;
 import migp.adapter.mock.OSAMock;
 import org.junit.Test;
@@ -27,21 +28,21 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class OSA_XTest extends ABS_Test {
-    
-    public OSA_XTest() throws Exception{
-        super();
-        if(dev_mock == null){
-            this.InitDevice(new OSAMock());
+public class OSA_XTest {
+
+    public OSA_XTest() throws Exception {
+        if (dev_mock == null) {
+            this.InitDevice();
         }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static OSA_X instance;
     public static OSAMock dev_mock;
+    public static ABS_Test commontest;
 
-    protected void InitDevice(OSAMock mock) throws Exception {
-        dev_mock = mock;
+    protected void InitDevice() throws Exception {
+        dev_mock = new OSAMock();
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
@@ -49,47 +50,111 @@ public class OSA_XTest extends ABS_Test {
         if (devs != null) {
             instance = (OSA_X) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }
-        super.InitDevice(instance, dev_mock);
     }
-
     // </editor-fold> 
     
-    // <editor-fold defaultstate="collapsed" desc="测试设置功能">
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
+    @Test
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置info测试">
+    @Test
+    public void test_setinfo() throws Exception {
+        //设置配置
+        commontest.setinfolist_setup();
+        //检查配置
+        commontest.setinfolist_check();
+    }
+    // </editor-fold> 
+    
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
+    @Test
+    public void test_readconfig() throws Exception {
+        commontest.check_configlist();
+        ArrayList<SConfigItem> list = instance.GetConfigList();
+        commontest.check_item(list, dev_mock.NRANGE, get_range_string(dev_mock.NRANGE.GetValue()));
+        commontest.check_item(list, dev_mock.NAVR);
+        commontest.check_item(list, dev_mock.NTEMPER_COMP);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
     private String get_range_string(int index) {
         return "(" + dev_mock.VDRANGE_MIN[index].GetValue() + "-" + dev_mock.NRANGE_MAX[index].GetValue() + ")";
     }
 
-    /**
-     * Test of SetConfigList method, of class OSA_X.
-     */
     @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetConfigList");
-        check_config_item(dev_mock.NRANGE, get_range_string(2));
-        check_config_item(dev_mock.NAVR, "3");
-        check_config_item(dev_mock.NTEMPER_COMP, "24.6");
+    public void test_setconfig() throws Exception {
+        //设置配置
+        commontest.setconfiglist_setup();
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        commontest.set_item(config, dev_mock.NRANGE, get_range_string(2));
+        commontest.set_item(config, dev_mock.NAVR, "3");
+        commontest.set_item(config, dev_mock.NTEMPER_COMP, "24.6");
+
+        //下发
+        instance.SetConfigList(config);
+        dev_mock.ReadREGS();
+
+        //检查配置
+        commontest.setconfiglist_check();
+        assertEquals(dev_mock.NRANGE.GetValue().toString(), "2");
+        assertEquals(dev_mock.NAVR.GetValue().toString(), "3");
+        assertEquals(dev_mock.NTEMPER_COMP.GetValue().toString(), "24.6");
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="检查定标系数">
-    /**
-     * Test of SetCalParList method, of class OSA_X.
-     */
+    // <editor-fold defaultstate="collapsed" desc="读取calpar测试">
     @Test
-    public void testSetCalParList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetCalParList");
-        check_cal_item(dev_mock.NRANGE_NUM, "3");
-        check_cal_item(dev_mock.NTEMPER_PAR, "3.0");
+    public void test_readcalpar() throws Exception {
+        commontest.check_configlist();
+        ArrayList<SConfigItem> list = instance.GetCalParList();
+        commontest.check_item(list, dev_mock.NRANGE_NUM, (dev_mock.NRANGE_NUM.GetValue() + 1) + "");
+        commontest.check_item(list, dev_mock.NTEMPER_PAR);
         for (int i = 0; i < dev_mock.NAMPLIFY.length; i++) {
-            check_cal_item(dev_mock.NRANGE_MAX[i], "3.0");
-            check_cal_item(dev_mock.NCLTEMPER[i], "22.0");
-            check_cal_item(dev_mock.NCLPARA[i], "12.0");
-            check_cal_item(dev_mock.NCLPARB[i], "13.0");
-            check_cal_item(dev_mock.NCLPARC[i], "14.0");
-            check_cal_item(dev_mock.NAMPLIFY[i], "2");
+            commontest.check_item(list, dev_mock.NRANGE_MAX[i]);
+            commontest.check_item(list, dev_mock.NCLTEMPER[i]);
+            commontest.check_item(list, dev_mock.NCLPARA[i]);
+            commontest.check_item(list, dev_mock.NCLPARB[i]);
+            commontest.check_item(list, dev_mock.NCLPARC[i]);
+            commontest.check_item(list, dev_mock.NAMPLIFY[i], (int) (OSA_X.AMPPAR / dev_mock.NAMPLIFY[i].GetValue()) + "");
+        }
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置calpar测试">
+    @Test
+    public void test_setcalpar() throws Exception {
+        //设置配置
+        ArrayList<SConfigItem> list = instance.GetCalParList();
+        commontest.set_item(list, dev_mock.NRANGE_NUM, "3");
+        commontest.set_item(list, dev_mock.NTEMPER_PAR, "2.0");
+        for (int i = 0; i < dev_mock.NAMPLIFY.length; i++) {
+            commontest.set_item(list, dev_mock.NRANGE_MAX[i], "3.0");
+            commontest.set_item(list, dev_mock.NCLTEMPER[i], "22.0");
+            commontest.set_item(list, dev_mock.NCLPARA[i], "12.0");
+            commontest.set_item(list, dev_mock.NCLPARB[i], "13.0");
+            commontest.set_item(list, dev_mock.NCLPARC[i], "13.0");
+            commontest.set_item(list, dev_mock.NAMPLIFY[i], "2");
+        }
+        //下发
+        instance.SetCalParList(list);
+        dev_mock.ReadREGS();
+
+        assertEquals(dev_mock.NRANGE_NUM.GetValue() + 1 + "", "3");
+        assertEquals(dev_mock.NTEMPER_PAR.GetValue().toString(), "2.0");
+        for (int i = 0; i < dev_mock.NAMPLIFY.length; i++) {
+            assertEquals(dev_mock.NRANGE_MAX[i].GetValue().toString(), "3.0");
+            assertEquals(dev_mock.NCLTEMPER[i].GetValue().toString(), "22.0");
+            assertEquals(dev_mock.NCLPARA[i].GetValue().toString(), "12.0");
+            assertEquals(dev_mock.NCLPARB[i].GetValue().toString(), "13.0");
+            assertEquals(dev_mock.NCLPARC[i].GetValue().toString(), "13.0");
+            assertEquals((int) (OSA_X.AMPPAR / dev_mock.NAMPLIFY[i].GetValue()) + "", "2");
         }
     }
     // </editor-fold> 
@@ -221,7 +286,7 @@ public class OSA_XTest extends ABS_Test {
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{134f}, new float[]{132f});
-                printREG(dev_mock.NTEMPER_PAR);
+                commontest.printREG(dev_mock.NTEMPER_PAR);
             } else {
                 for (int i = 1; i <= info.cal_num; i++) {
                     float[] oradata = new float[i];
@@ -232,10 +297,10 @@ public class OSA_XTest extends ABS_Test {
                     }
                     PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
-                    printREG(dev_mock.NCLTEMPER[dev_mock.NRANGE.GetValue()]);
-                    printREG(dev_mock.NCLPARA[dev_mock.NRANGE.GetValue()]);
-                    printREG(dev_mock.NCLPARB[dev_mock.NRANGE.GetValue()]);
-                    printREG(dev_mock.NCLPARC[dev_mock.NRANGE.GetValue()]);
+                    commontest.printREG(dev_mock.NCLTEMPER[dev_mock.NRANGE.GetValue()]);
+                    commontest.printREG(dev_mock.NCLPARA[dev_mock.NRANGE.GetValue()]);
+                    commontest.printREG(dev_mock.NCLPARB[dev_mock.NRANGE.GetValue()]);
+                    commontest.printREG(dev_mock.NCLPARC[dev_mock.NRANGE.GetValue()]);
                 }
             }
         }

@@ -28,21 +28,21 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class ESA_ECTest extends ABS_Test {
+public class ESA_ECTest {
 
     public ESA_ECTest() throws Exception {
-        super();
         if (dev_mock == null) {
-            this.InitDevice(new ECMock());
+            this.InitDevice();
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static ESA_EC instance;
     public static ECMock dev_mock;
+    public static ABS_Test commontest;
 
-    private void InitDevice(ECMock mock) throws Exception {
-        dev_mock = mock;
+    private void InitDevice() throws Exception {
+        dev_mock = new ECMock();
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
@@ -50,36 +50,80 @@ public class ESA_ECTest extends ABS_Test {
         if (devs != null) {
             instance = (ESA_EC) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }
-        super.InitDevice(instance, dev_mock);
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="参数设置测试">
-    /**
-     * Test of SetConfigList method, of class EOSA_DO.
-     */
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetConfigList");
-        this.check_config_item(dev_mock.NTEMP_COM, "12.0");
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置info测试">
+    @Test
+    public void test_setinfo() throws Exception {
+        //设置配置
+        commontest.setinfolist_setup();
+        //检查配置
+        commontest.setinfolist_check();
     }
     // </editor-fold> 
     
-    // <editor-fold defaultstate="collapsed" desc="系数设置测试">
-    /**
-     * Test of SetCalParList method, of class ESA_EC.
-     */
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
-    public void testSetCalParList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetCalParList");       
-        this.check_cal_item(dev_mock.NTEMP_CAL, "122.0");
-        this.check_cal_item(dev_mock.NA, "132.0");
+    public void test_readconfig() throws Exception {
+        commontest.check_configlist();
+        ArrayList<SConfigItem> list = instance.GetConfigList();
+        commontest.check_item(list, dev_mock.NTEMP_COM);
     }
     // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
+    @Test
+    public void test_setconfig() throws Exception {
+        //设置配置
+        commontest.setconfiglist_setup();
+        ArrayList<SConfigItem> list = instance.GetConfigList();
+        commontest.set_item(list, dev_mock.NTEMP_COM, "113.0");
+        
+        instance.SetConfigList(list);
+        dev_mock.ReadREGS();
+        
+        //检查配置
+        commontest.setconfiglist_check();
+        assertEquals(dev_mock.NTEMP_COM.GetValue().toString(), "113.0");
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="读取calpar测试">
+    @Test
+    public void test_readcalpar() throws Exception {
+        commontest.check_configlist();
+        ArrayList<SConfigItem> list = instance.GetCalParList();
+        commontest.check_item(list, dev_mock.NTEMP_CAL);
+        commontest.check_item(list, dev_mock.NA);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置calpar测试">
+    @Test
+    public void test_setcalpar() throws Exception {
+        //设置配置
+        ArrayList<SConfigItem> list = instance.GetCalParList();
+        commontest.set_item(list, dev_mock.NTEMP_CAL, "112.0");
+        commontest.set_item(list, dev_mock.NA, "132.1");
+        //下发
+        instance.SetCalParList(list);
+        dev_mock.ReadREGS();
+
+        assertEquals(dev_mock.NTEMP_CAL.GetValue().toString(), "112.0");
+        assertEquals(dev_mock.NA.GetValue().toString(), "132.1");
+    }
+    // </editor-fold> 
+    
     // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class ESA_EC.
@@ -115,7 +159,7 @@ public class ESA_ECTest extends ABS_Test {
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{34f}, new float[]{32f});
-                printREG(dev_mock.NTEMP_CAL);
+                commontest.printREG(dev_mock.NTEMP_CAL);
             } else {
                 for (int i = 1; i <= info.cal_num; i++) {
                     float[] oradata = new float[i];
@@ -126,7 +170,7 @@ public class ESA_ECTest extends ABS_Test {
                     }
                     PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
-                    printREG(dev_mock.NA);
+                    commontest.printREG(dev_mock.NA);
                 }
             }
         }

@@ -40,14 +40,16 @@ public class ESA_EC extends ESADEV {
         this.ReadMEG(NTEMP_CAL);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="配置接口"> 
+    // <editor-fold defaultstate="collapsed" desc="读取config"> 
     @Override
     public ArrayList<SConfigItem> GetConfigList() {
         ArrayList<SConfigItem> item = super.GetConfigList(); //To change body of generated methods, choose Tools | Templates.
         item.add(SConfigItem.CreateRWItem(NTEMP_COM.toString(), NTEMP_COM.GetValue() + "", ""));
         return item;
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="设置config"> 
     @Override
     public void SetConfigList(ArrayList<SConfigItem> list) throws Exception {
         super.SetConfigList(list);
@@ -59,7 +61,7 @@ public class ESA_EC extends ESADEV {
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="校准系数"> 
+    // <editor-fold defaultstate="collapsed" desc="读取calpar"> 
     @Override
     public ArrayList<SConfigItem> GetCalParList() {
         ArrayList<SConfigItem> item = super.GetCalParList(); //To change body of generated methods, choose Tools | Templates.
@@ -67,7 +69,9 @@ public class ESA_EC extends ESADEV {
         item.add(SConfigItem.CreateRWItem(NTEMP_CAL.toString(), this.NTEMP_CAL.GetValue() + "", ""));
         return item;
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="设置calpar"> 
     @Override
     public void SetCalParList(ArrayList<SConfigItem> list) throws Exception {
         super.SetCalParList(list);

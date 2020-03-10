@@ -108,7 +108,7 @@ public class OSAMock extends DevMock {
         VDEVTYPE.SetValue(0x010E);
         NRANGE.SetValue(1);
         NCMODE.SetValue(1);
-        NRANGE_NUM.SetValue(4);
+        NRANGE_NUM.SetValue(3);
         ///////////////////////////////////////////////////////////        
         MALARM.SetValue(0);
         WriteREGS();

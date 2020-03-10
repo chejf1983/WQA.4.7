@@ -26,21 +26,21 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class ESA_PHTest extends ABS_Test {
+public class ESA_PHTest {
 
     public ESA_PHTest() throws Exception {
-        super();
         if (dev_mock == null) {
-            this.InitDevice(new PHMock());
+            this.InitDevice();
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static ESA_PH instance;
     public static PHMock dev_mock;
+    public static ABS_Test commontest;
 
-    private void InitDevice(PHMock mock) throws Exception {
-        dev_mock = mock;
+    private void InitDevice() throws Exception {
+        dev_mock = new PHMock();
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
@@ -48,85 +48,75 @@ public class ESA_PHTest extends ABS_Test {
         if (devs != null) {
             instance = (ESA_PH) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }
-        super.InitDevice(instance, dev_mock);
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="信息设置">
-    /**
-     * Test of SetCalParList method, of class ESA_PH.
-     *
-     * @throws java.lang.Exception
-     */
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testSetInfoParList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetinfoConfig");
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
+    }
+    // </editor-fold> 
 
-        this.check_info_item(dev_mock.EDEVNAME, "TestDO1");
-        this.check_info_item(dev_mock.EBUILDSER, "202002210");
-        this.check_info_item(dev_mock.EBUILDDATE, "20202020");
+    // <editor-fold defaultstate="collapsed" desc="设置info测试">
+    @Test
+    public void test_setinfo() throws Exception {
+        //设置配置
+        commontest.setinfolist_setup();
+        //检查配置
+        commontest.setinfolist_check();
     }
     // </editor-fold> 
     
-    // <editor-fold defaultstate="collapsed" desc="参数设置">
-     /**
-     * Test of SetCalParList method, of class ESA_PH.
-     *
-     * @throws java.lang.Exception
-     */
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
-    public void testSetConfigParList() throws Exception {
-//        System.out.println("SetCalParList");
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetConfig");
-        ArrayList<SConfigItem> info_list = instance.GetInfoList();
-        String bandrate = AbsDevice.BANDRATE_STRING[dev_mock.client.bandrate + 1];
-        String addr = dev_mock.client.addr + 1 + "";
-        info_list = instance.GetConfigList();
-        info_list.forEach(item -> {
-            if (item.IsKey(AbsDevice.SBandRate)) {
-                item.SetValue(bandrate);
-                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + bandrate + "[读取结果]:" + item.value);
-            }
-            if (item.IsKey(AbsDevice.SDevAddr)) {
-                item.SetValue(addr);
-                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + addr + "[读取结果]:" + item.value);
-            }
-        });
-        instance.SetConfigList(info_list);
-        info_list = instance.GetConfigList();
-        info_list.forEach(info -> {
-            if (info.IsKey(AbsDevice.SBandRate)) {
-                assertEquals(info.value, bandrate);
-            }
-            if (info.IsKey(AbsDevice.SDevAddr)) {
-                assertEquals(info.value, addr);
-            }
-        });
+    public void test_readconfig() throws Exception {
+        commontest.check_configlist();
     }
     // </editor-fold> 
-    
-    // <editor-fold defaultstate="collapsed" desc="定标系数设置">
 
-    /**
-     * Test of SetCalParList method, of class ESA_ORP.
-     *
-     * @throws java.lang.Exception
-     */
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
     @Test
-    public void testSetCalParList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetConfig");
-        this.check_cal_item(dev_mock.NTEMP_CAL, "122.0");
-        this.check_cal_item(dev_mock.NA, "32.01");
-        this.check_cal_item(dev_mock.NE0, "22.01");
-//        this.check_cal_item(dev_mock.NB, "33.0");
+    public void test_setconfig() throws Exception {
+        //设置配置
+        commontest.setconfiglist_setup();
+        dev_mock.ReadREGS();
+        //检查配置
+        commontest.setconfiglist_check();
     }
-
     // </editor-fold> 
-        
+
+    // <editor-fold defaultstate="collapsed" desc="读取calpar测试">
+    @Test
+    public void test_readcalpar() throws Exception {
+        commontest.check_configlist();
+        ArrayList<SConfigItem> list = instance.GetCalParList();
+        commontest.check_item(list, dev_mock.NTEMP_CAL);
+        commontest.check_item(list, dev_mock.NA);
+        commontest.check_item(list, dev_mock.NE0);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置calpar测试">
+    @Test
+    public void test_setcalpar() throws Exception {
+        //设置配置
+        ArrayList<SConfigItem> list = instance.GetCalParList();
+        commontest.set_item(list, dev_mock.NTEMP_CAL, "113.0");
+        commontest.set_item(list, dev_mock.NA, "13.1");
+        commontest.set_item(list, dev_mock.NE0, "23.2");
+        //下发
+        instance.SetCalParList(list);
+        dev_mock.ReadREGS();
+
+        assertEquals(dev_mock.NTEMP_CAL.GetValue().toString(), "113.0");
+        assertEquals(dev_mock.NA.GetValue().toString(), "13.1");
+        assertEquals(dev_mock.NE0.GetValue().toString(), "23.2");
+    }
+    // </editor-fold> 
+         
     // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class ESA_PH.
@@ -166,7 +156,7 @@ public class ESA_PHTest extends ABS_Test {
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{34f}, new float[]{32f});
-                printREG(dev_mock.NTEMP_CAL);
+                commontest.printREG(dev_mock.NTEMP_CAL);
             } else {
                 for (int i = 1; i <= info.cal_num; i++) {
                     float[] oradata = new float[i];
@@ -177,8 +167,8 @@ public class ESA_PHTest extends ABS_Test {
                     }
                     PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
-                    printREG(dev_mock.NA);
-                    printREG(dev_mock.NE0);
+                    commontest.printREG(dev_mock.NA);
+                    commontest.printREG(dev_mock.NE0);
                 }
             }
         }

@@ -26,20 +26,23 @@ public class ESA_ORP extends ESADEV {
         super(io, addr);
     }
 
+    // <editor-fold defaultstate="collapsed" desc="寄存器列表"> 
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     FMEG NA = new FMEG(new NVPA(0, 4), "ORP系数A");
     FMEG NB = new FMEG(new NVPA(4, 4), "ORP系数B");
     private FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
     // </editor-fold> 
+    // </editor-fold> 
     
+    // <editor-fold defaultstate="collapsed" desc="初始化"> 
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
         this.ReadMEG(NA, NB, NTEMP_CAL);
     }
+    // </editor-fold> 
 
-
-    // <editor-fold defaultstate="collapsed" desc="配置接口"> 
+    // <editor-fold defaultstate="collapsed" desc="读取calpar"> 
     @Override
     public ArrayList<SConfigItem> GetCalParList() {
         ArrayList<SConfigItem> item = super.GetCalParList(); //To change body of generated methods, choose Tools | Templates.
@@ -48,7 +51,9 @@ public class ESA_ORP extends ESADEV {
         item.add(SConfigItem.CreateRWItem(NB.toString(), this.NB.GetValue() + "", ""));
         return item;
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="设置calpar"> 
     @Override
     public void SetCalParList(ArrayList<SConfigItem> list) throws Exception {
         super.SetCalParList(list);

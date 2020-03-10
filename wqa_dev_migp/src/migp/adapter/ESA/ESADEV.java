@@ -16,6 +16,7 @@ import wqa.adapter.io.ShareIO;
  */
 public abstract class ESADEV extends AbsDevice{
     
+    // <editor-fold defaultstate="collapsed" desc="内存表"> 
     // <editor-fold defaultstate="collapsed" desc="VPA"> 
     FMEG VDRANGE_MIN = new FMEG(new VPA(0x02, 4), "主参数量程下限");
     FMEG VDRANGE_MAX = new FMEG(new VPA(0x06, 4), "主参数量程上限");
@@ -39,6 +40,7 @@ public abstract class ESADEV extends AbsDevice{
     FMEG SR6 = new FMEG(new SRA(20, 4), "红光幅值");
     FMEG SR7 = new FMEG(new SRA(24, 4), "参考红光幅值");
     // </editor-fold> 
+    // </editor-fold> 
 
     public ESADEV(ShareIO io, byte addr) {
         super(io, addr);
@@ -47,8 +49,7 @@ public abstract class ESADEV extends AbsDevice{
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
-        
-        
+                
         this.ReadMEG(VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX);
     }
     

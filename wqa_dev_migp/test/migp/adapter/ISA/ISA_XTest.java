@@ -27,21 +27,21 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class ISA_XTest extends ABS_Test {
+public class ISA_XTest {
 
     public ISA_XTest() throws Exception{
-        super();
         if(dev_mock == null){
-            this.InitDevice(new ISAMock());
+            this.InitDevice();
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static ISA_X instance;
     public static ISAMock dev_mock;
+    public static ABS_Test commontest;
 
-    private void InitDevice(ISAMock mock) throws Exception {
-        dev_mock = mock;
+    private void InitDevice() throws Exception {
+        dev_mock = new ISAMock();
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
@@ -49,59 +49,92 @@ public class ISA_XTest extends ABS_Test {
         if (devs != null) {
             instance = (ISA_X) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }
-        super.InitDevice(instance, dev_mock);
     }
     // </editor-fold> 
-
-    // <editor-fold defaultstate="collapsed" desc="测试设置功能">   
-    /**
-     * Test of SetConfigList method, of class OSA_X.
-     */
+    
+    // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetConfigList");
-        check_config_item(dev_mock.NK_COM, "2.0");
-        check_config_item(dev_mock.NCL_COM, "3.0");
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="检查定标系数">
-    private void check_cal_item(MEG reg, String name, String testvalue) throws Exception {
-        //设置寄存器
+    // <editor-fold defaultstate="collapsed" desc="设置info测试">
+    @Test
+    public void test_setinfo() throws Exception {
+        //设置配置
+        commontest.setinfolist_setup();
+        //检查配置
+        commontest.setinfolist_check();
+    }
+    // </editor-fold> 
+    
+    // <editor-fold defaultstate="collapsed" desc="读取config测试">
+    @Test
+    public void test_readconfig() throws Exception {
+        commontest.check_configlist();
+        ArrayList<SConfigItem> list = instance.GetConfigList();
+        commontest.check_item(list, dev_mock.NK_COM);
+        commontest.check_item(list, dev_mock.NCL_COM);
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置config测试">
+    @Test
+    public void test_setconfig() throws Exception {
+        //设置配置
+        commontest.setconfiglist_setup();
+        ArrayList<SConfigItem> config = instance.GetConfigList();
+        commontest.set_item(config, dev_mock.NK_COM, "2.0");
+        commontest.set_item(config, dev_mock.NCL_COM, "3.0");
+
+        //下发
+        instance.SetConfigList(config);
+        dev_mock.ReadREGS();
+
+        //检查配置
+        commontest.setconfiglist_check();
+        assertEquals(dev_mock.NK_COM.GetValue().toString(), "2.0");
+        assertEquals(dev_mock.NCL_COM.GetValue().toString(), "3.0");
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="读取calpar测试">
+    @Test
+    public void test_readcalpar() throws Exception {
+        commontest.check_configlist();
         ArrayList<SConfigItem> list = instance.GetCalParList();
-        for (SConfigItem item : list) {
-            if (item.IsKey(name)) {
-                item.SetValue(testvalue);
-                instance.SetCalParList(list);
-            }
-        }
-        //比较测试结果
-        list = instance.GetCalParList();
-        for (SConfigItem item : list) {
-            if (item.IsKey(name)) {
-                assertEquals(item.value, testvalue);
-                dev_mock.ReadREGS();
-                PrintLog.println(item.inputtype + "-" + item.data_name + "设置值:" + testvalue + "读取结果:" + item.value + "设备值:" + reg.GetValue().toString());
-                return;
-            }
-        }
-        fail("没有找到配置项" + reg.toString());
-    }
-
-    /**
-     * Test of SetCalParList method, of class OSA_X.
-     */
-    @Test
-    public void testSetCalParList() throws Exception {
-        PrintLog.println("*****************************************");
-        PrintLog.println("SetCalParList");
-        check_cal_item(dev_mock.NTEMP_CAL, "3.0");
+        commontest.check_item(list, dev_mock.NTEMP_CAL);
         for (int i = 0; i < instance.GetCalDataList().length - 1; i++) {
-            check_cal_item(dev_mock.NAS[i], instance.GetCalDataList()[i].data_name + dev_mock.NAS[i].toString(), "3.0");
-            check_cal_item(dev_mock.NES[i], instance.GetCalDataList()[i].data_name + dev_mock.NAS[i].toString(), "22.0");
-            check_cal_item(dev_mock.NFS[i], instance.GetCalDataList()[i].data_name + dev_mock.NAS[i].toString(), "12.0");
+            commontest.check_item(list, instance.GetCalDataList()[i].data_name + dev_mock.NAS[i].toString(), dev_mock.NAS[i].GetValue().toString());
+            commontest.check_item(list, instance.GetCalDataList()[i].data_name + dev_mock.NES[i].toString(), dev_mock.NES[i].GetValue().toString());
+            commontest.check_item(list, instance.GetCalDataList()[i].data_name + dev_mock.NFS[i].toString(), dev_mock.NFS[i].GetValue().toString());
+        }
+    }
+    // </editor-fold> 
+
+    // <editor-fold defaultstate="collapsed" desc="设置calpar测试">
+    @Test
+    public void test_setcalpar() throws Exception {
+        //设置配置
+        ArrayList<SConfigItem> list = instance.GetCalParList();
+        commontest.set_item(list, dev_mock.NTEMP_CAL, "3.0");
+        for (int i = 0; i < instance.GetCalDataList().length - 1; i++) {
+            commontest.set_item(list, instance.GetCalDataList()[i].data_name + dev_mock.NAS[i], "3.0");
+            commontest.set_item(list, instance.GetCalDataList()[i].data_name + dev_mock.NES[i], "22.0");
+            commontest.set_item(list, instance.GetCalDataList()[i].data_name + dev_mock.NFS[i], "12.0");
+        }
+        //下发
+        instance.SetCalParList(list);
+        dev_mock.ReadREGS();
+
+        assertEquals(dev_mock.NTEMP_CAL.GetValue().toString(), "3.0");
+        for (int i = 0; i < instance.GetCalDataList().length - 1; i++) {
+            assertEquals(dev_mock.NAS[i].GetValue().toString(), "3.0");
+            assertEquals(dev_mock.NES[i].GetValue().toString(), "22.0");
+            assertEquals(dev_mock.NFS[i].GetValue().toString(), "12.0");
         }
     }
     // </editor-fold> 
@@ -144,7 +177,7 @@ public class ISA_XTest extends ABS_Test {
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{134f}, new float[]{132f});
-                printREG(dev_mock.NTEMP_CAL);
+                commontest.printREG(dev_mock.NTEMP_CAL);
             } else {
                 for (int i = 1; i <= info.cal_num; i++) {
                     float[] oradata = new float[i];
@@ -155,11 +188,11 @@ public class ISA_XTest extends ABS_Test {
                     }
                     PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
-                    printREG(dev_mock.SCLNUM);
-                    printREG(dev_mock.SCLODATA[0]);
-                    printREG(dev_mock.SCLODATA[1]);
-                    printREG(dev_mock.SCLTDATA[0]);
-                    printREG(dev_mock.SCLTDATA[1]);
+                    commontest.printREG(dev_mock.SCLNUM);
+                    commontest.printREG(dev_mock.SCLODATA[0]);
+                    commontest.printREG(dev_mock.SCLODATA[1]);
+                    commontest.printREG(dev_mock.SCLTDATA[0]);
+                    commontest.printREG(dev_mock.SCLTDATA[1]);
                 }
             }
         }
