@@ -30,6 +30,8 @@ public class ABS_Test {
 
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     public void check_infolist() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("检查info配置");
         ArrayList<SConfigItem> config = absinstance.GetInfoList();
         absdev_mock.ReadREGS();
         this.check_item(config, absdev_mock.EDEVNAME);
@@ -43,6 +45,8 @@ public class ABS_Test {
 
     // <editor-fold defaultstate="collapsed" desc="设置info测试">
     public void setinfolist_setup() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("设置info配置");
         ArrayList<SConfigItem> config = absinstance.GetInfoList();
         this.set_item(config, absdev_mock.EDEVNAME, "TESTM01");
         this.set_item(config, absdev_mock.EBUILDSER, "20200310");
@@ -60,6 +64,8 @@ public class ABS_Test {
 
     // <editor-fold defaultstate="collapsed" desc="读取config测试">
     public void check_configlist() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("检查config配置");
         ArrayList<SConfigItem> config = absinstance.GetConfigList();
         absdev_mock.ReadREGS();
         config.forEach(item -> {
@@ -77,6 +83,8 @@ public class ABS_Test {
 
     // <editor-fold defaultstate="collapsed" desc="设置config测试">
     public void setconfiglist_setup() throws Exception {
+        PrintLog.println("***********************************");
+        PrintLog.println("设置config配置");
         ArrayList<SConfigItem> config = absinstance.GetConfigList();
         set_item(config, AbsDevice.SBandRate, AbsDevice.BANDRATE_STRING[2]);
         set_item(config, AbsDevice.SDevAddr, "5");
