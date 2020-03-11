@@ -26,10 +26,9 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class ECDeviceTest extends ABS_Test {
+public class ECDeviceTest {
 
     public ECDeviceTest() throws Exception {
-        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -38,6 +37,7 @@ public class ECDeviceTest extends ABS_Test {
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static ECDevice instance;
     public static ECDevMock dev_mock;
+    public static ABS_Test commontest;
 
     private void InitDevice() throws Exception {
         dev_mock = new ECDevMock();
@@ -48,32 +48,29 @@ public class ECDeviceTest extends ABS_Test {
         if (devs != null) {
             instance = (ECDevice) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }
     }
     // </editor-fold> 
-
+    
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testInfoConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadInfoList");
-        super.testreadinfo(instance.GetInfoList(), dev_mock);
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
     }
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
-    public void testReadConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadConfigList");
+    public void test_readconfig() throws Exception {        
+        commontest.check_configlist();
         ArrayList<SConfigItem> config = instance.GetConfigList();
-        super.testreadconfig(config, dev_mock);
-        
-        this.check_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[dev_mock.ECRANG.GetValue()]);
-        this.check_item(config, dev_mock.PAREC, dev_mock.PAREC.GetValue().toString());
-        this.check_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[dev_mock.SALTRANGE.GetValue()]);
-        this.check_item(config, dev_mock.CMPTDS, NahonConvert.TimData(dev_mock.CMPTDS.GetValue(), 2) + "");
-        this.check_item(config, dev_mock.CMPTEMP, NahonConvert.TimData(dev_mock.CMPTEMP.GetValue(), 2) + "");
+        dev_mock.ReadREGS();
+        commontest.check_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[dev_mock.ECRANG.GetValue()]);
+        commontest.check_item(config, dev_mock.PAREC);
+        commontest.check_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[dev_mock.SALTRANGE.GetValue()]);
+        commontest.check_item(config, dev_mock.CMPTDS);
+        commontest.check_item(config, dev_mock.CMPTEMP);
     }
     // </editor-fold> 
 
@@ -84,31 +81,27 @@ public class ECDeviceTest extends ABS_Test {
      * @throws java.lang.Exception
      */
     @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("SetConfigList");
-
+    public void test_setconfig() throws Exception {        
+        commontest.setconfiglist_setup();
         ArrayList<SConfigItem> config = instance.GetConfigList();
-        super.testsetconfig(config, dev_mock);
-        this.set_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[2]);
-        this.set_item(config, dev_mock.PAREC, "3.0");
-        this.set_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[2]);
-        this.set_item(config, dev_mock.CMPTDS, "2.0");
-        this.set_item(config, dev_mock.CMPTEMP, "12.0");
-
+        commontest.set_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[2]);
+        commontest.set_item(config, dev_mock.PAREC, "3.0");
+        commontest.set_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[2]);
+        commontest.set_item(config, dev_mock.CMPTDS, "2.0");
+        commontest.set_item(config, dev_mock.CMPTEMP, "12.0");
+        
         instance.SetConfigList(config);
         dev_mock.ReadREGS();
-        config = instance.GetConfigList();
-
-        this.testcheckconfig(config, dev_mock);
-        this.check_item(config, dev_mock.ECRANG, ECDevice.EC_UNIT_STRING[2]);
-        this.check_item(config, dev_mock.PAREC, "3.0");
-        this.check_item(config, dev_mock.SALTRANGE, ECDevice.SALT_UNIT_STRING[2]);
-        this.check_item(config, dev_mock.CMPTDS, "2.0");
-        this.check_item(config, dev_mock.CMPTEMP, "12.0");
+        
+        commontest.setconfiglist_check();
+        assertEquals(dev_mock.ECRANG.GetValue().toString(), "2");
+        assertEquals(dev_mock.PAREC.GetValue().toString(), "3.0");
+        assertEquals(dev_mock.SALTRANGE.GetValue().toString(), "2");
+        assertEquals(dev_mock.CMPTDS.GetValue().toString(), "2.0");
+        assertEquals(dev_mock.CMPTEMP.GetValue().toString(), "12.0");
     }
     // </editor-fold> 
-    
+        
     // <editor-fold defaultstate="collapsed" desc="采集测试">
     /**
      * Test of CollectData method, of class ECDevice.

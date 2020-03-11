@@ -11,7 +11,6 @@ import modebus.register.FREG;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import wqa.adapter.ESA.DODevice;
-import wqa.adapter.factory.AbsDevice;
 import wqa.adapter.factory.ModBusDevFactory;
 import wqa.adapter.io.ShareIO;
 import wqa.adapter.model.MOCKIO;
@@ -26,10 +25,9 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class DODeviceTest extends ABS_Test {
+public class DODeviceTest {
 
     public DODeviceTest() throws Exception {
-        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -38,6 +36,7 @@ public class DODeviceTest extends ABS_Test {
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static DODevice instance;
     public static DODevMock dev_mock;
+    public static ABS_Test commontest;
 
     private void InitDevice() throws Exception {
         dev_mock = new DODevMock();
@@ -48,33 +47,30 @@ public class DODeviceTest extends ABS_Test {
         if (devs != null) {
             instance = (DODevice) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }    
     }
     // </editor-fold>         
-    
+        
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testInfoConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadInfoList");
-        super.testreadinfo(instance.GetInfoList(), dev_mock);        
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
-    public void testReadConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadConfigList");
-        
+    public void test_readconfig() throws Exception {        
+        commontest.check_configlist();
         ArrayList<SConfigItem> config = instance.GetConfigList();
-        super.testreadconfig(config, dev_mock);
-        this.check_item(config, dev_mock.PASCA, dev_mock.PASCA.GetValue().toString());
-        this.check_item(config, dev_mock.SALT, dev_mock.SALT.GetValue().toString());
-        this.check_item(config, dev_mock.AVR, dev_mock.AVR.GetValue().toString());  
+        dev_mock.ReadREGS();
+        commontest.check_item(config, dev_mock.PASCA);
+        commontest.check_item(config, dev_mock.SALT);
+        commontest.check_item(config, dev_mock.AVR);
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="设置config测试">
     /**
      * Test of SetConfigList method, of class DODevice.
@@ -82,27 +78,23 @@ public class DODeviceTest extends ABS_Test {
      * @throws java.lang.Exception
      */
     @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("SetConfigList");
-        
+    public void test_setconfig() throws Exception {        
+        commontest.setconfiglist_setup();
         ArrayList<SConfigItem> config = instance.GetConfigList();
-        super.testsetconfig(config, dev_mock);
-        this.set_item(config, dev_mock.PASCA, "12.0");
-        this.set_item(config, dev_mock.SALT, "112.1");
-        this.set_item(config, dev_mock.AVR, "3");
+        commontest.set_item(config, dev_mock.PASCA, "12.0");
+        commontest.set_item(config, dev_mock.SALT, "112.1");
+        commontest.set_item(config, dev_mock.AVR, "3");
         
         instance.SetConfigList(config);
         dev_mock.ReadREGS();
-        config = instance.GetConfigList();
         
-        this.testcheckconfig(config, dev_mock);
-        this.check_item(config, dev_mock.PASCA, "12.0");
-        this.check_item(config, dev_mock.SALT, "112.1");
-        this.check_item(config, dev_mock.AVR, "3");
+        commontest.setconfiglist_check();
+        assertEquals(dev_mock.PASCA.GetValue().toString(), "12.0");
+        assertEquals(dev_mock.SALT.GetValue().toString(), "112.1");
+        assertEquals(dev_mock.AVR.GetValue().toString(), "3");
     }
     // </editor-fold> 
-
+        
     // <editor-fold defaultstate="collapsed" desc="采集测试）">
     /**
      * Test of CollectData method, of class DODevice.

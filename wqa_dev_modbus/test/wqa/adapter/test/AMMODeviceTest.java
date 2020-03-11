@@ -25,10 +25,9 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class AMMODeviceTest extends ABS_Test {
+public class AMMODeviceTest {
 
     public AMMODeviceTest() throws Exception {
-        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -37,6 +36,7 @@ public class AMMODeviceTest extends ABS_Test {
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static AMMODevice instance;
     public static AMMODevMock dev_mock;
+    public static ABS_Test commontest;
 
     private void InitDevice() throws Exception {
         dev_mock = new AMMODevMock();
@@ -47,25 +47,22 @@ public class AMMODeviceTest extends ABS_Test {
         if (devs != null) {
             instance = (AMMODevice) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }
     }
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testInfoConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadInfoList");
-        super.testreadinfo(instance.GetInfoList(), dev_mock);
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
     }
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
-    public void testReadConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadConfigList");
-        super.testreadconfig(instance.GetConfigList(), dev_mock);
+    public void test_readconfig() throws Exception {        
+        commontest.check_configlist();
     }
     // </editor-fold> 
 
@@ -76,18 +73,10 @@ public class AMMODeviceTest extends ABS_Test {
      * @throws java.lang.Exception
      */
     @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("SetConfigList");
-
-        ArrayList<SConfigItem> config = instance.GetConfigList();
-        super.testsetconfig(config, dev_mock);
-
-        instance.SetConfigList(config);
-        dev_mock.ReadREGS();
-        config = instance.GetConfigList();
-
-        this.testcheckconfig(config, dev_mock);
+    public void test_setconfig() throws Exception {        
+        commontest.setconfiglist_setup();
+        
+        commontest.setconfiglist_check();
     }
     // </editor-fold> 
 

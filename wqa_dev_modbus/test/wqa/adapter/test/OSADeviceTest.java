@@ -26,10 +26,9 @@ import wqa.control.dev.collect.SDisplayData;
  *
  * @author chejf
  */
-public class OSADeviceTest extends ABS_Test {
+public class OSADeviceTest {
 
     public OSADeviceTest() throws Exception {
-        super();
         if (instance == null) {
             this.InitDevice();
         }
@@ -38,6 +37,7 @@ public class OSADeviceTest extends ABS_Test {
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static OSADevice instance;
     public static OSADevMock dev_mock;
+    public static ABS_Test commontest;
 
     private void InitDevice() throws Exception {
         dev_mock = new OSADevMock();
@@ -48,29 +48,26 @@ public class OSADeviceTest extends ABS_Test {
         if (devs != null) {
             instance = (OSADevice) devs;
             instance.InitDevice();
+            commontest = new ABS_Test(instance, dev_mock);
         }
     }
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
-    public void testInfoConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadInfoList");
-        super.testreadinfo(instance.GetInfoList(), dev_mock);
+    public void test_readinfo() throws Exception {
+        commontest.check_infolist();
     }
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
-    public void testReadConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("ReadConfigList");
+    public void test_readconfig() throws Exception {        
+        commontest.check_configlist();
         ArrayList<SConfigItem> config = instance.GetConfigList();
-        super.testreadconfig(config, dev_mock);
-        
-        this.check_item(config, dev_mock.RANGE, instance.range_info[dev_mock.RANGE.GetValue()]);
-        this.check_item(config, dev_mock.AVR, dev_mock.AVR.GetValue().toString());
+        dev_mock.ReadREGS();
+        commontest.check_item(config, dev_mock.RANGE, instance.range_info[dev_mock.RANGE.GetValue()]);
+        commontest.check_item(config, dev_mock.AVR);
     }
     // </editor-fold> 
 
@@ -81,22 +78,18 @@ public class OSADeviceTest extends ABS_Test {
      * @throws java.lang.Exception
      */
     @Test
-    public void testSetConfigList() throws Exception {
-        PrintLog.println("***********************************");
-        PrintLog.println("SetConfigList");
-
+    public void test_setconfig() throws Exception {        
+        commontest.setconfiglist_setup();
         ArrayList<SConfigItem> config = instance.GetConfigList();
-        super.testsetconfig(config, dev_mock);
-        this.set_item(config, dev_mock.RANGE, instance.range_info[1]);
-        this.set_item(config, dev_mock.AVR, "3");
-
+        commontest.set_item(config, dev_mock.RANGE, instance.range_info[1]);
+        commontest.set_item(config, dev_mock.AVR, "3");
+        
         instance.SetConfigList(config);
         dev_mock.ReadREGS();
-        config = instance.GetConfigList();
-
-        this.testcheckconfig(config, dev_mock);
-        this.check_item(config, dev_mock.RANGE, instance.range_info[1]);
-        this.check_item(config, dev_mock.AVR, "3");
+        
+        commontest.setconfiglist_check();
+        assertEquals(dev_mock.RANGE.GetValue().toString(), "1");
+        assertEquals(dev_mock.AVR.GetValue().toString(), "3");
     }
     // </editor-fold> 
 
