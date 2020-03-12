@@ -5,17 +5,18 @@
  */
 package wqa.adapter.io;
 
+import wqa.dev.data.SIOInfo;
 import java.util.concurrent.locks.ReentrantLock;
 import nahon.comm.event.EventCenter;
 import wqa.adapter.io.SDataPacket.IOEvent;
-import wqa.bill.io.IAbstractIO;
+import wqa.dev.intf.IAbstractIO;
 import wqa.system.WQAPlatform;
 
 /**
  *
  * @author chejf
  */
-public class ShareIO {
+public class ShareIO implements IAbstractIO{
 
     //用户数
     public int UserNum = 0;        
@@ -42,6 +43,7 @@ public class ShareIO {
         }
     }
 
+    @Override
     public void SendData(byte[] data) throws Exception {
         if (!this.io.IsClosed()) {
             byte[] tmp = new byte[data.length];
@@ -51,6 +53,7 @@ public class ShareIO {
         }
     }
 
+    @Override
     public int ReceiveData(byte[] data, int timeout) throws Exception {
         if (!this.io.IsClosed()) {
             int reclen = this.io.ReceiveData(data, timeout);
@@ -65,14 +68,17 @@ public class ShareIO {
         }
     }
 
+    @Override
     public SIOInfo GetConnectInfo() {
         return this.io.GetConnectInfo();
     }
 
+    @Override
     public int MaxBuffersize() {
         return this.io.MaxBuffersize();
     }
     
+    @Override
     public void SetConnectInfo(SIOInfo info) throws Exception {
         this.io.SetConnectInfo(info);
         WQAPlatform.GetInstance().GetConfig().setProperty(info.par[0], info.par[1]);
@@ -81,14 +87,17 @@ public class ShareIO {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="IO开关">   
+    @Override
     public boolean IsClosed() {
         return this.io.IsClosed();
     }
 
+    @Override
     public void Open() throws Exception {
         this.io.Open();
     }
 
+    @Override
     public void Close() {
         this.io.Close();
     }

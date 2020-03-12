@@ -5,9 +5,11 @@
  */
 package wqa.control.config;
 
-import wqa.control.data.SMotorParameter;
+import wqa.dev.data.SMotorParameter;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.adapter.io.ShareIO;
+import wqa.dev.intf.IDevMotorConfig;
 
 /**
  *
@@ -29,7 +31,7 @@ public class DevMotorConfig {
 
     public void SetMotoPara(SMotorParameter par) {
         try {
-            this.motorbean.LockDev();
+            ((ShareIO) motorbean.GetIO()).Lock();
             if (par == null) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "入参不能为空");
                 return;
@@ -39,19 +41,19 @@ public class DevMotorConfig {
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "设置参数失败: ", ex);
         } finally {
-            this.motorbean.UnLockDev();
+            ((ShareIO) motorbean.GetIO()).UnLock();
         }
     }
 
     public void StartManual() {
         try {
-            this.motorbean.LockDev();
+            ((ShareIO) motorbean.GetIO()).Lock();
             this.motorbean.StartManual();
             this.msg_instance.SetMessage("启动成功");
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "启动失败: ", ex);
         } finally {
-            this.motorbean.UnLockDev();
+            ((ShareIO) motorbean.GetIO()).UnLock();
         }
     }
 }

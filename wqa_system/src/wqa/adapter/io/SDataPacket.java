@@ -5,6 +5,7 @@
  */
 package wqa.adapter.io;
 
+import wqa.dev.data.SIOInfo;
 import java.util.Date;
 
 /**

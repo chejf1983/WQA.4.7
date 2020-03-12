@@ -11,7 +11,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBAlarmTable;
 import wqa.bill.db.H2DBSaver;
 import wqa.bill.db.JDBDataTable;
-import wqa.control.data.DevID;
+import wqa.dev.data.DevID;
 import wqa.system.WQAPlatform;
 
 /**

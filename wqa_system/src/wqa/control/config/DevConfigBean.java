@@ -7,9 +7,12 @@ package wqa.control.config;
 
 import nahon.comm.event.EventCenter;
 import wqa.bill.log.DevLog;
-import wqa.bill.log.LogNode;
+import wqa.dev.data.LogNode;
 import wqa.control.common.DevControl;
-import wqa.control.common.IDevice;
+import wqa.dev.intf.ICalibrate;
+import wqa.dev.intf.IConfigList;
+import wqa.dev.intf.IDevMotorConfig;
+import wqa.dev.intf.IDevice;
 
 /**
  *

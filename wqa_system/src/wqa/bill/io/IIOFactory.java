@@ -5,6 +5,8 @@
  */
 package wqa.bill.io;
 
+import wqa.dev.intf.IAbstractIO;
+
 /**
  *
  * @author chejf

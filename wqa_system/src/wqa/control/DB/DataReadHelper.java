@@ -16,8 +16,8 @@ import nahon.comm.exl2.xlsTable_W;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
-import wqa.control.common.CDevDataTable;
-import wqa.control.data.DevID;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.dev.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.system.WQAPlatform;
 

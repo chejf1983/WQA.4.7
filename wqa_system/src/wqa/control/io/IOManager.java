@@ -12,14 +12,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import wqa.adapter.io.ShareIO;
 import wqa.bill.io.IIOFactory;
-import wqa.bill.io.IAbstractIO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.event.Event;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.io.SDataPacket;
-import wqa.adapter.io.SIOInfo;
+import wqa.dev.data.SIOInfo;
+import wqa.dev.intf.IAbstractIO;
 import wqa.system.WQAPlatform;
 
 /**

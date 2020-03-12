@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
-import wqa.control.common.CDevDataTable;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.dev.data.SDisplayData;
 import wqa.control.common.DevControl;
 import wqa.system.WQAPlatform;
 

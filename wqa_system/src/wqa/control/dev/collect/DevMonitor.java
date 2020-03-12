@@ -5,6 +5,8 @@
  */
 package wqa.control.dev.collect;
 
+import wqa.dev.data.SDisplayData;
+import wqa.dev.intf.ICollect;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;

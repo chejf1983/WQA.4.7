@@ -19,10 +19,10 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBAlarmTable;
 import wqa.bill.db.H2DBSaver;
 import static wqa.bill.db.JDBAlarmTable.*;
-import wqa.control.data.DevID;
+import wqa.dev.data.DevID;
 import wqa.system.WQAPlatform;
 import wqa.control.data.IMainProcess;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.dev.data.SDisplayData;
 
 /**
  *

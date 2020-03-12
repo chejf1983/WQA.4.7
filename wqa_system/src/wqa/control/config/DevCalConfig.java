@@ -10,9 +10,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.control.common.CDevDataTable;
-import wqa.bill.log.LogNode;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.adapter.io.ShareIO;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.dev.data.LogNode;
+import wqa.dev.data.SDisplayData;
+import wqa.dev.intf.ICalibrate;
 import wqa.system.WQAPlatform;
 
 /**
@@ -66,7 +68,6 @@ public class DevCalConfig {
 //        }
 //        return null;
 //    }
-
     private LogNode RecordCalLog(String type, float[] oradata, float[] testdata) {
         LogNode ret = new LogNode("定标类型", type);
 
@@ -90,7 +91,7 @@ public class DevCalConfig {
     public void CalParameter(String type, float[] oradata, float[] testdata) {
         LogNode condition = RecordCalLog(type, oradata, testdata);
         try {
-            this.calbean.LockDev();
+            ((ShareIO) calbean.GetIO()).Lock();
             LogNode cal_ret = this.calbean.CalParameter(type, oradata, testdata);
             this.msg_instance.SetMessage("校准成功");
             this.msg_instance.PrintDevLog(condition, cal_ret);
@@ -98,7 +99,7 @@ public class DevCalConfig {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "校准失败", ex);
             this.msg_instance.PrintDevLog(condition, LogNode.CALFAIL());
         } finally {
-            calbean.UnLockDev();
+            ((ShareIO) calbean.GetIO()).UnLock();
         }
     }
     // </editor-fold>  
@@ -127,13 +128,13 @@ public class DevCalConfig {
         public void run() {
             while (isstart) {
                 try {
-                    calbean.LockDev();
+                    ((ShareIO) calbean.GetIO()).Lock();
                     CalDataEvent.CreateEvent(calbean.CollectData());
                 } catch (Exception ex) {
                     LogCenter.Instance().SendFaultReport(Level.SEVERE, "采集失败", ex);
                     break;
                 } finally {
-                    calbean.UnLockDev();
+                    ((ShareIO) calbean.GetIO()).UnLock();
                 }
 
                 try {

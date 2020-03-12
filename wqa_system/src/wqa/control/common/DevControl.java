@@ -12,8 +12,10 @@ import java.util.logging.Logger;
 import wqa.control.config.DevConfigBean;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.control.dev.collect.ICollect;
-import wqa.control.data.SConnectInfo;
+import wqa.adapter.io.ShareIO;
+import wqa.dev.intf.ICollect;
+import wqa.dev.data.SConnectInfo;
+import wqa.dev.intf.IDevice;
 import wqa.system.WQAPlatform;
 
 /**
@@ -57,13 +59,13 @@ public class DevControl {
 
     public void Init() throws Exception {
         try {
-            device.LockDev();
+            ((ShareIO) device.GetIO()).Lock();
             this.state = ControlState.DISCONNECT;
             this.ChangeState(ControlState.CONNECT);
             this.InitProcess();
-            this.device.GetConnectInfo().io.UserNum++;
+            ((ShareIO) device.GetIO()).UserNum++;
         } finally {
-            device.UnLockDev();
+            ((ShareIO) device.GetIO()).UnLock();
         }
     }
 
@@ -73,7 +75,7 @@ public class DevControl {
         }
         this.ChangeState(ControlState.CLOSE);
 //        WQAPlatform.GetInstance().GetManager().DeleteDevControl(this);
-        this.device.GetConnectInfo().io.UserNum--;
+        ((ShareIO) device.GetIO()).UserNum--;
     }
 
     public SConnectInfo GetConnectInfo() {
@@ -98,7 +100,7 @@ public class DevControl {
 //                while (GetState() != ControlState.CLOSE && !WQAPlatform.GetInstance().GetThreadPool().isShutdown()) {
                 while (GetState() != ControlState.CLOSE) {
                     try {
-                        device.LockDev();
+                        ((ShareIO) device.GetIO()).Lock();
                         //连接状态下，获取数据
                         if (GetState() == ControlState.CONNECT) {
                             if (!GetCollector().CollectData()) {
@@ -122,7 +124,7 @@ public class DevControl {
                         ChangeState(ControlState.DISCONNECT);
                         LogCenter.Instance().PrintLog(Level.SEVERE, ex.getMessage());
                     } finally {
-                        device.UnLockDev();
+                        ((ShareIO) device.GetIO()).UnLock();
                     }
 
                     try {
@@ -161,12 +163,12 @@ public class DevControl {
         //连接状态下，才可以配置设备
         if (this.GetState() == ControlState.CONNECT) {
 //            try {
-                //初始化需要的配置信息
+            //初始化需要的配置信息
 //                this.device.InitDevice();
-                configmodel = new DevConfigBean(this);
-                configmodel.InitDevConfig(this.device);
-                ChangeState(ControlState.CONFIG);
-                return configmodel;
+            configmodel = new DevConfigBean(this);
+            configmodel.InitDevConfig(this.device);
+            ChangeState(ControlState.CONFIG);
+            return configmodel;
 //            } catch (Exception ex) {
 //                LogCenter.Instance().SendFaultReport(Level.SEVERE, "读取配置失败:" + ex);
 //                return null;

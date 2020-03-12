@@ -7,9 +7,11 @@ package wqa.control.config;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.control.common.IDevice;
+import wqa.adapter.io.ShareIO;
+import wqa.dev.intf.IConfigList;
+import wqa.dev.intf.IDevice;
+import wqa.dev.intf.SConfigItem;
 
 /**
  *
@@ -38,13 +40,13 @@ public class DevConfigTable {
 
     public void InitConfigTable() throws Exception {
         try {
-            this.dev.LockDev();
+            ((ShareIO)dev.GetIO()).Lock();
             this.dev.InitDevice();
             this.msg_instance.UpdateConfigEvent.CreateEvent(null);
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {
-            this.dev.UnLockDev();
+            ((ShareIO)dev.GetIO()).UnLock();
         }
     }
 
@@ -63,7 +65,7 @@ public class DevConfigTable {
 
     public void SetConfigList(SConfigItem[] list) {
         try {
-            this.dev.LockDev();
+            ((ShareIO)dev.GetIO()).Lock();
 
             ArrayList<SConfigItem> changelist = new ArrayList();
             for (int i = 0; i < list.length; i++) {
@@ -77,7 +79,7 @@ public class DevConfigTable {
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {
-            this.dev.UnLockDev();
+            ((ShareIO)dev.GetIO()).UnLock();
         }
     }
 

@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import wqa.control.data.DevID;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.dev.data.DevID;
+import wqa.dev.data.SDisplayData;
 
 /**
  *

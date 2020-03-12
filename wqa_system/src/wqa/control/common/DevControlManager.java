@@ -13,6 +13,8 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.io.ShareIO;
 import wqa.control.io.IOManager;
 import wqa.control.data.IMainProcess;
+import wqa.dev.intf.IDevice;
+import wqa.dev.intf.IDeviceSearch;
 
 /**
  *
