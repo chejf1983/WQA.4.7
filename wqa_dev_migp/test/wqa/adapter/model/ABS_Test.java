@@ -11,7 +11,7 @@ import migp.adapter.factory.AbsDevice;
 import migp.adapter.mock.DevMock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import wqa.control.config.SConfigItem;
+import wqa.dev.intf.SConfigItem;
 
 /**
  *

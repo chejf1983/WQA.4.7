@@ -10,11 +10,9 @@ import base.migp.reg.*;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import migp.adapter.factory.TemperCalibrateCalculate;
-import wqa.adapter.io.ShareIO;
-import wqa.bill.log.LogNode;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
-import wqa.control.config.SConfigItem;
+import wqa.dev.data.*;
+import wqa.adapter.factory.CErrorTable;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -22,7 +20,7 @@ import wqa.control.config.SConfigItem;
  */
 public class ESA_ORP extends ESADEV {
 
-    public ESA_ORP(ShareIO io, byte addr) {
+    public ESA_ORP(IAbstractIO io, byte addr) {
         super(io, addr);
     }
 

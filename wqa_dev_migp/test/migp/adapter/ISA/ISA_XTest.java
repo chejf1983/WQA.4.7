@@ -7,21 +7,16 @@ package migp.adapter.ISA;
 
 import base.migp.reg.MEG;
 import java.util.ArrayList;
-import static migp.adapter.OSA.OSA_XTest.dev_mock;
-import static migp.adapter.OSA.OSA_XTest.instance;
 import migp.adapter.factory.MIGPDevFactory;
 import migp.adapter.mock.ISAMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import wqa.adapter.io.ShareIO;
 import wqa.adapter.model.ABS_Test;
 import wqa.adapter.model.MOCKIO;
 import wqa.adapter.model.PrintLog;
-import wqa.control.common.CDevDataTable;
-import wqa.control.common.IDevice;
-import wqa.control.config.SConfigItem;
-import wqa.control.dev.collect.SDataElement;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.dev.data.*;
+import wqa.adapter.factory.*;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -45,7 +40,7 @@ public class ISA_XTest {
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
-        IDevice devs = new MIGPDevFactory().SearchOneDev(new ShareIO(io), (byte) 02);
+        IDevice devs = new MIGPDevFactory().SearchOneDev((io), (byte) 02);
         if (devs != null) {
             instance = (ISA_X) devs;
             instance.InitDevice();

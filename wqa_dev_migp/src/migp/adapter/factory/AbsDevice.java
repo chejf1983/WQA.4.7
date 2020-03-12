@@ -11,18 +11,10 @@ import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.*;
 import java.util.ArrayList;
-import wqa.adapter.io.SIOInfo;
-import wqa.adapter.io.ShareIO;
-import wqa.control.common.CDevDataTable;
-import wqa.control.common.CDevDataTable.DataInfo;
-import wqa.control.dev.collect.ICollect;
-import wqa.control.common.IDevice;
-import wqa.control.config.ICalibrate;
-import wqa.control.config.SConfigItem;
-import wqa.control.data.SConnectInfo;
-import wqa.control.config.IConfigList;
-import wqa.control.data.DevID;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.adapter.factory.CDevDataTable.DataInfo;
+import wqa.dev.intf.*;
+import wqa.dev.data.*;
 
 /**
  *
@@ -31,7 +23,7 @@ import wqa.control.dev.collect.SDisplayData;
 public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     protected MIGP_CmdSend base_drv;
-    private final ShareIO local_io;
+    private final IAbstractIO local_io;
     public static int DEF_TIMEOUT = 400; //ms
     public static int DEF_RETRY = 3;
 
@@ -39,22 +31,15 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     MIGPEia eiainfo = new MIGPEia(this.base_drv);
     public final IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");  //R  
 
-    public AbsDevice(ShareIO io, byte addr) {
+    public AbsDevice(IAbstractIO io, byte addr) {
         this.base_drv = new MIGP_CmdSend(MIGPDevFactory.Convert(io), (byte) 0xF0, addr);
         this.local_io = io;
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">
-    //锁定IO
     @Override
-    public void LockDev() throws Exception {
-        this.local_io.Lock();
-
-    }
-
-    @Override
-    public void UnLockDev() {
-        this.local_io.UnLock();
+    public IAbstractIO GetIO() {
+        return this.local_io;
     }
 
     //初始化设备
@@ -79,7 +64,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             this.bandrate_index = this.getbandrate();
         }
     }
-       
+
     //获取设备类型
     @Override
     public int ReTestType() {
@@ -129,21 +114,20 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         }
         return data_names.toArray(new String[0]);
     }
-    
+
     protected SDisplayData BuildDisplayData() {
         SDisplayData disdata = new SDisplayData(new DevID(VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue()));
 
         return disdata;
     }
-    
-    protected void ReadMEG(MEG... megs) throws Exception{
+
+    protected void ReadMEG(MEG... megs) throws Exception {
         this.base_drv.ReadMEG(DEF_RETRY, DEF_TIMEOUT, megs);
     }
-    
-    
-    protected void SetMEG(MEG... megs) throws Exception{
+
+    protected void SetMEG(MEG... megs) throws Exception {
         this.base_drv.SetMEG(DEF_RETRY, DEF_TIMEOUT, megs);
-    } 
+    }
     // </editor-fold>     
 
     // <editor-fold defaultstate="collapsed" desc="配置接口"> 
@@ -173,8 +157,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
                 SetConfigREG(eiainfo.EBUILDDATE, item.value);
             }
         }
-    }   
-    
+    }
+
     protected void SetConfigREG(MEG reg, String value) throws Exception {
         String lastvalue = reg.GetValue().toString();
         if (!reg.ConmpareTo(reg.Convert(value))) {

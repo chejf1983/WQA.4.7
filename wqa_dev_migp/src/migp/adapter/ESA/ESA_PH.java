@@ -11,11 +11,9 @@ import base.migp.reg.FMEG;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import migp.adapter.factory.TemperCalibrateCalculate;
-import wqa.adapter.io.ShareIO;
-import wqa.bill.log.LogNode;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
-import wqa.control.config.SConfigItem;
+import wqa.dev.data.*;
+import wqa.adapter.factory.CErrorTable;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -23,7 +21,7 @@ import wqa.control.config.SConfigItem;
  */
 public class ESA_PH extends ESADEV {
 
-    public ESA_PH(ShareIO io, byte addr) {
+    public ESA_PH(IAbstractIO io, byte addr) {
         super(io, addr);
     }
 

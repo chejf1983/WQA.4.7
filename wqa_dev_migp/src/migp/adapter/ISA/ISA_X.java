@@ -12,11 +12,9 @@ import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import java.util.HashMap;
 import static migp.adapter.factory.AbsDevice.DMask;
-import wqa.adapter.io.ShareIO;
-import wqa.bill.log.LogNode;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
-import wqa.control.config.SConfigItem;
+import wqa.dev.data.*;
+import wqa.adapter.factory.CErrorTable;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -24,7 +22,7 @@ import wqa.control.config.SConfigItem;
  */
 public class ISA_X extends AbsDevice {
 
-    public ISA_X(ShareIO io, byte addr) {
+    public ISA_X(IAbstractIO io, byte addr) {
         super(io, addr);
 
         this.enablelist.put(0x0300, new String[]{"K+对氨离子", "", "", ""});

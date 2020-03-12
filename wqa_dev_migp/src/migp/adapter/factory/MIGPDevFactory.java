@@ -21,9 +21,9 @@ import migp.adapter.ISA.ISA_X;
 import migp.adapter.OSA.OSA_X;
 import static migp.adapter.factory.AbsDevice.DEF_RETRY;
 import static migp.adapter.factory.AbsDevice.DEF_TIMEOUT;
-import wqa.adapter.io.ShareIO;
-import wqa.control.common.IDevice;
-import wqa.control.common.IDeviceSearch;
+import wqa.dev.intf.IAbstractIO;
+import wqa.dev.intf.IDevice;
+import wqa.dev.intf.IDeviceSearch;
 
 /**
  *
@@ -68,7 +68,7 @@ public class MIGPDevFactory implements IDeviceSearch {
     // <editor-fold defaultstate="collapsed" desc="搜索设备">
     //搜索指定物理口
     @Override
-    public IDevice[] SearchDevice(ShareIO io) {
+    public IDevice[] SearchDevice(IAbstractIO io) {
         if (io.IsClosed()) {
             return new IDevice[0];
         }
@@ -93,7 +93,7 @@ public class MIGPDevFactory implements IDeviceSearch {
 
     //搜索一个设备
     @Override
-    public IDevice SearchOneDev(ShareIO io, byte addr) throws Exception {
+    public IDevice SearchOneDev(IAbstractIO io, byte addr) throws Exception {
         //创建一个基础协议包
         MIGP_CmdSend base = new MIGP_CmdSend(Convert(io), (byte)0xF0, addr);
         //搜索设备基本信息，根据基本信息创建虚拟设备
@@ -102,13 +102,13 @@ public class MIGPDevFactory implements IDeviceSearch {
     }
 
     //创建设备
-    private IDevice BuildDevice(ShareIO io, byte addr, int DevType) throws Exception {
+    private IDevice BuildDevice(IAbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
             //反射获取对应类
             Class stu = Class.forName(class_name);
-            Constructor constructor = stu.getConstructor(ShareIO.class, byte.class);
+            Constructor constructor = stu.getConstructor(IAbstractIO.class, byte.class);
             return (IDevice) constructor.newInstance(io, addr);
         } else {
             //没有找到设备类，返回空
@@ -145,9 +145,9 @@ public class MIGPDevFactory implements IDeviceSearch {
         }
     }
         
-    public static AbstractIO Convert(ShareIO io) {
+    public static AbstractIO Convert(IAbstractIO io) {
         return new AbstractIO() {
-            private final ShareIO instance = io;
+            private final IAbstractIO instance = io;
 
             @Override
             public boolean IsClosed() {
@@ -179,7 +179,7 @@ public class MIGPDevFactory implements IDeviceSearch {
 
             @Override
             public IOInfo GetConnectInfo() {
-                wqa.adapter.io.SIOInfo ioinfo = this.instance.GetConnectInfo();
+                wqa.dev.data.SIOInfo ioinfo = this.instance.GetConnectInfo();
                 return new IOInfo(ioinfo.iotype, ioinfo.par);
             }
 

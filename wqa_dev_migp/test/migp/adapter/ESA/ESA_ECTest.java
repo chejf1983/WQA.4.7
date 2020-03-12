@@ -6,23 +6,17 @@
 package migp.adapter.ESA;
 
 import base.migp.reg.MEG;
-import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
-import static migp.adapter.ESA.EOSA_DOTest.dev_mock;
-import static migp.adapter.ESA.EOSA_DOTest.instance;
 import migp.adapter.factory.MIGPDevFactory;
 import migp.adapter.mock.ECMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import wqa.adapter.io.ShareIO;
 import wqa.adapter.model.ABS_Test;
 import wqa.adapter.model.MOCKIO;
 import wqa.adapter.model.PrintLog;
-import wqa.control.common.CDevDataTable;
-import wqa.control.common.IDevice;
-import wqa.control.config.SConfigItem;
-import wqa.control.dev.collect.SDataElement;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.dev.data.*;
+import wqa.adapter.factory.*;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -46,7 +40,7 @@ public class ESA_ECTest {
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
-        IDevice devs = new MIGPDevFactory().SearchOneDev(new ShareIO(io), (byte) 02);
+        IDevice devs = new MIGPDevFactory().SearchOneDev((io), (byte) 02);
         if (devs != null) {
             instance = (ESA_EC) devs;
             instance.InitDevice();

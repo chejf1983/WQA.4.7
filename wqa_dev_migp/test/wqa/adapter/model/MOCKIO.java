@@ -5,8 +5,8 @@
  */
 package wqa.adapter.model;
 
-import wqa.adapter.io.SIOInfo;
-import wqa.bill.io.IAbstractIO;
+import wqa.dev.data.SIOInfo;
+import wqa.dev.intf.IAbstractIO;
 
 /**
  *

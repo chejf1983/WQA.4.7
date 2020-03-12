@@ -12,13 +12,10 @@ import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import java.util.Arrays;
 import migp.adapter.factory.TemperCalibrateCalculate;
-import wqa.adapter.io.ShareIO;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
-import wqa.bill.log.LogNode;
-import wqa.control.config.IDevMotorConfig;
-import wqa.control.config.SConfigItem;
-import wqa.control.data.SMotorParameter;
+import wqa.dev.data.SDisplayData;
+import wqa.adapter.factory.CErrorTable;
+import wqa.dev.data.*;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -26,7 +23,7 @@ import wqa.control.data.SMotorParameter;
  */
 public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
-    public OSA_X(ShareIO io, byte addr) {
+    public OSA_X(IAbstractIO io, byte addr) {
         super(io, addr);
     }
 
