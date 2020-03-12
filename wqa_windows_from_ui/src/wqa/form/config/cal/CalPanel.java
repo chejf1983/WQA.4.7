@@ -13,9 +13,9 @@ import nahon.comm.event.Event;
 import nahon.comm.event.EventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.common.ListFlowLayout;
-import wqa.control.common.CDevDataTable;
-import wqa.control.dev.collect.SDataElement;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.dev.data.SDataElement;
+import wqa.dev.data.SDisplayData;
 import wqa.control.config.DevCalConfig;
 
 /**

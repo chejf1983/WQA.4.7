@@ -6,7 +6,7 @@
 package wqa.form.config;
 
 import javax.swing.table.AbstractTableModel;
-import wqa.control.config.SConfigItem;
+import wqa.dev.intf.SConfigItem;
 
 /**
  *

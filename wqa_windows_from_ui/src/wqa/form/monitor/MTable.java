@@ -8,8 +8,8 @@ package wqa.form.monitor;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import wqa.common.JImagePane;
-import wqa.control.dev.collect.SDataElement;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.dev.data.SDataElement;
+import wqa.dev.data.SDisplayData;
 
 /**
  *

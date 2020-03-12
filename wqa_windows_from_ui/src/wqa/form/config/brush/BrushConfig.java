@@ -7,8 +7,8 @@ package wqa.form.config.brush;
 
 import javax.swing.table.TableCellEditor;
 import wqa.control.config.DevMotorConfig;
-import wqa.control.data.SMotorParameter;
-import wqa.control.data.SMotorParameter.CleanMode;
+import wqa.dev.data.SMotorParameter;
+import wqa.dev.data.SMotorParameter.CleanMode;
 import wqa.form.config.ConfigTableModel;
 
 /**

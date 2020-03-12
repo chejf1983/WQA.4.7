@@ -13,9 +13,10 @@ import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
-import wqa.control.common.CDevDataTable;
-import wqa.control.dev.collect.SDataElement;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.dev.data.SDataElement;
+import wqa.dev.data.SDisplayData;
+import wqa.system.WQAPlatform;
 
 /**
  *
@@ -32,7 +33,7 @@ public class DataVector {
 
     public DataVector(int dev_type) {
         this.dev_type = dev_type;
-        CDevDataTable.DataInfo[] data_infos = CDevDataTable.GetInstance().GetSupportData(dev_type);
+        CDevDataTable.DataInfo[] data_infos = GetSupportData(dev_type);
         data_names = new String[data_infos.length];
         visable = new boolean[data_infos.length];
         for (int i = 0; i < data_infos.length; i++) {
@@ -41,7 +42,21 @@ public class DataVector {
             select_name = data_names[0];
         }
     }
-
+    
+    //    //获取支持的数据
+    public static CDevDataTable.DataInfo[] GetSupportData(int dev_type) {
+        ArrayList<CDevDataTable.DataInfo> info = new ArrayList();
+        CDevDataTable.DevInfo dev_info =  CDevDataTable.GetInstance().namemap.get(dev_type);
+        for (int i = 0; i < dev_info.data_list.length; i++) {
+            CDevDataTable.DataInfo tinfo = dev_info.data_list[i];
+            if (WQAPlatform.GetInstance().is_internal) {
+                info.add(tinfo);
+            } else if (!tinfo.internal_only) {
+                info.add(tinfo);
+            }
+        }
+        return info.toArray(new CDevDataTable.DataInfo[0]);
+    }
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
     public String[] GetSupportDataName() {
         ArrayList<String> names = new ArrayList();

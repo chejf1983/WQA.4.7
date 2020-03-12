@@ -7,7 +7,7 @@ package wqa.form.iolist;
 
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.SIOInfo;
+import wqa.dev.data.SIOInfo;
 import wqa.adapter.io.ShareIO;
 import wqa.control.io.IOManager;
 

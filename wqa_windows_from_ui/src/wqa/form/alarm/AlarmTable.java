@@ -8,7 +8,7 @@ package wqa.form.alarm;
 import java.text.SimpleDateFormat;
 import javax.swing.table.AbstractTableModel;
 import wqa.control.DB.AlarmHelper;
-import wqa.control.common.CErrorTable;
+import wqa.adapter.factory.CErrorTable;
 
 /**
  *

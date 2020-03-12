@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import wqa.common.InitPaneHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.swing.DefaultListCellRenderer;
@@ -22,11 +23,13 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.common.Chooser;
 import wqa.control.DB.DataReadHelper;
 import wqa.control.DB.DataReadHelper.SearchResult;
-import wqa.control.common.CDevDataTable;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.adapter.factory.CDevDataTable.DataInfo;
+import wqa.adapter.factory.CDevDataTable.DevInfo;
 import wqa.control.data.IMainProcess;
-import wqa.form.errormsg.MsgBoxFactory;
 import wqa.form.main.MainForm;
 import wqa.form.main.ProcessDialog;
+import wqa.form.monitor.DataVector;
 import wqa.system.WQAPlatform;
 
 /**
@@ -105,7 +108,7 @@ public class DataSearch extends javax.swing.JPanel {
             System.out.println(ex);
         }
     }
-
+    
     //更新探头的数据类型
     private void UpdateSelectIndex() {
         if (List_devlist.getSelectedIndex() < 0) {
@@ -113,7 +116,7 @@ public class DataSearch extends javax.swing.JPanel {
         }
         this.ComboBox_devtypes.removeAllItems();
         int dev_type = this.Dev_list[this.List_devlist.getSelectedIndex()].dev_id.dev_type;
-        CDevDataTable.DataInfo[] GetSupportData = CDevDataTable.GetInstance().GetSupportData(dev_type);
+        CDevDataTable.DataInfo[] GetSupportData = DataVector.GetSupportData(dev_type);
         for (CDevDataTable.DataInfo devtype : GetSupportData) {
             this.ComboBox_devtypes.addItem(devtype.data_name);
         }

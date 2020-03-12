@@ -18,7 +18,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.control.config.DevConfigTable;
-import wqa.control.config.SConfigItem;
+import wqa.dev.intf.SConfigItem;
 
 /**
  *

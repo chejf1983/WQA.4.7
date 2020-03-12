@@ -11,9 +11,9 @@ import comm.win.io.WindowsIOFactory;
 import gnu.io.CommPortIdentifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import wqa.bill.io.IAbstractIO;
 import wqa.bill.io.IIOFactory;
-import wqa.adapter.io.SIOInfo;
+import wqa.dev.data.SIOInfo;
+import wqa.dev.intf.IAbstractIO;
 
 /**
  *

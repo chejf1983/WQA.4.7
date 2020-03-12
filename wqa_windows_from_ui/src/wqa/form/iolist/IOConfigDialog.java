@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import static javax.swing.SwingConstants.BOTTOM;
 import static javax.swing.SwingConstants.CENTER;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.SIOInfo;
+import wqa.dev.data.SIOInfo;
 import wqa.adapter.io.ShareIO;
 import wqa.control.io.IOManager;
 import wqa.system.WQAPlatform;
