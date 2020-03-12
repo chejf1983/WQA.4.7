@@ -12,8 +12,9 @@ import static org.junit.Assert.fail;
 import wqa.adapter.devmock.DevMock;
 import wqa.adapter.factory.AbsDevice;
 import wqa.adapter.model.PrintLog;
-import wqa.control.common.CDevDataTable;
-import wqa.control.config.SConfigItem;
+import wqa.adapter.factory.*;
+import wqa.dev.data.*;
+import wqa.dev.intf.*;
 
 /**
  *

@@ -5,21 +5,17 @@
  */
 package wqa.adapter.test;
 
-import java.util.ArrayList;
 import modebus.register.FREG;
 import org.junit.Test;
 import wqa.adapter.ESA.PHDevice;
 import static org.junit.Assert.*;
 import wqa.adapter.devmock.PHDevMock;
 import wqa.adapter.factory.ModBusDevFactory;
-import wqa.adapter.io.ShareIO;
 import wqa.adapter.model.MOCKIO;
 import wqa.adapter.model.PrintLog;
-import wqa.control.common.CDevDataTable;
-import wqa.control.common.IDevice;
-import wqa.control.config.SConfigItem;
-import wqa.control.dev.collect.SDataElement;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.adapter.factory.*;
+import wqa.dev.data.*;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -43,7 +39,7 @@ public class PHDeviceTest  {
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();
-        IDevice devs = new ModBusDevFactory().SearchOneDev(new ShareIO(io), (byte) 02);
+        IDevice devs = new ModBusDevFactory().SearchOneDev((io), (byte) 02);
         if (devs != null) {
             instance = (PHDevice) devs;
             instance.InitDevice();
