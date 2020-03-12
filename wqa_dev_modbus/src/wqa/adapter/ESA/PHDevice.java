@@ -8,10 +8,9 @@ package wqa.adapter.ESA;
 import wqa.adapter.factory.AbsDevice;
 import modebus.pro.NahonConvert;
 import modebus.register.*;
-import wqa.adapter.io.ShareIO;
-import wqa.bill.log.LogNode;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
+import wqa.adapter.factory.*;
+import wqa.dev.data.*;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -30,7 +29,7 @@ public class PHDevice extends AbsDevice {
     private final FREG CLTEMPER = new FREG(0x3A, 2, "");    //R/W
     private final IREG CLTEMPERSTART = new IREG(0x3C, 1, "");//R/W
 
-    public PHDevice(ShareIO io, byte addr) {
+    public PHDevice(IAbstractIO io, byte addr) {
         super(io, addr);
     }
 

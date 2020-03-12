@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.dev.collect;
+package wqa.dev.data;
 
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.control.common.CDevDataTable;
-import static wqa.control.common.CDevDataTable.ORA_Flag;
-import wqa.control.data.DevID;
+import wqa.adapter.factory.CDevDataTable;
+import static wqa.adapter.factory.CDevDataTable.ORA_Flag;
+import wqa.dev.data.DevID;
 
 /**
  *

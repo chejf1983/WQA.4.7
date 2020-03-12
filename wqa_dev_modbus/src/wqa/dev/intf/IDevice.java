@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.common;
+package wqa.dev.intf;
 
-import wqa.control.data.SConnectInfo;
-import wqa.control.config.IConfigList;
+import wqa.dev.data.SConnectInfo;
+
 
 /**
  *
@@ -14,13 +14,7 @@ import wqa.control.config.IConfigList;
  */
 public interface IDevice {  
     
-    // <editor-fold defaultstate="collapsed" desc="设备控制">  
-    //锁定设备
-    public void LockDev() throws Exception;
-    
-    //解锁设备
-    public void UnLockDev();
-    
+    // <editor-fold defaultstate="collapsed" desc="设备控制">      
     //初始化设备
     public void InitDevice() throws Exception;
     
@@ -29,6 +23,8 @@ public interface IDevice {
     
     //重新获取设备
     public int ReTestType();   
+    
+    public IAbstractIO GetIO();
     // </editor-fold>      
     
     // <editor-fold defaultstate="collapsed" desc="基本信息">  

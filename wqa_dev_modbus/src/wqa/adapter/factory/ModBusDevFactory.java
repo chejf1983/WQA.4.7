@@ -18,9 +18,7 @@ import wqa.adapter.ESA.ECDevice;
 import wqa.adapter.ESA.PHDevice;
 import wqa.adapter.ISA.AMMODevice;
 import wqa.adapter.OSA.OSADevice;
-import wqa.adapter.io.ShareIO;
-import wqa.control.common.IDevice;
-import wqa.control.common.IDeviceSearch;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -29,7 +27,7 @@ import wqa.control.common.IDeviceSearch;
 public class ModBusDevFactory implements IDeviceSearch {
     //搜索指定物理口
     @Override
-    public IDevice[] SearchDevice(ShareIO io) {
+    public IDevice[] SearchDevice(IAbstractIO io) {
         if (io.IsClosed()) {
             return new IDevice[0];
         }
@@ -54,7 +52,7 @@ public class ModBusDevFactory implements IDeviceSearch {
 
     //搜索一个设备
     @Override
-    public IDevice SearchOneDev(ShareIO io, byte addr) throws Exception {
+    public IDevice SearchOneDev(IAbstractIO io, byte addr) throws Exception {
         //创建一个基础协议包
         ModeBusNode base = new ModeBusNode(io, addr);
         IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
@@ -64,12 +62,12 @@ public class ModBusDevFactory implements IDeviceSearch {
     }
 
     //创建设备
-    private IDevice BuildDevice(ShareIO io, byte addr, int DevType) throws Exception {
+    private IDevice BuildDevice(IAbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
             Class stu = Class.forName(class_name);
-            Constructor constructor = stu.getConstructor(ShareIO.class, byte.class);
+            Constructor constructor = stu.getConstructor(IAbstractIO.class, byte.class);
             return (IDevice) constructor.newInstance(io, addr);
         } else {
             if (DevType != -1) {

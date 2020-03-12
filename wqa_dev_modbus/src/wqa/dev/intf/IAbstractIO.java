@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.bill.io;
+package wqa.dev.intf;
 
-import wqa.adapter.io.SIOInfo;
+import wqa.dev.data.SIOInfo;
 
 /**
  *

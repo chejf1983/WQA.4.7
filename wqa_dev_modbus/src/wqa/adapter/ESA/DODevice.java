@@ -11,11 +11,9 @@ import modebus.pro.NahonConvert;
 import modebus.register.*;
 import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
 import static wqa.adapter.factory.AbsDevice.RETRY_TIME;
-import wqa.adapter.io.ShareIO;
-import wqa.bill.log.LogNode;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
-import wqa.control.config.SConfigItem;
+import wqa.adapter.factory.*;
+import wqa.dev.data.*;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -40,7 +38,7 @@ public class DODevice extends AbsDevice {
     private final FREG CLTEMPER = new FREG(0x3A, 2, "温度定标参数");    //R/W
     private final IREG CLTEMPERSTART = new IREG(0x3C, 1, "启动温度定标");//R/W
 
-    public DODevice(ShareIO io, byte addr) {
+    public DODevice(IAbstractIO io, byte addr) {
         super(io, addr);
     }
 

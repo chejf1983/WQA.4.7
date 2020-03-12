@@ -8,18 +8,12 @@ package wqa.adapter.factory;
 import java.util.ArrayList;
 import modebus.pro.ModeBusNode;
 import modebus.register.*;
-import wqa.adapter.io.SIOInfo;
-import wqa.adapter.io.ShareIO;
-import wqa.control.common.CDevDataTable;
-import wqa.control.common.CDevDataTable.DataInfo;
-import wqa.control.common.IDevice;
-import wqa.control.config.SConfigItem;
-import wqa.control.data.SConnectInfo;
-import wqa.control.dev.collect.ICollect;
-import wqa.control.config.ICalibrate;
-import wqa.control.config.IConfigList;
-import wqa.control.data.DevID;
-import wqa.control.dev.collect.SDisplayData;
+import wqa.adapter.factory.CDevDataTable.DataInfo;
+import wqa.dev.data.DevID;
+import wqa.dev.data.SConnectInfo;
+import wqa.dev.data.SDisplayData;
+import wqa.dev.data.SIOInfo;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -44,7 +38,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     protected final BREG SDTEMPSWT = new BREG(0x42, 1, "手动温补开关"); //R/W
     protected final FREG SDTEMP = new FREG(0x43, 2, "手动温补值", 0, 60);//R/W
 
-    public AbsDevice(ShareIO io, byte addr) {
+    public AbsDevice(IAbstractIO io, byte addr) {
         this.base_drv = new ModeBusNode(io, addr);
     }
 
@@ -71,13 +65,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     // <editor-fold defaultstate="collapsed" desc="公共接口接口">
     @Override
-    public void LockDev() throws Exception {
-        this.base_drv.GetIO().Lock();
-    }
-
-    @Override
-    public void UnLockDev() {
-        this.base_drv.GetIO().UnLock();
+    public IAbstractIO GetIO(){
+        return this.base_drv.GetIO();
     }
 
     @Override

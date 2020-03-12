@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.config;
+package wqa.dev.intf;
 
-import wqa.bill.log.LogNode;
-import wqa.control.common.CDevDataTable;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.IDevice;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.dev.data.LogNode;
+import wqa.dev.data.SDisplayData;
 
 /**
  *

@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.common;
-
-import wqa.adapter.io.ShareIO;
+package wqa.dev.intf;
 
 /**
  *
  * @author chejf
  */
 public interface IDeviceSearch {
-    public IDevice[] SearchDevice(ShareIO io);
+    public IDevice[] SearchDevice(IAbstractIO io);
     
-    public IDevice SearchOneDev(ShareIO io, byte addr) throws Exception;
+    public IDevice SearchOneDev(IAbstractIO io, byte addr) throws Exception;
 
 }

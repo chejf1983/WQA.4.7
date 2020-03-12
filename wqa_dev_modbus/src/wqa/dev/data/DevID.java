@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.data;
+package wqa.dev.data;
 
-import wqa.control.common.CDevDataTable;
+import wqa.adapter.factory.CDevDataTable;
 
 /**
  *

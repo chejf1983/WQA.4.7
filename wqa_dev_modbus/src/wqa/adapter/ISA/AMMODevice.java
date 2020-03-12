@@ -9,10 +9,9 @@ import modebus.pro.NahonConvert;
 import modebus.register.*;
 import wqa.adapter.factory.AbsDevice;
 import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
-import wqa.adapter.io.ShareIO;
-import wqa.bill.log.LogNode;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
+import wqa.adapter.factory.*;
+import wqa.dev.data.*;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -36,7 +35,7 @@ public class AMMODevice extends AbsDevice {
     public final FREG CLTEMP = new FREG(0x3A, 2, "温度定标参数");    //R/W
     public final IREG CLTEMPSTART = new IREG(0x3C, 1, "启动温度定标");//R/W
 
-    public AMMODevice(ShareIO io, byte addr) {
+    public AMMODevice(IAbstractIO io, byte addr) {
         super(io, addr);
     }
 

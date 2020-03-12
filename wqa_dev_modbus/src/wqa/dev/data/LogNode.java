@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.bill.log;
+package wqa.dev.data;
 
 import java.util.ArrayList;
 

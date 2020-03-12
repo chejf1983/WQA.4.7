@@ -6,7 +6,7 @@
 package modebus.pro;
 
 import modebus.register.REG;
-import wqa.adapter.io.ShareIO;
+import wqa.dev.intf.IAbstractIO;
 
 /**
  *
@@ -14,20 +14,20 @@ import wqa.adapter.io.ShareIO;
  */
 public class ModeBusNode {
 
-    protected ShareIO io;
+    protected IAbstractIO io;
     public byte addr = 0x00;
     public final int def_timeout = 400;
     public final int max_pack_len = 1024;
     public static byte READCMD = 0x03;
     public static byte WRITECMD = 0x10;
 
-    public ModeBusNode(ShareIO io, byte addr) {
+    public ModeBusNode(IAbstractIO io, byte addr) {
         this.io = io;
         this.addr = addr;
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口"> 
-    public ShareIO GetIO() {
+    public IAbstractIO GetIO() {
         return this.io;
     }
 

@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.common;
+package wqa.adapter.factory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import wqa.system.WQAPlatform;
 
 /**
  *
@@ -26,21 +25,6 @@ public class CDevDataTable {
 
     private CDevDataTable() {
         this.initInfoTable();
-    }
-
-    //获取支持的数据
-    public DataInfo[] GetSupportData(int dev_type) {
-        ArrayList<DataInfo> info = new ArrayList();
-        DevInfo dev_info = this.namemap.get(dev_type);
-        for (int i = 0; i < dev_info.data_list.length; i++) {
-            DataInfo tinfo = dev_info.data_list[i];
-            if (WQAPlatform.GetInstance().is_internal) {
-                info.add(tinfo);
-            } else if (!tinfo.internal_only) {
-                info.add(tinfo);
-            }
-        }
-        return info.toArray(new DataInfo[0]);
     }
 
     // <editor-fold defaultstate="collapsed" desc="设备静态信息">
@@ -119,19 +103,19 @@ public class CDevDataTable {
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
         new DevInfo(0x0202, "ESA_EC_I", "电导率",
-                new DataInfo("电导率", "us/cm", 1, "(0-500000)"),
+                new DataInfo("电导率", "uS/cm", 1, "(0-500000)"),
                 new DataInfo("电导率" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("盐度", "ppt", 0, "(0-75)")),
         new DevInfo(0x0221, "ESA_EC_I", "电导率",
-                new DataInfo("电导率", "us/cm", 1, "(0-500000)"),
+                new DataInfo("电导率", "uS/cm", 1, "(0-500000)"),
                 new DataInfo("电导率" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("盐度", "ppt", 0, "(0-75)")),
         new DevInfo(0x0203, "ESA_EC_II", "电导率",
-                new DataInfo("电导率", "us/cm", 1, "(0-500000)"),
+                new DataInfo("电导率", "uS/cm", 1, "(0-500000)"),
                 new DataInfo("电导率" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, ""),
@@ -181,7 +165,7 @@ public class CDevDataTable {
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
         new DevInfo(0x0108, "OSA_CYANO", "蓝绿藻",
-                new DataInfo("蓝绿藻", "细胞/ml", 3, "(0-2000000)", "(0-200000)"),
+                new DataInfo("蓝绿藻", "细胞/ul", 3, "(0-2000)", "(0-200)"),
                 new DataInfo("蓝绿藻" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),

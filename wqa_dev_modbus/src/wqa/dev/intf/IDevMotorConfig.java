@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.config;
+package wqa.dev.intf;
 
-import wqa.control.data.SMotorParameter;
-import wqa.control.common.IDevice;
+import wqa.dev.data.SMotorParameter;
+
 
 /**
  *

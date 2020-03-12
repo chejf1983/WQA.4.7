@@ -9,15 +9,13 @@ import java.util.ArrayList;
 import modebus.pro.NahonConvert;
 import modebus.register.*;
 import wqa.adapter.factory.AbsDevice;
-import wqa.adapter.io.ShareIO;
-import wqa.bill.log.LogNode;
-import wqa.control.common.CDevDataTable;
-import wqa.control.dev.collect.SDisplayData;
-import wqa.control.common.CErrorTable;
-import wqa.control.config.SConfigItem;
-import wqa.control.config.IDevMotorConfig;
-import wqa.control.data.SMotorParameter;
-import wqa.control.data.SMotorParameter.CleanMode;
+import wqa.adapter.factory.CDevDataTable;
+import wqa.adapter.factory.CErrorTable;
+import wqa.dev.data.LogNode;
+import wqa.dev.data.SDisplayData;
+import wqa.dev.data.SMotorParameter;
+import wqa.dev.data.SMotorParameter.CleanMode;
+import wqa.dev.intf.*;
 
 /**
  *
@@ -46,7 +44,7 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
     private final IREG RANGNUM = new IREG(0x50, 1, "量程个数"); //R
     private final FREG[] RANGN = new FREG[]{new FREG(0x51, 2, "量程1"), new FREG(0x53, 2, "量程2"), new FREG(0x55, 2, "量程3"), new FREG(0x57, 2, "量程4")}; //R
 
-    public OSADevice(ShareIO io, byte addr) {
+    public OSADevice(IAbstractIO io, byte addr) {
         super(io, addr);
     }
 
