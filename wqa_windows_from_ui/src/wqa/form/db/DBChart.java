@@ -37,6 +37,7 @@ public class DBChart extends javax.swing.JPanel {
         this.Button_add.setToolTipText("当前曲线复制成背景曲线");
         this.Button_del.setToolTipText("删除最后一条背景曲线");
 
+        this.CheckBox_isYEnable.setVisible(false);
         this.initSnapShot();
     }
 
