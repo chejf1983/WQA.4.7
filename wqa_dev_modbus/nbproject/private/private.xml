@@ -3,7 +3,38 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/factory/ModBusDevFactory.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/factory/CErrorTable.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/test/OSADeviceTest.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SIOInfo.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SDataElement.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SDisplayData.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/test/ABS_Test.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/test/AMMODeviceTest.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/ICalibrate.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/LogNode.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/DevID.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/test/PHDeviceTest.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/ICollect.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/factory/AbsDevice.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/model/MOCKIO.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/test/ECDeviceTest.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/SConfigItem.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/IDevice.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/factory/CDevDataTable.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SConnectInfo.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/IDevMotorConfig.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/ESA/PHDevice.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SMotorParameter.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/IConfigList.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/modebus/pro/ModeBusNode.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/ESA/ECDevice.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/test/DODeviceTest.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/IDeviceSearch.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/IAbstractIO.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/ESA/DODevice.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/ISA/AMMODevice.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/OSA/OSADevice.java</file>
         </group>
     </open-files>
 </project-private>

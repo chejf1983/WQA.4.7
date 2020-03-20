@@ -23,10 +23,10 @@ public class LogNode {
     }
 
     public static LogNode CALOK() {
-        return new LogNode("效准结果", "效准成功");
+        return new LogNode("校准结果", "校准成功");
     }
 
     public static LogNode CALFAIL() {
-        return new LogNode("效准结果", "效准失败");
+        return new LogNode("校准结果", "校准失败");
     }
 }
