@@ -181,7 +181,11 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
         for (SConfigItem item : list) {
             if (item.IsKey(NRANGE_NUM.toString())) {
                 int num = Integer.valueOf(item.value);
-                this.SetConfigREG(NRANGE_NUM, (num - 1) + "");
+                if (num > NRANGE_NUM.min && num <= NRANGE_NUM.max + 1) {
+                    this.SetConfigREG(NRANGE_NUM, (num - 1) + "");
+                } else {
+                    throw new Exception("输入范围在" + (NRANGE_NUM.min + 1) + "-" + (NRANGE_NUM.max + 1));
+                }
             }
             if (item.IsKey(NTEMPER_PAR.toString())) {
                 this.SetConfigREG(NTEMPER_PAR, item.value);
@@ -225,11 +229,11 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
                 this.NCMODE.GetValue() == 00 ? SMotorParameter.CleanMode.Auto : SMotorParameter.CleanMode.Manu,
                 new SConfigItem[]{
                     SConfigItem.CreateRWItem(NCTIME.toString(), NCTIME.GetValue().toString(), NCTIME.min + "-" + NCTIME.max),
-                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max),
-                    SConfigItem.CreateRWItem(NCBRUSH.toString(), NCBRUSH.GetValue().toString(), NCBRUSH.min + "-" + NCBRUSH.max)},
+                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max)},
                 new SConfigItem[]{
                     SConfigItem.CreateRWItem(NCTIME.toString(), NCTIME.GetValue().toString(), NCTIME.min + "-" + NCTIME.max),
-                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max)});
+                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max),
+                    SConfigItem.CreateRWItem(NCBRUSH.toString(), NCBRUSH.GetValue().toString(), NCBRUSH.min + "-" + NCBRUSH.max)});
         return par;
     }
 

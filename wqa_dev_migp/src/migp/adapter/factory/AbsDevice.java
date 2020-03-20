@@ -207,7 +207,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     //修改设备地址
     private void setaddr(int devaddr) throws Exception {
         if (devaddr < 1 || devaddr > 32) {
-            throw new Exception("地址需要再(1-32)");
+            throw new Exception("地址需要在(1-32)");
         }
 
         if (devaddr != this.base_drv.GetDstAddr()) {
