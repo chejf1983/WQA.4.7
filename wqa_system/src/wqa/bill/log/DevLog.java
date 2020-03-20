@@ -101,7 +101,7 @@ public class DevLog {
             calog_lock.lock();
             try {
                 FileWriter fileWriter = new FileWriter(logfile, true);
-                LogNode node = new LogNode("时间", new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date()));
+                LogNode node = new LogNode("时间", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 node.children.addAll(Arrays.asList(log));
                 PrintNode(fileWriter, node);
                 fileWriter.flush();

@@ -71,8 +71,8 @@ public class DevCalConfig {
     private LogNode RecordCalLog(String type, float[] oradata, float[] testdata) {
         LogNode ret = new LogNode("定标类型", type);
 
-        boolean isdo = (this.calbean.GetCalDataList()[GetIndex(type)].cal_num & 0xFF00) == 0x100;
-        if (isdo && !"温度".contentEquals(type)) {
+//        boolean isdo = (this.calbean.GetCalDataList()[GetIndex(type)].cal_num & 0xFF00) == 0x100;
+        if (type.contentEquals("溶解氧")) {
 //            return new String[]{"饱和氧", "无氧"};
             ret.children.add(new LogNode("校准系数", 1, "饱和氧", oradata[0]));
             if (testdata.length >= 2) {
