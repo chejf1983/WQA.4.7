@@ -19,9 +19,9 @@ import javax.swing.table.JTableHeader;
 import nahon.comm.event.Event;
 import nahon.comm.event.EventListener;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.SDataPacket;
+import wqa.bill.io.SDataPacket;
 import wqa.common.InitPaneHelper;
-import wqa.control.io.IOManager;
+import wqa.bill.io.IOManager;
 import wqa.form.errormsg.MsgBoxFactory;
 
 /**
