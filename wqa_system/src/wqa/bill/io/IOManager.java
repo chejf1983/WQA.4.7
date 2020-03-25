@@ -3,21 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.io;
+package wqa.bill.io;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
-import wqa.adapter.io.ShareIO;
+import wqa.bill.io.ShareIO;
 import wqa.bill.io.IIOFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.event.Event;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.SDataPacket;
+import wqa.bill.io.SDataPacket;
 import wqa.dev.data.SIOInfo;
 import wqa.dev.intf.IAbstractIO;
 import wqa.system.WQAPlatform;

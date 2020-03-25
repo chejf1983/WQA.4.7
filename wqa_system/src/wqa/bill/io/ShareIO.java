@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.adapter.io;
+package wqa.bill.io;
 
 import wqa.dev.data.SIOInfo;
 import java.util.concurrent.locks.ReentrantLock;
 import nahon.comm.event.EventCenter;
-import wqa.adapter.io.SDataPacket.IOEvent;
+import wqa.bill.io.SDataPacket.IOEvent;
 import wqa.dev.intf.IAbstractIO;
 import wqa.system.WQAPlatform;
 

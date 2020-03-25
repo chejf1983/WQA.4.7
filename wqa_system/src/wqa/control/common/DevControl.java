@@ -6,13 +6,12 @@
 package wqa.control.common;
 
 import java.util.concurrent.TimeUnit;
-import wqa.control.dev.collect.DevMonitor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import wqa.control.config.DevConfigBean;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.ShareIO;
+import wqa.bill.io.ShareIO;
 import wqa.dev.intf.ICollect;
 import wqa.dev.data.SConnectInfo;
 import wqa.dev.intf.IDevice;

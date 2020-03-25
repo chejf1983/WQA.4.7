@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.ShareIO;
+import wqa.bill.io.ShareIO;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.SDisplayData;

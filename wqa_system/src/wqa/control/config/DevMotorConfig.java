@@ -8,7 +8,7 @@ package wqa.control.config;
 import wqa.dev.data.SMotorParameter;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.ShareIO;
+import wqa.bill.io.ShareIO;
 import wqa.dev.intf.IDevMotorConfig;
 
 /**

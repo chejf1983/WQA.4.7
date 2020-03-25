@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.adapter.io;
+package wqa.bill.io;
 
 import wqa.dev.data.SIOInfo;
 import java.util.Date;

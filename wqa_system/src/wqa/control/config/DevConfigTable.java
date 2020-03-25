@@ -8,7 +8,7 @@ package wqa.control.config;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.io.ShareIO;
+import wqa.bill.io.ShareIO;
 import wqa.dev.intf.IConfigList;
 import wqa.dev.intf.IDevice;
 import wqa.dev.intf.SConfigItem;

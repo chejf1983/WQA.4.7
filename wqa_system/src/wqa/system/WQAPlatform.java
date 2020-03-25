@@ -20,7 +20,7 @@ import wqa.control.common.DevControlManager;
 import wqa.bill.io.IIOFactory;
 import wqa.control.DB.DBHelperFactory;
 import wqa.bill.log.DevLog;
-import wqa.control.io.IOManager;
+import wqa.bill.io.IOManager;
 import wqa.dev.intf.IDeviceSearch;
 
 /**
