@@ -420,4 +420,7 @@ public class EOSA_DO extends ESADEV {
     }
     // </editor-fold> 
 
+    public static void main(String... args) throws Exception{
+        float ByteArrayToFloat = NahonConvert.ByteArrayToFloat(new byte[]{(byte)0x00, (byte)0xBE, (byte)0x70, (byte)0xF0}, 0);
+    }
 }
