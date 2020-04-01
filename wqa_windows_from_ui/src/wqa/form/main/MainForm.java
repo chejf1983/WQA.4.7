@@ -5,7 +5,6 @@
  */
 package wqa.form.main;
 
-import wqa.form.errormsg.MsgBoxFactory;
 import wqa.form.log.LogPane;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -13,7 +12,6 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
@@ -22,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -32,7 +31,7 @@ import static javax.swing.SwingConstants.*;
 import nahon.comm.faultsystem.LogCenter;
 import migp.adapter.factory.MIGPDevFactory;
 import wqa.adapter.factory.ModBusDevFactory;
-import wqa.common.InitPaneHelper;
+import wqa.bill.io.IOManager;
 import static wqa.common.JImagePane.*;
 import wqa.control.data.IMainProcess;
 import wqa.form.db.DataSearch;
@@ -48,6 +47,7 @@ import wqa.form.alarm.AlarmSearch;
 public class MainForm extends javax.swing.JFrame {
 
     public static MainForm main_parent;
+
     /**
      * Creates new form MainFrom
      */
@@ -62,7 +62,7 @@ public class MainForm extends javax.swing.JFrame {
         this.InitHeadPane();
         this.InitWorkPane();
         this.InitTaile();
-        
+
         main_parent = this;
     }
 
@@ -167,32 +167,49 @@ public class MainForm extends javax.swing.JFrame {
             this.LB_Search.setEnabled(false);
 
             ProcessDialog.ApplyGlobalProcessBar();
-            WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
+            Future submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+                WQAPlatform.GetInstance().GetManager().SearchDevice(new IMainProcess() {
+                    @Override
+                    public void SetValue(float pecent) {
+                        java.awt.EventQueue.invokeLater(() -> {
+                            if (ProcessDialog.GetGlobalProcessBar() != null) {
+                                ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent + 10);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void Finish(Object result) {
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                ProcessDialog.ReleaseGlobalProcessBar();
+                                LB_Search.setEnabled(true);
+                            }
+                        });
+                    }
+                });
+            });
+
+            /**
+             * 增加超时机制
+             */
+            new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    WQAPlatform.GetInstance().GetManager().SearchDevice(new IMainProcess() {
-                        @Override
-                        public void SetValue(float pecent) {
-                            java.awt.EventQueue.invokeLater(() -> {
-                                if (ProcessDialog.GetGlobalProcessBar() != null) {
-                                    ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent + 10);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void Finish(Object result) {
-                            java.awt.EventQueue.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ProcessDialog.ReleaseGlobalProcessBar();
-                                    LB_Search.setEnabled(true);
-                                }
-                            });
-                        }
-                    });
+                    if (!submit.isDone()) {
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                ProcessDialog.ReleaseGlobalProcessBar();
+                                LB_Search.setEnabled(true);
+                            }
+                        });
+                        submit.cancel(true);
+                        LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索设备超时");
+                    }
                 }
-            });
+            }, 15000 * IOManager.GetInstance().GetAllIO().length);
         }
     }//GEN-LAST:event_LB_SearchMouseClicked
 

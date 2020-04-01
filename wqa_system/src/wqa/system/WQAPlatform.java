@@ -29,7 +29,7 @@ import wqa.dev.intf.IDeviceSearch;
  */
 public class WQAPlatform {
 
-    private static WQAPlatform instance;
+    private static WQAPlatform instance;    
 
     private WQAPlatform() {
     }

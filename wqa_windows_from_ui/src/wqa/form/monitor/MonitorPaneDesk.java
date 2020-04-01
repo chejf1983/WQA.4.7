@@ -100,13 +100,10 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
 
             //如果有全屏的界面，则不刷新界面
             if (is_mlayout) {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        Panel_desk.removeAll();
-                        SortAddAllPane();
-                        Panel_desk.updateUI();
-                    }
+                java.awt.EventQueue.invokeLater(() -> {
+                    Panel_desk.removeAll();
+                    SortAddAllPane();
+                    Panel_desk.updateUI();
                 });
             }
         } finally {
@@ -117,17 +114,14 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
     //切换全屏界面
     public void SwitchCard(MonitorPane1 pane) {
         if (is_mlayout) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    Panel_desk.removeAll();
-                    updateUI();
-                    //切换成cardlayout
-                    Panel_desk.setLayout(clayout);
-                    Panel_desk.add(pane);
-                    updateUI();
-                    is_mlayout = false;
-                }
+            java.awt.EventQueue.invokeLater(() -> {
+                Panel_desk.removeAll();
+                updateUI();
+                //切换成cardlayout
+                Panel_desk.setLayout(clayout);
+                Panel_desk.add(pane);
+                updateUI();
+                is_mlayout = false;
             });
         }
     }
@@ -135,16 +129,13 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
     //切换回mflowlayout
     public void SwitchMCard() {
         if (!is_mlayout) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    Panel_desk.removeAll();
-                    updateUI();
-                    Panel_desk.setLayout(mlayout);
-                    SortAddAllPane();
-                    updateUI();
-                    is_mlayout = true;
-                }
+            java.awt.EventQueue.invokeLater(() -> {
+                Panel_desk.removeAll();
+                updateUI();
+                Panel_desk.setLayout(mlayout);
+                SortAddAllPane();
+                updateUI();
+                is_mlayout = true;
             });
         }
     }
@@ -159,12 +150,9 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
 
             MonitorPane1 pane = this.bookpanes.remove(dev);
             if (pane != null) {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        Panel_desk.remove(pane);
-                        Panel_desk.updateUI();
-                    }
+                java.awt.EventQueue.invokeLater(() -> {
+                    Panel_desk.remove(pane);
+                    Panel_desk.updateUI();
                 });
             }
         } finally {
