@@ -26,7 +26,29 @@ public class CDevDataTable {
     private CDevDataTable() {
         this.initInfoTable();
     }
+        
+    //获取采集数据，所以不是内部版本显示的数据
+    public DataInfo[] GetStanderDatas(int dev_type, boolean need_internal, boolean need_ora) {
+        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(dev_type).data_list;
+        ArrayList<DataInfo> data_names = new ArrayList();
+        for (int i = 0; i < data_list.length; i++) {
+            if (!data_list[i].internal_only) {
+                data_names.add(data_list[i]);
+            }
+        }
+        return data_names.toArray(new DataInfo[0]);
+    }
+    
+    public int GetDataIndex(int dev_type, String data_name) {
+        for (int i = 0; i < this.namemap.get(dev_type).data_list.length; i++) {
+            if (data_name.contentEquals(this.namemap.get(dev_type).data_list[i].data_name)) {
+                return i;
+            }
+        }
 
+        return -1;
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="设备静态信息">
     public class DevInfo {
         public int dev_type;
@@ -73,16 +95,6 @@ public class CDevDataTable {
     public HashMap<Integer, DevInfo> namemap = new HashMap();
 
     public static String ORA_Flag = "信号";
-
-    public int GetDataIndex(int dev_type, String data_name) {
-        for (int i = 0; i < this.namemap.get(dev_type).data_list.length; i++) {
-            if (data_name.contentEquals(this.namemap.get(dev_type).data_list[i].data_name)) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
 
     private void initInfoTable() {
         //ESA     
