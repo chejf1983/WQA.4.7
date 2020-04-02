@@ -5,6 +5,8 @@
         <group>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/monitor/MonitorPaneDesk.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/monitor/MonitorPane1.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/config/ConfigTableModel.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/config/ConfigTablePane.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/main/MainForm.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/main/StartFlash.java</file>
         </group>

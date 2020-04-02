@@ -248,7 +248,7 @@ public class ISA_X extends AbsDevice {
         SCLODATA[1].SetValue(len > 1 ? oradata[1] : 0);
         SCLTDATA[1].SetValue(len > 1 ? testdata[1] : 0);
         CLSTART.SetValue(len);
-        this.SetMEG(SCLNUM, SCLODATA[0], SCLODATA[1], SCLODATA[0], SCLODATA[1], CLSTART);
+        this.SetMEG(SCLNUM, SCLODATA[0], SCLODATA[1], SCLTDATA[0], SCLTDATA[1], CLSTART);
     }
 
     private void cal_temp(float testdata) throws Exception {

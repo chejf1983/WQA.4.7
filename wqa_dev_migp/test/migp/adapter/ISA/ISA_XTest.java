@@ -24,8 +24,8 @@ import wqa.dev.intf.*;
  */
 public class ISA_XTest {
 
-    public ISA_XTest() throws Exception{
-        if(dev_mock == null){
+    public ISA_XTest() throws Exception {
+        if (dev_mock == null) {
             this.InitDevice();
         }
     }
@@ -48,7 +48,7 @@ public class ISA_XTest {
         }
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
     public void test_readinfo() throws Exception {
@@ -65,7 +65,7 @@ public class ISA_XTest {
         commontest.setinfolist_check();
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
     public void test_readconfig() throws Exception {
@@ -183,11 +183,13 @@ public class ISA_XTest {
                     }
                     PrintLog.println(i + "点定标");
                     instance.CalParameter(info.data_name, oradata, testdata);
+                    for (int j = 0; j < oradata.length; j++) {
+                        dev_mock.ReadREGS();
+//                         assertEquals(dev_mock.SCLNUM.GetValue().toString(), (i) + "");
+                        assertEquals(dev_mock.SCLODATA[j].GetValue().toString(), oradata[j] + "");
+                        assertEquals(dev_mock.SCLTDATA[j].GetValue().toString(), testdata[j] + "");
+                    }
                     commontest.printREG(dev_mock.SCLNUM);
-                    commontest.printREG(dev_mock.SCLODATA[0]);
-                    commontest.printREG(dev_mock.SCLODATA[1]);
-                    commontest.printREG(dev_mock.SCLTDATA[0]);
-                    commontest.printREG(dev_mock.SCLTDATA[1]);
                 }
             }
         }

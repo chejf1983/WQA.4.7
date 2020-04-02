@@ -32,6 +32,7 @@ import nahon.comm.faultsystem.LogCenter;
 import migp.adapter.factory.MIGPDevFactory;
 import wqa.adapter.factory.ModBusDevFactory;
 import wqa.bill.io.IOManager;
+import wqa.bill.io.ShareIO;
 import static wqa.common.JImagePane.*;
 import wqa.control.data.IMainProcess;
 import wqa.form.db.DataSearch;
@@ -191,6 +192,12 @@ public class MainForm extends javax.swing.JFrame {
                 });
             });
 
+            int opio = 0;
+            for(ShareIO io :IOManager.GetInstance().GetAllIO() ){
+                if(!io.IsClosed()){
+                    opio++;
+                }
+            }
             /**
              * 增加超时机制
              */
@@ -209,7 +216,7 @@ public class MainForm extends javax.swing.JFrame {
                         LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索设备超时");
                     }
                 }
-            }, 15000 * IOManager.GetInstance().GetAllIO().length);
+            }, 3000 + 30000 * opio);
         }
     }//GEN-LAST:event_LB_SearchMouseClicked
 

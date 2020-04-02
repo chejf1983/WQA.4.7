@@ -6,7 +6,7 @@
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/SConfigItem.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/DevID.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SDataElement.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/factory/AbsDevice.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/modebus/pro/NahonConvert.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/factory/CDevDataTable.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/ESA/ECDevice.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/test/wqa/adapter/test/DODeviceTest.java</file>

@@ -45,7 +45,7 @@ public class ISAMock extends DevMock {
     public IMEG SR4 = new IMEG(new SRA(0x0E, 2), "参数4原始信号");
     public FMEG SR5 = new FMEG(new SRA(0x10, 4), "温度原始信号");
 
-    public IMEG SCLNUM = new IMEG(new SRA(0x18, 2), "温度原始信号", 0, 3);//参数1，2，3，4
+    public IMEG SCLNUM = new IMEG(new SRA(0x18, 2), "参数顺序", 0, 3);//参数1，2，3，4
     public FMEG[] SCLODATA = new FMEG[]{new FMEG(new SRA(0x1A, 4), "第1点原始信号"), new FMEG(new SRA(0x22, 4), "第2点原始信号")}; //R/W
     public FMEG[] SCLTDATA = new FMEG[]{new FMEG(new SRA(0x1E, 4), "第1点定标数据"), new FMEG(new SRA(0x26, 4), "第2点定标数据")}; //R/W
     IMEG CLSTART = new IMEG(new SRA(0x2A, 2), "启动定标", 1, 2); //R/W
