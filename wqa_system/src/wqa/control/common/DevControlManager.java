@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.io.ShareIO;
 import wqa.bill.io.IOManager;
+import wqa.bill.io.ShareIO;
 import wqa.control.data.IMainProcess;
 import wqa.dev.intf.IDevice;
 import wqa.dev.intf.IDeviceSearch;
@@ -85,16 +85,15 @@ public class DevControlManager {
         }
 
         //遍历所有控制器，再搜索完毕后初始化所有设备
-        control_list.forEach((control) -> {
+        for (DevControl control : control_list) {
+//        control_list.forEach((control) -> {
             try {
                 //只初始化关闭状态下的控制器
-                if (control.GetState() == DevControl.ControlState.CLOSE) {
-                    control.Init();
-                }
+                control.Start();
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "设备初始化失败", ex);
             }
-        });
+        };
 
         if (process != null) {
             process.Finish(true);
@@ -148,6 +147,7 @@ public class DevControlManager {
     public void DeleteDevControl(DevControl del_dev) {
         for (int i = 0; i < this.control_list.size(); i++) {
             if (this.control_list.get(i).equals(del_dev)) {
+                del_dev.End();
                 this.control_list.remove(del_dev);
                 //通知设备删除，刷新界面
                 StateChange.CreateEvent(DevControlManager.DevNumChange.DEL, del_dev);
@@ -158,7 +158,7 @@ public class DevControlManager {
 
     public void DeleteAllControls() {
         for (DevControl control : this.GetAllControls()) {
-            control.Close();
+            control.End();
             //通知设备删除，刷新界面
             StateChange.CreateEvent(DevControlManager.DevNumChange.DEL, control);
         }

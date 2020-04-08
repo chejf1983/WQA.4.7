@@ -11,7 +11,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.control.common.DevControl;
 import wqa.system.WQAPlatform;
 
 /**
@@ -38,6 +37,11 @@ public class DevMonitor {
             this.tmpdata = this.dev.CollectData();
 //            this.tmpdata.dev_name = this.parent.ToString();
             this.SaveAlarmInfo(tmpdata);
+            if(this.tmpdata.alarm != 0){
+                parent.ChangeState(DevControl.ControlState.ALARM, this.tmpdata.alram_info);
+            }else{                
+                parent.ChangeState(DevControl.ControlState.CONNECT);
+            }
             DataEvent.CreateEvent(this.tmpdata);
             return true;
         } catch (Exception ex) {

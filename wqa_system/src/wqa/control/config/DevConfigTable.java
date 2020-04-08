@@ -42,7 +42,7 @@ public class DevConfigTable {
         try {
             ((ShareIO)dev.GetIO()).Lock();
             this.dev.InitDevice();
-            this.msg_instance.UpdateConfigEvent.CreateEvent(null);
+//            this.msg_instance.UpdateConfigEvent.CreateEvent(null);
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {

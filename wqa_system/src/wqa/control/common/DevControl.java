@@ -6,6 +6,7 @@
 package wqa.control.common;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import wqa.control.config.DevConfigBean;
@@ -26,26 +27,29 @@ public class DevControl {
     // <editor-fold defaultstate="collapsed" desc="控制器状态"> 
     public enum ControlState {
         CONNECT,
+        ALARM,
         DISCONNECT,
-        CONFIG,
-        CLOSE
+        CONFIG
     }
 
-    private ControlState state = ControlState.CLOSE;
+    private ControlState state = ControlState.DISCONNECT;
+    private final ReentrantLock state_lock = new ReentrantLock(true);
 
     public ControlState GetState() {
         return this.state;
     }
     public EventCenter<ControlState> StateChange = new EventCenter();
 
-    public void ChangeState(ControlState state) {
-        if (this.state != ControlState.CLOSE) {
-            if (this.state != state) {
-                this.state = state;
-                this.StateChange.CreateEvent(state);
-                LogCenter.Instance().PrintLog(Level.SEVERE, "切换状态->" + state);
-            }
+    public void ChangeState(ControlState state, String info) {
+        if (this.state != state) {
+            this.state = state;
+            this.StateChange.CreateEvent(state, info);
+            LogCenter.Instance().PrintLog(Level.SEVERE, "切换状态->" + state);
         }
+    }
+
+    public void ChangeState(ControlState state) {
+        ChangeState(state, "");
     }
     // </editor-fold>    
 
@@ -54,27 +58,6 @@ public class DevControl {
 
     public DevControl(IDevice device) {
         this.device = device;
-    }
-
-    public void Init() throws Exception {
-        try {
-            ((ShareIO) device.GetIO()).Lock();
-            this.state = ControlState.DISCONNECT;
-            this.ChangeState(ControlState.CONNECT);
-            this.InitProcess();
-            ((ShareIO) device.GetIO()).UserNum++;
-        } finally {
-            ((ShareIO) device.GetIO()).UnLock();
-        }
-    }
-
-    public void Close() {
-        if (this.configmodel != null) {
-            this.configmodel.Close();
-        }
-        this.ChangeState(ControlState.CLOSE);
-//        WQAPlatform.GetInstance().GetManager().DeleteDevControl(this);
-        ((ShareIO) device.GetIO()).UserNum--;
     }
 
     public SConnectInfo GetConnectInfo() {
@@ -91,49 +74,21 @@ public class DevControl {
     }
     // </editor-fold>    
 
-    // <editor-fold defaultstate="collapsed" desc="循环进程"> 
-    private void InitProcess() {
-        WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-//                while (GetState() != ControlState.CLOSE && !WQAPlatform.GetInstance().GetThreadPool().isShutdown()) {
-                while (GetState() != ControlState.CLOSE) {
-                    try {
-                        ((ShareIO) device.GetIO()).Lock();
-                        //连接状态下，获取数据
-                        if (GetState() == ControlState.CONNECT) {
-                            if (!GetCollector().CollectData()) {
-                                ChangeState(ControlState.DISCONNECT);
-                            }
-                        } else {
-                            //其他状态下，开心跳检查重连设备
-                            if (ReConnect()) {
-                                if (GetState() == ControlState.DISCONNECT) {
-                                    device.InitDevice();
-                                    ChangeState(ControlState.CONNECT);
-                                }
-                            } else {
-                                //心跳包多一次检查
-                                if (!ReConnect()) {
-                                    ChangeState(ControlState.DISCONNECT);
-                                }
-                            }
-                        }
-                    } catch (Exception ex) {
-                        ChangeState(ControlState.DISCONNECT);
-                        LogCenter.Instance().PrintLog(Level.SEVERE, ex.getMessage());
-                    } finally {
-                        ((ShareIO) device.GetIO()).UnLock();
-                    }
-
-                    try {
-                        TimeUnit.SECONDS.sleep(2);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(DevMonitor.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+    // <editor-fold defaultstate="collapsed" desc="动作"> 
+    private void KeepAlive() throws Exception {
+        //其他状态下，开心跳检查重连设备
+        for (int i = 0; i < 2; i++) {
+            if (ReConnect()) {
+                if (GetState() == ControlState.DISCONNECT) {
+                    device.InitDevice();
+                    ChangeState(ControlState.CONNECT);
                 }
+                return;
             }
-        });
+        }
+        //心跳包多一次检查
+        ChangeState(ControlState.DISCONNECT);
+        StopConfig();
     }
 
     public boolean ReConnect() {
@@ -142,6 +97,119 @@ public class DevControl {
             return this.device.GetConnectInfo().dev_id.dev_type == devtype;
         } catch (Exception ex) {
             return false;
+        }
+    }
+
+    private class Process implements Runnable {
+
+        boolean is_start = true;
+
+        @Override
+        public void run() {
+            while (is_start) {
+                try {
+                    ((ShareIO) device.GetIO()).Lock();
+                    state_lock.lock();
+                    //连接状态下，获取数据
+                    if (GetState() == ControlState.CONNECT) {
+                        if (!GetCollector().CollectData()) {
+                            ChangeState(ControlState.DISCONNECT);
+                        }
+                    }
+                    if (GetState() == ControlState.ALARM) {
+                        if (!GetCollector().CollectData()) {
+                            ChangeState(ControlState.DISCONNECT);
+                        }
+                    }
+
+                    if (GetState() == ControlState.DISCONNECT) {
+                        KeepAlive();
+                    }
+                    if (GetState() == ControlState.CONFIG) {
+                        KeepAlive();
+                    }
+                } catch (Exception ex) {
+                    ChangeState(ControlState.DISCONNECT);
+                    LogCenter.Instance().PrintLog(Level.SEVERE, ex.getMessage());
+                } finally {
+                    state_lock.unlock();
+                    ((ShareIO) device.GetIO()).UnLock();
+                }
+
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(DevMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    // </editor-fold>    
+
+    // <editor-fold defaultstate="collapsed" desc="输入">
+    private Process run_process = null;
+
+    public void Start() {
+        state_lock.lock();
+        try {
+            if (this.run_process == null) {
+                run_process = new Process();
+                this.ChangeState(ControlState.CONNECT);
+                WQAPlatform.GetInstance().GetThreadPool().submit(run_process);
+            }
+        } finally {
+            state_lock.unlock();
+        }
+    }
+
+    private DevConfigBean configmodel;
+
+    //开始配置
+    public DevConfigBean StartConfig() {
+        state_lock.lock();
+        try {
+            if (this.GetState() == ControlState.CONNECT
+                    || this.GetState() == ControlState.ALARM) {
+                configmodel = new DevConfigBean(this);
+                configmodel.InitDevConfig(this.device);
+                ChangeState(ControlState.CONFIG);
+                return configmodel;
+            } else {
+                return null;
+            }
+        } finally {
+            state_lock.unlock();
+        }
+    }
+
+    //关闭配置
+    public void StopConfig() {
+        state_lock.lock();
+        try {
+            if (this.configmodel != null) {
+                this.configmodel.Close();
+                if (this.GetState() == DevControl.ControlState.CONFIG) {
+                    this.ChangeState(DevControl.ControlState.CONNECT);
+                }
+                this.configmodel = null;
+            }
+        } finally {
+            state_lock.unlock();
+        }
+    }
+
+    //停止控制
+    public void End() {
+        state_lock.lock();
+        try {
+            if (this.run_process != null) {
+                this.StopConfig();
+                this.ChangeState(ControlState.DISCONNECT);
+                run_process.is_start = false;
+                run_process = null;
+            }
+        } finally {
+            state_lock.unlock();
         }
     }
     // </editor-fold>    
@@ -155,26 +223,6 @@ public class DevControl {
         }
         return this.collect_instance;
     }
-
-    private DevConfigBean configmodel;
-
-    public DevConfigBean GetConfigImpl() {
-        //连接状态下，才可以配置设备
-        if (this.GetState() == ControlState.CONNECT) {
-//            try {
-            //初始化需要的配置信息
-//                this.device.InitDevice();
-            configmodel = new DevConfigBean(this);
-            configmodel.InitDevConfig(this.device);
-            ChangeState(ControlState.CONFIG);
-            return configmodel;
-//            } catch (Exception ex) {
-//                LogCenter.Instance().SendFaultReport(Level.SEVERE, "读取配置失败:" + ex);
-//                return null;
-//            }
-        } else {
-            return null;
-        }
-    }
     // </editor-fold>   
+
 }

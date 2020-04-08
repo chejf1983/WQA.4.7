@@ -51,15 +51,14 @@ public class DevConfigBean {
 
         return true;
     }
+    
+    public EventCenter CloseEvent = new EventCenter();
 
     public void Close() {
         if (this.GetDevCalConfig() != null) {
             this.GetDevCalConfig().SetStartGetData(false);
         }
-
-        if (this.mother.GetState() == DevControl.ControlState.CONFIG) {
-            this.mother.ChangeState(DevControl.ControlState.CONNECT);
-        }
+        CloseEvent.CreateEvent(null);
     }
 
     // <editor-fold defaultstate="collapsed" desc="配置模块"> 
@@ -87,6 +86,10 @@ public class DevConfigBean {
     // </editor-fold>   
     
     // <editor-fold defaultstate="collapsed" desc="显示消息提示"> 
+    public void PrintDevLog(LogNode... nodes) {
+        DevLog.Instance().AddLog(this.dev.GetConnectInfo().dev_id, nodes);
+    }
+
     public interface MessageInterface {
 
         public void SetMessage(String msg);
@@ -104,9 +107,7 @@ public class DevConfigBean {
     }
     // </editor-fold>  
 
-    public EventCenter UpdateConfigEvent = new EventCenter();
-
-    public void PrintDevLog(LogNode... nodes) {
-        DevLog.Instance().AddLog(this.dev.GetConnectInfo().dev_id, nodes);
+    public void Quit() {
+        this.mother.StopConfig();
     }
 }
