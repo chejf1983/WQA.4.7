@@ -192,30 +192,19 @@ public class MonitorPane1 extends javax.swing.JPanel {
                         switch (event.GetEvent()) {
                             case CONNECT:
                                 Lable_Title.setText(GetDevName());
-//                                Label_State.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/monitor/resource/health_24p.png")));
                                 Lable_Title.setForeground(Color.WHITE);
+                                ChangeState(state.connect);
                                 break;
                             case DISCONNECT:
                                 Lable_Title.setForeground(Color.RED);
-                                if (config_form != null) {
-                                    config_form.dispose();
-                                }
-                                if (cal_form != null) {
-                                    cal_form.dispose();
-                                }
-//                                Label_State.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/monitor/resource/disconnect_24.png")));
+                                ChangeState(state.connect);
                                 break;
                             case CONFIG:
                                 Lable_Title.setForeground(Color.GREEN);
-//                                Label_State.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/monitor/resource/config_24p.png")));
+                                ChangeState(state.config);
                                 break;
-                            case CLOSE:
-                                if (config_form != null) {
-                                    config_form.dispose();
-                                }
-                                if (cal_form != null) {
-                                    cal_form.dispose();
-                                }
+                            case ALARM:
+                                ChangeState(state.warning);
                                 break;
                             default:
                                 throw new AssertionError(event.GetEvent().name());
@@ -245,12 +234,8 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private void UpdateData(SDisplayData data) {
         //刷新报警界面
         if (data.alarm != 0) {
-            this.ChangeState(state.warning);
-//            Label_AlarmInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/monitor/resource/warning_24p.png")));
             Label_AlarmInfo.setToolTipText(data.alram_info);
         } else {
-            this.ChangeState(state.connect);
-//            Label_AlarmInfo.setIcon(null);
             Label_AlarmInfo.setToolTipText(null);
         }
 
@@ -529,7 +514,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private CommonConfigForm config_form;
     private void Button_ConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_ConfigActionPerformed
-        DevConfigBean config = currentdev.GetConfigImpl();
+        DevConfigBean config = currentdev.StartConfig();
         if (config == null) {
             return;
         }
@@ -541,26 +526,19 @@ public class MonitorPane1 extends javax.swing.JPanel {
                     @Override
                     public void windowClosed(WindowEvent we) {
                         config_form.Close();
-                        config_form = null;
-                        config.Close();
-                        ChangeState(state.connect);
                     }
                 });
-                this.ChangeState(state.config);
                 config_form.setVisible(true);
             }
         } catch (Exception ex) {
-            config.Close();
-            config_form.Close();
-            config_form.dispose();
-            config_form = null;
+            config.Quit();
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         }
     }//GEN-LAST:event_Button_ConfigActionPerformed
 
     private CalConfigForm cal_form;
     private void ButtonCalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCalActionPerformed
-        DevConfigBean config = currentdev.GetConfigImpl();
+        DevConfigBean config = currentdev.StartConfig();
         if (config == null) {
             return;
         }
@@ -571,19 +549,12 @@ public class MonitorPane1 extends javax.swing.JPanel {
                     @Override
                     public void windowClosed(WindowEvent we) {
                         cal_form.Close();
-                        cal_form = null;
-                        config.Close();
-                        ChangeState(state.connect);
                     }
                 });
-                this.ChangeState(state.config);
                 cal_form.setVisible(true);
             }
         } catch (Exception ex) {
-            config.Close();
-            cal_form.Close();
-            cal_form.dispose();
-            cal_form = null;
+            config.Quit();
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         }
     }//GEN-LAST:event_ButtonCalActionPerformed
@@ -601,7 +572,6 @@ public class MonitorPane1 extends javax.swing.JPanel {
 //        JOptionPane.sh
         if (ConfirmBox.ShowConfirmBox(MainForm.main_parent, "是否删除该设备?")) {
 //            if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(MainForm.main_parent, "是否删除该设备?", "提示", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION)) {
-            this.currentdev.Close();
             WQAPlatform.GetInstance().GetManager().DeleteDevControl(this.currentdev);
 //            }
         }

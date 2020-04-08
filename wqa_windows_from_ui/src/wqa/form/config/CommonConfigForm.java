@@ -27,9 +27,10 @@ public class CommonConfigForm extends ConfigForm{
     
     private ArrayList<ConfigTablePane> pane = new ArrayList();
     private JTabbedPane TabbedPane = new JTabbedPane();
+    private DevConfigBean config;
 
     public boolean InitModel(DevConfigBean config) throws Exception{
-//        this.config = config;
+        this.config = config;
 
         config.SetMessageImple((String msg) -> {
             java.awt.EventQueue.invokeLater(() -> {
@@ -44,14 +45,14 @@ public class CommonConfigForm extends ConfigForm{
             TabbedPane.add(table.GetListName(), configTablePane);
         }
 
-        config.UpdateConfigEvent.RegeditListener(new EventListener() {
-            @Override
-            public void recevieEvent(Event event) {
-                pane.forEach(pane -> {
-                    pane.Refresh();
-                });
-            }
-        });
+//        config.UpdateConfigEvent.RegeditListener(new EventListener() {
+//            @Override
+//            public void recevieEvent(Event event) {
+//                pane.forEach(pane -> {
+//                    pane.Refresh();
+//                });
+//            }
+//        });
 
 //        if (this.config.GetDevCalConfig() != null) {
 //            TabbedPane.add("校准", new CalPanel(this.config.GetDevCalConfig()));
@@ -64,10 +65,24 @@ public class CommonConfigForm extends ConfigForm{
         }
 
         this.AddPane(this.TabbedPane);
+        
+        this.config.CloseEvent.RegeditListener(new EventListener() {
+            @Override
+            public void recevieEvent(Event event) {
+                CommonConfigForm.this.dispose();    
+            }
+        });
         return true;
     }
     
     public void InitViewConfig(DataVector viewConfig) throws Exception{
         TabbedPane.add("界面配置", new ViewConfigPane(viewConfig));
     }
+    
+    @Override
+    public void Close() {
+        config.Quit();
+        super.Close(); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

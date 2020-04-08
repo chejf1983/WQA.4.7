@@ -115,24 +115,20 @@ public class ConfigForm extends javax.swing.JDialog {
     private final ReentrantLock time_lock = new ReentrantLock(true);
     private final int max_liftime = 1800;
     private int life_time = max_liftime;
-    private boolean is_open = false;
 
     private void InitAutoClose() {
-        WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-                is_open = true;
-                Label_life.setText("");
-                while (is_open) {
-                    try {
-                        //检查窗体活性
-                        CheckForm();
-                        //检查提示信息过期
-                        CheckMessage();
-                        TimeUnit.SECONDS.sleep(1);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ConfigForm.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        
+        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+            Label_life.setText("");
+            while (life_time < -3) {
+                try {
+                    //检查窗体活性
+                    CheckForm();
+                    //检查提示信息过期
+                    CheckMessage();
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ConfigForm.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -148,15 +144,15 @@ public class ConfigForm extends javax.swing.JDialog {
             }
 
             if (life_time == 0) {
-                this.dispose();
+               Close();
             }
         } finally {
             time_lock.unlock();
         }
     }
 
-    public void Close() {
-        this.is_open = false;
+    public void Close() {  
+        life_time = 0;
     }
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
