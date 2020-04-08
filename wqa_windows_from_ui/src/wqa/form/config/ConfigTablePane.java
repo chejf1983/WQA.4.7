@@ -183,12 +183,8 @@ public class ConfigTablePane extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void Button_readActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_readActionPerformed
-        try {
-            this.config.InitConfigTable();
-            this.InitTable(this.config.GetConfigList());
-        } catch (Exception ex) {
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
-        }
+        this.config.InitConfigTable();
+        this.InitTable(this.config.GetConfigList());
     }//GEN-LAST:event_Button_readActionPerformed
 
     private void Button_setActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_setActionPerformed

@@ -38,7 +38,7 @@ public class DevConfigTable {
         return "";
     }
 
-    public void InitConfigTable() throws Exception {
+    public void InitConfigTable(){
         try {
             ((ShareIO)dev.GetIO()).Lock();
             this.dev.InitDevice();

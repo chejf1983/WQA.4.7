@@ -4,6 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SMotorParameter.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/data/SDisplayData.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/dev/intf/IDevice.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_dev_modbus/src/wqa/adapter/OSA/OSADevice.java</file>
         </group>
     </open-files>
