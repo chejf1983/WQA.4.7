@@ -60,14 +60,14 @@ public ABS_Test(AbsDevice instance, DevMock dev_mock) throws Exception {
     public void setconfiglist_setup() throws Exception {
         ArrayList<SConfigItem> config = instance.GetConfigList();
         this.set_item(config, dev_mock.DEVADDR, "2");
-        this.set_item(config, dev_mock.BANDRANGEI, AbsDevice.SBandRate[2]);
+        this.set_item(config, dev_mock.BANDRANGEI, AbsDevice.SBandRate[5]);
         instance.SetConfigList(config);
     }
 
     public void setconfiglist_check() throws Exception {
         dev_mock.ReadREGS();
         assertEquals(dev_mock.DEVADDR.GetValue().toString(), "2");
-        assertEquals(dev_mock.BANDRANGEI.GetValue().toString(), "2");
+        assertEquals(dev_mock.BANDRANGEI.GetValue().toString(), "5");
     }
     // </editor-fold> 
 

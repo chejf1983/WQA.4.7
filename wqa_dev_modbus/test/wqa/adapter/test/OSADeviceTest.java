@@ -85,7 +85,7 @@ public class OSADeviceTest {
         
         commontest.setconfiglist_check();
         assertEquals(dev_mock.RANGE.GetValue().toString(), "1");
-        assertEquals(dev_mock.AVR.GetValue().toString(), "3");
+        assertEquals(dev_mock.AVR.GetValue().toString(), "3");    
     }
     // </editor-fold> 
 

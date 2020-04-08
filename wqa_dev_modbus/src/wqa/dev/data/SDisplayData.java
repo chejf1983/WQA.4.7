@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.CDevDataTable;
 import static wqa.adapter.factory.CDevDataTable.ORA_Flag;
-import wqa.dev.data.DevID;
 
 /**
  *
