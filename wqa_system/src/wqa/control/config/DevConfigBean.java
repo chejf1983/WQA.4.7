@@ -54,13 +54,6 @@ public class DevConfigBean {
     
     public EventCenter CloseEvent = new EventCenter();
 
-    public void Close() {
-        if (this.GetDevCalConfig() != null) {
-            this.GetDevCalConfig().SetStartGetData(false);
-        }
-        CloseEvent.CreateEvent(null);
-    }
-
     // <editor-fold defaultstate="collapsed" desc="配置模块"> 
     //基本配置
     private DevConfigTable[] config_list;

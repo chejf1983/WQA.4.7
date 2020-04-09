@@ -142,7 +142,7 @@ public class DevControl {
                 } finally {
                     state_lock.unlock();
                 }
-                
+
                 try {
                     TimeUnit.SECONDS.sleep(2);
                 } catch (InterruptedException ex) {
@@ -194,7 +194,12 @@ public class DevControl {
         state_lock.lock();
         try {
             if (this.configmodel != null) {
-                this.configmodel.Close();
+//                this.configmodel.GetDevCalConfig()
+                if (this.configmodel.GetDevCalConfig() != null) {
+                    this.configmodel.GetDevCalConfig().SetStartGetData(false);
+                }
+                this.configmodel.CloseEvent.CreateEvent(null);
+                
                 if (this.GetState() == DevControl.ControlState.CONFIG) {
                     this.ChangeState(DevControl.ControlState.CONNECT);
                 }

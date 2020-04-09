@@ -43,8 +43,7 @@ public class ConfigForm extends javax.swing.JDialog {
         this.InitAutoClose();
     }
 
-
-    protected void AddPane(javax.swing.JComponent pane){
+    protected void AddPane(javax.swing.JComponent pane) {
         this.WorkPane.setLayout(new CardLayout());
         this.WorkPane.add(pane);
     }
@@ -117,7 +116,7 @@ public class ConfigForm extends javax.swing.JDialog {
     private int life_time = max_liftime;
 
     private void InitAutoClose() {
-        
+
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             Label_life.setText("");
             while (life_time < -3) {
@@ -144,15 +143,18 @@ public class ConfigForm extends javax.swing.JDialog {
             }
 
             if (life_time == 0) {
-               Close();
+                Close();
             }
         } finally {
             time_lock.unlock();
         }
     }
 
-    public void Close() {  
-        life_time = 0;
+    public void Close() {
+        if (life_time > 0) {
+            life_time = -10;
+            this.dispose();
+        }
     }
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
