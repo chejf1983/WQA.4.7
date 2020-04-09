@@ -31,7 +31,6 @@ import static javax.swing.SwingConstants.*;
 import nahon.comm.faultsystem.LogCenter;
 import migp.adapter.factory.MIGPDevFactory;
 import wqa.adapter.factory.ModBusDevFactory;
-import wqa.bill.io.IOManager;
 import wqa.bill.io.ShareIO;
 import static wqa.common.JImagePane.*;
 import wqa.control.data.IMainProcess;
@@ -40,6 +39,7 @@ import wqa.form.iolist.IOConfigDialog;
 import wqa.form.monitor.MonitorPaneDesk;
 import wqa.system.WQAPlatform;
 import wqa.form.alarm.AlarmSearch;
+import wqa.winio.adapter.IOManager;
 
 /**
  *
@@ -169,7 +169,7 @@ public class MainForm extends javax.swing.JFrame {
 
             ProcessDialog.ApplyGlobalProcessBar();
             Future submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
-                WQAPlatform.GetInstance().GetManager().SearchDevice(new IMainProcess() {
+                WQAPlatform.GetInstance().GetManager().SearchDevice(IOManager.GetInstance().GetAllIO(), new IMainProcess() {
                     @Override
                     public void SetValue(float pecent) {
                         java.awt.EventQueue.invokeLater(() -> {

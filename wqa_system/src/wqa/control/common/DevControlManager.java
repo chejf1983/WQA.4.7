@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.io.IOManager;
 import wqa.bill.io.ShareIO;
 import wqa.control.data.IMainProcess;
 import wqa.dev.intf.IDevice;
@@ -34,7 +33,7 @@ public class DevControlManager {
     }
 
     // <editor-fold defaultstate="collapsed" desc="搜索设备"> 
-    public void SearchDevice(IMainProcess<Boolean> process) {
+    public void SearchDevice(ShareIO[] iolist, IMainProcess<Boolean> process) {
         //检查驱动
         if (DevControlManager.dev_drv == null) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "没有加载驱动");
@@ -45,7 +44,7 @@ public class DevControlManager {
         }
 
         //罗列所有物理口
-        ShareIO[] iolist = IOManager.GetInstance().GetAllIO();
+//        ShareIO[] iolist = IOManager.GetInstance().GetAllIO();
 
         int open_io = 0;
         for (ShareIO io : iolist) {

@@ -19,6 +19,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.ModBusDevFactory;
 import wqa.system.WQAPlatform;
 import wqa.winio.adapter.IOFactory;
+import wqa.winio.adapter.IOManager;
 
 /**
  *
@@ -56,7 +57,7 @@ public class StartFlash extends javax.swing.JFrame {
             public void run() {
                 try {
                     //加载驱动
-                    WQAPlatform.LoadIOFactory(new IOFactory());
+                    IOManager.SetIOFactory(new IOFactory());
                     WQAPlatform.LoadDriver(new ModBusDevFactory());
                     //初始化系统
                     WQAPlatform.GetInstance().InitSystem();

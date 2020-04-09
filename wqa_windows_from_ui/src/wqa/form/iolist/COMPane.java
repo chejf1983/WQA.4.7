@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.dev.data.SIOInfo;
 import wqa.bill.io.ShareIO;
-import wqa.bill.io.IOManager;
 
 /**
  *

@@ -21,8 +21,8 @@ import nahon.comm.event.EventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.SDataPacket;
 import wqa.common.InitPaneHelper;
-import wqa.bill.io.IOManager;
 import wqa.form.errormsg.MsgBoxFactory;
+import wqa.winio.adapter.IOManager;
 
 /**
  *

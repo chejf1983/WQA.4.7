@@ -17,10 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.control.common.DevControlManager;
-import wqa.bill.io.IIOFactory;
 import wqa.control.DB.DBHelperFactory;
 import wqa.bill.log.DevLog;
-import wqa.bill.io.IOManager;
 import wqa.dev.intf.IDeviceSearch;
 
 /**
@@ -42,10 +40,6 @@ public class WQAPlatform {
     }
 
     // <editor-fold defaultstate="collapsed" desc="IO驱动和设备驱动"> 
-    public static void LoadIOFactory(IIOFactory iodrv) {
-        IOManager.SetIOFactory(iodrv);
-    }
-
     public static void LoadDriver(IDeviceSearch factory) {
         DevControlManager.SetDevDriver(factory);
     }

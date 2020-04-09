@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.bill.io;
+package wqa.winio.adapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import java.util.EventListener;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import wqa.bill.io.ShareIO;
-import wqa.bill.io.IIOFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.event.Event;

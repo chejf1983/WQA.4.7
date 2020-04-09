@@ -8,20 +8,12 @@ package wqa.form.iolist;
 import java.awt.Color;
 import wqa.common.ListFlowLayout;
 import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.net.URL;
 import java.util.logging.Level;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import static javax.swing.SwingConstants.BOTTOM;
-import static javax.swing.SwingConstants.CENTER;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.dev.data.SIOInfo;
 import wqa.bill.io.ShareIO;
-import wqa.bill.io.IOManager;
 import wqa.system.WQAPlatform;
+import wqa.winio.adapter.IOManager;
 
 /**
  *

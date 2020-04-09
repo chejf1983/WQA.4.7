@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.bill.io;
+package wqa.winio.adapter;
 
 import wqa.dev.intf.IAbstractIO;
 
