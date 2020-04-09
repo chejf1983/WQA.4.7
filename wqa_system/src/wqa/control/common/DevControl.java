@@ -100,6 +100,35 @@ public class DevControl {
         }
     }
 
+    private void MainAction() {
+        try {
+            ((ShareIO) device.GetIO()).Lock();
+            //连接状态下，获取数据
+            if (GetState() == ControlState.CONNECT) {
+                if (!GetCollector().CollectData()) {
+                    ChangeState(ControlState.DISCONNECT);
+                }
+            }
+            if (GetState() == ControlState.ALARM) {
+                if (!GetCollector().CollectData()) {
+                    ChangeState(ControlState.DISCONNECT);
+                }
+            }
+
+            if (GetState() == ControlState.DISCONNECT) {
+                KeepAlive();
+            }
+            if (GetState() == ControlState.CONFIG) {
+                KeepAlive();
+            }
+        } catch (Exception ex) {
+            ChangeState(ControlState.DISCONNECT);
+            LogCenter.Instance().PrintLog(Level.SEVERE, ex.getMessage());
+        } finally {
+            ((ShareIO) device.GetIO()).UnLock();
+        }
+    }
+
     private class Process implements Runnable {
 
         boolean is_start = true;
@@ -107,39 +136,14 @@ public class DevControl {
         @Override
         public void run() {
             while (is_start) {
+                state_lock.lock();
                 try {
-                    ((ShareIO) device.GetIO()).Lock();
-                    state_lock.lock();
-                    //连接状态下，获取数据
-                    if (GetState() == ControlState.CONNECT) {
-                        if (!GetCollector().CollectData()) {
-                            ChangeState(ControlState.DISCONNECT);
-                        }
-                    }
-                    if (GetState() == ControlState.ALARM) {
-                        if (!GetCollector().CollectData()) {
-                            ChangeState(ControlState.DISCONNECT);
-                        }
-                    }
-
-                    if (GetState() == ControlState.DISCONNECT) {
-                        KeepAlive();
-                    }
-                    if (GetState() == ControlState.CONFIG) {
-                        KeepAlive();
-                    }
-                } catch (Exception ex) {
-                    ChangeState(ControlState.DISCONNECT);
-                    LogCenter.Instance().PrintLog(Level.SEVERE, ex.getMessage());
-                } finally {
-                    state_lock.unlock();
-                    ((ShareIO) device.GetIO()).UnLock();
-                }
-
-                try {
+                    MainAction();
                     TimeUnit.SECONDS.sleep(2);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(DevMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    state_lock.unlock();
                 }
             }
         }
