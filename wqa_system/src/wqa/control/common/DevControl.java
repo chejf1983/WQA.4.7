@@ -139,11 +139,14 @@ public class DevControl {
                 state_lock.lock();
                 try {
                     MainAction();
+                } finally {
+                    state_lock.unlock();
+                }
+                
+                try {
                     TimeUnit.SECONDS.sleep(2);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(DevMonitor.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    state_lock.unlock();
                 }
             }
         }
