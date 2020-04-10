@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
+import wqa.winio.adapter.WComManager;
 
 /**
  *
@@ -131,9 +132,7 @@ public class COMPane extends javax.swing.JPanel {
     private void ToggleButton_OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButton_OpenActionPerformed
         if (ToggleButton_Open.isSelected()) {
             try {
-                SIOInfo newinfo = io.GetConnectInfo();
-                newinfo.par[1] = this.ComboBox_bandrate.getSelectedItem().toString();
-                io.SetConnectInfo(newinfo);
+                WComManager.GetInstance().ChangeBandrate(io, this.ComboBox_bandrate.getSelectedItem().toString());
                 io.Open();
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "打开串口失败", ex);

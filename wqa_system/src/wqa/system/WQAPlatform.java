@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.bill.io.IOManager;
 import wqa.control.common.DevControlManager;
 import wqa.control.DB.DBHelperFactory;
 import wqa.bill.log.DevLog;
@@ -89,6 +90,15 @@ public class WQAPlatform {
             devcontrol_manager = new DevControlManager();
         }
         return devcontrol_manager;
+    }
+    
+    private IOManager ioManager;
+    public IOManager GetIOManager() {
+        if (ioManager == null) {
+            ioManager = new IOManager();
+            ioManager.InitLogWatchDog();
+        }
+        return ioManager;
     }
 
     //线程池

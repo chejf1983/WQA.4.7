@@ -22,7 +22,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.SDataPacket;
 import wqa.common.InitPaneHelper;
 import wqa.form.errormsg.MsgBoxFactory;
-import wqa.winio.adapter.IOManager;
+import wqa.system.WQAPlatform;
 
 /**
  *
@@ -55,7 +55,7 @@ public class LogPane extends javax.swing.JPanel {
             }
         });
 
-        IOManager.GetInstance().SendReceive.RegeditListener(new EventListener<String>() {
+        WQAPlatform.GetInstance().GetIOManager().SendReceive.RegeditListener(new EventListener<String>() {
             @Override
             public void recevieEvent(Event<String> event) {
                 java.awt.EventQueue.invokeLater(() -> {

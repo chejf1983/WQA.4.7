@@ -39,7 +39,7 @@ import wqa.form.iolist.IOConfigDialog;
 import wqa.form.monitor.MonitorPaneDesk;
 import wqa.system.WQAPlatform;
 import wqa.form.alarm.AlarmSearch;
-import wqa.winio.adapter.IOManager;
+import wqa.winio.adapter.WComManager;
 
 /**
  *
@@ -169,7 +169,7 @@ public class MainForm extends javax.swing.JFrame {
 
             ProcessDialog.ApplyGlobalProcessBar();
             Future submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
-                WQAPlatform.GetInstance().GetManager().SearchDevice(IOManager.GetInstance().GetAllIO(), new IMainProcess() {
+                WQAPlatform.GetInstance().GetManager().SearchDevice(WComManager.GetInstance().GetAllOpenCom(), new IMainProcess() {
                     @Override
                     public void SetValue(float pecent) {
                         java.awt.EventQueue.invokeLater(() -> {
@@ -192,12 +192,8 @@ public class MainForm extends javax.swing.JFrame {
                 });
             });
 
-            int opio = 0;
-            for(ShareIO io :IOManager.GetInstance().GetAllIO() ){
-                if(!io.IsClosed()){
-                    opio++;
-                }
-            }
+            int opio = WComManager.GetInstance().GetAllOpenCom().length;
+           
             /**
              * 增加超时机制
              */

@@ -48,7 +48,7 @@ public interface IAbstractIO {
      */
     public SIOInfo GetConnectInfo();
 
-    public void SetConnectInfo(SIOInfo info) throws Exception;
+    public void SetConnectInfo(SIOInfo info);
 
     //最大包长度
     public int MaxBuffersize();

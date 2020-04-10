@@ -13,7 +13,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
 import wqa.system.WQAPlatform;
-import wqa.winio.adapter.IOManager;
+import wqa.winio.adapter.WComManager;
 
 /**
  *
@@ -54,8 +54,8 @@ public class IOConfigDialog extends javax.swing.JDialog {
 
     private void RefreshIO() {
         this.IO_PaneDesk.removeAll();
-
-        ShareIO[] iolist = IOManager.GetInstance().RefleshAllIO();
+        WComManager.GetInstance().InitAllCom();
+        ShareIO[] iolist = WComManager.GetInstance().GetAllCom();
         for (ShareIO iolist1 : iolist) {
             if (SIOInfo.COM.equals(iolist1.GetConnectInfo().iotype)) {
                 COMPane com = new COMPane();
@@ -206,18 +206,18 @@ public class IOConfigDialog extends javax.swing.JDialog {
     private void Button_AddComActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AddComActionPerformed
         // TODO add your handling code here:
         String COMName = TextField_ComName.getText().trim();
-        if (IOManager.GetInstance().AddUserCOM(COMName)) {
-            this.RefreshIO();
-        } else {
-            LogCenter.Instance().ShowMessBox(Level.SEVERE, "串口已经存在");
-        }
-        try {
-            int nm = Integer.valueOf(COMName.substring(3));
-            String newName = "COM" + (nm + 1);
-            TextField_ComName.setText(newName);
-        } catch (Exception ex) {
-
-        }
+//        if (IOManager2.GetInstance().AddUserCOM(COMName)) {
+//            this.RefreshIO();
+//        } else {
+//            LogCenter.Instance().ShowMessBox(Level.SEVERE, "串口已经存在");
+//        }
+//        try {
+//            int nm = Integer.valueOf(COMName.substring(3));
+//            String newName = "COM" + (nm + 1);
+//            TextField_ComName.setText(newName);
+//        } catch (Exception ex) {
+//
+//        }
     }//GEN-LAST:event_Button_AddComActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

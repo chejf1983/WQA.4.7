@@ -18,8 +18,6 @@ import wqa.dev.intf.IMAbstractIO;
  */
 public class ShareIO implements IMAbstractIO {
 
-    //用户数
-    public int UserNum = 0;
     private IAbstractIO io;
     private final ReentrantLock share_lock = new ReentrantLock(true);
 
@@ -28,8 +26,8 @@ public class ShareIO implements IMAbstractIO {
     public ShareIO(IAbstractIO io) {
         this.io = io;
     }
-
-    // <editor-fold defaultstate="collapsed" desc="IO控制">       
+  
+    // <editor-fold defaultstate="collapsed" desc="IO控制">   
     public void Lock() throws Exception {
         if (this.IsClosed()) {
             throw new Exception(this.io.GetConnectInfo().par[0] + "串口未打开");
@@ -41,8 +39,18 @@ public class ShareIO implements IMAbstractIO {
         if (share_lock.isLocked()) {
             share_lock.unlock();
         }
+    }  
+    
+    public SIOInfo GetConnectInfo() {
+        return this.io.GetConnectInfo();
     }
 
+    public void SetConnectInfo(SIOInfo info) {
+        this.io.SetConnectInfo(info);
+    }
+    // </editor-fold>  
+
+    // <editor-fold defaultstate="collapsed" desc="IMAbstractIO接口"> 
     @Override
     public void SendData(byte[] data) throws Exception {
         if (!this.io.IsClosed()) {
@@ -69,30 +77,6 @@ public class ShareIO implements IMAbstractIO {
     }
 
     @Override
-    public MIOInfo GetIOInfo() {
-        SIOInfo info = this.io.GetConnectInfo();
-        return new MIOInfo(info.iotype, info.par);
-    }
-
-    public SIOInfo GetConnectInfo() {
-        return this.io.GetConnectInfo();
-    }
-
-    @Override
-    public int MaxBuffersize() {
-        return this.io.MaxBuffersize();
-    }
-
-//    @Override
-    public void SetConnectInfo(SIOInfo info) throws Exception {
-        this.io.SetConnectInfo(info);
-        WQAPlatform.GetInstance().GetConfig().setProperty(info.par[0], info.par[1]);
-        WQAPlatform.GetInstance().SaveConfig();
-    }
-    // </editor-fold>  
-
-    // <editor-fold defaultstate="collapsed" desc="IO开关">   
-    @Override
     public boolean IsClosed() {
         return this.io.IsClosed();
     }
@@ -106,6 +90,16 @@ public class ShareIO implements IMAbstractIO {
     public void Close() {
         this.io.Close();
     }
-// </editor-fold>  
+    
+    @Override
+    public MIOInfo GetIOInfo() {
+        SIOInfo info = this.io.GetConnectInfo();
+        return new MIOInfo(info.iotype, info.par);
+    }
 
+    @Override
+    public int MaxBuffersize() {
+        return this.io.MaxBuffersize();
+    }
+    // </editor-fold>  
 }

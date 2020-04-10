@@ -46,13 +46,7 @@ public class DevControlManager {
         //罗列所有物理口
 //        ShareIO[] iolist = IOManager.GetInstance().GetAllIO();
 
-        int open_io = 0;
-        for (ShareIO io : iolist) {
-            if (!io.IsClosed()) {
-                open_io++;
-            }
-        }
-        float max_num = open_io * max_addr;
+        float max_num = iolist.length * max_addr;
         float search_num = 0;
 
         //遍历所有物理口
