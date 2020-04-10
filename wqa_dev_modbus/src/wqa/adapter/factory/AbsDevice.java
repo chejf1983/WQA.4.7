@@ -10,9 +10,9 @@ import modebus.pro.ModeBusNode;
 import modebus.register.*;
 import wqa.adapter.factory.CDevDataTable.DataInfo;
 import wqa.dev.data.DevID;
-import wqa.dev.data.SConnectInfo;
+import wqa.dev.data.MIOInfo;
+import wqa.dev.data.SDevInfo;
 import wqa.dev.data.SDisplayData;
-import wqa.dev.data.SIOInfo;
 import wqa.dev.intf.*;
 
 /**
@@ -38,7 +38,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     protected final BREG SDTEMPSWT = new BREG(0x42, 1, "手动温补开关"); //R/W
     protected final FREG SDTEMP = new FREG(0x43, 2, "手动温补值", 0, 60);//R/W
 
-    public AbsDevice(IAbstractIO io, byte addr) {
+    public AbsDevice(IMAbstractIO io, byte addr) {
         this.base_drv = new ModeBusNode(io, addr);
     }
 
@@ -51,8 +51,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
         DEVADDR.SetValue((int)this.base_drv.GetCurrentAddr());
         //波特率序号也根据IO信息来，设备读出来不准确
-        SIOInfo comm_info = this.base_drv.GetIO().GetConnectInfo();
-        if (comm_info.iotype.equals(SIOInfo.COM)) {
+        MIOInfo comm_info = this.base_drv.GetIO().GetIOInfo();
+        if (comm_info.iotype.equals(MIOInfo.COM)) {
             String sbandrate = comm_info.par[1];
             for (int i = 0; i < this.SBandRate.length; i++) {
                 if (sbandrate.contentEquals(this.SBandRate[i])) {
@@ -65,7 +65,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     // <editor-fold defaultstate="collapsed" desc="公共接口接口">
     @Override
-    public IAbstractIO GetIO(){
+    public IMAbstractIO GetIO(){
         return this.base_drv.GetIO();
     }
 
@@ -88,10 +88,10 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         return ProType.MODEBUS;
     }
 
-    private SConnectInfo info = new SConnectInfo();
+    private SDevInfo info = new SDevInfo();
 
     @Override
-    public SConnectInfo GetConnectInfo() {
+    public SDevInfo GetDevInfo() {
         //初始化连接信息
         info.io = this.base_drv.GetIO();
         info.dev_id = new DevID(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue());

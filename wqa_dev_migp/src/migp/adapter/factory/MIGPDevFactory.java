@@ -21,9 +21,10 @@ import migp.adapter.ISA.ISA_X;
 import migp.adapter.OSA.OSA_X;
 import static migp.adapter.factory.AbsDevice.DEF_RETRY;
 import static migp.adapter.factory.AbsDevice.DEF_TIMEOUT;
-import wqa.dev.intf.IAbstractIO;
+import wqa.dev.data.MIOInfo;
 import wqa.dev.intf.IDevice;
 import wqa.dev.intf.IDeviceSearch;
+import wqa.dev.intf.IMAbstractIO;
 
 /**
  *
@@ -33,6 +34,7 @@ public class MIGPDevFactory implements IDeviceSearch {
 
     // <editor-fold defaultstate="collapsed" desc="设备类目录">
     private final HashMap<Integer, String> class_map = new HashMap<>();
+
     public MIGPDevFactory() {
         class_map.put(0x0200, ESA_PH.class.getName());
         class_map.put(0x0220, ESA_PH.class.getName());
@@ -43,7 +45,7 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x0208, ESA_ORP.class.getName());
         class_map.put(0x0210, EOSA_DO.class.getName());
         class_map.put(0xA210, EOSA_DO.class.getName());
-        
+
         class_map.put(0x0100, OSA_X.class.getName());
         class_map.put(0x0102, OSA_X.class.getName());
         class_map.put(0x0104, OSA_X.class.getName());
@@ -53,7 +55,7 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x010E, OSA_X.class.getName());
         class_map.put(0x0110, EOSA_DO.class.getName());
         class_map.put(0xA110, EOSA_DO.class.getName());
-        
+
         class_map.put(0x0300, ISA_X.class.getName());
         class_map.put(0x0301, ISA_X.class.getName());
         class_map.put(0x0308, ISA_X.class.getName());
@@ -64,15 +66,11 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x0320, ISA_X.class.getName());
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="搜索设备">
     //搜索指定物理口
     @Override
-    public IDevice[] SearchDevice(IAbstractIO io) {
-        if (io.IsClosed()) {
-            return new IDevice[0];
-        }
-
+    public IDevice[] SearchDevice(IMAbstractIO io) {
         //尝试打开IO口
         ArrayList<IDevice> devlist = new ArrayList();
 
@@ -93,22 +91,22 @@ public class MIGPDevFactory implements IDeviceSearch {
 
     //搜索一个设备
     @Override
-    public IDevice SearchOneDev(IAbstractIO io, byte addr) throws Exception {
+    public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception {
         //创建一个基础协议包
-        MIGP_CmdSend base = new MIGP_CmdSend(Convert(io), (byte)0xF0, addr);
+        MIGP_CmdSend base = new MIGP_CmdSend(Convert(io), (byte) 0xF0, addr);
         //搜索设备基本信息，根据基本信息创建虚拟设备
 //        return null;
         return this.BuildDevice(io, (byte) addr, SearchDevType(base));
     }
 
     //创建设备
-    private IDevice BuildDevice(IAbstractIO io, byte addr, int DevType) throws Exception {
+    private IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
             //反射获取对应类
             Class stu = Class.forName(class_name);
-            Constructor constructor = stu.getConstructor(IAbstractIO.class, byte.class);
+            Constructor constructor = stu.getConstructor(IMAbstractIO.class, byte.class);
             return (IDevice) constructor.newInstance(io, addr);
         } else {
             //没有找到设备类，返回空
@@ -120,9 +118,9 @@ public class MIGPDevFactory implements IDeviceSearch {
             return null;
         }
     }
-    
+
     //获取设备类型函数
-    public static int SearchDevType(MIGP_CmdSend sender){
+    public static int SearchDevType(MIGP_CmdSend sender) {
         VPA VPA00 = new VPA(0x00, 2);//设备类型地址
         VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
         try {
@@ -144,14 +142,15 @@ public class MIGPDevFactory implements IDeviceSearch {
             return -1;
         }
     }
-        
-    public static AbstractIO Convert(IAbstractIO io) {
+
+    public static AbstractIO Convert(IMAbstractIO io) {
         return new AbstractIO() {
-            private final IAbstractIO instance = io;
+            private final IMAbstractIO instance = io;
 
             @Override
             public boolean IsClosed() {
                 return instance.IsClosed();
+//                return false;
             }
 
             @Override
@@ -179,13 +178,14 @@ public class MIGPDevFactory implements IDeviceSearch {
 
             @Override
             public IOInfo GetConnectInfo() {
-                wqa.dev.data.SIOInfo ioinfo = this.instance.GetConnectInfo();
+                MIOInfo ioinfo = this.instance.GetIOInfo();
                 return new IOInfo(ioinfo.iotype, ioinfo.par);
             }
 
             @Override
             public int MaxBuffersize() {
                 return this.instance.MaxBuffersize();
+//                return 65535;
             }
         };
     }

@@ -16,10 +16,11 @@ import java.util.logging.Logger;
 import nahon.comm.event.Event;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.bill.io.IAbstractIO;
 import wqa.bill.io.SDataPacket;
-import wqa.dev.data.SIOInfo;
-import wqa.dev.intf.IAbstractIO;
+import wqa.bill.io.SIOInfo;
 import wqa.system.WQAPlatform;
+import wqa.dev.intf.IMAbstractIO;
 
 /**
  *

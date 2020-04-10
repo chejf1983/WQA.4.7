@@ -38,7 +38,7 @@ public class ECDevice extends AbsDevice {
     private final FREG CLTEMPER = new FREG(0x3A, 2, "温度定标参数");    //R/W
     private final IREG CLTEMPERSTART = new IREG(0x3C, 1, "启动温度定标");//R/W
 
-    public ECDevice(IAbstractIO io, byte addr) {
+    public ECDevice(IMAbstractIO io, byte addr) {
         super(io, addr);
     }
 

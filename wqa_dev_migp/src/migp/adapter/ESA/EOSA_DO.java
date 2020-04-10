@@ -20,7 +20,7 @@ import wqa.dev.intf.*;
  */
 public class EOSA_DO extends ESADEV {
 
-    public EOSA_DO(IAbstractIO io, byte addr) {
+    public EOSA_DO(IMAbstractIO io, byte addr) {
         super(io, addr);
     }
     

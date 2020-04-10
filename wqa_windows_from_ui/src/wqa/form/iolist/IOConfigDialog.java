@@ -10,7 +10,7 @@ import wqa.common.ListFlowLayout;
 import java.awt.FlowLayout;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.dev.data.SIOInfo;
+import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
 import wqa.system.WQAPlatform;
 import wqa.winio.adapter.IOManager;

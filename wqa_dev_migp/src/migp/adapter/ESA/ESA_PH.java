@@ -21,7 +21,7 @@ import wqa.dev.intf.*;
  */
 public class ESA_PH extends ESADEV {
 
-    public ESA_PH(IAbstractIO io, byte addr) {
+    public ESA_PH(IMAbstractIO io, byte addr) {
         super(io, addr);
     }
 

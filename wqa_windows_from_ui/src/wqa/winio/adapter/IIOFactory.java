@@ -5,7 +5,7 @@
  */
 package wqa.winio.adapter;
 
-import wqa.dev.intf.IAbstractIO;
+import wqa.bill.io.IAbstractIO;
 
 /**
  *

@@ -27,12 +27,7 @@ import wqa.dev.intf.*;
 public class ModBusDevFactory implements IDeviceSearch {
     //搜索指定物理口
     @Override
-    public IDevice[] SearchDevice(IAbstractIO io) {
-        if (io.IsClosed()) {
-            return new IDevice[0];
-        }
-
-        //尝试打开IO口
+    public IDevice[] SearchDevice(IMAbstractIO io) {
         ArrayList<IDevice> devlist = new ArrayList();
 
         for (int i = 1; i < 0x20; i++) {
@@ -52,7 +47,7 @@ public class ModBusDevFactory implements IDeviceSearch {
 
     //搜索一个设备
     @Override
-    public IDevice SearchOneDev(IAbstractIO io, byte addr) throws Exception {
+    public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception {
         //创建一个基础协议包
         ModeBusNode base = new ModeBusNode(io, addr);
         IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
@@ -62,12 +57,12 @@ public class ModBusDevFactory implements IDeviceSearch {
     }
 
     //创建设备
-    private IDevice BuildDevice(IAbstractIO io, byte addr, int DevType) throws Exception {
+    private IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
             Class stu = Class.forName(class_name);
-            Constructor constructor = stu.getConstructor(IAbstractIO.class, byte.class);
+            Constructor constructor = stu.getConstructor(IMAbstractIO.class, byte.class);
             return (IDevice) constructor.newInstance(io, addr);
         } else {
             if (DevType != -1) {

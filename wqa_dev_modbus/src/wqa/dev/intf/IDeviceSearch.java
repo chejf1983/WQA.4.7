@@ -10,8 +10,8 @@ package wqa.dev.intf;
  * @author chejf
  */
 public interface IDeviceSearch {
-    public IDevice[] SearchDevice(IAbstractIO io);
+    public IDevice[] SearchDevice(IMAbstractIO io);
     
-    public IDevice SearchOneDev(IAbstractIO io, byte addr) throws Exception;
+    public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception;
 
 }

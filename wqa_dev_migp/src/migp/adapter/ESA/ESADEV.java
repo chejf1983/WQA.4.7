@@ -8,7 +8,7 @@ package migp.adapter.ESA;
 import base.migp.mem.*;
 import base.migp.reg.*;
 import migp.adapter.factory.AbsDevice;
-import wqa.dev.intf.IAbstractIO;
+import wqa.dev.intf.IMAbstractIO;
 
 /**
  *
@@ -42,7 +42,7 @@ public abstract class ESADEV extends AbsDevice{
     // </editor-fold> 
     // </editor-fold> 
 
-    public ESADEV(IAbstractIO io, byte addr) {
+    public ESADEV(IMAbstractIO io, byte addr) {
         super(io, addr);
     }    
     

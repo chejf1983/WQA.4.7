@@ -5,7 +5,7 @@
  */
 package wqa.dev.intf;
 
-import wqa.dev.data.SConnectInfo;
+import wqa.dev.data.SDevInfo;
 
 
 /**
@@ -24,7 +24,7 @@ public interface IDevice {
     //重新获取设备
     public int ReTestType();   
     
-    public IAbstractIO GetIO();
+    public IMAbstractIO GetIO();
     // </editor-fold>      
     
     // <editor-fold defaultstate="collapsed" desc="基本信息">  
@@ -35,7 +35,7 @@ public interface IDevice {
     public ProType GetProType();
     
     //获取连接信息
-    public SConnectInfo GetConnectInfo();    
+    public SDevInfo GetDevInfo();    
     // </editor-fold>  
                
 }

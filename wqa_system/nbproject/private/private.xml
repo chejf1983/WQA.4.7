@@ -5,6 +5,7 @@
         <group>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_system/src/wqa/control/common/DevControl.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_system/src/wqa/control/common/DevControlManager.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_system/src/wqa/control/config/DevConfigBean.java</file>
             <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_system/src/wqa/system/WQAPlatform.java</file>
         </group>
     </open-files>

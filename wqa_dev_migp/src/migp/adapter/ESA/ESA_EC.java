@@ -20,7 +20,7 @@ import wqa.dev.intf.*;
  */
 public class ESA_EC extends ESADEV {
 
-    public ESA_EC(IAbstractIO io, byte addr) {
+    public ESA_EC(IMAbstractIO io, byte addr) {
         super(io, addr);
     }
 

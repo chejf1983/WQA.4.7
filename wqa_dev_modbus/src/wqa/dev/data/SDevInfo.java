@@ -5,19 +5,19 @@
  */
 package wqa.dev.data;
 
-import wqa.dev.intf.IAbstractIO;
+import wqa.dev.intf.IMAbstractIO;
 
 
 /**
  *
  * @author chejf
  */
-public class SConnectInfo {
+public class SDevInfo {
 
-    public IAbstractIO io;
+    public IMAbstractIO io;
     public DevID dev_id;
 
-    public boolean EqualsTo(SConnectInfo other) {
+    public boolean EqualsTo(SDevInfo other) {
         return this.io == other.io
                 && this.dev_id.EqualsTo(other.dev_id);
     }

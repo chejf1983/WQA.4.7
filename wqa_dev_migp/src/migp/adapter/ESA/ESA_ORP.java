@@ -20,7 +20,7 @@ import wqa.dev.intf.*;
  */
 public class ESA_ORP extends ESADEV {
 
-    public ESA_ORP(IAbstractIO io, byte addr) {
+    public ESA_ORP(IMAbstractIO io, byte addr) {
         super(io, addr);
     }
 

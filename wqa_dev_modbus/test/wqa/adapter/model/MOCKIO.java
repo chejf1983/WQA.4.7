@@ -5,7 +5,6 @@
  */
 package wqa.adapter.model;
 
-import wqa.adapter.factory.*;
 import wqa.dev.data.*;
 import wqa.dev.intf.*;
 
@@ -13,7 +12,7 @@ import wqa.dev.intf.*;
  *
  * @author chejf
  */
-public class MOCKIO implements IAbstractIO {
+public class MOCKIO implements IMAbstractIO {
 
     private boolean isclosed = true;
     private ModbusClient client = null;
@@ -62,18 +61,12 @@ public class MOCKIO implements IAbstractIO {
     }
 
     @Override
-    public SIOInfo GetConnectInfo() {
-        return new SIOInfo(SIOInfo.COM, "COM9", "9600");
-    }
-
-    @Override
-    public void SetConnectInfo(SIOInfo info) throws Exception {
-        return;
+    public MIOInfo GetIOInfo() {
+        return new MIOInfo("COM", new String[]{"COM9", "9600"});
     }
 
     @Override
     public int MaxBuffersize() {
         return 65535;
     }
-
 }

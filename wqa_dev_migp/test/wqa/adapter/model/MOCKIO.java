@@ -5,14 +5,14 @@
  */
 package wqa.adapter.model;
 
-import wqa.dev.data.SIOInfo;
-import wqa.dev.intf.IAbstractIO;
+import wqa.dev.data.MIOInfo;
+import wqa.dev.intf.IMAbstractIO;
 
 /**
  *
  * @author chejf
  */
-public class MOCKIO implements IAbstractIO {
+public class MOCKIO implements IMAbstractIO {
 
     private boolean isclosed = true;
     private MigpClient client = null;
@@ -49,7 +49,7 @@ public class MOCKIO implements IAbstractIO {
     @Override
     public int ReceiveData(byte[] data, int timeout) throws Exception {
         byte[] mem = this.client.Reply();
-        System.arraycopy(mem, 0, data, 0, mem.length);        
+        System.arraycopy(mem, 0, data, 0, mem.length);
         if (mem.length > 0) {
             PrintLog.PrintIO("REC:");
             for (int i = 0; i < mem.length; i++) {
@@ -61,18 +61,12 @@ public class MOCKIO implements IAbstractIO {
     }
 
     @Override
-    public SIOInfo GetConnectInfo() {
-        return new SIOInfo(SIOInfo.COM, "COM9", "9600");
-    }
-
-    @Override
-    public void SetConnectInfo(SIOInfo info) throws Exception {
-        return;
+    public MIOInfo GetIOInfo() {
+        return new MIOInfo(MIOInfo.COM, "COM9", "9600");
     }
 
     @Override
     public int MaxBuffersize() {
         return 65535;
     }
-
 }

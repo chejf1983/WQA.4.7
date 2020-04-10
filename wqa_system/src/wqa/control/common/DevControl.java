@@ -14,7 +14,7 @@ import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.dev.intf.ICollect;
-import wqa.dev.data.SConnectInfo;
+import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.IDevice;
 import wqa.system.WQAPlatform;
 
@@ -60,8 +60,8 @@ public class DevControl {
         this.device = device;
     }
 
-    public SConnectInfo GetConnectInfo() {
-        return device.GetConnectInfo();
+    public SDevInfo GetConnectInfo() {
+        return device.GetDevInfo();
     }
 
     public IDevice.ProType GetProType() {
@@ -70,7 +70,7 @@ public class DevControl {
 
     public String ToString() {
         //获取数据key
-        return this.device.GetConnectInfo().dev_id.ToChineseString() + "(" + GetConnectInfo().io.GetConnectInfo().par[0] + ")";
+        return this.device.GetDevInfo().dev_id.ToChineseString() + "(" + device.GetDevInfo().io.GetIOInfo().par[0] + ")";
     }
     // </editor-fold>    
 
@@ -94,7 +94,7 @@ public class DevControl {
     public boolean ReConnect() {
         try {
             int devtype = this.device.ReTestType();
-            return this.device.GetConnectInfo().dev_id.dev_type == devtype;
+            return this.device.GetDevInfo().dev_id.dev_type == devtype;
         } catch (Exception ex) {
             return false;
         }

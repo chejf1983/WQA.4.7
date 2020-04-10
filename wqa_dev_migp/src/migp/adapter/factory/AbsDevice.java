@@ -23,7 +23,7 @@ import wqa.dev.data.*;
 public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     protected MIGP_CmdSend base_drv;
-    private final IAbstractIO local_io;
+    private final IMAbstractIO local_io;
     public static int DEF_TIMEOUT = 400; //ms
     public static int DEF_RETRY = 3;
 
@@ -31,14 +31,14 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     MIGPEia eiainfo = new MIGPEia(this.base_drv);
     public final IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");  //R  
 
-    public AbsDevice(IAbstractIO io, byte addr) {
+    public AbsDevice(IMAbstractIO io, byte addr) {
         this.base_drv = new MIGP_CmdSend(MIGPDevFactory.Convert(io), (byte) 0xF0, addr);
         this.local_io = io;
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">
     @Override
-    public IAbstractIO GetIO() {
+    public IMAbstractIO GetIO() {
         return this.local_io;
     }
 
@@ -49,8 +49,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         this.ReadMEG(VDEVTYPE);
         this.ReadMEG(eiainfo.EBUILDDATE, eiainfo.EBUILDSER, eiainfo.EDEVNAME, eiainfo.EHWVER, eiainfo.ESWVER);
 
-        SIOInfo comm_info = this.local_io.GetConnectInfo();
-        if (comm_info.iotype.equals(SIOInfo.COM)) {
+        MIOInfo comm_info = this.local_io.GetIOInfo();
+        if (comm_info.iotype.equals(MIOInfo.COM)) {
             //串口的情况下，参数1表示波特率
             String sbandrate = comm_info.par[1];
             for (int i = 0; i < BANDRATE_STRING.length; i++) {
@@ -79,9 +79,9 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     //获取连接信息
     @Override
-    public SConnectInfo GetConnectInfo() {
+    public SDevInfo GetDevInfo() {
         //初始化连接信息
-        SConnectInfo info = new SConnectInfo();
+        SDevInfo info = new SDevInfo();
         info.io = this.local_io;
         info.dev_id = new DevID(this.VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
         return info;

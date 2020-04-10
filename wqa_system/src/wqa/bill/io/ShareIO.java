@@ -5,21 +5,21 @@
  */
 package wqa.bill.io;
 
-import wqa.dev.data.SIOInfo;
 import java.util.concurrent.locks.ReentrantLock;
 import nahon.comm.event.EventCenter;
 import wqa.bill.io.SDataPacket.IOEvent;
-import wqa.dev.intf.IAbstractIO;
+import wqa.dev.data.MIOInfo;
 import wqa.system.WQAPlatform;
+import wqa.dev.intf.IMAbstractIO;
 
 /**
  *
  * @author chejf
  */
-public class ShareIO implements IAbstractIO{
+public class ShareIO implements IMAbstractIO {
 
     //用户数
-    public int UserNum = 0;        
+    public int UserNum = 0;
     private IAbstractIO io;
     private final ReentrantLock share_lock = new ReentrantLock(true);
 
@@ -48,7 +48,7 @@ public class ShareIO implements IAbstractIO{
         if (!this.io.IsClosed()) {
             byte[] tmp = new byte[data.length];
             System.arraycopy(data, 0, tmp, 0, data.length);
-            this.SendReceive.CreateEventAsync(new SDataPacket(this.GetConnectInfo(), IOEvent.Send, tmp));
+            this.SendReceive.CreateEventAsync(new SDataPacket(this.io.GetConnectInfo(), IOEvent.Send, tmp));
             this.io.SendData(data);
         }
     }
@@ -60,7 +60,7 @@ public class ShareIO implements IAbstractIO{
             if (reclen > 0) {
                 byte[] tmp = new byte[reclen];
                 System.arraycopy(data, 0, tmp, 0, reclen);
-                this.SendReceive.CreateEventAsync(new SDataPacket(this.GetConnectInfo(), IOEvent.Receive, tmp));
+                this.SendReceive.CreateEventAsync(new SDataPacket(this.io.GetConnectInfo(), IOEvent.Receive, tmp));
             }
             return reclen;
         } else {
@@ -69,6 +69,11 @@ public class ShareIO implements IAbstractIO{
     }
 
     @Override
+    public MIOInfo GetIOInfo() {
+        SIOInfo info = this.io.GetConnectInfo();
+        return new MIOInfo(info.iotype, info.par);
+    }
+
     public SIOInfo GetConnectInfo() {
         return this.io.GetConnectInfo();
     }
@@ -77,8 +82,8 @@ public class ShareIO implements IAbstractIO{
     public int MaxBuffersize() {
         return this.io.MaxBuffersize();
     }
-    
-    @Override
+
+//    @Override
     public void SetConnectInfo(SIOInfo info) throws Exception {
         this.io.SetConnectInfo(info);
         WQAPlatform.GetInstance().GetConfig().setProperty(info.par[0], info.par[1]);
@@ -102,5 +107,5 @@ public class ShareIO implements IAbstractIO{
         this.io.Close();
     }
 // </editor-fold>  
-    
+
 }

@@ -125,7 +125,7 @@ public class DevControlManager {
             dev.InitDevice();
             //避免重复添加
             for (DevControl tmp : this.control_list) {
-                if (dev.GetConnectInfo().EqualsTo(tmp.GetConnectInfo())) {
+                if (dev.GetDevInfo().EqualsTo(tmp.GetConnectInfo())) {
                     //已经存在就不再搜索
                     return null;
                 }

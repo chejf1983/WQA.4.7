@@ -23,7 +23,7 @@ import wqa.dev.intf.*;
  */
 public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
-    public OSA_X(IAbstractIO io, byte addr) {
+    public OSA_X(IMAbstractIO io, byte addr) {
         super(io, addr);
     }
 
