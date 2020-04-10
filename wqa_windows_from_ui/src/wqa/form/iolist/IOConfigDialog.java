@@ -206,18 +206,18 @@ public class IOConfigDialog extends javax.swing.JDialog {
     private void Button_AddComActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AddComActionPerformed
         // TODO add your handling code here:
         String COMName = TextField_ComName.getText().trim();
-//        if (IOManager2.GetInstance().AddUserCOM(COMName)) {
-//            this.RefreshIO();
-//        } else {
-//            LogCenter.Instance().ShowMessBox(Level.SEVERE, "串口已经存在");
-//        }
-//        try {
-//            int nm = Integer.valueOf(COMName.substring(3));
-//            String newName = "COM" + (nm + 1);
-//            TextField_ComName.setText(newName);
-//        } catch (Exception ex) {
-//
-//        }
+        if (WComManager.GetInstance().AddCom(COMName)){
+            this.RefreshIO();
+            try {
+                int nm = Integer.valueOf(COMName.substring(3));
+                String newName = "COM" + (nm + 1);
+                TextField_ComName.setText(newName);
+            } catch (Exception ex) {
+
+            }
+        }else{
+            LogCenter.Instance().ShowMessBox(Level.SEVERE, "串口已经存在");
+        }
     }//GEN-LAST:event_Button_AddComActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
