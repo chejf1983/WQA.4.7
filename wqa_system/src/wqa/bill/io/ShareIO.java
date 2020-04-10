@@ -9,7 +9,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import nahon.comm.event.EventCenter;
 import wqa.bill.io.SDataPacket.IOEvent;
 import wqa.dev.data.MIOInfo;
-import wqa.system.WQAPlatform;
 import wqa.dev.intf.IMAbstractIO;
 
 /**
@@ -29,9 +28,6 @@ public class ShareIO implements IMAbstractIO {
   
     // <editor-fold defaultstate="collapsed" desc="IO控制">   
     public void Lock() throws Exception {
-        if (this.IsClosed()) {
-            throw new Exception(this.io.GetConnectInfo().par[0] + "串口未打开");
-        }
         share_lock.lock();
     }
 

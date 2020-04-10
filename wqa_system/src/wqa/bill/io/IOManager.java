@@ -55,6 +55,16 @@ public class IOManager {
     public ShareIO[] GetAllIO() {
         return localio.toArray(new ShareIO[0]);
     }
+    
+    public ShareIO[] GetAllOpenIO(){
+        ArrayList<ShareIO> open_coms = new ArrayList();
+        for (ShareIO io : GetAllIO()) {
+            if (!io.IsClosed()) {
+                open_coms.add(io);
+            }
+        }
+        return open_coms.toArray(new ShareIO[0]);
+    }
     // </editor-fold>   
 
     // <editor-fold defaultstate="collapsed" desc="IOlog处理"> 
@@ -130,12 +140,12 @@ public class IOManager {
     // <editor-fold defaultstate="collapsed" desc="IO存储"> 
     private int par_num = 2;
 
-    public void SaveIO(String KEY, ShareIO io) {
+    public void SaveIOConfig(String KEY, ShareIO io) {
         SIOInfo sioInfo = io.GetConnectInfo();
-        this.SaveIO(KEY, sioInfo);
+        this.SaveIOConfig(KEY, sioInfo);
     }
 
-    public void SaveIO(String Key, SIOInfo sioInfo) {
+    public void SaveIOConfig(String Key, SIOInfo sioInfo) {
         WQAPlatform.GetInstance().GetConfig().setProperty(Key, sioInfo.iotype);
         for (int i = 0; i < par_num; i++) {
             if (sioInfo.par.length > i) {
@@ -146,7 +156,7 @@ public class IOManager {
         }
     }
 
-    public SIOInfo GetIO(String Key) {
+    public SIOInfo GetIOConfig(String Key) {
         String iotype = WQAPlatform.GetInstance().GetConfig().getProperty(Key, "NON");
         if (iotype.contentEquals("NON")) {
             return null;

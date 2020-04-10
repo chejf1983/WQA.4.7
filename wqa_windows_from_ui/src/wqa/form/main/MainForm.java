@@ -169,7 +169,7 @@ public class MainForm extends javax.swing.JFrame {
 
             ProcessDialog.ApplyGlobalProcessBar();
             Future submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
-                WQAPlatform.GetInstance().GetManager().SearchDevice(WComManager.GetInstance().GetAllOpenCom(), new IMainProcess() {
+                WQAPlatform.GetInstance().GetManager().SearchDevice(WQAPlatform.GetInstance().GetIOManager().GetAllOpenIO(), new IMainProcess() {
                     @Override
                     public void SetValue(float pecent) {
                         java.awt.EventQueue.invokeLater(() -> {

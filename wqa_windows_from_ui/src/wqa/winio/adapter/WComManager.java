@@ -43,12 +43,12 @@ public class WComManager {
         system_coms = new ShareIO[ComList.length];
         for (int i = 0; i < system_coms.length; i++) {
             //查找配置文件当中的信息
-            SIOInfo ioinfo = WQAPlatform.GetInstance().GetIOManager().GetIO(ComList[i]);
+            SIOInfo ioinfo = WQAPlatform.GetInstance().GetIOManager().GetIOConfig(ComList[i]);
             if (ioinfo == null) {
                 //如果没有找到配置文件，新建一个9600的串口信息
                 ioinfo = new SIOInfo(SIOInfo.COM, ComList[i], "9600");
                 //如果不存在，保存配置信息
-                WQAPlatform.GetInstance().GetIOManager().SaveIO(ComList[i], ioinfo);
+                WQAPlatform.GetInstance().GetIOManager().SaveIOConfig(ComList[i], ioinfo);
             }
             //查找IO库中是否已经存在该串口实体
             system_coms[i] = FindIO(ioinfo);
@@ -165,7 +165,7 @@ public class WComManager {
         SIOInfo ioinfo = ioinstance.GetConnectInfo();
         ioinfo.par[1] = bandrate;
         ioinstance.SetConnectInfo(ioinfo);
-        WQAPlatform.GetInstance().GetIOManager().SaveIO(ioinfo.par[0], ioinfo);
+        WQAPlatform.GetInstance().GetIOManager().SaveIOConfig(ioinfo.par[0], ioinfo);
     }
     // </editor-fold> 
 

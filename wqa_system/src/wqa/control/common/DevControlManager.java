@@ -51,9 +51,11 @@ public class DevControlManager {
 
         //遍历所有物理口
         for (ShareIO io : iolist) {
-            //物理口必须已经打开
             try {
                 io.Lock();
+                //重新开关一次串口
+                io.Close();
+                io.Open();
                 //遍历32个地址
                 for (int i = 1; i < max_addr; i++) {
                     if (process != null) {
