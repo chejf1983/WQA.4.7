@@ -155,12 +155,12 @@ public class MIGPDevFactory implements IDeviceSearch {
 
             @Override
             public void Open() throws Exception {
-                this.instance.Open();
+//                this.instance.Open();
             }
 
             @Override
             public void Close() {
-                this.instance.Close();
+//                this.instance.Close();
             }
 
             @Override

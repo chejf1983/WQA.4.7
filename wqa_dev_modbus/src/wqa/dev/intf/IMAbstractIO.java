@@ -19,11 +19,6 @@ public interface IMAbstractIO {
      */
     public boolean IsClosed();
 
-    //打開IO
-    public void Open() throws Exception;
-
-    //關閉IO
-    public void Close();
     /**
      * 发送数据
      *

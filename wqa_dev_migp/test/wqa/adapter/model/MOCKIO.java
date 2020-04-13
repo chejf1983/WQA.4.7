@@ -26,12 +26,10 @@ public class MOCKIO implements IMAbstractIO {
         return isclosed;
     }
 
-    @Override
     public void Open() throws Exception {
         this.isclosed = false;
     }
 
-    @Override
     public void Close() {
         this.isclosed = true;
     }
