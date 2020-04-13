@@ -14,7 +14,7 @@ public class SIOInfo {
     public static String COM = "COM";
     public static String TCP = "TCP";
     public static String USB = "USB";
-    
+
     public String iotype;
     public String[] par;
 
@@ -27,7 +27,7 @@ public class SIOInfo {
         this.iotype = info.iotype;
         this.par = info.par;
     }
-    
+
     public boolean equalto(SIOInfo info) {
         if (info == null) {
             return false;

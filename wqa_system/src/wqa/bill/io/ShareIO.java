@@ -36,6 +36,14 @@ public class ShareIO implements IMAbstractIO {
             share_lock.unlock();
         }
     }  
+
+    public void Open() throws Exception {
+        this.io.Open();
+    }
+
+    public void Close() {
+        this.io.Close();
+    }
     
     public SIOInfo GetConnectInfo() {
         return this.io.GetConnectInfo();
@@ -75,16 +83,6 @@ public class ShareIO implements IMAbstractIO {
     @Override
     public boolean IsClosed() {
         return this.io.IsClosed();
-    }
-
-    @Override
-    public void Open() throws Exception {
-        this.io.Open();
-    }
-
-    @Override
-    public void Close() {
-        this.io.Close();
     }
     
     @Override
