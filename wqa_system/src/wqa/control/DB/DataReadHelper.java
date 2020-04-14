@@ -17,6 +17,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.bill.db.DataRecord;
 import wqa.dev.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.system.WQAPlatform;
@@ -94,68 +95,6 @@ public class DataReadHelper {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="数据读取接口"> 
-    public class DataRecord {
-
-        //有效数据
-        public Float[] values;
-        //量程+单位
-        public String[] value_strings;
-        //时间
-        public Date time;
-        //DB数据信息
-        public DevTableInfo dev_info;
-
-        private String[] names;
-
-        public DataRecord(DevTableInfo dev_info) {
-            //获取DB显示数据
-            this.dev_info = dev_info;
-            //赋值数据值
-            this.values = new Float[dev_info.data_element.length];
-            //赋值量程单位
-            this.value_strings = new String[dev_info.data_element.length];
-
-            names = new String[dev_info.data_element.length * 2 + 1];
-            names[0] = "时间";
-            for (int i = 0; i < dev_info.data_element.length; i++) {
-                names[i * 2 + 1] = dev_info.data_element[i].data_name;
-                names[i * 2 + 2] = "(量程)单位";
-            }
-        }
-
-        public DataRecord(DevTableInfo dev_info, ResultSet set) throws SQLException {
-            this(dev_info);
-            this.InitData(set);
-        }
-
-        public void InitData(ResultSet set) throws SQLException {
-            //读取时间
-            this.time = set.getTimestamp(JDBDataTable.Time_Key);
-
-            //获取静态数据表
-            for (int i = 0; i < values.length; i++) {
-                int index = CDevDataTable.GetInstance().GetDataIndex(dev_info.dev_id.dev_type, dev_info.data_element[i].data_name);
-                //根据显示数据内容查找静态数据表的序号，对应到数据库中的位置
-                values[i] = set.getFloat(JDBDataTable.DataIndexKey + index);
-                value_strings[i] = set.getString(JDBDataTable.UnitIndexKey + index);
-            }
-        }
-
-        public String[] GetNames() {
-            return names;
-        }
-
-        public Object[] GetValue() {
-            Object[] ret = new Object[this.values.length * 2 + 1];
-            ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(this.time);
-            for (int i = 0; i < values.length; i++) {
-                ret[i * 2 + 1] = values[i];
-                ret[i * 2 + 2] = value_strings[i].contentEquals("") ? "--" : value_strings[i];
-            }
-            return ret;
-        }
-    }
-
     //搜索结果
     public class SearchResult {
 
@@ -250,7 +189,7 @@ public class DataReadHelper {
                         tmp_index++;
                         DataRecord data = new DataRecord(table_name, ret_set);
                         //添加EXCEL行
-                        table.WriterLine(data.GetValue());
+                        table.WriterLine(GetValue(data));
                         if (tmp_index++ % 100 == 0) {
                             process.SetValue((100 * tmp_index) / data_count);
                         }
@@ -264,6 +203,16 @@ public class DataReadHelper {
                 process.Finish(true);
             }
         });
+    }
+
+    public Object[] GetValue(DataRecord data) {
+        Object[] ret = new Object[data.values.length * 2 + 1];
+        ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(data.time);
+        for (int i = 0; i < data.values.length; i++) {
+            ret[i * 2 + 1] = data.values[i];
+            ret[i * 2 + 2] = data.value_strings[i].contentEquals("") ? "--" : data.value_strings[i];
+        }
+        return ret;
     }
     // </editor-fold>  
 }
