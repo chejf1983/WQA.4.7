@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
+import wqa.bill.db.DataRecord;
 import wqa.chart.ChartRangePaint;
 import wqa.chart.DataChart;
 import wqa.control.DB.DataReadHelper;
@@ -41,11 +42,11 @@ public class DBChart extends javax.swing.JPanel {
         this.initSnapShot();
     }
 
-    private DataReadHelper.DataRecord[] main_data;
+    private DataRecord[] main_data;
     private String main_name;
     private int index;
 
-    public void PaintLine(String name, DataReadHelper.DataRecord[] data_ret, int index) {
+    public void PaintLine(String name, DataRecord[] data_ret, int index) {
         this.main_data = data_ret;
         this.main_name = name;
         this.index = index;
@@ -54,7 +55,7 @@ public class DBChart extends javax.swing.JPanel {
         TimeSeries mainline = new TimeSeries(name);
         ArrayList<String> describe = new ArrayList();
         try {
-            for (DataReadHelper.DataRecord data_ret1 : data_ret) {
+            for (DataRecord data_ret1 : data_ret) {
                 if (!Float.isNaN(data_ret1.values[index])) {
                     mainline.addOrUpdate(new Second(data_ret1.time), data_ret1.values[index]);
                     describe.add(data_ret1.value_strings[index]);
@@ -85,7 +86,7 @@ public class DBChart extends javax.swing.JPanel {
                 return;
             }
             TimeSeries line = new TimeSeries(this.main_name);
-            for (DataReadHelper.DataRecord main_data1 : main_data) {
+            for (DataRecord main_data1 : main_data) {
                 line.addOrUpdate(new Second(main_data1.time), main_data1.values[index]);
             }
             sn_lines.add(line);

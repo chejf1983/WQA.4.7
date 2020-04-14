@@ -23,6 +23,7 @@ import wqa.common.Chooser;
 import wqa.control.DB.DataReadHelper;
 import wqa.control.DB.DataReadHelper.SearchResult;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.bill.db.DataRecord;
 import wqa.control.data.IMainProcess;
 import wqa.form.main.MainForm;
 import wqa.form.main.ProcessDialog;
@@ -84,7 +85,7 @@ public class DataSearch extends javax.swing.JPanel {
     public static int Max_ChartPoint = 2048;
     private DataReadHelper.DevTableInfo[] Dev_list;
     //搜索到的数据
-    private DataReadHelper.DataRecord[] data_set = new DataReadHelper.DataRecord[0];
+    private DataRecord[] data_set = new DataRecord[0];
 
     private void InitDBChart() {
         Date now = new Date();
