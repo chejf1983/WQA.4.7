@@ -138,8 +138,8 @@ public class EOSA_DO extends ESADEV {
 
     // <editor-fold defaultstate="collapsed" desc="采集接口"> 
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
         this.ReadMEG(MALARM, MPAR1, MPAR2, MPAR3);
         if (this.VVATOKEN.GetValue() > 0) {
             //原始数据

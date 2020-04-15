@@ -110,8 +110,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         return data_names.toArray(new String[0]);
     }
 
-    protected SDisplayData BuildDisplayData() {
-        SDisplayData disdata = new SDisplayData(new DevID(VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue()));
+    protected CollectData BuildDisplayData() {
+        CollectData disdata = new CollectData(new DevID(VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue()));
 
         return disdata;
     }

@@ -194,7 +194,7 @@ public class EOSA_DOTest {
         PrintLog.println("***********************************");
         PrintLog.println("CollectData");
 
-        SDisplayData result = instance.CollectData();
+        CollectData result = instance.CollectData();
         MEG[] regs = new MEG[]{dev_mock.MPAR1, dev_mock.MPAR2, dev_mock.SR1, dev_mock.MPAR3, dev_mock.SR2};
         if (dev_mock.VVATOKEN.GetValue() > 0) {
             regs = new MEG[]{dev_mock.MPAR1, dev_mock.MPAR2, dev_mock.SR1, dev_mock.MPAR3, dev_mock.SR2, dev_mock.SR3, dev_mock.SR4, dev_mock.SR5, dev_mock.SR6, dev_mock.SR7};

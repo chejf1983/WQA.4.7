@@ -181,8 +181,8 @@ public class ISA_X extends AbsDevice {
 
     // <editor-fold defaultstate="collapsed" desc="采集接口"> 
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
         //读取数据
         this.ReadMEG(MALARM, MPAR1, MPAR2, MPAR3, MPAR4, MPAR5);
         //原始数据

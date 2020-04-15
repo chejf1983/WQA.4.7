@@ -12,7 +12,7 @@ import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import java.util.Arrays;
 import migp.adapter.factory.TemperCalibrateCalculate;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.*;
 import wqa.dev.intf.*;
@@ -273,8 +273,8 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
     // <editor-fold defaultstate="collapsed" desc="采集接口"> 
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
         //读取数据
         this.ReadMEG(MALARM, MPAR1, MPAR2);
         //原始数据

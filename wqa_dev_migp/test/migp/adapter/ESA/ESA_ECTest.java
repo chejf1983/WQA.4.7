@@ -127,7 +127,7 @@ public class ESA_ECTest {
         PrintLog.println("***********************************");
         PrintLog.println("CollectData");
 
-        SDisplayData result = instance.CollectData();
+        CollectData result = instance.CollectData();
         MEG[] regs = new MEG[]{dev_mock.MPAR1, dev_mock.SR1, dev_mock.MPAR3, dev_mock.SR2, dev_mock.MPAR2};
         for (int i = 0; i < result.datas.length; i++) {
             SDataElement data = result.datas[i];

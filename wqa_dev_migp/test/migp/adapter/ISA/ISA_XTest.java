@@ -143,7 +143,7 @@ public class ISA_XTest {
         PrintLog.println("***********************************");
         PrintLog.println("CollectData");
 
-        SDisplayData result = instance.CollectData();
+        CollectData result = instance.CollectData();
 //        FMEG TMP = new FMEG(new VPA(0, 4), "");
 //        TMP.SetValue((float) (dev_mock.SR3.GetValue() - dev_mock.SR4.GetValue()));
         MEG[] regs = new MEG[]{dev_mock.MPAR1, dev_mock.SR1, dev_mock.MPAR2, dev_mock.SR2,
