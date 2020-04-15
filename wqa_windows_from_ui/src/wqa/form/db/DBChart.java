@@ -9,9 +9,7 @@ import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
-import wqa.bill.db.DataRecord;
 import wqa.chart.ChartRangePaint;
 import wqa.chart.DataChart;
 
@@ -41,29 +39,23 @@ public class DBChart extends javax.swing.JPanel {
         this.initSnapShot();
     }
 
-    private DataRecord[] main_data;
-    private String main_name;
-    private int index;
+    private TimeSeries mainline = null;
 
-    public void PaintLine(String name, DataRecord[] data_ret, int index) {
-        this.main_data = data_ret;
-        this.main_name = name;
-        this.index = index;
-//        TimeSeries mainline = this.chart.GetMainLine();
-//        mainline.clear();
-        TimeSeries mainline = new TimeSeries(name);
-        ArrayList<String> describe = new ArrayList();
-        try {
-            for (DataRecord data_ret1 : data_ret) {
-                if (!Float.isNaN(data_ret1.values[index])) {
-                    mainline.addOrUpdate(new Second(data_ret1.time), data_ret1.values[index]);
-                    describe.add(data_ret1.value_strings[index]);
-                }
-            }
-            this.chart.PaintMainLine(mainline, describe.toArray(new String[0]));
-        } catch (Exception ex) {
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
-        }
+    public void PaintLine(TimeSeries mainline, String[] describe) {
+        this.mainline = mainline;
+//        ArrayList<String> describe = new ArrayList();
+//        try {
+//            for (DataRecord data_ret1 : data_ret) {
+//                if (!Float.isNaN(data_ret1.values[index])) {
+//                    mainline.addOrUpdate(new Second(data_ret1.time), data_ret1.values[index]);
+//                    describe.add(data_ret1.value_strings[index]);
+//                }
+//            }
+//            this.chart.PaintMainLine(mainline, describe.toArray(new String[0]));
+//        } catch (Exception ex) {
+//            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+//        }
+        this.chart.PaintMainLine(mainline, describe);
     }
 
     // <editor-fold defaultstate="collapsed" desc="SnapShot Line"> 
@@ -78,17 +70,14 @@ public class DBChart extends javax.swing.JPanel {
     }
 
     public void CopyToSnapShot() {
-        if (main_data != null) {
+        if (mainline != null) {
             //增加一路新曲线
             if (sn_lines.size() >= max_num) {
                 LogCenter.Instance().ShowMessBox(Level.SEVERE, "已达上限，无法再增加");
                 return;
             }
-            TimeSeries line = new TimeSeries(this.main_name);
-            for (DataRecord main_data1 : main_data) {
-                line.addOrUpdate(new Second(main_data1.time), main_data1.values[index]);
-            }
-            sn_lines.add(line);
+            sn_lines.add(mainline);
+            mainline = null;
             this.chart.PaintSnapShot(sn_lines.toArray(new TimeSeries[0]));
         }
     }

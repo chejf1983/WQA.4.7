@@ -13,16 +13,19 @@ import java.awt.event.MouseEvent;
 import wqa.common.InitPaneHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import nahon.comm.faultsystem.LogCenter;
+import org.jfree.data.time.Second;
+import org.jfree.data.time.TimeSeries;
 import wqa.common.Chooser;
-import wqa.bill.db.DataRecord;
-import wqa.control.DB.DataReadHelper;
-import wqa.control.DB.DataReadHelper.SearchResult;
+import wqa.bill.db.JDBDataTable;
+import wqa.control.DB.DataRecordResult;
+import wqa.control.DB.DataRecordResult.DataRecord;
 import wqa.control.data.IMainProcess;
 import wqa.dev.data.DevID;
 import wqa.form.main.MainForm;
@@ -112,21 +115,9 @@ public class DataSearch extends javax.swing.JPanel {
             return;
         }
         this.ComboBox_devtypes.removeAllItems();
-        String[] GetSupportData = DataReadHelper.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
+        String[] GetSupportData = JDBDataTable.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
         for (String data_name : GetSupportData) {
             this.ComboBox_devtypes.addItem(data_name);
-        }
-    }
-
-    //刷新数据图表
-    private void UpdateChart() {
-        if (data_set.length > 0 && ComboBox_devtypes.getSelectedItem() != null && List_devlist.getSelectedIndex() >= 0) {
-            DevID devname = Dev_list[List_devlist.getSelectedIndex()];
-            String data_name = devname.ToChineseString() + ":" + ComboBox_devtypes.getSelectedItem().toString();
-            int data_index = ComboBox_devtypes.getSelectedIndex();
-            if (data_index >= 0) {
-                DataChart.PaintLine(data_name, data_set, data_index);
-            }
         }
     }
 
@@ -355,7 +346,7 @@ public class DataSearch extends javax.swing.JPanel {
         ProcessDialog.ApplyGlobalProcessBar();
         //开始搜索
         WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().SearchLimitData(this.Dev_list[this.List_devlist.getSelectedIndex()],//选择的设备
-                start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<SearchResult>() {
+                start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<DataRecordResult>() {
             @Override
             public void SetValue(float pecent) {
                 java.awt.EventQueue.invokeLater(() -> {
@@ -367,14 +358,14 @@ public class DataSearch extends javax.swing.JPanel {
             }
 
             @Override
-            public void Finish(SearchResult data_ret) {
+            public void Finish(DataRecordResult data_ret) {
                 java.awt.EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         //更新数据
-                        data_set = data_ret.data;
+                        data_set = data_ret.data.toArray(new DataRecord[0]);
                         //刷新图标
-                        UpdateChart();
+                        ComboBox_devtypesItemStateChanged(null);
                         Label_DataNum.setText(data_ret.search_num + "");
                         ProcessDialog.ReleaseGlobalProcessBar();
                         //JOptionPane.showMessageDialog(null, "new:" + (System.currentTimeMillis() - start));
@@ -476,7 +467,27 @@ public class DataSearch extends javax.swing.JPanel {
 
     //数据类型刷新，更新表
     private void ComboBox_devtypesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ComboBox_devtypesItemStateChanged
-        UpdateChart();
+        if (data_set.length > 0 && ComboBox_devtypes.getSelectedItem() != null && List_devlist.getSelectedIndex() >= 0) {
+            DevID devname = Dev_list[List_devlist.getSelectedIndex()];
+            String data_name = devname.ToChineseString() + ":" + ComboBox_devtypes.getSelectedItem().toString();
+            int index = data_set[0].GetIndex(ComboBox_devtypes.getSelectedItem().toString());
+            if (index < 0) {
+                return;
+            }
+            TimeSeries mainline = new TimeSeries(data_name);
+            ArrayList<String> describe = new ArrayList();
+            try {
+                for (DataRecord data_ret1 : data_set) {
+                    if (!Float.isNaN(data_ret1.values[index])) {
+                        mainline.addOrUpdate(new Second(data_ret1.time), data_ret1.values[index]);
+                        describe.add(data_ret1.value_strings[index]);
+                    }
+                }
+                DataChart.PaintLine(mainline, describe.toArray(new String[0]));
+            } catch (Exception ex) {
+                LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+            }
+        }
     }//GEN-LAST:event_ComboBox_devtypesItemStateChanged
 
 //    private boolean is_Auto = false;
