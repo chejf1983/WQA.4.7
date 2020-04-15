@@ -15,7 +15,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.common.ListFlowLayout;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.dev.data.SDataElement;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 import wqa.control.config.DevCalConfig;
 
 /**
@@ -62,9 +62,9 @@ public class CalPanel extends javax.swing.JPanel {
         this.Cal_Panel.setLayout(new ListFlowLayout(FlowLayout.LEADING, 1, 5, true, false));
 
         //注册定标采集数据响应
-        this.calbean.CalDataEvent.RegeditListener(new EventListener<SDisplayData>() {
+        this.calbean.CalDataEvent.RegeditListener(new EventListener<CollectData>() {
             @Override
-            public void recevieEvent(Event<SDisplayData> event) {
+            public void recevieEvent(Event<CollectData> event) {
                 /* Create and display the dialog */
                 java.awt.EventQueue.invokeLater(() -> {
                     //获取采样值

@@ -25,7 +25,7 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.chart.axis.DateAxis;
 import wqa.chart.DataChart;
 import wqa.common.JImagePane;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.common.DevMonitor;
 import wqa.control.config.DevConfigBean;
@@ -169,9 +169,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private void initDevice() {
         //初始化数据刷新监听
-        this.currentdev.DataEvent.RegeditListener(new EventListener<SDisplayData>() {
+        this.currentdev.DataEvent.RegeditListener(new EventListener<CollectData>() {
             @Override
-            public void recevieEvent(Event<SDisplayData> event) {
+            public void recevieEvent(Event<CollectData> event) {
                 /* Create and display the dialog */
                 java.awt.EventQueue.invokeLater(() -> {
                     UpdateData(event.GetEvent());
@@ -225,7 +225,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
     }
 
     //刷新数据
-    private void UpdateData(SDisplayData data) {
+    private void UpdateData(CollectData data) {
         //刷新报警界面
         if (data.alarm != 0) {
             Label_AlarmInfo.setToolTipText(data.alram_info);

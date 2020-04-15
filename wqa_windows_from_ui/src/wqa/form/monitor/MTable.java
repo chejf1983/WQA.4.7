@@ -9,7 +9,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import wqa.common.JImagePane;
 import wqa.dev.data.SDataElement;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 
 /**
  *
@@ -50,7 +50,7 @@ public class MTable extends javax.swing.JPanel {
 
     private void UpdateData() {
         String[] names = this.data_vector.GetSupportDataName();
-        SDisplayData data = this.data_vector.GetLastData();
+        CollectData data = this.data_vector.GetLastData();
         if (data == null) {
             return;
         }

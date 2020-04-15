@@ -115,7 +115,7 @@ public class DataSearch extends javax.swing.JPanel {
             return;
         }
         this.ComboBox_devtypes.removeAllItems();
-        String[] GetSupportData = JDBDataTable.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
+        String[] GetSupportData = DataRecordResult.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
         for (String data_name : GetSupportData) {
             this.ComboBox_devtypes.addItem(data_name);
         }
@@ -340,9 +340,7 @@ public class DataSearch extends javax.swing.JPanel {
             LogCenter.Instance().ShowMessBox(Level.SEVERE, "请先选择需要搜索的设备");
             return;
         }
-
-//        this.dataChart1.crosshair.DeleteCrossHair();
-//        long start = System.currentTimeMillis();
+;
         ProcessDialog.ApplyGlobalProcessBar();
         //开始搜索
         WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().SearchLimitData(this.Dev_list[this.List_devlist.getSelectedIndex()],//选择的设备
@@ -359,17 +357,14 @@ public class DataSearch extends javax.swing.JPanel {
 
             @Override
             public void Finish(DataRecordResult data_ret) {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        //更新数据
-                        data_set = data_ret.data.toArray(new DataRecord[0]);
-                        //刷新图标
-                        ComboBox_devtypesItemStateChanged(null);
-                        Label_DataNum.setText(data_ret.search_num + "");
-                        ProcessDialog.ReleaseGlobalProcessBar();
-                        //JOptionPane.showMessageDialog(null, "new:" + (System.currentTimeMillis() - start));
-                    }
+                java.awt.EventQueue.invokeLater(() -> {
+                    //更新数据
+                    data_set = data_ret.data.toArray(new DataRecord[0]);
+                    //刷新图标
+                    ComboBox_devtypesItemStateChanged(null);
+                    Label_DataNum.setText(data_ret.search_num + "");
+                    ProcessDialog.ReleaseGlobalProcessBar();
+                    //JOptionPane.showMessageDialog(null, "new:" + (System.currentTimeMillis() - start));
                 });
             }
 
@@ -419,27 +414,21 @@ public class DataSearch extends javax.swing.JPanel {
                 start_time, stop_time, new IMainProcess() {
             @Override
             public void SetValue(float pecent) {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        //刷新进度条
-                        if (ProcessDialog.GetGlobalProcessBar() != null) {
-                            ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
-                        }
+                java.awt.EventQueue.invokeLater(() -> {
+                    //刷新进度条
+                    if (ProcessDialog.GetGlobalProcessBar() != null) {
+                        ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
                     }
                 });
             }
 
             @Override
             public void Finish(Object result) {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        //始能按钮
-                        ProcessDialog.ReleaseGlobalProcessBar();
-                        LogCenter.Instance().ShowMessBox(Level.SEVERE, "导出完毕");
-                        Button_Export.setEnabled(true);
-                    }
+                java.awt.EventQueue.invokeLater(() -> {
+                    //始能按钮
+                    ProcessDialog.ReleaseGlobalProcessBar();
+                    LogCenter.Instance().ShowMessBox(Level.SEVERE, "导出完毕");
+                    Button_Export.setEnabled(true);
                 });
             }
         });
