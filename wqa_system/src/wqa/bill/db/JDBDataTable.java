@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import wqa.adapter.factory.CDevDataTable;
-import wqa.control.DB.DataRecordResult;
+import wqa.control.DB.SDataRecordResult;
 import wqa.dev.data.DevID;
 import wqa.dev.data.CollectData;
 import wqa.system.WQAPlatform;
@@ -86,7 +86,7 @@ public class JDBDataTable {
 
         String CREATE_TABLE_SQL = "create table if not exists " + table_name
                 + "(" + Time_Key + " datetime(2) primary key not null, ";
-        for (int i = 0; i < DataRecordResult.GetAllData(id).length; i++) {
+        for (int i = 0; i < SDataRecordResult.GetAllData(id).length; i++) {
             CREATE_TABLE_SQL += DataIndexKey + i + " varchar(50),";
             CREATE_TABLE_SQL += UnitIndexKey + i + " varchar(50),";
         }
