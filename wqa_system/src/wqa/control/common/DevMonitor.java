@@ -5,13 +5,14 @@
  */
 package wqa.control.common;
 
-import wqa.dev.data.SDisplayData;
+import java.util.ArrayList;
+import wqa.dev.data.CollectData;
 import wqa.dev.intf.ICollect;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.dev.data.DevID;
+import wqa.adapter.factory.CDevDataTable;
 import wqa.dev.data.SDevInfo;
 import wqa.system.WQAPlatform;
 
@@ -31,17 +32,17 @@ public class DevMonitor {
     }
 
     // <editor-fold defaultstate="collapsed" desc="采集数据"> 
-    public EventCenter<SDisplayData> DataEvent = new EventCenter();
-    
+    public EventCenter<CollectData> DataEvent = new EventCenter();
+
     public boolean CollectData() {
         data_lock.lock();
         try {
             this.tmpdata = this.dev.CollectData();
 //            this.tmpdata.dev_name = this.parent.ToString();
             this.SaveAlarmInfo(tmpdata);
-            if(this.tmpdata.alarm != 0){
+            if (this.tmpdata.alarm != 0) {
                 parent.ChangeState(DevControl.ControlState.ALARM, this.tmpdata.alram_info);
-            }else{                
+            } else {
                 parent.ChangeState(DevControl.ControlState.CONNECT);
             }
             DataEvent.CreateEvent(this.tmpdata);
@@ -54,12 +55,12 @@ public class DevMonitor {
         }
     }
 
-    private SDisplayData tmpdata = null;
+    private CollectData tmpdata = null;
 
-    public SDisplayData ReceiveByDB() {
+    public CollectData ReceiveByDB() {
         data_lock.lock();
         try {
-            SDisplayData ret = tmpdata;
+            CollectData ret = tmpdata;
             tmpdata = null;
             return ret;
         } finally {
@@ -69,7 +70,7 @@ public class DevMonitor {
 
     private int last_alarm = -1;
 
-    private void SaveAlarmInfo(SDisplayData data) {
+    private void SaveAlarmInfo(CollectData data) {
         if (data.alarm != this.last_alarm) {
             //ainfo.SaveTo(db_instance);
             if (last_alarm == -1 && data.alarm == 0) {
@@ -80,16 +81,30 @@ public class DevMonitor {
         }
     }
     // </editor-fold>   
-    
-     public String[] GetSupportDataName(){
-         return null;
-     }
-     
-     public DevControl GetParent1(){
-         return null;
-     }
-     
-     public SDevInfo GetDevID(){
-         return this.parent.GetConnectInfo();
-     }
+
+    public String[] GetSupportDataName() {
+        //单位信息
+        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(this.GetDevID().dev_id.dev_type);
+        ArrayList<String> list = new ArrayList();
+        if (d_infos != null) {
+            for (CDevDataTable.DataInfo info : d_infos.data_list) {
+                if (info.internal_only) {
+                    if (WQAPlatform.GetInstance().is_internal) {
+                        list.add(info.data_name);
+                    }
+                } else {
+                    list.add(info.data_name);
+                }
+            }
+        }
+        return list.toArray(new String[0]);
+    }
+
+    public DevControl GetParent1() {
+        return this.parent;
+    }
+
+    public SDevInfo GetDevID() {
+        return this.parent.GetConnectInfo();
+    }
 }

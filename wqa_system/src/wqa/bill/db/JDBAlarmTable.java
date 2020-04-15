@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import wqa.dev.data.DevID;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 
 /**
  *
@@ -32,7 +32,7 @@ public class JDBAlarmTable {
         this.db = db;
     }
 
-    public void AddAlarm(SDisplayData data) throws Exception {
+    public void AddAlarm(CollectData data) throws Exception {
         String INSERT_TABLE_SQL = "insert into " + AlarmTable + " values(null, ?, ?, ?, ?)";
 
         CallableStatement prepareCall = db.conn.prepareCall(INSERT_TABLE_SQL);

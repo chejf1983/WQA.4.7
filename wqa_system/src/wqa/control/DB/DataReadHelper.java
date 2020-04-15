@@ -153,11 +153,11 @@ public class DataReadHelper {
     }
 
     public Object[] GetValue(DevID devid, ResultSet set) throws Exception {
-        String names[] = JDBDataTable.GetSupportData(devid);
+        String names[] = DataRecordResult.GetSupportData(devid);
         Object[] ret = new Object[names.length * 2 + 1];
         ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(set.getTimestamp(JDBDataTable.Time_Key));
         for (int i = 0; i < names.length; i++) {
-            int index = JDBDataTable.GetDataToDBIndex(devid, names[i]);
+            int index = DataRecordResult.GetDataToDBIndex(devid, names[i]);
             ret[i * 2 + 1] = set.getFloat(JDBDataTable.DataIndexKey + index);
             String info = set.getString(JDBDataTable.UnitIndexKey + index);
             ret[i * 2 + 2] = info.contentEquals("") ? "--" : info;
@@ -166,7 +166,7 @@ public class DataReadHelper {
     }
 
     public String[] GetNames(DevID dev_info) {
-        String[] element = JDBDataTable.GetSupportData(dev_info);
+        String[] element = DataRecordResult.GetSupportData(dev_info);
         String[] names = new String[element.length * 2 + 1];
         names[0] = "时间";
         for (int i = 0; i < element.length; i++) {

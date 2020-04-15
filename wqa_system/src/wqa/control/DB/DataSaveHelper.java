@@ -11,8 +11,7 @@ import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
-import wqa.adapter.factory.CDevDataTable;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 import wqa.control.common.DevControl;
 import wqa.system.WQAPlatform;
 
@@ -109,7 +108,7 @@ public class DataSaveHelper {
         DevControl[] controls = WQAPlatform.GetInstance().GetManager().GetAllControls();
         for (DevControl control : controls) {
             //获取DB缓存栈
-            SDisplayData data = control.GetCollector().ReceiveByDB();
+            CollectData data = control.GetCollector().ReceiveByDB();
 
             //如果没有数据，不保存
             if (data == null) {

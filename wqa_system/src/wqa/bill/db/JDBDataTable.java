@@ -12,8 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.control.DB.DataRecordResult;
 import wqa.dev.data.DevID;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 import wqa.system.WQAPlatform;
 
 /**
@@ -50,7 +51,7 @@ public class JDBDataTable {
         return devices.toArray(new DevID[0]);
     }
 
-    public void AddData(SDisplayData data) throws Exception {
+    public void AddData(CollectData data) throws Exception {
 //        获取表名称
         String table_name = ConvertTableName(data.dev_id);
         //初始化插入SQL语句
@@ -85,7 +86,7 @@ public class JDBDataTable {
 
         String CREATE_TABLE_SQL = "create table if not exists " + table_name
                 + "(" + Time_Key + " datetime(2) primary key not null, ";
-        for (int i = 0; i < GetAllData(id).length; i++) {
+        for (int i = 0; i < DataRecordResult.GetAllData(id).length; i++) {
             CREATE_TABLE_SQL += DataIndexKey + i + " varchar(50),";
             CREATE_TABLE_SQL += UnitIndexKey + i + " varchar(50),";
         }
@@ -180,43 +181,5 @@ public class JDBDataTable {
     public void DropTable(DevID key) throws SQLException {
         String table_name = ConvertTableName(key);
         this.db.DropTable(table_name);
-    }
-
-    public static String[] GetSupportData(DevID dev_id) {
-        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
-        ArrayList<String> list = new ArrayList();
-        if (d_infos != null) {
-            for (CDevDataTable.DataInfo info : d_infos.data_list) {
-                if (info.internal_only) {
-                    if (WQAPlatform.GetInstance().is_internal) {
-                        list.add(info.data_name);
-                    }
-                } else {
-                    list.add(info.data_name);
-                }
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
-    public static String[] GetAllData(DevID dev_id) {
-        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
-        ArrayList<String> list = new ArrayList();
-        if (d_infos != null) {
-            for (CDevDataTable.DataInfo info : d_infos.data_list) {
-                list.add(info.data_name);
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-    
-    public static int GetDataToDBIndex(DevID dev_id, String data_name){
-        String[] all_datas = GetAllData(dev_id);
-        for(int i = 0; i < all_datas.length; i++){
-            if(all_datas[i].contentEquals(data_name)){
-                return i;
-            }
-        }
-        return -1;
     }
 }

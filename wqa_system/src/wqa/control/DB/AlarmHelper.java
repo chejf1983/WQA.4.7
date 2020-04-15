@@ -22,7 +22,7 @@ import static wqa.bill.db.JDBAlarmTable.*;
 import wqa.dev.data.DevID;
 import wqa.system.WQAPlatform;
 import wqa.control.data.IMainProcess;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 
 /**
  *
@@ -31,18 +31,12 @@ import wqa.dev.data.SDisplayData;
 public class AlarmHelper {
 
     private final H2DBSaver db_instance;
-    private WritableWorkbook workbook;
-    private WritableSheet sheet;
-
-    private int tableStart_column = 1;//新table的column启始位置
-    private int tableStart_row = 1;   //新table的row启始位置
-
-    private int[] column_len;
 
     public AlarmHelper(H2DBSaver db_instance) {
         this.db_instance = db_instance;
     }
 
+    // <editor-fold defaultstate="collapsed" desc="表信息"> 
     //罗列所有设备表
     public DevID[] ListAllDevice() {
         db_instance.dbLock.lock();
@@ -69,7 +63,9 @@ public class AlarmHelper {
             db_instance.dbLock.unlock();
         }
     }
+    // </editor-fold>  
 
+    // <editor-fold defaultstate="collapsed" desc="搜索记录"> 
     //报警记录
     public class AlarmRecord {
 
@@ -132,7 +128,9 @@ public class AlarmHelper {
             }
         });
     }
+    // </editor-fold>  
 
+    // <editor-fold defaultstate="collapsed" desc="导出Excel"> 
     //搜索记录
     public void ExportToExcel(String file_name, DevID dev_name, Date start, Date stop, IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
@@ -180,8 +178,10 @@ public class AlarmHelper {
             }
         });
     }
+    // </editor-fold>  
 
-    public void SaveAlarmInfo(SDisplayData info) {
+    // <editor-fold defaultstate="collapsed" desc="保存报警信息"> 
+    public void SaveAlarmInfo(CollectData info) {
         db_instance.dbLock.lock();
         try {
             new JDBAlarmTable(db_instance).CreateTable();
@@ -192,4 +192,5 @@ public class AlarmHelper {
             db_instance.dbLock.unlock();
         }
     }
+    // </editor-fold>  
 }

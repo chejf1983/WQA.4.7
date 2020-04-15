@@ -12,6 +12,7 @@ import java.util.Date;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.bill.db.JDBDataTable;
 import wqa.dev.data.DevID;
+import wqa.system.WQAPlatform;
 
 /**
  *
@@ -45,7 +46,7 @@ public class DataRecordResult {
             //获取DB显示数据
             this.dev_info = dev_info;
 
-            this.names = JDBDataTable.GetSupportData(dev_info);
+            this.names = DataRecordResult.GetSupportData(dev_info);
             //赋值数据值
             this.values = new Float[names.length];
             //赋值量程单位
@@ -74,5 +75,43 @@ public class DataRecordResult {
                 value_strings[i] = set.getString(JDBDataTable.UnitIndexKey + index);
             }
         }
+    }
+    
+    public static String[] GetSupportData(DevID dev_id) {
+        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
+        ArrayList<String> list = new ArrayList();
+        if (d_infos != null) {
+            for (CDevDataTable.DataInfo info : d_infos.data_list) {
+                if (info.internal_only) {
+                    if (WQAPlatform.GetInstance().is_internal) {
+                        list.add(info.data_name);
+                    }
+                } else {
+                    list.add(info.data_name);
+                }
+            }
+        }
+        return list.toArray(new String[0]);
+    }
+
+    public static String[] GetAllData(DevID dev_id) {
+        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
+        ArrayList<String> list = new ArrayList();
+        if (d_infos != null) {
+            for (CDevDataTable.DataInfo info : d_infos.data_list) {
+                list.add(info.data_name);
+            }
+        }
+        return list.toArray(new String[0]);
+    }
+    
+    public static int GetDataToDBIndex(DevID dev_id, String data_name){
+        String[] all_datas = GetAllData(dev_id);
+        for(int i = 0; i < all_datas.length; i++){
+            if(all_datas[i].contentEquals(data_name)){
+                return i;
+            }
+        }
+        return -1;
     }
 }
