@@ -14,8 +14,8 @@ import nahon.comm.event.EventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.common.ListFlowLayout;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.control.common.DisplayData;
 import wqa.dev.data.SDataElement;
-import wqa.dev.data.CollectData;
 import wqa.control.config.DevCalConfig;
 
 /**
@@ -40,8 +40,8 @@ public class CalPanel extends javax.swing.JPanel {
         ComboBox_DataType.removeAllItems();
 
         //遍历可定标类型
-        for (CDevDataTable.DataInfo type : this.calbean.GetCalType()) {
-            ComboBox_DataType.addItem(type.data_name);
+        for (String type : this.calbean.GetCalType()) {
+            ComboBox_DataType.addItem(type);
         }
 
         //默认选择第一个定标数据
@@ -62,9 +62,9 @@ public class CalPanel extends javax.swing.JPanel {
         this.Cal_Panel.setLayout(new ListFlowLayout(FlowLayout.LEADING, 1, 5, true, false));
 
         //注册定标采集数据响应
-        this.calbean.CalDataEvent.RegeditListener(new EventListener<CollectData>() {
+        this.calbean.CalDataEvent.RegeditListener(new EventListener<DisplayData>() {
             @Override
-            public void recevieEvent(Event<CollectData> event) {
+            public void recevieEvent(Event<DisplayData> event) {
                 /* Create and display the dialog */
                 java.awt.EventQueue.invokeLater(() -> {
                     //获取采样值
@@ -74,9 +74,9 @@ public class CalPanel extends javax.swing.JPanel {
                     //原始值不为空显示
                     if (data != null) {
                         //设置值
-                        for (CalItem item : itemlist) {
+                        itemlist.forEach((item) -> {
                             item.SetValue(data_o.mainData, data.mainData);
-                        }
+                        });
                         //显示当前采样值
                         Label_value.setText(data.mainData + data.unit);
                         //显示当前温度

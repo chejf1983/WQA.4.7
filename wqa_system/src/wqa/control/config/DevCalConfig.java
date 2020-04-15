@@ -12,8 +12,10 @@ import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.control.common.DisplayData;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.CollectData;
+import wqa.dev.data.SDataElement;
 import wqa.dev.intf.ICalibrate;
 import wqa.system.WQAPlatform;
 
@@ -33,13 +35,18 @@ public class DevCalConfig {
 
     // <editor-fold defaultstate="collapsed" desc="定标接口"> 
     //获取定标数据类型
-    public CDevDataTable.DataInfo[] GetCalType() {
-        return this.calbean.GetCalDataList();
+    public String[] GetCalType() {
+        CDevDataTable.DataInfo[] datalist = this.calbean.GetCalDataList();
+        String[] ret = new String[datalist.length];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = datalist[i].data_name;
+        }
+        return ret;
     }
 
     private int GetIndex(String type) {
         for (int i = 0; i < this.GetCalType().length; i++) {
-            if (type.contentEquals(this.GetCalType()[i].data_name)) {
+            if (type.contentEquals(this.GetCalType()[i])) {
                 return i;
             }
         }
@@ -56,18 +63,6 @@ public class DevCalConfig {
         return this.calbean.GetCalDataList()[index].cal_num & 0xFF;
     }
 
-//    public String[] GetTestLable(String type) {
-//        int index = GetIndex(type);
-//        if (index == -1) {
-//            return null;
-//        }
-//
-//        boolean isdo = (this.calbean.GetCalDataList()[GetIndex(type)].cal_num & 0xFF00) == 0x100;
-//        if (isdo) {
-//            return new String[]{"饱和氧", "无氧"};
-//        }
-//        return null;
-//    }
     private LogNode RecordCalLog(String type, float[] oradata, float[] testdata) {
         LogNode ret = new LogNode("定标类型", type);
 
@@ -105,7 +100,7 @@ public class DevCalConfig {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="定标采集"> 
-    public EventCenter<CollectData> CalDataEvent = new EventCenter();
+    public EventCenter<DisplayData> CalDataEvent = new EventCenter();
     private CollectInstance collect_instance = null;
 
     public boolean IsRunning() {
@@ -129,7 +124,7 @@ public class DevCalConfig {
             while (isstart) {
                 try {
                     ((ShareIO) calbean.GetIO()).Lock();
-                    CalDataEvent.CreateEvent(calbean.CollectData());
+                    CalDataEvent.CreateEvent(CreateDisplayData(calbean.CollectData()));
                 } catch (Exception ex) {
                     LogCenter.Instance().SendFaultReport(Level.SEVERE, "采集失败", ex);
                     break;
@@ -159,6 +154,20 @@ public class DevCalConfig {
                 this.collect_instance = null;
             }
         }
+    }
+
+    private DisplayData CreateDisplayData(CollectData data) {
+        DisplayData tmp = new DisplayData(data.dev_id);
+        tmp.time = data.time;
+        tmp.alarm = data.alarm;
+        tmp.alram_info = data.alram_info;
+        String[] display_datas = this.GetCalType();
+        tmp.datas = new SDataElement[display_datas.length * 2];
+        for (int i = 0; i < display_datas.length; i++) {
+            tmp.datas[i * 2] = data.GetDataElement(display_datas[i]);
+            tmp.datas[i * 2 + 1] = data.GetOraDataElement(display_datas[i]);
+        }
+        return tmp;
     }
     // </editor-fold> 
 

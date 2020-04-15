@@ -7,7 +7,6 @@ package wqa.form.config;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.logging.Level;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -16,7 +15,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import nahon.comm.faultsystem.LogCenter;
 import wqa.control.config.DevConfigTable;
 import wqa.dev.intf.SConfigItem;
 

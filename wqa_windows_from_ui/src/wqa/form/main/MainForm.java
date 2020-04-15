@@ -31,7 +31,6 @@ import static javax.swing.SwingConstants.*;
 import nahon.comm.faultsystem.LogCenter;
 import migp.adapter.factory.MIGPDevFactory;
 import wqa.adapter.factory.ModBusDevFactory;
-import wqa.bill.io.ShareIO;
 import static wqa.common.JImagePane.*;
 import wqa.control.data.IMainProcess;
 import wqa.form.db.DataSearch;

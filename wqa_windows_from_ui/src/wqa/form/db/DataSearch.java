@@ -23,7 +23,6 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import wqa.common.Chooser;
-import wqa.bill.db.JDBDataTable;
 import wqa.control.DB.DataRecordResult;
 import wqa.control.DB.DataRecordResult.DataRecord;
 import wqa.control.data.IMainProcess;
