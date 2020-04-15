@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.dev.data.SDataElement;
 import wqa.dev.data.SDevInfo;
 import wqa.system.WQAPlatform;
 
@@ -23,7 +24,7 @@ import wqa.system.WQAPlatform;
 public class DevMonitor {
 
     private final ICollect dev;
-    private DevControl parent;
+    private final DevControl parent;
     private final ReentrantLock data_lock = new ReentrantLock();
 
     public DevMonitor(DevControl parent, ICollect dev) {
@@ -32,20 +33,19 @@ public class DevMonitor {
     }
 
     // <editor-fold defaultstate="collapsed" desc="采集数据"> 
-    public EventCenter<CollectData> DataEvent = new EventCenter();
+    public EventCenter<DisplayData> DataEvent = new EventCenter();
 
     public boolean CollectData() {
         data_lock.lock();
         try {
             this.tmpdata = this.dev.CollectData();
-//            this.tmpdata.dev_name = this.parent.ToString();
             this.SaveAlarmInfo(tmpdata);
             if (this.tmpdata.alarm != 0) {
                 parent.ChangeState(DevControl.ControlState.ALARM, this.tmpdata.alram_info);
             } else {
                 parent.ChangeState(DevControl.ControlState.CONNECT);
             }
-            DataEvent.CreateEvent(this.tmpdata);
+            DataEvent.CreateEvent(CreateDisplayData(this.tmpdata));
             return true;
         } catch (Exception ex) {
             LogCenter.Instance().PrintLog(Level.SEVERE, "采集数据失败", ex);
@@ -106,5 +106,18 @@ public class DevMonitor {
 
     public SDevInfo GetDevID() {
         return this.parent.GetConnectInfo();
+    }
+    
+    private DisplayData CreateDisplayData(CollectData data){
+        DisplayData tmp = new DisplayData(data.dev_id);
+        tmp.time = data.time;
+        tmp.alarm = data.alarm;
+        tmp.alram_info = data.alram_info;
+        String[] display_datas = this.GetSupportDataName();
+        tmp.datas = new SDataElement[display_datas.length];
+        for(int i = 0; i < display_datas.length; i++){
+            tmp.datas[i] = data.GetDataElement(display_datas[i]);
+        }
+        return tmp;
     }
 }
