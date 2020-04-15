@@ -45,7 +45,7 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
         Collection<MonitorPane1> values = bookpanes.values();
         ArrayList<MonitorPane1> mlist = new ArrayList(values);
         Collections.sort(mlist, (MonitorPane1 m1, MonitorPane1 m2) -> {
-            return m1.currentdev.GetConnectInfo().dev_id.dev_addr > m2.currentdev.GetConnectInfo().dev_id.dev_addr ? 1 : -1;
+            return m1.currentdev.GetDevID().dev_id.dev_addr > m2.currentdev.GetDevID().dev_id.dev_addr ? 1 : -1;
         });
         for (MonitorPane1 m : mlist) {
             Panel_desk.add(m);
@@ -95,7 +95,7 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
             }
 
             //添加到设备界面字典
-            MonitorPane1 pane = new MonitorPane1(this, dev);
+            MonitorPane1 pane = new MonitorPane1(this, dev.GetCollector());
             this.bookpanes.put(dev, pane);
 
             //如果有全屏的界面，则不刷新界面

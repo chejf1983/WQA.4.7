@@ -14,7 +14,6 @@ import org.jfree.data.time.TimeSeries;
 import wqa.bill.db.DataRecord;
 import wqa.chart.ChartRangePaint;
 import wqa.chart.DataChart;
-import wqa.control.DB.DataReadHelper;
 
 /**
  *

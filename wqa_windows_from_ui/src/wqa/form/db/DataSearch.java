@@ -20,14 +20,13 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.common.Chooser;
+import wqa.bill.db.DataRecord;
 import wqa.control.DB.DataReadHelper;
 import wqa.control.DB.DataReadHelper.SearchResult;
-import wqa.adapter.factory.CDevDataTable;
-import wqa.bill.db.DataRecord;
 import wqa.control.data.IMainProcess;
+import wqa.dev.data.DevID;
 import wqa.form.main.MainForm;
 import wqa.form.main.ProcessDialog;
-import wqa.form.monitor.DataVector;
 import wqa.system.WQAPlatform;
 
 /**
@@ -83,7 +82,7 @@ public class DataSearch extends javax.swing.JPanel {
     private final DBChart DataChart = new DBChart();
     private static final String TIMEFORMATE = "yyyy-MM-dd HH:mm:ss";
     public static int Max_ChartPoint = 2048;
-    private DataReadHelper.DevTableInfo[] Dev_list;
+    private DevID[] Dev_list;
     //搜索到的数据
     private DataRecord[] data_set = new DataRecord[0];
 
@@ -106,27 +105,25 @@ public class DataSearch extends javax.swing.JPanel {
             System.out.println(ex);
         }
     }
-    
+
     //更新探头的数据类型
     private void UpdateSelectIndex() {
         if (List_devlist.getSelectedIndex() < 0) {
             return;
         }
         this.ComboBox_devtypes.removeAllItems();
-        int dev_type = this.Dev_list[this.List_devlist.getSelectedIndex()].dev_id.dev_type;
-        CDevDataTable.DataInfo[] GetSupportData = DataVector.GetSupportData(dev_type);
-        for (CDevDataTable.DataInfo devtype : GetSupportData) {
-            this.ComboBox_devtypes.addItem(devtype.data_name);
+        String[] GetSupportData = DataReadHelper.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
+        for (String data_name : GetSupportData) {
+            this.ComboBox_devtypes.addItem(data_name);
         }
     }
 
     //刷新数据图表
     private void UpdateChart() {
         if (data_set.length > 0 && ComboBox_devtypes.getSelectedItem() != null && List_devlist.getSelectedIndex() >= 0) {
-            DataReadHelper.DevTableInfo devname = Dev_list[List_devlist.getSelectedIndex()];
-            String data_name = devname.dev_id.ToChineseString() + ":" + ComboBox_devtypes.getSelectedItem().toString();
-            String select_data = ComboBox_devtypes.getSelectedItem().toString();
-            int data_index = devname.GetSelectIndex(select_data);
+            DevID devname = Dev_list[List_devlist.getSelectedIndex()];
+            String data_name = devname.ToChineseString() + ":" + ComboBox_devtypes.getSelectedItem().toString();
+            int data_index = ComboBox_devtypes.getSelectedIndex();
             if (data_index >= 0) {
                 DataChart.PaintLine(data_name, data_set, data_index);
             }
@@ -312,9 +309,9 @@ public class DataSearch extends javax.swing.JPanel {
 
         //清空表格
         model.clear();
-        for (DataReadHelper.DevTableInfo devname : Dev_list) {
+        for (DevID devname : Dev_list) {
             //添加列表（设备中文名[地址]);
-            model.addElement(devname.dev_id.ToChineseString());
+            model.addElement(devname.ToChineseString());
         }
         //默认选择第0个设备
         if (Dev_list.length > 0) {
@@ -358,16 +355,13 @@ public class DataSearch extends javax.swing.JPanel {
         ProcessDialog.ApplyGlobalProcessBar();
         //开始搜索
         WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().SearchLimitData(this.Dev_list[this.List_devlist.getSelectedIndex()],//选择的设备
-                start_time, stop_time, this.Max_ChartPoint, new IMainProcess<SearchResult>() {
+                start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<SearchResult>() {
             @Override
             public void SetValue(float pecent) {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        //更新进度条
-                        if (ProcessDialog.GetGlobalProcessBar() != null) {
-                            ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
-                        }
+                java.awt.EventQueue.invokeLater(() -> {
+                    //更新进度条
+                    if (ProcessDialog.GetGlobalProcessBar() != null) {
+                        ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
                     }
                 });
             }
@@ -387,6 +381,7 @@ public class DataSearch extends javax.swing.JPanel {
                     }
                 });
             }
+
         });
     }//GEN-LAST:event_Button_SearchActionPerformed
 
@@ -421,7 +416,7 @@ public class DataSearch extends javax.swing.JPanel {
         //检查导出文件名
         if (filepath == null) {
             return;
-        } 
+        }
 
         //去始能导出按钮
         this.Button_Export.setEnabled(false);

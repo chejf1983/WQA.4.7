@@ -14,6 +14,7 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.control.common.DevMonitor;
 import wqa.dev.data.SDataElement;
 import wqa.dev.data.SDisplayData;
 import wqa.system.WQAPlatform;
@@ -29,34 +30,20 @@ public class DataVector {
     private final boolean[] visable;
     private final String[] data_names;
     private final int maxlen = 1800;
-    public final int dev_type;
+    public final DevMonitor dev_type;
 
-    public DataVector(int dev_type) {
+    public DataVector(DevMonitor dev_type) {
         this.dev_type = dev_type;
-        CDevDataTable.DataInfo[] data_infos = GetSupportData(dev_type);
+        String[] data_infos = dev_type.GetSupportDataName();
         data_names = new String[data_infos.length];
         visable = new boolean[data_infos.length];
         for (int i = 0; i < data_infos.length; i++) {
-            data_names[i] = data_infos[i].data_name;
+            data_names[i] = data_infos[i];
             visable[i] = true;
             select_name = data_names[0];
         }
     }
-    
-    //    //获取支持的数据
-    public static CDevDataTable.DataInfo[] GetSupportData(int dev_type) {
-        ArrayList<CDevDataTable.DataInfo> info = new ArrayList();
-        CDevDataTable.DevInfo dev_info =  CDevDataTable.GetInstance().namemap.get(dev_type);
-        for (int i = 0; i < dev_info.data_list.length; i++) {
-            CDevDataTable.DataInfo tinfo = dev_info.data_list[i];
-            if (WQAPlatform.GetInstance().is_internal) {
-                info.add(tinfo);
-            } else if (!tinfo.internal_only) {
-                info.add(tinfo);
-            }
-        }
-        return info.toArray(new CDevDataTable.DataInfo[0]);
-    }
+
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
     public String[] GetSupportDataName() {
         ArrayList<String> names = new ArrayList();
@@ -70,7 +57,7 @@ public class DataVector {
 
     //输入数据
     public void InputData(SDisplayData data) {
-        if (data.dev_id.dev_type != this.dev_type) {
+        if (data.dev_id.dev_type != this.dev_type.GetDevID().dev_id.dev_type) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "异常数据,无法显示");
             return;
         }

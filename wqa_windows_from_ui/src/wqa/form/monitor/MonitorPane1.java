@@ -26,10 +26,10 @@ import org.jfree.chart.axis.DateAxis;
 import wqa.chart.DataChart;
 import wqa.common.JImagePane;
 import wqa.dev.data.SDisplayData;
-import wqa.control.common.DevControl;
 import wqa.control.common.DevControl.ControlState;
+import wqa.control.common.DevMonitor;
 import wqa.control.config.DevConfigBean;
-import wqa.dev.intf.IDevice;
+import wqa.dev.data.SDevInfo;
 import wqa.form.config.CalConfigForm;
 import wqa.form.config.CommonConfigForm;
 import wqa.form.errormsg.ConfirmBox;
@@ -49,10 +49,10 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private final MonitorPaneDesk parent;
     private final DataVector data_vector;
 
-    public MonitorPane1(MonitorPaneDesk parent, DevControl dev) {
+    public MonitorPane1(MonitorPaneDesk parent, DevMonitor dev) {
         this.currentdev = dev;
         this.parent = parent;
-        this.data_vector = new DataVector(dev.GetConnectInfo().dev_id.dev_type);
+        this.data_vector = new DataVector(dev);
 
         initComponents();
 
@@ -106,13 +106,13 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private void UpdateComboBox() {
         m_chart.GetComboBox().removeAllItems();
         //初始化曲线下拉框
-        for (String name : this.data_vector.GetSupportDataName()) {
+        for (String name : currentdev.GetSupportDataName()) {
             m_chart.GetComboBox().addItem(name);
         }
 
-        if (data_vector.GetSupportDataName().length > 0) {
+        if (currentdev.GetSupportDataName().length > 0) {
             data_vector.SetSelectName(data_vector.GetSupportDataName()[0]);
-            m_chart.GetComboBox().setSelectedItem(data_vector.GetSupportDataName()[0]);
+            m_chart.GetComboBox().setSelectedItem(currentdev.GetSupportDataName()[0]);
         } else {
             data_vector.SetSelectName("");
             m_chart.GetComboBox().setSelectedItem("");
@@ -164,53 +164,47 @@ public class MonitorPane1 extends javax.swing.JPanel {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="初始化设备事件">
-    final DevControl currentdev;
+    final DevMonitor currentdev;
     private final ReentrantLock dsiplay_lock = new ReentrantLock(true);
 
     private void initDevice() {
         //初始化数据刷新监听
-        this.currentdev.GetCollector().DataEvent.RegeditListener(new EventListener<SDisplayData>() {
+        this.currentdev.DataEvent.RegeditListener(new EventListener<SDisplayData>() {
             @Override
             public void recevieEvent(Event<SDisplayData> event) {
                 /* Create and display the dialog */
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        UpdateData(event.GetEvent());
-                    }
+                java.awt.EventQueue.invokeLater(() -> {
+                    UpdateData(event.GetEvent());
                 });
             }
         });
 
         //初始化状态刷新监听
-        this.currentdev.StateChange.RegeditListener(new EventListener<ControlState>() {
+        this.currentdev.GetParent1().StateChange.RegeditListener(new EventListener<ControlState>() {
             @Override
             public void recevieEvent(Event<ControlState> event) {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch (event.GetEvent()) {
-                            case CONNECT:
-                                Lable_Title.setText(GetDevName());
-                                Lable_Title.setForeground(Color.WHITE);
-                                ChangeState(state.connect);
-                                break;
-                            case DISCONNECT:
-                                Lable_Title.setForeground(Color.RED);
-                                ChangeState(state.connect);
-                                break;
-                            case CONFIG:
-                                Lable_Title.setForeground(Color.GREEN);
-                                ChangeState(state.config);
-                                break;
-                            case ALARM:
-                                ChangeState(state.warning);
-                                break;
-                            default:
-                                throw new AssertionError(event.GetEvent().name());
-                        }
-                        updateUI();
+                java.awt.EventQueue.invokeLater(() -> {
+                    switch (event.GetEvent()) {
+                        case CONNECT:
+                            Lable_Title.setText(GetDevName());
+                            Lable_Title.setForeground(Color.WHITE);
+                            ChangeState(state.connect);
+                            break;
+                        case DISCONNECT:
+                            Lable_Title.setForeground(Color.RED);
+                            ChangeState(state.connect);
+                            break;
+                        case CONFIG:
+                            Lable_Title.setForeground(Color.GREEN);
+                            ChangeState(state.config);
+                            break;
+                        case ALARM:
+                            ChangeState(state.warning);
+                            break;
+                        default:
+                            throw new AssertionError(event.GetEvent().name());
                     }
+                    updateUI();
                 });
             }
         });
@@ -424,14 +418,14 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     // <editor-fold defaultstate="collapsed" desc="初始化界面">
     private String GetDevName() {
-        String stype = currentdev.GetProType() == IDevice.ProType.MIGP ? "*" : "";
-        return stype + currentdev.ToString();
+        SDevInfo devinfo = currentdev.GetDevID();
+        String stype = devinfo.protype == SDevInfo.ProType.MIGP ? "*" : "";
+        return stype + devinfo.dev_id.ToChineseString();
     }
 
     private final CardLayout display_layout = new CardLayout();
 
     private void initMonitorPane() {
-//        this.setBackground(new Color(0,0,0,0));
         this.DisplayArea.setLayout(display_layout);
 
         this.setOpaque(false);
@@ -444,17 +438,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
         this.Button_del.setToolTipText("删除设备");
 
         //初始化设备配置按钮
-//        this.Lable_Title.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/monitor/resource/home_16p.png")));
         this.Lable_Title.setText(GetDevName());
-
-//        this.Lable_Title.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-//        this.Lable_Title.setToolTipText("打开设备配置");
-//        Label_State.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/monitor/resource/health_24p.png")));
         this.Button_max.setToolTipText("全屏");
         this.Button_min.setToolTipText("缩小");
-//        this.Label_Brush.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-//        this.Label_Brush.setToolTipText("清空图表数据");
-
         this.ButtonCal.setToolTipText("校准");
         this.Button_Config.setToolTipText("设置");
         this.Button_ChartSwitch.setToolTipText("显示曲线");
@@ -514,7 +500,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private CommonConfigForm config_form;
     private void Button_ConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_ConfigActionPerformed
-        DevConfigBean config = currentdev.StartConfig();
+        DevConfigBean config = currentdev.GetParent1().StartConfig();
         if (config == null) {
             return;
         }
@@ -538,7 +524,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private CalConfigForm cal_form;
     private void ButtonCalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCalActionPerformed
-        DevConfigBean config = currentdev.StartConfig();
+        DevConfigBean config = currentdev.GetParent1().StartConfig();
         if (config == null) {
             return;
         }
@@ -568,18 +554,14 @@ public class MonitorPane1 extends javax.swing.JPanel {
     }//GEN-LAST:event_Button_maxActionPerformed
 
     private void Button_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_delActionPerformed
-        //JOptionPane.showMessageDialog(this,"删除设备");
-//        JOptionPane.sh
         if (ConfirmBox.ShowConfirmBox(MainForm.main_parent, "是否删除该设备?")) {
-//            if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(MainForm.main_parent, "是否删除该设备?", "提示", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION)) {
-            WQAPlatform.GetInstance().GetManager().DeleteDevControl(this.currentdev);
-//            }
+            WQAPlatform.GetInstance().GetManager().DeleteDevControl(this.currentdev.GetParent1());
         }
     }//GEN-LAST:event_Button_delActionPerformed
 
     private void Button_DevLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_DevLogActionPerformed
         DevLogForm logform = new DevLogForm(MainForm.main_parent, false, GetDevName());
-        logform.InitLog(this.currentdev.GetConnectInfo().dev_id);
+        logform.InitLog(this.currentdev.GetDevID().dev_id);
         logform.setVisible(true);
     }//GEN-LAST:event_Button_DevLogActionPerformed
 
