@@ -41,8 +41,8 @@ public class AMMODevice extends AbsDevice {
 
     // <editor-fold defaultstate="collapsed" desc="采集控制"> 
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
 //        AmmoPacket ammo_data = this.ammo_drv.GetData();
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, PH, NH4, K, TEMPER, OPH, ONH4, OK);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);

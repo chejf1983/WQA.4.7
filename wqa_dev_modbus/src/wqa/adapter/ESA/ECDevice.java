@@ -66,8 +66,8 @@ public class ECDevice extends AbsDevice {
 
     // <editor-fold defaultstate="collapsed" desc="采集控制">
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, EC, SALT, TEMPER, OEC);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
         disdata.datas[0].mainData = NahonConvert.TimData(EC.GetValue(), 2);

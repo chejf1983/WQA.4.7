@@ -107,7 +107,7 @@ public class ECDeviceTest {
         PrintLog.println("***********************************");
         PrintLog.println("CollectData");
 
-        SDisplayData result = instance.CollectData();
+        CollectData result = instance.CollectData();
         FREG[] regs = new FREG[]{dev_mock.EC, dev_mock.OEC, dev_mock.TEMPER, dev_mock.OTEMPER, dev_mock.SALT};
         for (int i = 0; i < result.datas.length; i++) {
             SDataElement data = result.datas[i];

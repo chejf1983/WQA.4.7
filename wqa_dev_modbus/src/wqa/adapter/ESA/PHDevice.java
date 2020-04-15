@@ -35,8 +35,8 @@ public class PHDevice extends AbsDevice {
 
     // <editor-fold defaultstate="collapsed" desc="采集接口"> 
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, PH, TEMPER, OPH);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
 

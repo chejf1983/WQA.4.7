@@ -103,7 +103,7 @@ public class DODeviceTest {
         PrintLog.println("***********************************");
         PrintLog.println("CollectData");
 
-        SDisplayData result = instance.CollectData();
+        CollectData result = instance.CollectData();
         FREG[] regs = new FREG[]{dev_mock.DO, dev_mock.DOPEC, dev_mock.ODO, dev_mock.TEMPER, dev_mock.OTEMPER};
         for (int i = 0; i < result.datas.length; i++) {
             SDataElement data = result.datas[i];

@@ -85,7 +85,7 @@ public class AMMODeviceTest {
         PrintLog.println("***********************************");
         PrintLog.println("CollectData");
 
-        SDisplayData result = instance.CollectData();
+        CollectData result = instance.CollectData();
         FREG[] regs;
         if (dev_mock.DEVTYPE.GetValue() == 0x0301) {
             regs = new FREG[]{dev_mock.PH, dev_mock.OPH, dev_mock.NH4, dev_mock.ONH4, dev_mock.K, dev_mock.OK, dev_mock.TEMPER, dev_mock.OTEMPER};

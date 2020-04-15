@@ -173,7 +173,7 @@ public class OSADeviceTest {
         PrintLog.println("***********************************");
         PrintLog.println("CollectData");
 
-        SDisplayData result = instance.CollectData();
+        CollectData result = instance.CollectData();
         REG[] regs = new REG[]{dev_mock.MDATA, dev_mock.ODATA, dev_mock.TEMPER, dev_mock.OTEMPER};
         for (int i = 0; i < result.datas.length; i++) {
             SDataElement data = result.datas[i];

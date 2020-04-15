@@ -12,7 +12,7 @@ import wqa.adapter.factory.CDevDataTable.DataInfo;
 import wqa.dev.data.DevID;
 import wqa.dev.data.MIOInfo;
 import wqa.dev.data.SDevInfo;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 import wqa.dev.intf.*;
 
 /**
@@ -118,8 +118,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         return list.toArray(new DataInfo[0]);
     }
 
-    public SDisplayData BuildDisplayData() {
-        return new SDisplayData(new DevID(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue()));
+    public CollectData BuildDisplayData() {
+        return new CollectData(new DevID(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue()));
     }
     // </editor-fold>  
 

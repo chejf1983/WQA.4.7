@@ -12,7 +12,7 @@ import wqa.adapter.factory.AbsDevice;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.LogNode;
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 import wqa.dev.data.SMotorParameter;
 import wqa.dev.data.SMotorParameter.CleanMode;
 import wqa.dev.intf.*;
@@ -164,8 +164,8 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
 
     // <editor-fold defaultstate="collapsed" desc="采集控制"> 
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, MDATA, TEMPER, ODATA);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
 //        CommonDataPacket sph_data = this.trub_drv.GetData();

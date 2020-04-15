@@ -88,8 +88,8 @@ public class DODevice extends AbsDevice {
 
     // <editor-fold defaultstate="collapsed" desc="采集控制"> 
     @Override
-    public SDisplayData CollectData() throws Exception {
-        SDisplayData disdata = this.BuildDisplayData();
+    public CollectData CollectData() throws Exception {
+        CollectData disdata = this.BuildDisplayData();
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, DO, DOPEC, TEMPER, ODO);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
 

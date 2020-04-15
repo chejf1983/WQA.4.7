@@ -5,12 +5,12 @@
  */
 package wqa.dev.intf;
 
-import wqa.dev.data.SDisplayData;
+import wqa.dev.data.CollectData;
 
 /**
  *
  * @author chejf
  */
 public interface ICollect {   
-    public SDisplayData CollectData() throws Exception;
+    public CollectData CollectData() throws Exception;
 }
