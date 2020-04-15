@@ -82,12 +82,6 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             return -1;
         }
     }
-
-    @Override
-    public ProType GetProType() {
-        return ProType.MODEBUS;
-    }
-
     private SDevInfo info = new SDevInfo();
 
     @Override
@@ -95,6 +89,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         //初始化连接信息
         info.io = this.base_drv.GetIO();
         info.dev_id = new DevID(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue());
+        info.protype = SDevInfo.ProType.MODEBUS;
         return info;
     }
 

@@ -27,13 +27,7 @@ public interface IDevice {
     public IMAbstractIO GetIO();
     // </editor-fold>      
     
-    // <editor-fold defaultstate="collapsed" desc="基本信息">  
-    //协议类型
-    public enum ProType{
-        MIGP,MODEBUS
-    }
-    public ProType GetProType();
-    
+    // <editor-fold defaultstate="collapsed" desc="基本信息">    
     //获取连接信息
     public SDevInfo GetDevInfo();    
     // </editor-fold>  

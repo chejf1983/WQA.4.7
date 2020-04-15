@@ -71,12 +71,6 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         return MIGPDevFactory.SearchDevType(this.base_drv);
     }
 
-    //获取协议类型
-    @Override
-    public ProType GetProType() {
-        return ProType.MIGP;
-    }
-
     //获取连接信息
     @Override
     public SDevInfo GetDevInfo() {
@@ -84,6 +78,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         SDevInfo info = new SDevInfo();
         info.io = this.local_io;
         info.dev_id = new DevID(this.VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
+        info.protype = SDevInfo.ProType.MIGP;
         return info;
     }
 
