@@ -13,11 +13,9 @@ import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
-import wqa.adapter.factory.CDevDataTable;
 import wqa.control.common.DevMonitor;
+import wqa.control.common.DisplayData;
 import wqa.dev.data.SDataElement;
-import wqa.dev.data.CollectData;
-import wqa.system.WQAPlatform;
 
 /**
  *
@@ -26,7 +24,7 @@ import wqa.system.WQAPlatform;
 public class DataVector {
 
     private final ReentrantLock datalist_lock = new ReentrantLock();
-    private final ArrayList<CollectData> datasource = new ArrayList();
+    private final ArrayList<DisplayData> datasource = new ArrayList();
     private final boolean[] visable;
     private final String[] data_names;
     private final int maxlen = 1800;
@@ -56,7 +54,7 @@ public class DataVector {
     }
 
     //输入数据
-    public void InputData(CollectData data) {
+    public void InputData(DisplayData data) {
         if (data.dev_id.dev_type != this.dev_type.GetDevID().dev_id.dev_type) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "异常数据,无法显示");
             return;
@@ -79,7 +77,7 @@ public class DataVector {
     public void Clean() {
         datalist_lock.lock();
         try {
-            CollectData data = this.GetLastData();
+            DisplayData data = this.GetLastData();
             this.datasource.clear();
             this.datasource.add(data);
             RefreshData();
@@ -93,7 +91,7 @@ public class DataVector {
         ((DataTableModel) this.table_model).Update();
     }
 
-    public CollectData GetLastData() {
+    public DisplayData GetLastData() {
         datalist_lock.lock();
         try {
             if (this.datasource.isEmpty()) {
@@ -115,15 +113,6 @@ public class DataVector {
         this.select_name = name;
     }
 
-    private int GetIndexByName(String name) {
-        for (int i = 0; i < this.data_names.length; i++) {
-            if (name.contentEquals(this.data_names[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     private ArrayList<String> describe = new ArrayList();
 
     public String[] GetDataTimeDescribe() {
@@ -131,7 +120,7 @@ public class DataVector {
     }
 
     public TimeSeries GetdateTimeSeries() {
-        CollectData lastdata = this.GetLastData();
+        DisplayData lastdata = this.GetLastData();
         TimeSeries mainline = new TimeSeries("");
         describe.clear();
         //清空数据
@@ -177,11 +166,11 @@ public class DataVector {
         private ArrayList<Object[]> rows = new ArrayList();
 
         public void Update() {
-            CollectData lastdata = GetLastData();
+            DisplayData lastdata = GetLastData();
             rows.clear();
             if (lastdata != null) {
-                for (String name : GetSupportDataName()) {
-                    SDataElement data = lastdata.GetDataElement(name);
+                for (SDataElement data : lastdata.datas) {
+//                    SDataElement data = lastdata.GetDataElement(name);
                     this.rows.add(new Object[]{data.name, data.mainData + data.unit, data.range_info});
                 }
             }

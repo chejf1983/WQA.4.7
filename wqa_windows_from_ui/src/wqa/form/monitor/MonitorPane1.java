@@ -28,6 +28,7 @@ import wqa.common.JImagePane;
 import wqa.dev.data.CollectData;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.common.DevMonitor;
+import wqa.control.common.DisplayData;
 import wqa.control.config.DevConfigBean;
 import wqa.dev.data.SDevInfo;
 import wqa.form.config.CalConfigForm;
@@ -106,13 +107,14 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private void UpdateComboBox() {
         m_chart.GetComboBox().removeAllItems();
         //初始化曲线下拉框
-        for (String name : currentdev.GetSupportDataName()) {
+        String[] names = currentdev.GetSupportDataName();
+        for (String name : names) {
             m_chart.GetComboBox().addItem(name);
         }
 
         if (currentdev.GetSupportDataName().length > 0) {
-            data_vector.SetSelectName(data_vector.GetSupportDataName()[0]);
-            m_chart.GetComboBox().setSelectedItem(currentdev.GetSupportDataName()[0]);
+            data_vector.SetSelectName(names[0]);
+            m_chart.GetComboBox().setSelectedItem(names[0]);
         } else {
             data_vector.SetSelectName("");
             m_chart.GetComboBox().setSelectedItem("");
@@ -169,9 +171,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private void initDevice() {
         //初始化数据刷新监听
-        this.currentdev.DataEvent.RegeditListener(new EventListener<CollectData>() {
+        this.currentdev.DataEvent.RegeditListener(new EventListener<DisplayData>() {
             @Override
-            public void recevieEvent(Event<CollectData> event) {
+            public void recevieEvent(Event<DisplayData> event) {
                 /* Create and display the dialog */
                 java.awt.EventQueue.invokeLater(() -> {
                     UpdateData(event.GetEvent());
@@ -225,7 +227,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
     }
 
     //刷新数据
-    private void UpdateData(CollectData data) {
+    private void UpdateData(DisplayData data) {
         //刷新报警界面
         if (data.alarm != 0) {
             Label_AlarmInfo.setToolTipText(data.alram_info);
