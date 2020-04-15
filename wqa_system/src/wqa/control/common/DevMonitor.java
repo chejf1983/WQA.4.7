@@ -33,7 +33,7 @@ public class DevMonitor {
     }
 
     // <editor-fold defaultstate="collapsed" desc="采集数据"> 
-    public EventCenter<DisplayData> DataEvent = new EventCenter();
+    public EventCenter<SDisplayData> DataEvent = new EventCenter();
 
     public boolean CollectData() {
         data_lock.lock();
@@ -108,8 +108,8 @@ public class DevMonitor {
         return this.parent.GetConnectInfo();
     }
     
-    private DisplayData CreateDisplayData(CollectData data){
-        DisplayData tmp = new DisplayData(data.dev_id);
+    private SDisplayData CreateDisplayData(CollectData data){
+        SDisplayData tmp = new SDisplayData(data.dev_id);
         tmp.time = data.time;
         tmp.alarm = data.alarm;
         tmp.alram_info = data.alram_info;

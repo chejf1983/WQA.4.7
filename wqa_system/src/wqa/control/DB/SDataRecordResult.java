@@ -19,12 +19,12 @@ import wqa.system.WQAPlatform;
  * @author chejf
  */
 //搜索结果
-public class DataRecordResult {
+public class SDataRecordResult {
 
     public long search_num;
     public ArrayList<DataRecord> data;
 
-    public DataRecordResult() {
+    public SDataRecordResult() {
         search_num = 0;
         data = new ArrayList();
     }
@@ -46,7 +46,7 @@ public class DataRecordResult {
             //获取DB显示数据
             this.dev_info = dev_info;
 
-            this.names = DataRecordResult.GetSupportData(dev_info);
+            this.names = SDataRecordResult.GetSupportData(dev_info);
             //赋值数据值
             this.values = new Float[names.length];
             //赋值量程单位

@@ -66,15 +66,15 @@ public class DataReadHelper {
 
     }
 
-    public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<DataRecordResult> process) {
+    public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SDataRecordResult> process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             db_instance.dbLock.lock();
             try (ResultSet ret_set = SearchData(table_name, start, stop)) {
-                DataRecordResult ret = new DataRecordResult();
+                SDataRecordResult ret = new SDataRecordResult();
 
                 //检查是否为空集
                 if (!ret_set.first()) {
-                    process.Finish(new DataRecordResult());
+                    process.Finish(new SDataRecordResult());
                 }
 
                 //统计记录个数
@@ -92,7 +92,7 @@ public class DataReadHelper {
                 //跳跃搜索数据
                 while (ret_set.absolute((int) (ret_set.getRow() + data_to_jump))) {
                     //增加一个转换结果
-                    DataRecordResult.DataRecord record = ret.new DataRecord(table_name);
+                    SDataRecordResult.DataRecord record = ret.new DataRecord(table_name);
                     record.InitData(ret_set);
                     //保存结果
                     ret.data.add(record);
@@ -104,7 +104,7 @@ public class DataReadHelper {
                 process.Finish(ret);
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索失败", ex);
-                process.Finish(new DataRecordResult());
+                process.Finish(new SDataRecordResult());
             } finally {
                 db_instance.dbLock.unlock();
             }
@@ -153,11 +153,11 @@ public class DataReadHelper {
     }
 
     public Object[] GetValue(DevID devid, ResultSet set) throws Exception {
-        String names[] = DataRecordResult.GetSupportData(devid);
+        String names[] = SDataRecordResult.GetSupportData(devid);
         Object[] ret = new Object[names.length * 2 + 1];
         ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(set.getTimestamp(JDBDataTable.Time_Key));
         for (int i = 0; i < names.length; i++) {
-            int index = DataRecordResult.GetDataToDBIndex(devid, names[i]);
+            int index = SDataRecordResult.GetDataToDBIndex(devid, names[i]);
             ret[i * 2 + 1] = set.getFloat(JDBDataTable.DataIndexKey + index);
             String info = set.getString(JDBDataTable.UnitIndexKey + index);
             ret[i * 2 + 2] = info.contentEquals("") ? "--" : info;
@@ -166,7 +166,7 @@ public class DataReadHelper {
     }
 
     public String[] GetNames(DevID dev_info) {
-        String[] element = DataRecordResult.GetSupportData(dev_info);
+        String[] element = SDataRecordResult.GetSupportData(dev_info);
         String[] names = new String[element.length * 2 + 1];
         names[0] = "时间";
         for (int i = 0; i < element.length; i++) {

@@ -12,7 +12,7 @@ import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.adapter.factory.CDevDataTable;
-import wqa.control.common.DisplayData;
+import wqa.control.common.SDisplayData;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.CollectData;
 import wqa.dev.data.SDataElement;
@@ -100,7 +100,7 @@ public class DevCalConfig {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="定标采集"> 
-    public EventCenter<DisplayData> CalDataEvent = new EventCenter();
+    public EventCenter<SDisplayData> CalDataEvent = new EventCenter();
     private CollectInstance collect_instance = null;
 
     public boolean IsRunning() {
@@ -156,8 +156,8 @@ public class DevCalConfig {
         }
     }
 
-    private DisplayData CreateDisplayData(CollectData data) {
-        DisplayData tmp = new DisplayData(data.dev_id);
+    private SDisplayData CreateDisplayData(CollectData data) {
+        SDisplayData tmp = new SDisplayData(data.dev_id);
         tmp.time = data.time;
         tmp.alarm = data.alarm;
         tmp.alram_info = data.alram_info;

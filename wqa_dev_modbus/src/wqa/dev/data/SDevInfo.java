@@ -5,7 +5,6 @@
  */
 package wqa.dev.data;
 
-import wqa.dev.intf.IDevice;
 import wqa.dev.intf.IMAbstractIO;
 
 

@@ -8,7 +8,7 @@ package wqa.form.monitor;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import wqa.common.JImagePane;
-import wqa.control.common.DisplayData;
+import wqa.control.common.SDisplayData;
 import wqa.dev.data.SDataElement;
 
 /**
@@ -50,7 +50,7 @@ public class MTable extends javax.swing.JPanel {
 
     private void UpdateData() {
         String[] names = this.data_vector.GetSupportDataName();
-        DisplayData data = this.data_vector.GetLastData();
+        SDisplayData data = this.data_vector.GetLastData();
         if (data == null) {
             return;
         }

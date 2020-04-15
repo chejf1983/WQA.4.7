@@ -14,7 +14,7 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import wqa.control.common.DevMonitor;
-import wqa.control.common.DisplayData;
+import wqa.control.common.SDisplayData;
 import wqa.dev.data.SDataElement;
 
 /**
@@ -24,7 +24,7 @@ import wqa.dev.data.SDataElement;
 public class DataVector {
 
     private final ReentrantLock datalist_lock = new ReentrantLock();
-    private final ArrayList<DisplayData> datasource = new ArrayList();
+    private final ArrayList<SDisplayData> datasource = new ArrayList();
     private final boolean[] visable;
     private final String[] data_names;
     private final int maxlen = 1800;
@@ -54,7 +54,7 @@ public class DataVector {
     }
 
     //输入数据
-    public void InputData(DisplayData data) {
+    public void InputData(SDisplayData data) {
         if (data.dev_id.dev_type != this.dev_type.GetDevID().dev_id.dev_type) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "异常数据,无法显示");
             return;
@@ -77,7 +77,7 @@ public class DataVector {
     public void Clean() {
         datalist_lock.lock();
         try {
-            DisplayData data = this.GetLastData();
+            SDisplayData data = this.GetLastData();
             this.datasource.clear();
             this.datasource.add(data);
             RefreshData();
@@ -91,7 +91,7 @@ public class DataVector {
         ((DataTableModel) this.table_model).Update();
     }
 
-    public DisplayData GetLastData() {
+    public SDisplayData GetLastData() {
         datalist_lock.lock();
         try {
             if (this.datasource.isEmpty()) {
@@ -120,7 +120,7 @@ public class DataVector {
     }
 
     public TimeSeries GetdateTimeSeries() {
-        DisplayData lastdata = this.GetLastData();
+        SDisplayData lastdata = this.GetLastData();
         TimeSeries mainline = new TimeSeries("");
         describe.clear();
         //清空数据
@@ -166,7 +166,7 @@ public class DataVector {
         private ArrayList<Object[]> rows = new ArrayList();
 
         public void Update() {
-            DisplayData lastdata = GetLastData();
+            SDisplayData lastdata = GetLastData();
             rows.clear();
             if (lastdata != null) {
                 for (SDataElement data : lastdata.datas) {

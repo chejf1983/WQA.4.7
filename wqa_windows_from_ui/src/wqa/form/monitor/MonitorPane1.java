@@ -28,7 +28,7 @@ import wqa.common.JImagePane;
 import wqa.dev.data.CollectData;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.common.DevMonitor;
-import wqa.control.common.DisplayData;
+import wqa.control.common.SDisplayData;
 import wqa.control.config.DevConfigBean;
 import wqa.dev.data.SDevInfo;
 import wqa.form.config.CalConfigForm;
@@ -171,9 +171,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private void initDevice() {
         //初始化数据刷新监听
-        this.currentdev.DataEvent.RegeditListener(new EventListener<DisplayData>() {
+        this.currentdev.DataEvent.RegeditListener(new EventListener<SDisplayData>() {
             @Override
-            public void recevieEvent(Event<DisplayData> event) {
+            public void recevieEvent(Event<SDisplayData> event) {
                 /* Create and display the dialog */
                 java.awt.EventQueue.invokeLater(() -> {
                     UpdateData(event.GetEvent());
@@ -227,7 +227,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
     }
 
     //刷新数据
-    private void UpdateData(DisplayData data) {
+    private void UpdateData(SDisplayData data) {
         //刷新报警界面
         if (data.alarm != 0) {
             Label_AlarmInfo.setToolTipText(data.alram_info);

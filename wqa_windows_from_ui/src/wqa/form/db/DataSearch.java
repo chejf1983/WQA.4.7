@@ -23,8 +23,8 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import wqa.common.Chooser;
-import wqa.control.DB.DataRecordResult;
-import wqa.control.DB.DataRecordResult.DataRecord;
+import wqa.control.DB.SDataRecordResult;
+import wqa.control.DB.SDataRecordResult.DataRecord;
 import wqa.control.data.IMainProcess;
 import wqa.dev.data.DevID;
 import wqa.form.main.MainForm;
@@ -114,7 +114,7 @@ public class DataSearch extends javax.swing.JPanel {
             return;
         }
         this.ComboBox_devtypes.removeAllItems();
-        String[] GetSupportData = DataRecordResult.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
+        String[] GetSupportData = SDataRecordResult.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
         for (String data_name : GetSupportData) {
             this.ComboBox_devtypes.addItem(data_name);
         }
@@ -343,7 +343,7 @@ public class DataSearch extends javax.swing.JPanel {
         ProcessDialog.ApplyGlobalProcessBar();
         //开始搜索
         WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().SearchLimitData(this.Dev_list[this.List_devlist.getSelectedIndex()],//选择的设备
-                start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<DataRecordResult>() {
+                start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<SDataRecordResult>() {
             @Override
             public void SetValue(float pecent) {
                 java.awt.EventQueue.invokeLater(() -> {
@@ -355,7 +355,7 @@ public class DataSearch extends javax.swing.JPanel {
             }
 
             @Override
-            public void Finish(DataRecordResult data_ret) {
+            public void Finish(SDataRecordResult data_ret) {
                 java.awt.EventQueue.invokeLater(() -> {
                     //更新数据
                     data_set = data_ret.data.toArray(new DataRecord[0]);
