@@ -6,7 +6,6 @@
 package wqa.control.DB;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,60 +36,71 @@ public class DataReadHelper {
     }
 
     // <editor-fold defaultstate="collapsed" desc="表信息"> 
-    public class DevTableInfo {
-
-        public DevID dev_id;
-        public CDevDataTable.DataInfo[] data_element;
-
-        public DevTableInfo(DevID dev_id) {
-            this.dev_id = dev_id;
-            ArrayList<CDevDataTable.DataInfo> list = new ArrayList();
-            CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
-            if (d_infos != null) {
-                for (CDevDataTable.DataInfo info : d_infos.data_list) {
-                    if (info.internal_only) {
-                        if (WQAPlatform.GetInstance().is_internal) {
-                            list.add(info);
-                        }
-                    } else {
-                        list.add(info);
+    public static String[] GetSupportData(DevID dev_id) {
+        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
+        ArrayList<String> list = new ArrayList();
+        if (d_infos != null) {
+            for (CDevDataTable.DataInfo info : d_infos.data_list) {
+                if (info.internal_only) {
+                    if (WQAPlatform.GetInstance().is_internal) {
+                        list.add(info.data_name);
                     }
+                } else {
+                    list.add(info.data_name);
                 }
             }
-            data_element = list.toArray(new CDevDataTable.DataInfo[0]);
         }
-
-        public int GetSelectIndex(String name) {
-            for (int i = 0; i < data_element.length; i++) {
-                if (name.contentEquals(data_element[i].data_name)) {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
+        return list.toArray(new String[0]);
     }
+//    public class DevTableInfo {
+//
+//        public DevID dev_id;
+//        public CDevDataTable.DataInfo[] data_element;
+//
+//        public DevTableInfo(DevID dev_id) {
+//            this.dev_id = dev_id;
+//            ArrayList<CDevDataTable.DataInfo> list = new ArrayList();
+//            CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
+//            if (d_infos != null) {
+//                for (CDevDataTable.DataInfo info : d_infos.data_list) {
+//                    if (info.internal_only) {
+//                        if (WQAPlatform.GetInstance().is_internal) {
+//                            list.add(info);
+//                        }
+//                    } else {
+//                        list.add(info);
+//                    }
+//                }
+//            }
+//            data_element = list.toArray(new CDevDataTable.DataInfo[0]);
+//        }
+//
+//        public int GetSelectIndex(String name) {
+//            for (int i = 0; i < data_element.length; i++) {
+//                if (name.contentEquals(data_element[i].data_name)) {
+//                    return i;
+//                }
+//            }
+//
+//            return -1;
+//        }
+//    }
 
     //列出所存储设备列表名称
-    public DevTableInfo[] ListAllDevice() {
+    public DevID[] ListAllDevice() {
         db_instance.dbLock.lock();
         try {
-            DevID[] dev_keys = new JDBDataTable(this.db_instance).ListAllDevice();
-            DevTableInfo[] infos = new DevTableInfo[dev_keys.length];
-            for (int i = 0; i < infos.length; i++) {
-                infos[i] = new DevTableInfo(dev_keys[i]);
-            }
-            return infos;
+            return new JDBDataTable(this.db_instance).ListAllDevice();
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "获取设备列表失败", ex);
-            return new DevTableInfo[0];
+            return new DevID[0];
         } finally {
             db_instance.dbLock.unlock();
         }
     }
 
-    public void DeleteTable(DevTableInfo table_name) throws Exception {
-        new JDBDataTable(this.db_instance).DropTable(table_name.dev_id);
+    public void DeleteTable(DevID table_name) throws Exception {
+        new JDBDataTable(this.db_instance).DropTable(table_name);
     }
     // </editor-fold>  
 
@@ -108,19 +118,19 @@ public class DataReadHelper {
     }
 
     //搜索数据
-    private ResultSet SearchData(DevTableInfo table_name, Date start, Date stop) throws Exception {
+    private ResultSet SearchData(DevID table_name, Date start, Date stop) throws Exception {
         db_instance.dbLock.lock();
         try {
             JDBDataTable db_helper = new JDBDataTable(db_instance);
             //搜索数据库结果
-            return db_helper.SearchRecords(table_name.dev_id, start, stop);
+            return db_helper.SearchRecords(table_name, start, stop);
         } finally {
             db_instance.dbLock.unlock();
         }
 
     }
 
-    public void SearchLimitData(DevTableInfo table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SearchResult> process) {
+    public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SearchResult> process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             db_instance.dbLock.lock();
             try (ResultSet ret_set = SearchData(table_name, start, stop)) {
@@ -165,7 +175,7 @@ public class DataReadHelper {
         });
     }
 
-    public void ExportToFile(String file_name, DevTableInfo table_name, Date start, Date stop, IMainProcess process) {
+    public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             db_instance.dbLock.lock();
             try (ResultSet ret_set = SearchData(table_name, start, stop)) {
@@ -179,12 +189,12 @@ public class DataReadHelper {
                 ret_set.beforeFirst();
                 int tmp_index = 0;
 
-                String sheet_name = table_name.dev_id.ToChineseString();
+                String sheet_name = table_name.ToChineseString();
                 //创建excel文件
                 try (XlsSheetWriter xl_saver = XlsSheetWriter.CreateSheet(file_name, sheet_name)) {
                     String[] names = new DataRecord(table_name).GetNames();
                     //写列名
-                    xlsTable_W table = xl_saver.CreateNewTable(table_name.dev_id.ToChineseString(), data_count, names);
+                    xlsTable_W table = xl_saver.CreateNewTable(table_name.ToChineseString(), data_count, names);
                     while (ret_set.next()) {
                         tmp_index++;
                         DataRecord data = new DataRecord(table_name, ret_set);

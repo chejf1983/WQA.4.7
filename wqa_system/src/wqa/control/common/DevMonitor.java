@@ -11,6 +11,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.dev.data.DevID;
+import wqa.dev.data.SDevInfo;
 import wqa.system.WQAPlatform;
 
 /**
@@ -78,4 +80,16 @@ public class DevMonitor {
         }
     }
     // </editor-fold>   
+    
+     public String[] GetSupportDataName(){
+         return null;
+     }
+     
+     public DevControl GetParent1(){
+         return null;
+     }
+     
+     public SDevInfo GetDevID(){
+         return this.parent.GetConnectInfo();
+     }
 }

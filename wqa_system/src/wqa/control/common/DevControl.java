@@ -64,10 +64,6 @@ public class DevControl {
         return device.GetDevInfo();
     }
 
-    public IDevice.ProType GetProType() {
-        return this.device.GetProType();
-    }
-
     public String ToString() {
         //获取数据key
         return this.device.GetDevInfo().dev_id.ToChineseString() + "(" + device.GetDevInfo().io.GetIOInfo().par[0] + ")";
