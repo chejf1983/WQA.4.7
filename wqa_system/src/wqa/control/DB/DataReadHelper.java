@@ -15,8 +15,6 @@ import nahon.comm.exl2.xlsTable_W;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
-import wqa.adapter.factory.CDevDataTable;
-import wqa.bill.db.DataRecord;
 import wqa.dev.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.system.WQAPlatform;
@@ -36,56 +34,6 @@ public class DataReadHelper {
     }
 
     // <editor-fold defaultstate="collapsed" desc="表信息"> 
-    public static String[] GetSupportData(DevID dev_id) {
-        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
-        ArrayList<String> list = new ArrayList();
-        if (d_infos != null) {
-            for (CDevDataTable.DataInfo info : d_infos.data_list) {
-                if (info.internal_only) {
-                    if (WQAPlatform.GetInstance().is_internal) {
-                        list.add(info.data_name);
-                    }
-                } else {
-                    list.add(info.data_name);
-                }
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-//    public class DevTableInfo {
-//
-//        public DevID dev_id;
-//        public CDevDataTable.DataInfo[] data_element;
-//
-//        public DevTableInfo(DevID dev_id) {
-//            this.dev_id = dev_id;
-//            ArrayList<CDevDataTable.DataInfo> list = new ArrayList();
-//            CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
-//            if (d_infos != null) {
-//                for (CDevDataTable.DataInfo info : d_infos.data_list) {
-//                    if (info.internal_only) {
-//                        if (WQAPlatform.GetInstance().is_internal) {
-//                            list.add(info);
-//                        }
-//                    } else {
-//                        list.add(info);
-//                    }
-//                }
-//            }
-//            data_element = list.toArray(new CDevDataTable.DataInfo[0]);
-//        }
-//
-//        public int GetSelectIndex(String name) {
-//            for (int i = 0; i < data_element.length; i++) {
-//                if (name.contentEquals(data_element[i].data_name)) {
-//                    return i;
-//                }
-//            }
-//
-//            return -1;
-//        }
-//    }
-
     //列出所存储设备列表名称
     public DevID[] ListAllDevice() {
         db_instance.dbLock.lock();
@@ -105,18 +53,6 @@ public class DataReadHelper {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="数据读取接口"> 
-    //搜索结果
-    public class SearchResult {
-
-        public long search_num;
-        public DataRecord[] data;
-
-        public SearchResult() {
-            search_num = 0;
-            data = new DataRecord[0];
-        }
-    }
-
     //搜索数据
     private ResultSet SearchData(DevID table_name, Date start, Date stop) throws Exception {
         db_instance.dbLock.lock();
@@ -130,16 +66,15 @@ public class DataReadHelper {
 
     }
 
-    public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SearchResult> process) {
+    public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<DataRecordResult> process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             db_instance.dbLock.lock();
             try (ResultSet ret_set = SearchData(table_name, start, stop)) {
-                ArrayList<DataRecord> data = new ArrayList();
-                SearchResult ret = new SearchResult();
+                DataRecordResult ret = new DataRecordResult();
 
                 //检查是否为空集
                 if (!ret_set.first()) {
-                    process.Finish(new SearchResult());
+                    process.Finish(new DataRecordResult());
                 }
 
                 //统计记录个数
@@ -157,24 +92,27 @@ public class DataReadHelper {
                 //跳跃搜索数据
                 while (ret_set.absolute((int) (ret_set.getRow() + data_to_jump))) {
                     //增加一个转换结果
-                    data.add(new DataRecord(table_name, ret_set));
+                    DataRecordResult.DataRecord record = ret.new DataRecord(table_name);
+                    record.InitData(ret_set);
+                    //保存结果
+                    ret.data.add(record);
                     //count = 0;
                     process.SetValue(100 * ret_set.getRow() / data_count);
                 }
 
-                //保存结果
-                ret.data = data.toArray(new DataRecord[0]);
                 //通知完成
                 process.Finish(ret);
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索失败", ex);
-                process.Finish(new SearchResult());
+                process.Finish(new DataRecordResult());
             } finally {
                 db_instance.dbLock.unlock();
             }
         });
     }
 
+    // </editor-fold>  
+    // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             db_instance.dbLock.lock();
@@ -192,14 +130,13 @@ public class DataReadHelper {
                 String sheet_name = table_name.ToChineseString();
                 //创建excel文件
                 try (XlsSheetWriter xl_saver = XlsSheetWriter.CreateSheet(file_name, sheet_name)) {
-                    String[] names = new DataRecord(table_name).GetNames();
+                    String[] names = GetNames(table_name);
                     //写列名
                     xlsTable_W table = xl_saver.CreateNewTable(table_name.ToChineseString(), data_count, names);
                     while (ret_set.next()) {
                         tmp_index++;
-                        DataRecord data = new DataRecord(table_name, ret_set);
                         //添加EXCEL行
-                        table.WriterLine(GetValue(data));
+                        table.WriterLine(GetValue(table_name, ret_set));
                         if (tmp_index++ % 100 == 0) {
                             process.SetValue((100 * tmp_index) / data_count);
                         }
@@ -215,14 +152,28 @@ public class DataReadHelper {
         });
     }
 
-    public Object[] GetValue(DataRecord data) {
-        Object[] ret = new Object[data.values.length * 2 + 1];
-        ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(data.time);
-        for (int i = 0; i < data.values.length; i++) {
-            ret[i * 2 + 1] = data.values[i];
-            ret[i * 2 + 2] = data.value_strings[i].contentEquals("") ? "--" : data.value_strings[i];
+    public Object[] GetValue(DevID devid, ResultSet set) throws Exception {
+        String names[] = JDBDataTable.GetSupportData(devid);
+        Object[] ret = new Object[names.length * 2 + 1];
+        ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(set.getTimestamp(JDBDataTable.Time_Key));
+        for (int i = 0; i < names.length; i++) {
+            int index = JDBDataTable.GetDataToDBIndex(devid, names[i]);
+            ret[i * 2 + 1] = set.getFloat(JDBDataTable.DataIndexKey + index);
+            String info = set.getString(JDBDataTable.UnitIndexKey + index);
+            ret[i * 2 + 2] = info.contentEquals("") ? "--" : info;
         }
         return ret;
+    }
+
+    public String[] GetNames(DevID dev_info) {
+        String[] element = JDBDataTable.GetSupportData(dev_info);
+        String[] names = new String[element.length * 2 + 1];
+        names[0] = "时间";
+        for (int i = 0; i < element.length; i++) {
+            names[i * 2 + 1] = element[i];
+            names[i * 2 + 2] = "(量程)单位";
+        }
+        return names;
     }
     // </editor-fold>  
 }

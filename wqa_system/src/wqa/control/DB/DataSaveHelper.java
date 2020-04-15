@@ -120,7 +120,7 @@ public class DataSaveHelper {
             try {
                 JDBDataTable data_dbhelper = new JDBDataTable(this.db_instance);
                 //然后创建设备数据表
-                data_dbhelper.CreateTableIfNotExist(data.dev_id, CDevDataTable.GetInstance().namemap.get(data.dev_id.dev_type).data_list.length);
+                data_dbhelper.CreateTableIfNotExist(data.dev_id);
                 //添加数据到设备数据表
                 data_dbhelper.AddData(data);
             } catch (Exception ex) {

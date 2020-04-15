@@ -11,8 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import wqa.adapter.factory.CDevDataTable;
 import wqa.dev.data.DevID;
 import wqa.dev.data.SDisplayData;
+import wqa.system.WQAPlatform;
 
 /**
  *
@@ -74,7 +76,7 @@ public class JDBDataTable {
         prepareCall.execute();
     }
 
-    public void CreateTableIfNotExist(DevID id, int data_num) throws Exception {
+    public void CreateTableIfNotExist(DevID id) throws Exception {
         String table_name = ConvertTableName(id);
 
         if (db.IsTableExist(table_name)) {
@@ -83,7 +85,7 @@ public class JDBDataTable {
 
         String CREATE_TABLE_SQL = "create table if not exists " + table_name
                 + "(" + Time_Key + " datetime(2) primary key not null, ";
-        for (int i = 0; i < data_num; i++) {
+        for (int i = 0; i < GetAllData(id).length; i++) {
             CREATE_TABLE_SQL += DataIndexKey + i + " varchar(50),";
             CREATE_TABLE_SQL += UnitIndexKey + i + " varchar(50),";
         }
@@ -128,36 +130,6 @@ public class JDBDataTable {
         }
     }
 
-    /*
-    //搜索数据(异常)
-    private ResultSet SearchRecords(int dev_type, int addr, Date startTime, Date stopTime, long interval) throws Exception {
-
-        String table_name = ConvertTableName(new DEVKEY(dev_type, addr));
-
-        if (stopTime == null) {
-            stopTime = new Date();
-        }
-
-        //设置条件
-        String sql = "with t_rowtable as (select * from "
-                + table_name + " where " + " id%" + interval + " = 0" //每隔一定距离获取一个数据
-                + " and " + Time_Key + " <= ?";             //截至时间，为空就是当前时间
-
-        if (startTime != null) {
-            sql += " and " + Time_Key + " >= ?";            //其始时间
-        }
-
-        sql += " order by id asc) select * from t_rowtable ";                           //按序号增加排列
-
-        //创建statement
-        CallableStatement prepareCall = db.conn.prepareCall(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        prepareCall.setTimestamp(1, new java.sql.Timestamp(stopTime.getTime()));
-        if (startTime != null) {
-            prepareCall.setTimestamp(2, new java.sql.Timestamp(startTime.getTime()));
-        }
-
-        return prepareCall.executeQuery();
-    }*/
     //搜索数据
     public ResultSet SearchRecords(DevID id, Date startTime, Date stopTime) throws Exception {
 
@@ -200,11 +172,6 @@ public class JDBDataTable {
         prepareCall.executeUpdate();
     }
 
-//    public void DeleteData(int dev_type, int addr, Date befortime) throws Exception {
-//        DEVKEY devkey = new DEVKEY(dev_type, addr);
-//        this.DeleteData(devkey, befortime);
-//    }
-
     public boolean IsTableEmpty(DevID key) throws SQLException {
         String table_name = ConvertTableName(key);
         return this.db.IsTableEmpty(table_name);
@@ -213,5 +180,43 @@ public class JDBDataTable {
     public void DropTable(DevID key) throws SQLException {
         String table_name = ConvertTableName(key);
         this.db.DropTable(table_name);
+    }
+
+    public static String[] GetSupportData(DevID dev_id) {
+        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
+        ArrayList<String> list = new ArrayList();
+        if (d_infos != null) {
+            for (CDevDataTable.DataInfo info : d_infos.data_list) {
+                if (info.internal_only) {
+                    if (WQAPlatform.GetInstance().is_internal) {
+                        list.add(info.data_name);
+                    }
+                } else {
+                    list.add(info.data_name);
+                }
+            }
+        }
+        return list.toArray(new String[0]);
+    }
+
+    public static String[] GetAllData(DevID dev_id) {
+        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
+        ArrayList<String> list = new ArrayList();
+        if (d_infos != null) {
+            for (CDevDataTable.DataInfo info : d_infos.data_list) {
+                list.add(info.data_name);
+            }
+        }
+        return list.toArray(new String[0]);
+    }
+    
+    public static int GetDataToDBIndex(DevID dev_id, String data_name){
+        String[] all_datas = GetAllData(dev_id);
+        for(int i = 0; i < all_datas.length; i++){
+            if(all_datas[i].contentEquals(data_name)){
+                return i;
+            }
+        }
+        return -1;
     }
 }
