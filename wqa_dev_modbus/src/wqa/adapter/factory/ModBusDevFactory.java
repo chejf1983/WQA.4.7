@@ -85,6 +85,12 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0208, PHDevice.class.getName());
         class_map.put(0x0210, DODevice.class.getName());
 
+        
+        class_map.put(0x1200, PHDevice.class.getName());
+        class_map.put(0x1201, PHDevice.class.getName());
+        class_map.put(0x1202, ECDevice.class.getName());
+        class_map.put(0x1203, DODevice.class.getName());
+        
         class_map.put(0x0100, OSADevice.class.getName());
         class_map.put(0x0102, OSADevice.class.getName());
         class_map.put(0x0104, OSADevice.class.getName());

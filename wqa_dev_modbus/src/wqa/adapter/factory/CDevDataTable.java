@@ -155,7 +155,7 @@ public class CDevDataTable {
                 new DataInfo("红光幅值", "", 0, true, ""),
                 new DataInfo("信号偏置", "", 0, true, "")),
 
-        //OSA
+        //OSA0x01系列
         new DevInfo(0x0100, "OSA_TURB", "浊度",
                 new DataInfo("浊度", "NTU", 3, "(0-100)", "(0-500)", "(0-2000)", "(0-4000)"),
                 new DataInfo("浊度" + ORA_Flag, "", 0, true, ""),
@@ -209,7 +209,31 @@ public class CDevDataTable {
                 new DataInfo("红光幅值", "", 0, true, ""),
                 new DataInfo("信号偏置", "", 0, true, "")),
 
-        //ISA
+        //0x12系列
+        new DevInfo(0x1200, "MPA_PH", "PH",
+                new DataInfo("pH", "", 2, "(0-14)"),
+                new DataInfo("pH" + ORA_Flag, "", 0, true, ""),
+                new DataInfo("温度", "℃", 1, "(0-60)"),
+                new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
+        new DevInfo(0x1201, "MPA_ORP", "ORP",
+                new DataInfo("ORP", "mV", 2, "(-2000-2000)"),
+                new DataInfo("ORP" + ORA_Flag, "", 0, true, ""),
+                new DataInfo("温度", "℃", 1, "(0-60)"),
+                new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
+        new DevInfo(0x1202, "MPA_EC", "电导率",
+                new DataInfo("电导率", "uS/cm", 1, "(0-500000)"),
+                new DataInfo("电导率" + ORA_Flag, "", 0, true, ""),
+                new DataInfo("温度", "℃", 1, "(0-60)"),
+                new DataInfo("温度" + ORA_Flag, "", 0, true, ""),
+                new DataInfo("盐度", "ppt", 0, "(0-75)")),
+        new DevInfo(0x1203, "MPA_DO", "溶解氧",
+                new DataInfo("溶解氧", "mg/L", 0x02, "(0-20)"), 
+                new DataInfo("溶解氧百分比", "%", 0, ""),
+                new DataInfo("溶解氧" + ORA_Flag, "", 0, true, ""),
+                new DataInfo("温度", "℃", 1, "(0-60)"),
+                new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
+        
+        //ISA0x03系列
         new DevInfo(0x0300, "ISA_AMMO_I", "氨氮I",
                 new DataInfo("pH", "", 2, "(0-14)"),
                 new DataInfo("pH" + ORA_Flag, "", 0, true, ""),
@@ -279,6 +303,7 @@ public class CDevDataTable {
                 new DataInfo("Cl" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, ""))};
+        
         
         for(DevInfo info : d_list){
             this.namemap.put(info.dev_type, info);
