@@ -112,6 +112,7 @@ public class DataReadHelper {
     }
 
     // </editor-fold>  
+    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {

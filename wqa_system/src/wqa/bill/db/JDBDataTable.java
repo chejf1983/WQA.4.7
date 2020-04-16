@@ -11,11 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import wqa.adapter.factory.CDevDataTable;
 import wqa.control.DB.SDataRecordResult;
 import wqa.dev.data.DevID;
 import wqa.dev.data.CollectData;
-import wqa.system.WQAPlatform;
 
 /**
  *
@@ -55,7 +53,7 @@ public class JDBDataTable {
 //        获取表名称
         String table_name = ConvertTableName(data.dev_id);
         //初始化插入SQL语句
-        String INSERT_TABLE_SQL = "insert into " + table_name + " values(?";
+        String INSERT_TABLE_SQL = "insert into " + table_name + " values(null, ?";
         for (int i = 0; i < data.datas.length; i++) {
             INSERT_TABLE_SQL += ", ?, ?";
         }
@@ -85,7 +83,7 @@ public class JDBDataTable {
         }
 
         String CREATE_TABLE_SQL = "create table if not exists " + table_name
-                + "(" + Time_Key + " datetime(2) primary key not null, ";
+                + "(id int auto_increment primary key not null, " + Time_Key + " datetime(2), ";
         for (int i = 0; i < SDataRecordResult.GetAllData(id).length; i++) {
             CREATE_TABLE_SQL += DataIndexKey + i + " varchar(50),";
             CREATE_TABLE_SQL += UnitIndexKey + i + " varchar(50),";
@@ -169,6 +167,21 @@ public class JDBDataTable {
         CallableStatement prepareCall = db.conn.prepareCall(sql);
 
         prepareCall.setTimestamp(1, new java.sql.Timestamp(befortime.getTime()));
+
+        prepareCall.executeUpdate();
+    }
+    
+    public void DeleteData(DevID key, int index) throws Exception {
+        String table_name = ConvertTableName(key);
+
+        String sql = "delete from " + table_name
+                + " where ";
+
+        sql += "id <= ?";
+
+        CallableStatement prepareCall = db.conn.prepareCall(sql);
+
+        prepareCall.setInt(1, index);
 
         prepareCall.executeUpdate();
     }

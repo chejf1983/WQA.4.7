@@ -6,7 +6,7 @@
 package wqa.adapter.model;
 
 import java.util.ArrayList;
-import modebus.pro.CRC16;
+import modebus.pro.MCRC16;
 import modebus.pro.NahonConvert;
 import modebus.register.IREG;
 import modebus.register.REG;
@@ -67,7 +67,7 @@ public class ModbusClient {
             System.arraycopy(NahonConvert.UShortToByteArray(reg_addr), 0, rec_buffer, 2, 2); //寄存器
             System.arraycopy(NahonConvert.UShortToByteArray(reg_num), 0, rec_buffer, 4, 2);  //个数
         }
-        CRC16 crc16 = new CRC16();
+        MCRC16 crc16 = new MCRC16();
         int crc = crc16.getCrc(rec_buffer, rec_buffer_len - 2);
         System.arraycopy(NahonConvert.UShortToByteArray(crc), 0, rec_buffer, rec_buffer_len - 2, 2);//CRC检验
 

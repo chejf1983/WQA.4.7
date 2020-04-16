@@ -437,6 +437,7 @@ public class DataSearch extends javax.swing.JPanel {
     private void Button_SetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SetActionPerformed
         DBConfigDialog dbConfigDialog = new DBConfigDialog(MainForm.main_parent, false);
         dbConfigDialog.setVisible(true);
+        Button_refreshActionPerformed(null);
     }//GEN-LAST:event_Button_SetActionPerformed
 
     //删除一个探头的数据

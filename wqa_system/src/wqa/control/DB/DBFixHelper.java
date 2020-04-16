@@ -5,6 +5,7 @@
  */
 package wqa.control.DB;
 
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
@@ -38,7 +39,13 @@ public class DBFixHelper {
                     DevID[] dev_data_tables = dtable.ListAllDevice();
                     for (int i = 0; i < dev_data_tables.length; i++) {
                         //删除表之前的数据
-                        dtable.DeleteData(dev_data_tables[i], beforetime);
+                        int index = 0;
+                        try (ResultSet result = dtable.SearchRecords(dev_data_tables[i], null, beforetime)) {;
+                            result.last();
+                            index = result.getInt("id");
+                            result.close();
+                        }
+                        dtable.DeleteData(dev_data_tables[i], index);
                         //如果表空了，删除表
                         if (dtable.IsTableEmpty(dev_data_tables[i])) {
                             new JDBDataTable(db_instance).DropTable(dev_data_tables[i]);
@@ -47,6 +54,8 @@ public class DBFixHelper {
                     }
                     //删除报警信息历史数据
                     new JDBAlarmTable(db_instance).DeleteData(beforetime);
+                    db_instance.CLOSE();
+                    db_instance.OPEN();
                 } catch (Exception ex) {
                     LogCenter.Instance().SendFaultReport(Level.SEVERE, "获取设备列表失败", ex);
                 } finally {
