@@ -84,19 +84,20 @@ public class DataReadHelper {
                 ret_set.first();
 
                 //计算跳跃次数
-                double data_to_jump = (double)(data_count / limit_num);
-                if (data_to_jump < 0) {
+                double data_to_jump = ((double) data_count / limit_num);
+                if (data_to_jump < 1) {
                     data_to_jump = 1;//int count = 0;
                 }
 
+                int row = 1;
                 //跳跃搜索数据
-                while (ret_set.absolute((int) (data_to_jump - 1))) {
+                while (ret_set.absolute(row)) {
                     //增加一个转换结果
                     SDataRecordResult.DataRecord record = ret.new DataRecord(table_name);
                     record.InitData(ret_set);
                     //保存结果
                     ret.data.add(record);
-                    data_to_jump += data_to_jump;
+                    row += data_to_jump;
                     //count = 0;
                     process.SetValue(100 * ret_set.getRow() / data_count);
                 }
@@ -113,7 +114,6 @@ public class DataReadHelper {
     }
 
     // </editor-fold>  
-    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {

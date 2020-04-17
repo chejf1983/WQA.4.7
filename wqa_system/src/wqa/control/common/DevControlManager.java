@@ -64,6 +64,9 @@ public class DevControlManager {
                     try {
                         //搜索设备基本信息，根据基本信息创建虚拟设备
                         AddNewDevice(DevControlManager.dev_drv.SearchOneDev(io, (byte) i));
+                        
+                        //超时表示没有搜索到设备
+                        System.out.println("找到设备地址:" + i);
                         TimeUnit.MILLISECONDS.sleep(100);
                     } catch (Exception ex) {
                         //超时表示没有搜索到设备
@@ -89,7 +92,6 @@ public class DevControlManager {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "设备初始化失败", ex);
             }
         };
-
         if (process != null) {
             process.Finish(true);
         }
