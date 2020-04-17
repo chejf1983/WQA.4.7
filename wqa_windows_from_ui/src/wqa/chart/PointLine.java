@@ -92,6 +92,8 @@ public class PointLine {
                             stringWidth = tmp;
                         }
                     }
+                    //宽度加宽
+                    stringWidth += 8;
                     //找到单行字体高度
 //                    FontDesignMetrics metrics = FontDesignMetrics.getMetrics(labelFont);
 //                    int height = metrics.getHeight();
@@ -143,7 +145,7 @@ public class PointLine {
             double x = xyd.getXValue(s_index, p_index);
             double y = xyd.getYValue(s_index, p_index);
             Date time = new Date((long) x);
-            String label = String.format("(%s ,  %.4f)", new SimpleDateFormat("HH:mm:ss").format(time), y);
+            String label = String.format("(%s ,  %.4f)", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time), y);
             if (descibre != null && descibre.size() > p_index) {
                 label += "<br>" + descibre.get(p_index);
             }

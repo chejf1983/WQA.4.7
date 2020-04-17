@@ -75,6 +75,7 @@ public class DataChart extends javax.swing.JPanel {
 
         //chart背景
         dataChart.setBackgroundPaint(new Color(241, 244, 247));
+        
         //xyplot背景
         this.xyplot.setBackgroundPaint(gradientpaint);
 
@@ -96,7 +97,8 @@ public class DataChart extends javax.swing.JPanel {
         xyplot.getRangeAxis().setAutoRangeMinimumSize(1);
         //让X轴最右数据没有留白
         //xyplot.getDomainAxis().setUpperMargin(0);
-        ((DateAxis) (xyplot.getDomainAxis())).setDateFormatOverride(new SimpleDateFormat("MM-dd HH:mm:ss"));
+//        ((DateAxis) (xyplot.getDomainAxis()))
+        ((DateAxis) (xyplot.getDomainAxis())).setDateFormatOverride(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         //xyplot.getDomainAxis().setTickLabelFont(new Font("Microsoft YaHei", 0, 15));
         //((NumberAxis) xyplot.getDomainAxis()).setNumberFormatOverride(new DecimalFormat("0s"));
 
