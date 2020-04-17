@@ -84,18 +84,19 @@ public class DataReadHelper {
                 ret_set.first();
 
                 //计算跳跃次数
-                long data_to_jump = data_count / limit_num;
-                if (data_to_jump == 0) {
-                    data_to_jump++;//int count = 0;
+                double data_to_jump = (double)(data_count / limit_num);
+                if (data_to_jump < 0) {
+                    data_to_jump = 1;//int count = 0;
                 }
 
                 //跳跃搜索数据
-                while (ret_set.absolute((int) (ret_set.getRow() + data_to_jump))) {
+                while (ret_set.absolute((int) (data_to_jump - 1))) {
                     //增加一个转换结果
                     SDataRecordResult.DataRecord record = ret.new DataRecord(table_name);
                     record.InitData(ret_set);
                     //保存结果
                     ret.data.add(record);
+                    data_to_jump += data_to_jump;
                     //count = 0;
                     process.SetValue(100 * ret_set.getRow() / data_count);
                 }
