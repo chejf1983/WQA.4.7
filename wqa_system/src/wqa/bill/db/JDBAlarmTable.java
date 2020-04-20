@@ -9,7 +9,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 import wqa.dev.data.CollectData;
 
 /**
@@ -36,7 +36,7 @@ public class JDBAlarmTable {
         String INSERT_TABLE_SQL = "insert into " + AlarmTable + " values(null, ?, ?, ?, ?)";
 
         CallableStatement prepareCall = db.conn.prepareCall(INSERT_TABLE_SQL);
-        prepareCall.setString(1, data.dev_id.toString());
+        prepareCall.setString(1, new DevID(data.dev_type, data.dev_addr, data.serial_num).toString());
         prepareCall.setInt(2, data.alarm);
         prepareCall.setString(3, data.alram_info);
         prepareCall.setTimestamp(4, new java.sql.Timestamp(data.time.getTime()));

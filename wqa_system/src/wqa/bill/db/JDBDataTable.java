@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import wqa.control.DB.SDataRecordResult;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 import wqa.dev.data.CollectData;
 
 /**
@@ -51,7 +51,7 @@ public class JDBDataTable {
 
     public void AddData(CollectData data) throws Exception {
 //        获取表名称
-        String table_name = ConvertTableName(data.dev_id);
+        String table_name = ConvertTableName(new DevID(data.dev_type, data.dev_addr, data.serial_num));
         //初始化插入SQL语句
         String INSERT_TABLE_SQL = "insert into " + table_name + " values(null, ?";
         for (int i = 0; i < data.datas.length; i++) {

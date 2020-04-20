@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import modebus.pro.ModeBusNode;
 import modebus.register.*;
 import wqa.adapter.factory.CDevDataTable.DataInfo;
-import wqa.dev.data.DevID;
 import wqa.dev.data.MIOInfo;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.data.CollectData;
@@ -49,7 +48,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SDTEMPSWT, SDTEMP);
 
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
-        DEVADDR.SetValue((int)this.base_drv.GetCurrentAddr());
+        DEVADDR.SetValue((int) this.base_drv.GetCurrentAddr());
         //波特率序号也根据IO信息来，设备读出来不准确
         MIOInfo comm_info = this.base_drv.GetIO().GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
@@ -65,7 +64,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     // <editor-fold defaultstate="collapsed" desc="公共接口接口">
     @Override
-    public IMAbstractIO GetIO(){
+    public IMAbstractIO GetIO() {
         return this.base_drv.GetIO();
     }
 
@@ -88,7 +87,9 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     public SDevInfo GetDevInfo() {
         //初始化连接信息
         info.io = this.base_drv.GetIO();
-        info.dev_id = new DevID(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue());
+        info.dev_addr = this.DEVADDR.GetValue();
+        info.dev_type = this.DEVADDR.GetValue();
+        info.serial_num = this.SERIANUM.GetValue();
         info.protype = SDevInfo.ProType.MODEBUS;
         return info;
     }
@@ -119,7 +120,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     }
 
     public CollectData BuildDisplayData() {
-        return new CollectData(new DevID(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue()));
+        return new CollectData(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue());
     }
     // </editor-fold>  
 

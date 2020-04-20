@@ -25,12 +25,10 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.chart.axis.DateAxis;
 import wqa.chart.DataChart;
 import wqa.common.JImagePane;
-import wqa.dev.data.CollectData;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.common.DevMonitor;
 import wqa.control.common.SDisplayData;
 import wqa.control.config.DevConfigBean;
-import wqa.dev.data.SDevInfo;
 import wqa.form.config.CalConfigForm;
 import wqa.form.config.CommonConfigForm;
 import wqa.form.errormsg.ConfirmBox;
@@ -420,9 +418,8 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     // <editor-fold defaultstate="collapsed" desc="初始化界面">
     private String GetDevName() {
-        SDevInfo devinfo = currentdev.GetDevID();
-        String stype = devinfo.protype == SDevInfo.ProType.MIGP ? "*" : "";
-        return stype + devinfo.dev_id.ToChineseString();
+        String stype = currentdev.GetParent1().GetProType().contentEquals("MIGP") ? "*" : "";
+        return stype + currentdev.GetParent1().GetDevID().ToChineseString();
     }
 
     private final CardLayout display_layout = new CardLayout();
@@ -563,7 +560,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private void Button_DevLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_DevLogActionPerformed
         DevLogForm logform = new DevLogForm(MainForm.main_parent, false, GetDevName());
-        logform.InitLog(this.currentdev.GetDevID().dev_id);
+        logform.InitLog(this.currentdev.GetParent1().GetDevID());
         logform.setVisible(true);
     }//GEN-LAST:event_Button_DevLogActionPerformed
 

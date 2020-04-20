@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 
 /**
  *

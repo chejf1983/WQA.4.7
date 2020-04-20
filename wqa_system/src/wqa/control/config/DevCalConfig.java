@@ -13,6 +13,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.control.common.SDisplayData;
+import wqa.control.data.DevID;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.CollectData;
 import wqa.dev.data.SDataElement;
@@ -157,7 +158,7 @@ public class DevCalConfig {
     }
 
     private SDisplayData CreateDisplayData(CollectData data) {
-        SDisplayData tmp = new SDisplayData(data.dev_id);
+        SDisplayData tmp = new SDisplayData(new DevID(data.dev_type, data.dev_addr, data.serial_num));
         tmp.time = data.time;
         tmp.alarm = data.alarm;
         tmp.alram_info = data.alram_info;

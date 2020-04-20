@@ -55,7 +55,7 @@ public class DataVector {
 
     //输入数据
     public void InputData(SDisplayData data) {
-        if (data.dev_id.dev_type != this.dev_type.GetDevID().dev_id.dev_type) {
+        if (data.dev_id.dev_type != this.dev_type.GetParent1().GetDevID().dev_type) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "异常数据,无法显示");
             return;
         }

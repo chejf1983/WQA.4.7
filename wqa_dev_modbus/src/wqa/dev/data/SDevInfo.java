@@ -19,11 +19,15 @@ public class SDevInfo {
     }
     
     public IMAbstractIO io;
-    public DevID dev_id;
+    public int dev_type;
+    public int dev_addr;
+    public String serial_num;
     public ProType protype;
 
     public boolean EqualsTo(SDevInfo other) {
         return this.io == other.io
-                && this.dev_id.EqualsTo(other.dev_id);
+                && this.dev_type == other.dev_type
+                && this.dev_addr == other.dev_addr
+                && this.serial_num.contentEquals(other.serial_num);
     }
 }

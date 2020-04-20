@@ -77,7 +77,10 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         //初始化连接信息
         SDevInfo info = new SDevInfo();
         info.io = this.local_io;
-        info.dev_id = new DevID(this.VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
+        info.dev_addr = this.base_drv.GetDstAddr();
+        info.dev_type = this.VDEVTYPE.GetValue();
+        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
+//        info.dev_id = new DevID(this.VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
         info.protype = SDevInfo.ProType.MIGP;
         return info;
     }
@@ -111,7 +114,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     }
 
     protected CollectData BuildDisplayData() {
-        CollectData disdata = new CollectData(new DevID(VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue()));
+        CollectData disdata = new CollectData(VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
 
         return disdata;
     }

@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
 import wqa.dev.data.SDevInfo;
 import wqa.system.WQAPlatform;
@@ -84,7 +85,7 @@ public class DevMonitor {
 
     public String[] GetSupportDataName() {
         //单位信息
-        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(this.GetDevID().dev_id.dev_type);
+        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(this.parent.GetDevID().dev_type);
         ArrayList<String> list = new ArrayList();
         if (d_infos != null) {
             for (CDevDataTable.DataInfo info : d_infos.data_list) {
@@ -104,12 +105,8 @@ public class DevMonitor {
         return this.parent;
     }
 
-    public SDevInfo GetDevID() {
-        return this.parent.GetConnectInfo();
-    }
-    
     private SDisplayData CreateDisplayData(CollectData data){
-        SDisplayData tmp = new SDisplayData(data.dev_id);
+        SDisplayData tmp = new SDisplayData(this.parent.GetDevID());
         tmp.time = data.time;
         tmp.alarm = data.alarm;
         tmp.alram_info = data.alram_info;

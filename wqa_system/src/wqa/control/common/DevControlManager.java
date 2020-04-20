@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
+import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.dev.intf.IDevice;
 import wqa.dev.intf.IDeviceSearch;
@@ -123,7 +124,7 @@ public class DevControlManager {
             dev.InitDevice();
             //避免重复添加
             for (DevControl tmp : this.control_list) {
-                if (dev.GetDevInfo().EqualsTo(tmp.GetConnectInfo())) {
+                if (new DevID(dev.GetDevInfo().dev_type, dev.GetDevInfo().dev_addr, dev.GetDevInfo().serial_num).EqualsTo(tmp.GetDevID())) {
                     //已经存在就不再搜索
                     return null;
                 }

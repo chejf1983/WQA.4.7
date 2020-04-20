@@ -17,13 +17,18 @@ import static wqa.adapter.factory.CDevDataTable.ORA_Flag;
  */
 public class CollectData {
 
-    public CollectData(DevID dev_id) {
-        this.dev_id = dev_id;
+    public CollectData(
+            int dev_type,
+            int dev_addr,
+            String serial_num) {
+        this.dev_type = dev_type;
+        this.dev_addr = dev_addr;
+        this.serial_num = serial_num;
         this.time = new Date();
 
         try {
             //单位信息
-            CDevDataTable.DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.dev_id.dev_type).data_list;
+            CDevDataTable.DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.dev_type).data_list;
             datas = new SDataElement[data_list.length];
             for (int i = 0; i < data_list.length; i++) {
                 datas[i] = new SDataElement();
@@ -37,7 +42,9 @@ public class CollectData {
         }
     }
 
-    public final DevID dev_id;
+    public int dev_type;
+    public int dev_addr;
+    public String serial_num;
     public Date time;
     public SDataElement[] datas = new SDataElement[0];
     public int alarm = 0;

@@ -12,7 +12,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import wqa.bill.log.DevLog;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 
 /**
  *

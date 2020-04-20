@@ -22,7 +22,7 @@ import wqa.common.Chooser;
 import wqa.control.DB.AlarmHelper;
 import wqa.control.data.IMainProcess;
 import wqa.common.InitPaneHelper;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 import wqa.form.main.ProcessDialog;
 import wqa.system.WQAPlatform;
 

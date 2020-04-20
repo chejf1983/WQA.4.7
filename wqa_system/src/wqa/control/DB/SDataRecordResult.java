@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.bill.db.JDBDataTable;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 import wqa.system.WQAPlatform;
 
 /**

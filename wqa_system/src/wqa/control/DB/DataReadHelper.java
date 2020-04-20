@@ -7,7 +7,6 @@ package wqa.control.DB;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.exl2.XlsSheetWriter;
@@ -15,7 +14,7 @@ import nahon.comm.exl2.xlsTable_W;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.system.WQAPlatform;
 
@@ -114,6 +113,7 @@ public class DataReadHelper {
     }
 
     // </editor-fold>  
+    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {

@@ -45,7 +45,7 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
         Collection<MonitorPane1> values = bookpanes.values();
         ArrayList<MonitorPane1> mlist = new ArrayList(values);
         Collections.sort(mlist, (MonitorPane1 m1, MonitorPane1 m2) -> {
-            return m1.currentdev.GetDevID().dev_id.dev_addr > m2.currentdev.GetDevID().dev_id.dev_addr ? 1 : -1;
+            return m1.currentdev.GetParent1().GetDevID().dev_addr > m2.currentdev.GetParent1().GetDevID().dev_addr ? 1 : -1;
         });
         for (MonitorPane1 m : mlist) {
             Panel_desk.add(m);

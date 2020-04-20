@@ -7,7 +7,7 @@ package wqa.control.common;
 
 import java.util.Date;
 import static wqa.adapter.factory.CDevDataTable.ORA_Flag;
-import wqa.dev.data.DevID;
+import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
 
 /**

@@ -80,7 +80,7 @@ public class DevConfigBean {
     
     // <editor-fold defaultstate="collapsed" desc="显示消息提示"> 
     public void PrintDevLog(LogNode... nodes) {
-        DevLog.Instance().AddLog(this.dev.GetDevInfo().dev_id, nodes);
+        DevLog.Instance().AddLog(this.mother.GetDevID(), nodes);
     }
 
     public interface MessageInterface {

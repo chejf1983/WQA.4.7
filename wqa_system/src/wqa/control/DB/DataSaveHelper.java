@@ -13,6 +13,7 @@ import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
 import wqa.dev.data.CollectData;
 import wqa.control.common.DevControl;
+import wqa.control.data.DevID;
 import wqa.system.WQAPlatform;
 
 /**
@@ -119,7 +120,7 @@ public class DataSaveHelper {
             try {
                 JDBDataTable data_dbhelper = new JDBDataTable(this.db_instance);
                 //然后创建设备数据表
-                data_dbhelper.CreateTableIfNotExist(data.dev_id);
+                data_dbhelper.CreateTableIfNotExist(new DevID(data.dev_type, data.dev_addr, data.serial_num));
                 //添加数据到设备数据表
                 data_dbhelper.AddData(data);
             } catch (Exception ex) {

@@ -13,6 +13,7 @@ import wqa.control.config.DevConfigBean;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
+import wqa.control.data.DevID;
 import wqa.dev.intf.ICollect;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.IDevice;
@@ -60,13 +61,17 @@ public class DevControl {
         this.device = device;
     }
 
-    public SDevInfo GetConnectInfo() {
-        return device.GetDevInfo();
+    public DevID GetDevID(){
+        return new DevID(device.GetDevInfo().dev_type, device.GetDevInfo().dev_addr, device.GetDevInfo().serial_num);
+    }
+    
+    public String GetProType(){
+        return this.device.GetDevInfo().protype.toString();
     }
 
     public String ToString() {
         //获取数据key
-        return this.device.GetDevInfo().dev_id.ToChineseString() + "(" + device.GetDevInfo().io.GetIOInfo().par[0] + ")";
+        return this.GetDevID().ToChineseString() + "(" + device.GetDevInfo().io.GetIOInfo().par[0] + ")";
     }
     // </editor-fold>    
 
@@ -90,7 +95,7 @@ public class DevControl {
     public boolean ReConnect() {
         try {
             int devtype = this.device.ReTestType();
-            return this.device.GetDevInfo().dev_id.dev_type == devtype;
+            return this.device.GetDevInfo().dev_type == devtype;
         } catch (Exception ex) {
             return false;
         }
