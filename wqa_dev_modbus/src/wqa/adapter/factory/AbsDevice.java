@@ -88,7 +88,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         //初始化连接信息
         info.io = this.base_drv.GetIO();
         info.dev_addr = this.DEVADDR.GetValue();
-        info.dev_type = this.DEVADDR.GetValue();
+        info.dev_type = this.DEVTYPE.GetValue();
         info.serial_num = this.SERIANUM.GetValue();
         info.protype = SDevInfo.ProType.MODEBUS;
         return info;

@@ -46,7 +46,6 @@ public class DevControlManager {
 
         //罗列所有物理口
 //        ShareIO[] iolist = IOManager.GetInstance().GetAllIO();
-
         float max_num = iolist.length * max_addr;
         float search_num = 0;
 
@@ -65,9 +64,7 @@ public class DevControlManager {
                     try {
                         //搜索设备基本信息，根据基本信息创建虚拟设备
                         AddNewDevice(DevControlManager.dev_drv.SearchOneDev(io, (byte) i));
-                        
-                        //超时表示没有搜索到设备
-                        System.out.println("找到设备地址:" + i);
+
                         TimeUnit.MILLISECONDS.sleep(100);
                     } catch (Exception ex) {
                         //超时表示没有搜索到设备
@@ -132,6 +129,8 @@ public class DevControlManager {
             //生成新控制器
             DevControl newdev = new DevControl(dev);
             this.control_list.add(newdev);
+            //超时表示没有搜索到设备
+            System.out.println("找到设备地址:" + dev.GetDevInfo().dev_addr);
             //通知新设备添加，生成界面
             StateChange.CreateEvent(DevControlManager.DevNumChange.ADD, newdev);
             return newdev;
