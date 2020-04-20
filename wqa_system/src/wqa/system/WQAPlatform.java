@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.bill.db.H2DBSaver;
 import wqa.bill.io.IOManager;
 import wqa.control.common.DevControlManager;
 import wqa.control.DB.DBHelperFactory;
@@ -28,7 +29,9 @@ import wqa.dev.intf.IDeviceSearch;
  */
 public class WQAPlatform {
 
-    private static WQAPlatform instance;    
+    private static WQAPlatform instance;
+    private boolean isinited = false;
+    private String def_path = "./";
 
     private WQAPlatform() {
     }
@@ -46,16 +49,24 @@ public class WQAPlatform {
     }
     // </editor-fold>  
 
-    public void InitSystem() throws Exception {
-        LogCenter.Instance().SetLogPath("./log");
+    public void InitSystem(String path) throws Exception {
+        this.def_path = path;
+
+        LogCenter.Instance().SetLogPath(this.def_path + "log");
         LogCenter.Instance().PrintLog(Level.INFO, "开始记录LOG");
 
         //初始化设备日志信息
-        DevLog.Instance().InitDir("./cal_log");
+        DevLog.Instance().InitDir(this.def_path + "cal_log");
         
         this.InitConfig();
 
+        H2DBSaver.SetDBPath(def_path);
         this.GetDBHelperFactory().Init();
+        this.isinited = true;
+    }
+
+    public void InitSystem() throws Exception {
+        this.InitSystem("./");
     }
 
     public void CloseSystem() {
@@ -68,8 +79,11 @@ public class WQAPlatform {
         } catch (SQLException ex) {
             Logger.getLogger(WQAPlatform.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         this.GetThreadPool().shutdown();
+    }
+
+    public boolean IsInited() {
+        return this.isinited;
     }
 
     // <editor-fold defaultstate="collapsed" desc="系统模块"> 
@@ -121,7 +135,7 @@ public class WQAPlatform {
     }
 
     private void InitConfig() {
-        File file = new File("./dev_config");
+        File file = new File(this.def_path, "dev_config");
         if (file.exists()) {
             try {
                 Config.loadFromXML(new FileInputStream(file));
@@ -133,7 +147,7 @@ public class WQAPlatform {
     }
 
     public void SaveConfig() {
-        File file = new File("./dev_config");
+        File file = new File(this.def_path, "dev_config");
         try {
             Config.storeToXML(new FileOutputStream(file), "");
         } catch (IOException ex) {

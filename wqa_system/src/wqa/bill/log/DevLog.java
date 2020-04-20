@@ -40,6 +40,10 @@ public class DevLog {
         return instance;
     }
 
+    private boolean log_switch = true;
+    public void SetLogSwitch(boolean value){
+        this.log_switch = value;
+    }
     // <editor-fold defaultstate="collapsed" desc="设置LOG信息"> 
     public static String SyslogFile = ".log";//系统日志文件名称
     private String def_path = "./cal_log";
@@ -72,6 +76,8 @@ public class DevLog {
                 break;
             }
         }
+
+        log_switch = true;
     }
 
     private File GetLogFile(String dev_serial) {
@@ -95,6 +101,10 @@ public class DevLog {
     }
 
     public void AddLog(DevID id, LogNode... log) {
+        if (!log_switch) {
+            return;
+        }
+        
         File logfile = this.GetLogFile(id.ToChineseString());
 
         if (logfile != null) {
