@@ -57,9 +57,9 @@ public class ConfigTableModel extends AbstractTableModel {
             }
         } else {
             if (list[rowIndex].inputtype == SConfigItem.ItemType.B) {
-                return Boolean.valueOf(list[rowIndex].value);
+                return Boolean.valueOf(list[rowIndex].GetValue());
             } else {
-                return list[rowIndex].value;
+                return list[rowIndex].GetValue();
             }
         }
     }

@@ -61,7 +61,7 @@ public class ConfigTablePane extends javax.swing.JPanel {
                 if (column == 1 && list[row].inputtype == SConfigItem.ItemType.B) {
                     //设置默认设备名称下拉列表
                     JCheckBox combox = new JCheckBox();
-                    boolean value = Boolean.valueOf(list[row].value);
+                    boolean value = Boolean.valueOf(list[row].GetValue());
                     combox.setSelected(value);
 //                    return new DefaultCellRenderer(combox);
                     return new MyTableRenderer();
@@ -81,7 +81,7 @@ public class ConfigTablePane extends javax.swing.JPanel {
                 } else if (column == 1 && list[row].inputtype == SConfigItem.ItemType.B) {
                     //设置默认设备名称下拉列表
                     JCheckBox combox = new JCheckBox();
-                    boolean value = Boolean.valueOf(list[row].value);
+                    boolean value = Boolean.valueOf(list[row].GetValue());
                     combox.setSelected(value);
                     return new DefaultCellEditor(combox);
 //                    return DefaultCellEditor(combox);
