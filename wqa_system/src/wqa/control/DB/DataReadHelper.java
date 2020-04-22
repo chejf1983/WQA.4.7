@@ -66,92 +66,87 @@ public class DataReadHelper {
     }
 
     public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SDataRecordResult> process) {
-        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
-            db_instance.dbLock.lock();
-            try (ResultSet ret_set = SearchData(table_name, start, stop)) {
-                SDataRecordResult ret = new SDataRecordResult();
+        db_instance.dbLock.lock();
+        try (ResultSet ret_set = SearchData(table_name, start, stop)) {
+            SDataRecordResult ret = new SDataRecordResult();
 
-                //检查是否为空集
-                if (!ret_set.first()) {
-                    process.Finish(new SDataRecordResult());
-                }
-
-                //统计记录个数
-                ret_set.last();
-                long data_count = ret_set.getRow();
-                ret.search_num = data_count;
-                ret_set.first();
-
-                //计算跳跃次数
-                double data_to_jump = ((double) data_count / limit_num);
-                if (data_to_jump < 1) {
-                    data_to_jump = 1;//int count = 0;
-                }
-
-                int row = 1;
-                //跳跃搜索数据
-                while (ret_set.absolute(row)) {
-                    //增加一个转换结果
-                    SDataRecordResult.DataRecord record = ret.new DataRecord(table_name);
-                    record.InitData(ret_set);
-                    //保存结果
-                    ret.data.add(record);
-                    row += data_to_jump;
-                    //count = 0;
-                    process.SetValue(100 * ret_set.getRow() / data_count);
-                }
-
-                //通知完成
-                process.Finish(ret);
-            } catch (Exception ex) {
-                LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索失败", ex);
+            //检查是否为空集
+            if (!ret_set.first()) {
                 process.Finish(new SDataRecordResult());
-            } finally {
-                db_instance.dbLock.unlock();
             }
-        });
+
+            //统计记录个数
+            ret_set.last();
+            long data_count = ret_set.getRow();
+            ret.search_num = data_count;
+            ret_set.first();
+
+            //计算跳跃次数
+            double data_to_jump = ((double) data_count / limit_num);
+            if (data_to_jump < 1) {
+                data_to_jump = 1;//int count = 0;
+            }
+
+            int row = 1;
+            //跳跃搜索数据
+            while (ret_set.absolute(row)) {
+                //增加一个转换结果
+                SDataRecordResult.DataRecord record = ret.new DataRecord(table_name);
+                record.InitData(ret_set);
+                //保存结果
+                ret.data.add(record);
+                row += data_to_jump;
+                //count = 0;
+                process.SetValue(100 * ret_set.getRow() / data_count);
+            }
+
+            //通知完成
+            process.Finish(ret);
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索失败", ex);
+            process.Finish(new SDataRecordResult());
+        } finally {
+            db_instance.dbLock.unlock();
+        }
     }
 
     // </editor-fold>  
-    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
-        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
-            db_instance.dbLock.lock();
-            try (ResultSet ret_set = SearchData(table_name, start, stop)) {
-                //检查是否为空
-                if (!ret_set.first()) {
-                    return;
-                }
-                //统计总条数
-                ret_set.last();
-                long data_count = ret_set.getRow();
-                ret_set.beforeFirst();
-                int tmp_index = 0;
-
-                String sheet_name = table_name.ToChineseString();
-                //创建excel文件
-                try (XlsSheetWriter xl_saver = XlsSheetWriter.CreateSheet(file_name, sheet_name)) {
-                    String[] names = GetNames(table_name);
-                    //写列名
-                    xlsTable_W table = xl_saver.CreateNewTable(table_name.ToChineseString(), data_count, names);
-                    while (ret_set.next()) {
-                        tmp_index++;
-                        //添加EXCEL行
-                        table.WriterLine(GetValue(table_name, ret_set));
-                        if (tmp_index++ % 100 == 0) {
-                            process.SetValue((100 * tmp_index) / data_count);
-                        }
-                    }
-                    table.Finish();
-                }
-            } catch (Exception ex) {
-                LogCenter.Instance().SendFaultReport(Level.SEVERE, "保存失败", ex);
-            } finally {
-                db_instance.dbLock.unlock();
-                process.Finish(true);
+        db_instance.dbLock.lock();
+        try (ResultSet ret_set = SearchData(table_name, start, stop)) {
+            //检查是否为空
+            if (!ret_set.first()) {
+                return;
             }
-        });
+            //统计总条数
+            ret_set.last();
+            long data_count = ret_set.getRow();
+            ret_set.beforeFirst();
+            int tmp_index = 0;
+
+            String sheet_name = table_name.ToChineseString();
+            //创建excel文件
+            try (XlsSheetWriter xl_saver = XlsSheetWriter.CreateSheet(file_name, sheet_name)) {
+                String[] names = GetNames(table_name);
+                //写列名
+                xlsTable_W table = xl_saver.CreateNewTable(table_name.ToChineseString(), data_count, names);
+                while (ret_set.next()) {
+                    tmp_index++;
+                    //添加EXCEL行
+                    table.WriterLine(GetValue(table_name, ret_set));
+                    if (tmp_index++ % 100 == 0) {
+                        process.SetValue((100 * tmp_index) / data_count);
+                    }
+                }
+                table.Finish();
+            }
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, "保存失败", ex);
+        } finally {
+            db_instance.dbLock.unlock();
+            process.Finish(true);
+        }
     }
 
     public Object[] GetValue(DevID devid, ResultSet set) throws Exception {

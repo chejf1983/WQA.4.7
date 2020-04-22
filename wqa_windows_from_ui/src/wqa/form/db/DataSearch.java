@@ -314,12 +314,14 @@ public class DataSearch extends javax.swing.JPanel {
         this.TextField_end_time.setText(new SimpleDateFormat(TIMEFORMATE).format(new Date()));
     }//GEN-LAST:event_Button_nowActionPerformed
 
+    //获取起止时间
+    Date start_time = null;
+    Date stop_time = null;
+
     //搜索
     private void Button_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SearchActionPerformed
         UpdateSelectIndex();
-        //获取起止时间
-        Date start_time = null;
-        Date stop_time = null;
+
         try {
             start_time = new SimpleDateFormat(TIMEFORMATE).parse(this.TextField_start_time.getText());
             stop_time = new SimpleDateFormat(TIMEFORMATE).parse(this.TextField_end_time.getText());
@@ -339,42 +341,43 @@ public class DataSearch extends javax.swing.JPanel {
             LogCenter.Instance().ShowMessBox(Level.SEVERE, "请先选择需要搜索的设备");
             return;
         }
-;
+
         ProcessDialog.ApplyGlobalProcessBar();
-        //开始搜索
-        WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().SearchLimitData(this.Dev_list[this.List_devlist.getSelectedIndex()],//选择的设备
-                start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<SDataRecordResult>() {
-            @Override
-            public void SetValue(float pecent) {
-                java.awt.EventQueue.invokeLater(() -> {
-                    //更新进度条
-                    if (ProcessDialog.GetGlobalProcessBar() != null) {
-                        ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
-                    }
-                });
-            }
 
-            @Override
-            public void Finish(SDataRecordResult data_ret) {
-                java.awt.EventQueue.invokeLater(() -> {
-                    //更新数据
-                    data_set = data_ret.data.toArray(new DataRecord[0]);
-                    //刷新图标
-                    ComboBox_devtypesItemStateChanged(null);
-                    Label_DataNum.setText(data_ret.search_num + "");
-                    ProcessDialog.ReleaseGlobalProcessBar();
-                    //JOptionPane.showMessageDialog(null, "new:" + (System.currentTimeMillis() - start));
-                });
-            }
-
+        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+            //开始搜索
+            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().SearchLimitData(Dev_list[List_devlist.getSelectedIndex()],//选择的设备
+                    start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<SDataRecordResult>() {
+                        @Override
+                        public void SetValue(float pecent) {
+                            java.awt.EventQueue.invokeLater(() -> {
+                                //更新进度条
+                                if (ProcessDialog.GetGlobalProcessBar() != null) {
+                                    ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
+                                }
+                            });
+                        }
+                        
+                        @Override
+                        public void Finish(SDataRecordResult data_ret) {
+                            java.awt.EventQueue.invokeLater(() -> {
+                                //更新数据
+                                data_set = data_ret.data.toArray(new DataRecord[0]);
+                                //刷新图标
+                                ComboBox_devtypesItemStateChanged(null);
+                                Label_DataNum.setText(data_ret.search_num + "");
+                                ProcessDialog.ReleaseGlobalProcessBar();
+                                //JOptionPane.showMessageDialog(null, "new:" + (System.currentTimeMillis() - start));
+                            });
+                        }
+                        
+                    });
         });
     }//GEN-LAST:event_Button_SearchActionPerformed
 
     //输出到EXCEL
     private void Button_ExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_ExportActionPerformed
-        //获取起止时间
-        Date start_time = null;
-        Date stop_time = null;
+
         try {
             start_time = new SimpleDateFormat(TIMEFORMATE).parse(this.TextField_start_time.getText());
             stop_time = new SimpleDateFormat(TIMEFORMATE).parse(this.TextField_end_time.getText());
@@ -407,29 +410,31 @@ public class DataSearch extends javax.swing.JPanel {
         this.Button_Export.setEnabled(false);
 
         ProcessDialog.ApplyGlobalProcessBar();
-        //导出到excel
-        WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().ExportToFile(filepath,
-                this.Dev_list[this.List_devlist.getSelectedIndex()],
-                start_time, stop_time, new IMainProcess() {
-            @Override
-            public void SetValue(float pecent) {
-                java.awt.EventQueue.invokeLater(() -> {
-                    //刷新进度条
-                    if (ProcessDialog.GetGlobalProcessBar() != null) {
-                        ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
-                    }
-                });
-            }
+        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {//获取起止时间
+            //导出到excel
+            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().ExportToFile(filepath,
+                    this.Dev_list[this.List_devlist.getSelectedIndex()],
+                    start_time, stop_time, new IMainProcess() {
+                @Override
+                public void SetValue(float pecent) {
+                    java.awt.EventQueue.invokeLater(() -> {
+                        //刷新进度条
+                        if (ProcessDialog.GetGlobalProcessBar() != null) {
+                            ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
+                        }
+                    });
+                }
 
-            @Override
-            public void Finish(Object result) {
-                java.awt.EventQueue.invokeLater(() -> {
-                    //始能按钮
-                    ProcessDialog.ReleaseGlobalProcessBar();
-                    LogCenter.Instance().ShowMessBox(Level.SEVERE, "导出完毕");
-                    Button_Export.setEnabled(true);
-                });
-            }
+                @Override
+                public void Finish(Object result) {
+                    java.awt.EventQueue.invokeLater(() -> {
+                        //始能按钮
+                        ProcessDialog.ReleaseGlobalProcessBar();
+                        LogCenter.Instance().ShowMessBox(Level.SEVERE, "导出完毕");
+                        Button_Export.setEnabled(true);
+                    });
+                }
+            });
         });
     }//GEN-LAST:event_Button_ExportActionPerformed
 
