@@ -146,13 +146,13 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         for (SConfigItem item : list) {
             //更新名字
             if (item.IsKey(eiainfo.EDEVNAME.toString())) {
-                SetConfigREG(eiainfo.EDEVNAME, item.value);
+                SetConfigREG(eiainfo.EDEVNAME, item.GetValue());
             }
             if (item.IsKey(eiainfo.EBUILDSER.toString())) {
-                SetConfigREG(eiainfo.EBUILDSER, item.value);
+                SetConfigREG(eiainfo.EBUILDSER, item.GetValue());
             }
             if (item.IsKey(eiainfo.EBUILDDATE.toString())) {
-                SetConfigREG(eiainfo.EBUILDDATE, item.value);
+                SetConfigREG(eiainfo.EBUILDDATE, item.GetValue());
             }
         }
     }
@@ -192,12 +192,12 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         for (SConfigItem item : list) {
             //修改设备地址
             if (item.IsKey(SDevAddr)) {
-                this.setaddr(Integer.valueOf(item.value));
+                this.setaddr(Integer.valueOf(item.GetValue()));
             }
 
             //修改波特率
             if (item.IsKey(SBandRate)) {
-                this.setbandrate(item.value);
+                this.setbandrate(item.GetValue());
             }
         }
     }

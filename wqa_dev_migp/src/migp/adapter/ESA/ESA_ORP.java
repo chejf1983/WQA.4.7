@@ -57,13 +57,13 @@ public class ESA_ORP extends ESADEV {
         super.SetCalParList(list);
         for (SConfigItem item : list) {
             if (item.IsKey(NA.toString())) {
-                this.SetConfigREG(NA, item.value);
+                this.SetConfigREG(NA, item.GetValue());
             }
             if (item.IsKey(NB.toString())) {
-                this.SetConfigREG(NB, item.value);
+                this.SetConfigREG(NB, item.GetValue());
             }
             if (item.IsKey(NTEMP_CAL.toString())) {
-                this.SetConfigREG(NTEMP_CAL, item.value);
+                this.SetConfigREG(NTEMP_CAL, item.GetValue());
             }
         }
     }

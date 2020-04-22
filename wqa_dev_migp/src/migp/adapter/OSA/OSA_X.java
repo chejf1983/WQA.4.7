@@ -132,17 +132,17 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
             if (item.IsKey(NRANGE.toString())) {
                 String[] _range_string = this.get_range_string();
                 for (int i = 0; i < _range_string.length; i++) {
-                    if (item.value.contentEquals(_range_string[i])) {
+                    if (item.GetValue().contentEquals(_range_string[i])) {
                         this.SetConfigREG(NRANGE, String.valueOf(i));
                         break;
                     }
                 }
             }
             if (item.IsKey(NAVR.toString())) {
-                this.SetConfigREG(NAVR, item.value);
+                this.SetConfigREG(NAVR, item.GetValue());
             }
             if (item.IsKey(NTEMPER_COMP.toString())) {
-                this.SetConfigREG(NTEMPER_COMP, item.value);
+                this.SetConfigREG(NTEMPER_COMP, item.GetValue());
             }
         }
 
@@ -180,7 +180,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
         for (SConfigItem item : list) {
             if (item.IsKey(NRANGE_NUM.toString())) {
-                int num = Integer.valueOf(item.value);
+                int num = Integer.valueOf(item.GetValue());
                 if (num > NRANGE_NUM.min && num <= NRANGE_NUM.max + 1) {
                     this.SetConfigREG(NRANGE_NUM, (num - 1) + "");
                 } else {
@@ -188,30 +188,30 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
                 }
             }
             if (item.IsKey(NTEMPER_PAR.toString())) {
-                this.SetConfigREG(NTEMPER_PAR, item.value);
+                this.SetConfigREG(NTEMPER_PAR, item.GetValue());
             }
 
             for (int i = 0; i < this.NAMPLIFY.length; i++) {
                 if (item.IsKey(NRANGE_MAX[i].toString())) {
-                    this.SetConfigREG(NRANGE_MAX[i], item.value);
+                    this.SetConfigREG(NRANGE_MAX[i], item.GetValue());
                 }
                 if (item.IsKey(NCLTEMPER[i].toString())) {
-                    this.SetConfigREG(NCLTEMPER[i], item.value);
+                    this.SetConfigREG(NCLTEMPER[i], item.GetValue());
                 }
                 if (item.IsKey(NCLPARA[i].toString())) {
-                    this.SetConfigREG(NCLPARA[i], item.value);
+                    this.SetConfigREG(NCLPARA[i], item.GetValue());
                 }
                 if (item.IsKey(NCLPARB[i].toString())) {
-                    this.SetConfigREG(NCLPARB[i], item.value);
+                    this.SetConfigREG(NCLPARB[i], item.GetValue());
                 }
                 if (item.IsKey(NCLPARC[i].toString())) {
-                    this.SetConfigREG(NCLPARC[i], item.value);
+                    this.SetConfigREG(NCLPARC[i], item.GetValue());
                 }
                 if (item.IsKey(NAMPLIFY[i].toString())) {
-                    float tmp = Float.valueOf(item.value);
+                    float tmp = Float.valueOf(item.GetValue());
                     float famply = AMPPAR;
                     if (tmp != 0) {
-                        famply = AMPPAR / Float.valueOf(item.value);
+                        famply = AMPPAR / Float.valueOf(item.GetValue());
                     }
                     int amply = (int) (famply + 0.5);
                     this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
@@ -243,13 +243,13 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
         SConfigItem[] list = par.mode == SMotorParameter.CleanMode.Auto ? par.auto_config : par.manu_config;
         for (SConfigItem item : list) {
             if (item.IsKey(NCTIME.toString())) {
-                this.SetConfigREG(NCTIME, item.value);
+                this.SetConfigREG(NCTIME, item.GetValue());
             }
             if (item.IsKey(NCINTERVAL.toString())) {
-                this.SetConfigREG(NCINTERVAL, item.value);
+                this.SetConfigREG(NCINTERVAL, item.GetValue());
             }
             if (item.IsKey(NCBRUSH.toString())) {
-                this.SetConfigREG(NCBRUSH, item.value);
+                this.SetConfigREG(NCBRUSH, item.GetValue());
             }
         }
 

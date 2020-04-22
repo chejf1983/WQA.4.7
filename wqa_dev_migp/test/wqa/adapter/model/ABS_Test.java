@@ -70,12 +70,12 @@ public class ABS_Test {
         absdev_mock.ReadREGS();
         config.forEach(item -> {
             if (item.IsKey(AbsDevice.SBandRate)) {
-                assertEquals(AbsDevice.BANDRATE_STRING[absdev_mock.client.bandrate], item.value);
-                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + AbsDevice.BANDRATE_STRING[absdev_mock.client.bandrate] + "[读取结果]:" + item.value + "[设备值]:" + absdev_mock.client.bandrate);
+                assertEquals(AbsDevice.BANDRATE_STRING[absdev_mock.client.bandrate], item.GetValue());
+                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + AbsDevice.BANDRATE_STRING[absdev_mock.client.bandrate] + "[读取结果]:" + item.GetValue() + "[设备值]:" + absdev_mock.client.bandrate);
             }
             if (item.IsKey(AbsDevice.SDevAddr)) {
-                assertEquals(absdev_mock.client.addr + "", item.value);
-                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + absdev_mock.client.addr + "[读取结果]:" + item.value + "[设备值]:" + absdev_mock.client.addr);
+                assertEquals(absdev_mock.client.addr + "", item.GetValue());
+                PrintLog.println(item.inputtype + "-" + item.data_name + "[设置值]:" + absdev_mock.client.addr + "[读取结果]:" + item.GetValue() + "[设备值]:" + absdev_mock.client.addr);
             }
         });
     }
@@ -124,10 +124,10 @@ public class ABS_Test {
     public void check_item(ArrayList<SConfigItem> list, String name, String testvalue) throws Exception {
         for (SConfigItem item : list) {
             if (item.IsKey(name)) {
-                if (!item.value.contentEquals(testvalue)) {
-                    fail(item.data_name + "检查失败![读取结果]:" + item.value + "[期待值]:" + testvalue);
+                if (!item.GetValue().contentEquals(testvalue)) {
+                    fail(item.data_name + "检查失败![读取结果]:" + item.GetValue() + "[期待值]:" + testvalue);
                 } else {
-                    PrintLog.println(item.inputtype + "-" + item.data_name + "[读取结果]:" + item.value + "[期待值]:" + testvalue);
+                    PrintLog.println(item.inputtype + "-" + item.data_name + "[读取结果]:" + item.GetValue() + "[期待值]:" + testvalue);
                     return;
                 }
             }

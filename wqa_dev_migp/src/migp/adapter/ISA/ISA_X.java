@@ -128,10 +128,10 @@ public class ISA_X extends AbsDevice {
 
         for (SConfigItem item : list) {
             if (item.IsKey(NK_COM.toString())) {
-                this.SetConfigREG(NK_COM, item.value);
+                this.SetConfigREG(NK_COM, item.GetValue());
             }
             if (item.IsKey(NCL_COM.toString())) {
-                this.SetConfigREG(NCL_COM, item.value);
+                this.SetConfigREG(NCL_COM, item.GetValue());
             }
         }
 
@@ -163,17 +163,17 @@ public class ISA_X extends AbsDevice {
             String[] datanames = this.GetDataNames();
             for (int i = 0; i < datanames.length - 1; i++) {
                 if (item.IsKey(datanames[i] + NAS[i].toString())) {
-                    this.SetConfigREG(NAS[i], item.value);
+                    this.SetConfigREG(NAS[i], item.GetValue());
                 }
                 if (item.IsKey(datanames[i] + NES[i].toString())) {
-                    this.SetConfigREG(NES[i], item.value);
+                    this.SetConfigREG(NES[i], item.GetValue());
                 }
                 if (item.IsKey(datanames[i] + NFS[i].toString())) {
-                    this.SetConfigREG(NFS[i], item.value);
+                    this.SetConfigREG(NFS[i], item.GetValue());
                 }
             }
             if (item.IsKey(NTEMP_CAL.toString())) {
-                this.SetConfigREG(NTEMP_CAL, item.value);
+                this.SetConfigREG(NTEMP_CAL, item.GetValue());
             }
         }
     }

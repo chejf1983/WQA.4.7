@@ -50,7 +50,7 @@ public class OSA_XTest {
         }
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     @Test
     public void test_readinfo() throws Exception {
@@ -67,7 +67,7 @@ public class OSA_XTest {
         commontest.setinfolist_check();
     }
     // </editor-fold> 
-    
+
     // <editor-fold defaultstate="collapsed" desc="读取config测试">
     @Test
     public void test_readconfig() throws Exception {
@@ -164,30 +164,30 @@ public class OSA_XTest {
         if (result.mode == SMotorParameter.CleanMode.Auto) {
             for (SConfigItem item : result.auto_config) {
                 if (item.IsKey(dev_mock.NCTIME.toString())) {
-                    assertEquals(item.value, dev_mock.NCTIME.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.NCTIME.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
                 }
                 if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                    assertEquals(item.value, dev_mock.NCINTERVAL.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.NCINTERVAL.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
                 }
                 if (item.IsKey(dev_mock.NCBRUSH.toString())) {
-                    assertEquals(item.value, dev_mock.NCBRUSH.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.NCBRUSH.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
                 }
             }
         } else {
             for (SConfigItem item : result.manu_config) {
                 if (item.IsKey(dev_mock.NCTIME.toString())) {
-                    assertEquals(item.value, dev_mock.NCTIME.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.NCTIME.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
                 }
                 if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                    assertEquals(item.value, dev_mock.NCINTERVAL.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.NCINTERVAL.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
                 }
                 if (item.IsKey(dev_mock.NCBRUSH.toString())) {
-                    assertEquals(item.value, dev_mock.NCBRUSH.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.NCBRUSH.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.NCTIME.GetValue());
                 }
             }
@@ -205,24 +205,24 @@ public class OSA_XTest {
 
         for (SConfigItem item : result.manu_config) {
             if (item.IsKey(dev_mock.NCTIME.toString())) {
-                item.value = "100";
+                item.SetValue("100");
             }
             if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                item.value = "60";
+                item.SetValue("60");
             }
             if (item.IsKey(dev_mock.NCBRUSH.toString())) {
-                item.value = "3";
+                item.SetValue("3");
             }
         }
         for (SConfigItem item : result.auto_config) {
             if (item.IsKey(dev_mock.NCTIME.toString())) {
-                item.value = "99";
+                item.SetValue("99");
             }
             if (item.IsKey(dev_mock.NCINTERVAL.toString())) {
-                item.value = "61";
+                item.SetValue("61");
             }
             if (item.IsKey(dev_mock.NCBRUSH.toString())) {
-                item.value = "4";
+                item.SetValue("4");
             }
         }
         result.mode = SMotorParameter.CleanMode.Auto;

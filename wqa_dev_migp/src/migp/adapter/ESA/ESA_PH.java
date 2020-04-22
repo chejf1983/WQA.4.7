@@ -60,13 +60,13 @@ public class ESA_PH extends ESADEV {
         super.SetCalParList(list);
         for (SConfigItem item : list) {
             if (item.IsKey(NA.toString())) {
-                this.SetConfigREG(NA, item.value);
+                this.SetConfigREG(NA, item.GetValue());
             }
             if (item.IsKey(NE0.toString())) {
-                this.SetConfigREG(NE0, item.value);
+                this.SetConfigREG(NE0, item.GetValue());
             }
             if (item.IsKey(NTEMP_CAL.toString())) {
-                this.SetConfigREG(NTEMP_CAL, item.value);
+                this.SetConfigREG(NTEMP_CAL, item.GetValue());
             }
         }
     }

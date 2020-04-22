@@ -85,7 +85,7 @@ public class EOSA_DO extends ESADEV {
         for (SConfigItem item : list) {
             for (MEG mem : reglist) {
                 if (item.IsKey(mem.toString())) {
-                    this.SetConfigREG(mem, item.value);
+                    this.SetConfigREG(mem, item.GetValue());
                     break;
                 }
             }
@@ -128,7 +128,7 @@ public class EOSA_DO extends ESADEV {
         for (SConfigItem item : list) {
             for (MEG mem : reglist) {
                 if (item.IsKey(mem.toString())) {
-                    this.SetConfigREG(mem, item.value);
+                    this.SetConfigREG(mem, item.GetValue());
                     break;
                 }
             }
