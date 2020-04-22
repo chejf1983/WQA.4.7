@@ -72,15 +72,15 @@ public class DODevice extends AbsDevice {
         super.SetConfigList(list);
         for (SConfigItem item : list) {
             if (item.IsKey(PASCA.toString())) {
-                this.SetConfigREG(PASCA, item.value);
+                this.SetConfigREG(PASCA, item.GetValue());
             }
 
             if (item.IsKey(SALT.toString())) {
-                this.SetConfigREG(SALT, item.value);
+                this.SetConfigREG(SALT, item.GetValue());
             }
 
             if (item.IsKey(AVR.toString())) {
-                this.SetConfigREG(AVR, item.value);
+                this.SetConfigREG(AVR, item.GetValue());
             }
         }
     }

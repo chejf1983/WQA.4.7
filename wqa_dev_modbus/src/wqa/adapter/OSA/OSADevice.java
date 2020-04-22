@@ -100,14 +100,14 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
         for (SConfigItem item : list) {
             //设置平均次数
             if (item.IsKey(this.AVR.toString())) {
-                this.SetConfigREG(AVR, item.value);
+                this.SetConfigREG(AVR, item.GetValue());
 
             }
 
             //设置量程范围
             if (item.IsKey(RANGE.toString())) {
                 for (int i = 0; i < this.range_info.length; i++) {
-                    if (item.value.contentEquals(this.range_info[i])) {
+                    if (item.GetValue().contentEquals(this.range_info[i])) {
                         this.SetConfigREG(RANGE, String.valueOf(i));
                         break;
                     }
@@ -140,11 +140,11 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
 
         for (SConfigItem item : par.auto_config) {
             if (item.IsKey(CTIME.toString())) {
-                this.CTIME.SetValue(Integer.valueOf(item.value));
+                this.CTIME.SetValue(Integer.valueOf(item.GetValue()));
 
             }
             if (item.IsKey(CINTVAL.toString())) {
-                CINTVAL.SetValue(Integer.valueOf(item.value));
+                CINTVAL.SetValue(Integer.valueOf(item.GetValue()));
             }
         }
 

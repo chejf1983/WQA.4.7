@@ -99,22 +99,22 @@ public class OSADeviceTest {
         if (result.mode == SMotorParameter.CleanMode.Auto) {
             for (SConfigItem item : result.auto_config) {
                 if (item.IsKey(dev_mock.CTIME.toString())) {
-                    assertEquals(item.value, dev_mock.CTIME.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.CTIME.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CTIME.GetValue());
                 }
                 if (item.IsKey(dev_mock.CINTVAL.toString())) {
-                    assertEquals(item.value, dev_mock.CINTVAL.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.CINTVAL.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CINTVAL.GetValue());
                 }
             }
         } else {
             for (SConfigItem item : result.manu_config) {
                 if (item.IsKey(dev_mock.CTIME.toString())) {
-                    assertEquals(item.value, dev_mock.CTIME.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.CTIME.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CTIME.GetValue());
                 }
                 if (item.IsKey(dev_mock.CINTVAL.toString())) {
-                    assertEquals(item.value, dev_mock.CINTVAL.GetValue() + "");
+                    assertEquals(item.GetValue(), dev_mock.CINTVAL.GetValue() + "");
                     PrintLog.println(item.data_name + "[设置值]:" + item.toString() + "[寄存器值]:" + dev_mock.CINTVAL.GetValue());
                 }
             }
@@ -131,18 +131,18 @@ public class OSADeviceTest {
 
         for (SConfigItem item : result.manu_config) {
             if (item.IsKey(dev_mock.CTIME.toString())) {
-                item.value = "100";
+                item.SetValue("100");
             }
             if (item.IsKey(dev_mock.CINTVAL.toString())) {
-                item.value = "60";
+                item.SetValue("60");
             }
         }
         for (SConfigItem item : result.auto_config) {
             if (item.IsKey(dev_mock.CTIME.toString())) {
-                item.value = "99";
+                item.SetValue("99");
             }
             if (item.IsKey(dev_mock.CINTVAL.toString())) {
-                item.value = "61";
+                item.SetValue("61");
             }
         }
         result.mode = SMotorParameter.CleanMode.Auto;

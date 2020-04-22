@@ -15,7 +15,7 @@ public class SConfigItem {
         R, W, S, B //只读，读写，选择, boolean
     }
     public String data_name;
-    public String value;
+    private String value;
     public String unit;
     public ItemType inputtype;
     public String[] range; //只在选择模式下有效
@@ -55,6 +55,10 @@ public class SConfigItem {
         this.ischanged = false;
     }
 
+    public String GetValue(){
+        return this.value;
+    }
+    
     //设置
     public void SetValue(String newvalue) {
         this.ischanged = !this.value.contentEquals(newvalue);

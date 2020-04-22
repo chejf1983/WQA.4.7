@@ -127,7 +127,7 @@ public class ECDevice extends AbsDevice {
         for (SConfigItem item : list) {
             if (item.IsKey(ECRANG.toString())) {
                 for (int i = 0; i < EC_UNIT_STRING.length; i++) {
-                    if (item.value.contentEquals(EC_UNIT_STRING[i])) {
+                    if (item.GetValue().contentEquals(EC_UNIT_STRING[i])) {
                         this.SetConfigREG(ECRANG, String.valueOf(i));
                         break;
                     }
@@ -135,23 +135,23 @@ public class ECDevice extends AbsDevice {
             }
 
             if (item.IsKey(CMPTEMP.toString())) {
-                this.SetConfigREG(CMPTEMP, item.value);
+                this.SetConfigREG(CMPTEMP, item.GetValue());
             }
 
             if (item.IsKey(PAREC.toString())) {
-                this.SetConfigREG(PAREC, item.value);
+                this.SetConfigREG(PAREC, item.GetValue());
             }
 
             if (item.IsKey(SALTRANGE.toString())) {
                 for (int i = 0; i < SALT_UNIT_STRING.length; i++) {
-                    if (item.value.contentEquals(SALT_UNIT_STRING[i])) {
+                    if (item.GetValue().contentEquals(SALT_UNIT_STRING[i])) {
                         this.SetConfigREG(SALTRANGE, String.valueOf(i));
                         break;
                     }
                 }
             }
             if (item.IsKey(CMPTDS.toString())) {
-                this.SetConfigREG(CMPTDS, item.value);
+                this.SetConfigREG(CMPTDS, item.GetValue());
             }
         }
     }

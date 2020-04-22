@@ -97,10 +97,10 @@ public ABS_Test(AbsDevice instance, DevMock dev_mock) throws Exception {
     public void check_item(ArrayList<SConfigItem> list, String name, String testvalue) throws Exception {
         for (SConfigItem item : list) {
             if (item.IsKey(name)) {
-                if (!item.value.contentEquals(testvalue)) {
-                    fail(item.data_name + "检查失败![读取结果]:" + item.value + "[期待值]:" + testvalue);
+                if (!item.GetValue().contentEquals(testvalue)) {
+                    fail(item.data_name + "检查失败![读取结果]:" + item.GetValue() + "[期待值]:" + testvalue);
                 } else {
-                    PrintLog.println(item.inputtype + "-" + item.data_name + "[读取结果]:" + item.value + "[期待值]:" + testvalue);
+                    PrintLog.println(item.inputtype + "-" + item.data_name + "[读取结果]:" + item.GetValue() + "[期待值]:" + testvalue);
                     return;
                 }
             }

@@ -156,11 +156,11 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             //修改设备地址
             if (item.IsKey(DEVADDR.toString())) {
                 try {
-                    ModeBusNode base = new ModeBusNode(this.base_drv.GetIO(), Integer.valueOf(item.value).byteValue());
+                    ModeBusNode base = new ModeBusNode(this.base_drv.GetIO(), Integer.valueOf(item.GetValue()).byteValue());
                     base.ReadMemory(DEVADDR.RegAddr(), DEVADDR.RegNum(), 1, DEF_TIMEOUT);
                     throw new Exception("该地址已经存在!");
                 } catch (Exception ex) {
-                    this.SetConfigREG(DEVADDR, item.value);
+                    this.SetConfigREG(DEVADDR, item.GetValue());
                     this.base_drv.addr = DEVADDR.GetValue().byteValue();
                 }
             }
@@ -168,7 +168,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             //修改波特率
             if (item.IsKey(BANDRANGEI.toString())) {
                 for (int i = 0; i < SBandRate.length; i++) {
-                    if (item.value.contentEquals(SBandRate[i])) {
+                    if (item.GetValue().contentEquals(SBandRate[i])) {
                         this.SetConfigREG(BANDRANGEI, String.valueOf(i));
                         break;
                     }
@@ -177,12 +177,12 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
             //修改温补开关
             if (item.IsKey(SDTEMPSWT.toString())) {
-                this.SetConfigREG(SDTEMPSWT, item.value);
+                this.SetConfigREG(SDTEMPSWT, item.GetValue());
             }
 
             //修改温补值
             if (item.IsKey(SDTEMP.toString())) {
-                this.SetConfigREG(SDTEMP, item.value);
+                this.SetConfigREG(SDTEMP, item.GetValue());
             }
         }
     }
