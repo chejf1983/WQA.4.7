@@ -70,14 +70,17 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
     //初始化量程信息
     private String[] init_range_string() throws Exception {
 
-        if (this.RANGNUM.GetValue() == 0) {
-            return CDevDataTable.GetInstance().namemap.get(this.DEVTYPE.GetValue()).data_list[0].data_range;
-        } else {
+        if (this.RANGNUM.GetValue() > 0 && this.RANGNUM.GetValue() <= 4) {
             String[] ret = new String[this.RANGNUM.GetValue()];
+            if(ret.length > 4){
+                throw new Exception("量程信息异常:" + ret.length);
+            }
             for (int i = 0; i < ret.length; i++) {
                 ret[i] = "(0-" + RANGN[i].GetValue() + ")";
             }
             return ret;
+        } else {
+            return CDevDataTable.GetInstance().namemap.get(this.DEVTYPE.GetValue()).data_list[0].data_range;            
         }
     }
 

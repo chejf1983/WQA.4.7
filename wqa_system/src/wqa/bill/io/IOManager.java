@@ -87,7 +87,7 @@ public class IOManager {
         if (config == null) {
             throw new Exception("未知类型");
         }
-        
+
         config.changeConfig(io_instance, info);
     }
     // </editor-fold>   
@@ -193,9 +193,9 @@ public class IOManager {
         WQAPlatform.GetInstance().GetConfig().setProperty(Key, sioInfo.iotype);
         for (int i = 0; i < par_num; i++) {
             if (sioInfo.par.length > i) {
-                WQAPlatform.GetInstance().GetConfig().setProperty(Key + i, sioInfo.par[i]);
+                WQAPlatform.GetInstance().GetConfig().setProperty(Key + "P" + i, sioInfo.par[i]);
             } else {
-                WQAPlatform.GetInstance().GetConfig().setProperty(Key + i, "");
+                WQAPlatform.GetInstance().GetConfig().setProperty(Key + "P" + i, "");
             }
         }
     }
@@ -208,7 +208,7 @@ public class IOManager {
 
         ArrayList<String> pars = new ArrayList<>();
         for (int i = 0; i < par_num; i++) {
-            String par = WQAPlatform.GetInstance().GetConfig().getProperty(Key + i, "NON");
+            String par = WQAPlatform.GetInstance().GetConfig().getProperty(Key + "P" + i, "NON");
             if (par.contentEquals("NON")) {
                 break;
             } else {
