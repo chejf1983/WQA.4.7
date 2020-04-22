@@ -32,7 +32,7 @@ public class DevConfigTable {
     public String GetValue(String key) {
         for (SConfigItem item : configlist.GetItemList()) {
             if (item.data_name.contentEquals(key)) {
-                return item.value;
+                return item.GetValue();
             }
         }
         return "";
