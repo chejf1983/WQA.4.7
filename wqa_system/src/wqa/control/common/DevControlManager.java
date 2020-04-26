@@ -57,7 +57,7 @@ public class DevControlManager {
                 io.Close();
                 io.Open();
                 //遍历32个地址
-                for (int i = 1; i < max_addr; i++) {
+                for (int i = 1; i <= max_addr; i++) {
                     if (process != null) {
                         process.SetValue(100 * (search_num++) / max_num);
                     }

@@ -16,7 +16,6 @@ import wqa.bill.db.JDBDataTable;
 import wqa.bill.db.H2DBSaver;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
-import wqa.system.WQAPlatform;
 
 /**
  *
@@ -111,6 +110,7 @@ public class DataReadHelper {
     }
 
     // </editor-fold>  
+    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
         db_instance.dbLock.lock();

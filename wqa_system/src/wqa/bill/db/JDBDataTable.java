@@ -145,7 +145,7 @@ public class JDBDataTable {
             sql += " and " + Time_Key + " >= ?";            //其始时间
         }
 
-        sql += "order by " + Time_Key + " asc";                           //按序号增加排列
+        sql += "order by " + Time_Key + " asc";             //按序号增加排列
 
         CallableStatement prepareCall = db.conn.prepareCall(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         prepareCall.setTimestamp(1, new java.sql.Timestamp(stopTime.getTime()));
