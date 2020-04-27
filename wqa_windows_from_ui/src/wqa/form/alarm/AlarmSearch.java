@@ -19,9 +19,10 @@ import javax.swing.JList;
 import javax.swing.table.JTableHeader;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.common.Chooser;
-import wqa.control.DB.AlarmHelper;
+import wqa.bill.db.AlarmHelper;
 import wqa.control.data.IMainProcess;
 import wqa.common.InitPaneHelper;
+import wqa.control.DB.AlarmRecord;
 import wqa.control.data.DevID;
 import wqa.form.main.ProcessDialog;
 import wqa.system.WQAPlatform;
@@ -218,7 +219,7 @@ public class AlarmSearch extends javax.swing.JPanel {
 
     //刷新设备表格
     private void Button_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_refreshActionPerformed
-        this.Dev_List = WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmFind().ListAllDevice();
+        this.Dev_List = WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().ListAllDevice();
 
         model.clear();
         for (DevID devname : Dev_List) {
@@ -258,8 +259,8 @@ public class AlarmSearch extends javax.swing.JPanel {
 
         ProcessDialog.ApplyGlobalProcessBar();
         //搜索
-        WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmFind().SearchAlarmInfo(this.Dev_List[this.List_devlist.getSelectedIndex()],
-                start_time, stop_time, new IMainProcess<AlarmHelper.AlarmRecord[]>() {
+        WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().SearchAlarmInfo(this.Dev_List[this.List_devlist.getSelectedIndex()],
+                start_time, stop_time, new IMainProcess<AlarmRecord[]>() {
             @Override
             public void SetValue(float pecent) {
                 java.awt.EventQueue.invokeLater(() -> {
@@ -270,7 +271,7 @@ public class AlarmSearch extends javax.swing.JPanel {
             }
 
             @Override
-            public void Finish(AlarmHelper.AlarmRecord[] ainfo_list) {
+            public void Finish(AlarmRecord[] ainfo_list) {
                 java.awt.EventQueue.invokeLater(() -> {
                     //刷新表格
                     ProcessDialog.ReleaseGlobalProcessBar();
@@ -322,7 +323,7 @@ public class AlarmSearch extends javax.swing.JPanel {
         }
 
         this.Button_Export.setEnabled(false);
-        WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmFind().ExportToExcel(filepath,
+        WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().ExportToExcel(filepath,
                 this.Dev_List[this.List_devlist.getSelectedIndex()],
                 start_time, stop_time, new IMainProcess() {
             @Override
@@ -351,7 +352,7 @@ public class AlarmSearch extends javax.swing.JPanel {
         try {
             int[] indcs = this.List_devlist.getSelectedIndices();
             for (int i = 0; i < indcs.length; i++) {
-                WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmFind().DeleteAlarm(this.Dev_List[indcs[i]]);
+                WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().DeleteAlarm(this.Dev_List[indcs[i]]);
             }
 //            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().DeleteTable(this.devlist[this.List_devlist.getSelectedIndex()]);
             Button_refreshActionPerformed(null);

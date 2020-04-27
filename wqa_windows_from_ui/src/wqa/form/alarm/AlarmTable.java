@@ -7,8 +7,9 @@ package wqa.form.alarm;
 
 import java.text.SimpleDateFormat;
 import javax.swing.table.AbstractTableModel;
-import wqa.control.DB.AlarmHelper;
+import wqa.bill.db.AlarmHelper;
 import wqa.adapter.factory.CErrorTable;
+import wqa.control.DB.AlarmRecord;
 
 /**
  *
@@ -18,13 +19,13 @@ public class AlarmTable extends AbstractTableModel {
 
     private String[] table_names = new String[]{"序号", "时间", "报警号", "报警信息"};
     public static int[] table_with = new int[]{60, 150, 90, 0};
-    private AlarmHelper.AlarmRecord[] infos;
+    private AlarmRecord[] infos;
 
-    public AlarmTable(AlarmHelper.AlarmRecord[] ainfo_list) {
+    public AlarmTable(AlarmRecord[] ainfo_list) {
         this.infos = ainfo_list;
     }
 
-    public AlarmHelper.AlarmRecord[] GetAlarmInfo() {
+    public AlarmRecord[] GetAlarmInfo() {
         return this.infos;
     }
 
@@ -45,7 +46,7 @@ public class AlarmTable extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        AlarmHelper.AlarmRecord info = this.infos[rowIndex];
+        AlarmRecord info = this.infos[rowIndex];
         if (columnIndex == 0) {
             return rowIndex;
         } else if (columnIndex == 1) {

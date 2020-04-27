@@ -341,7 +341,7 @@ public class DBConfigDialog extends javax.swing.JDialog {
 
     //初始化配置参数
     private void InitCollectTime() {
-        this.TextField_dbtime.setText(WQAPlatform.GetInstance().GetDBHelperFactory().GetDataRecorder().GetCollectTimeBySecond() + "");
+        this.TextField_dbtime.setText(WQAPlatform.GetInstance().GetDBHelperFactory().GetCollectTimeBySecond() + "");
         this.Label_CRange.setText("(" + this.min_c_time + "-" + this.max_c_time + ")");
 
         this.TextField_maxPnum.setText(DataSearch.Max_ChartPoint + "");
@@ -358,8 +358,8 @@ public class DBConfigDialog extends javax.swing.JDialog {
             if (ctime < this.min_c_time) {
                 ctime = this.min_c_time;
             }
-            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataRecorder().SetCollectTime(ctime);
-            this.TextField_dbtime.setText(WQAPlatform.GetInstance().GetDBHelperFactory().GetDataRecorder().GetCollectTimeBySecond() + "");
+            WQAPlatform.GetInstance().GetDBHelperFactory().SetCollectTime(ctime);
+            this.TextField_dbtime.setText(WQAPlatform.GetInstance().GetDBHelperFactory().GetCollectTimeBySecond() + "");
 
             //设置曲线点个数设置
             DataSearch.Max_ChartPoint = Integer.valueOf(this.TextField_maxPnum.getText());

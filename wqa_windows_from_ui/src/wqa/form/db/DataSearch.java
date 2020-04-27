@@ -23,8 +23,8 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import wqa.common.Chooser;
+import wqa.control.DB.DataRecord;
 import wqa.control.DB.SDataRecordResult;
-import wqa.control.DB.SDataRecordResult.DataRecord;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.form.main.MainForm;
@@ -114,7 +114,7 @@ public class DataSearch extends javax.swing.JPanel {
             return;
         }
         this.ComboBox_devtypes.removeAllItems();
-        String[] GetSupportData = SDataRecordResult.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
+        String[] GetSupportData = DataRecord.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
         for (String data_name : GetSupportData) {
             this.ComboBox_devtypes.addItem(data_name);
         }
@@ -295,7 +295,7 @@ public class DataSearch extends javax.swing.JPanel {
     //刷新设备列表
     private void Button_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_refreshActionPerformed
         //获取设备列表
-        Dev_list = WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().ListAllDevice();
+        Dev_list = WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().ListAllDevice();
 
         //清空表格
         model.clear();
@@ -346,7 +346,7 @@ public class DataSearch extends javax.swing.JPanel {
 
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             //开始搜索
-            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().SearchLimitData(Dev_list[List_devlist.getSelectedIndex()],//选择的设备
+            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().SearchLimitData(Dev_list[List_devlist.getSelectedIndex()],//选择的设备
                     start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<SDataRecordResult>() {
                         @Override
                         public void SetValue(float pecent) {
@@ -412,7 +412,7 @@ public class DataSearch extends javax.swing.JPanel {
         ProcessDialog.ApplyGlobalProcessBar();
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {//获取起止时间
             //导出到excel
-            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().ExportToFile(filepath,
+            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().ExportToFile(filepath,
                     this.Dev_list[this.List_devlist.getSelectedIndex()],
                     start_time, stop_time, new IMainProcess() {
                 @Override
@@ -450,7 +450,7 @@ public class DataSearch extends javax.swing.JPanel {
         try {
             int[] indcs = this.List_devlist.getSelectedIndices();
             for (int i = 0; i < indcs.length; i++) {
-                WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().DeleteTable(this.Dev_list[indcs[i]]);
+                WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().DeleteTable(this.Dev_list[indcs[i]]);
             }
 //            WQAPlatform.GetInstance().GetDBHelperFactory().GetDataFinder().DeleteTable(this.devlist[this.List_devlist.getSelectedIndex()]);
             Button_refreshActionPerformed(null);
