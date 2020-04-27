@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.DB;
+package wqa.bill.db;
 
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.db.JDBAlarmTable;
-import wqa.bill.db.H2DBSaver;
-import wqa.bill.db.JDBDataTable;
+import wqa.control.DB.IDBFix;
 import wqa.control.data.DevID;
 import wqa.system.WQAPlatform;
 
@@ -19,7 +17,7 @@ import wqa.system.WQAPlatform;
  *
  * @author chejf
  */
-public class DBFixHelper {
+public class DBFixHelper implements IDBFix{
 
     private final H2DBSaver db_instance;
 
@@ -28,6 +26,7 @@ public class DBFixHelper {
     }
 
     //删除表
+    @Override
     public void DeleteData(Date beforetime, wqa.control.data.IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
             @Override
@@ -39,13 +38,7 @@ public class DBFixHelper {
                     DevID[] dev_data_tables = dtable.ListAllDevice();
                     for (int i = 0; i < dev_data_tables.length; i++) {
                         //删除表之前的数据
-                        int index = 0;
-                        try (ResultSet result = dtable.SearchRecords(dev_data_tables[i], null, beforetime)) {;
-                            result.last();
-                            index = result.getInt("id");
-                            result.close();
-                        }
-                        dtable.DeleteData(dev_data_tables[i], index);
+                        dtable.DeleteData(dev_data_tables[i], beforetime);
                         //如果表空了，删除表
                         if (dtable.IsTableEmpty(dev_data_tables[i])) {
                             new JDBDataTable(db_instance).DropTable(dev_data_tables[i]);
@@ -67,6 +60,7 @@ public class DBFixHelper {
     }
 
     //return xx MB
+    @Override
     public float GetDBSize() {
         return this.db_instance.GetDBSize();
     }

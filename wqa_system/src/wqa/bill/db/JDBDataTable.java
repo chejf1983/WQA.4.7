@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import wqa.control.DB.SDataRecordResult;
+import wqa.control.DB.DataRecord;
 import wqa.control.data.DevID;
 import wqa.dev.data.CollectData;
 
@@ -84,7 +84,7 @@ public class JDBDataTable {
 
         String CREATE_TABLE_SQL = "create table if not exists " + table_name
                 + "(id int auto_increment primary key not null, " + Time_Key + " datetime(2), ";
-        for (int i = 0; i < SDataRecordResult.GetAllData(id).length; i++) {
+        for (int i = 0; i < DataRecord.GetAllData(id).length; i++) {
             CREATE_TABLE_SQL += DataIndexKey + i + " varchar(50),";
             CREATE_TABLE_SQL += UnitIndexKey + i + " varchar(50),";
         }
@@ -145,8 +145,7 @@ public class JDBDataTable {
             sql += " and " + Time_Key + " >= ?";            //其始时间
         }
 
-        sql += "order by " + Time_Key + " asc";             //按序号增加排列
-
+//        sql += "order by " + Time_Key + " asc";             //按序号增加排列
         CallableStatement prepareCall = db.conn.prepareCall(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         prepareCall.setTimestamp(1, new java.sql.Timestamp(stopTime.getTime()));
         if (startTime != null) {
@@ -157,20 +156,15 @@ public class JDBDataTable {
     }
 
     public void DeleteData(DevID key, Date befortime) throws Exception {
-        String table_name = ConvertTableName(key);
+        int index = 0;
+        try (ResultSet result = SearchRecords(key, null, befortime)) {
+            result.last();
+            index = result.getInt("id");
+        }
 
-        String sql = "delete from " + table_name
-                + " where ";
-
-        sql += Time_Key + " <= ?";
-
-        CallableStatement prepareCall = db.conn.prepareCall(sql);
-
-        prepareCall.setTimestamp(1, new java.sql.Timestamp(befortime.getTime()));
-
-        prepareCall.executeUpdate();
+        DeleteData(key, index);
     }
-    
+
     public void DeleteData(DevID key, int index) throws Exception {
         String table_name = ConvertTableName(key);
 

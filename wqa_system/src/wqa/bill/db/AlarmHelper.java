@@ -3,20 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.DB;
+package wqa.bill.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.exl2.XlsSheetWriter;
 import nahon.comm.exl2.xlsTable_W;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.db.JDBAlarmTable;
-import wqa.bill.db.H2DBSaver;
 import static wqa.bill.db.JDBAlarmTable.*;
+import wqa.control.DB.AlarmRecord;
+import wqa.control.DB.IAlarmHelper;
 import wqa.control.data.DevID;
 import wqa.system.WQAPlatform;
 import wqa.control.data.IMainProcess;
@@ -26,7 +25,7 @@ import wqa.dev.data.CollectData;
  *
  * @author chejf
  */
-public class AlarmHelper {
+public class AlarmHelper implements IAlarmHelper {
 
     private final H2DBSaver db_instance;
 
@@ -36,9 +35,10 @@ public class AlarmHelper {
 
     // <editor-fold defaultstate="collapsed" desc="表信息"> 
     //罗列所有设备表
+    @Override
     public DevID[] ListAllDevice() {
         db_instance.dbLock.lock();
-        try {  
+        try {
             new JDBAlarmTable(db_instance).CreateTable();
             DevID[] dev_data_tables = new JDBAlarmTable(db_instance).ListAllDevice();
             return dev_data_tables;
@@ -51,6 +51,7 @@ public class AlarmHelper {
     }
 
     //删除指定设备表
+    @Override
     public void DeleteAlarm(DevID devinfo) {
         db_instance.dbLock.lock();
         try {
@@ -64,32 +65,8 @@ public class AlarmHelper {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="搜索记录"> 
-    //报警记录
-    public class AlarmRecord {
-
-        public int alarm;
-        public String alarm_info;
-        public Date time;
-
-        public AlarmRecord(ResultSet ret) throws SQLException {
-            if (ret != null) {
-                alarm = ret.getInt(Alarm_Key);
-                alarm_info = ret.getString(AlarmInfo_Key);
-//        ainfo.dev_name = ret.getString(DevInfo_Key);
-                time = ret.getTimestamp(Time_Key);
-            }
-        }
-
-        public String[] GetColumnName() {
-            return new String[]{"时间", "报警码", "报警信息"};
-        }
-
-        public Object[] GetValue() {
-            return new Object[]{new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(this.time), this.alarm, this.alarm_info};
-        }
-    }
-
     //搜索记录
+    @Override
     public void SearchAlarmInfo(DevID dev_name, Date start, Date stop, IMainProcess<AlarmRecord[]> process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
             @Override
@@ -110,7 +87,7 @@ public class AlarmHelper {
                     ArrayList<AlarmRecord> infolist = new ArrayList();
                     //转换记录
                     while (ret_set.next()) {
-                        infolist.add(new AlarmRecord(ret_set));
+                        infolist.add(BuildRecord(ret_set));
                         if (ret_set.getRow() % 10 == 0) {
                             process.SetValue(100 * ret_set.getRow() / data_count);
                         }
@@ -126,10 +103,23 @@ public class AlarmHelper {
             }
         });
     }
+
+    private AlarmRecord BuildRecord(ResultSet ret_set) throws SQLException {
+        if (ret_set != null) {
+            AlarmRecord ret = new AlarmRecord();
+            ret.alarm = ret_set.getInt(Alarm_Key);
+            ret.alarm_info = ret_set.getString(AlarmInfo_Key);
+//        ainfo.dev_name = ret.getString(DevInfo_Key);
+            ret.time = ret_set.getTimestamp(Time_Key);
+            return ret;
+        }
+        return null;
+    }
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="导出Excel"> 
     //搜索记录
+    @Override
     public void ExportToExcel(String file_name, DevID dev_name, Date start, Date stop, IMainProcess process) {
         WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
             @Override
@@ -152,11 +142,11 @@ public class AlarmHelper {
                     //创建excel文件
                     try (XlsSheetWriter xl_saver = XlsSheetWriter.CreateSheet(file_name, sheet_name)) {
                         //写列名
-                        xlsTable_W table = xl_saver.CreateNewTable("报警信息", data_count, new AlarmRecord(null).GetColumnName());
+                        xlsTable_W table = xl_saver.CreateNewTable("报警信息", data_count, new AlarmRecord().GetColumnName());
 
                         while (ret_set.next()) {
                             tmp_index++;
-                            AlarmRecord data = new AlarmRecord(ret_set);
+                            AlarmRecord data = BuildRecord(ret_set);
                             //添加EXCEL行
                             table.WriterLine(data.GetValue());
                             if (tmp_index++ % 10 == 0) {
@@ -179,6 +169,7 @@ public class AlarmHelper {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="保存报警信息"> 
+    @Override
     public void SaveAlarmInfo(CollectData info) {
         db_instance.dbLock.lock();
         try {

@@ -27,7 +27,7 @@ public class H2DBSaver {
     private boolean isOpened = false;
     public final Lock dbLock = new ReentrantLock();
 
-    public static void SetDBPath(String filepath) {
+    public void SetDBPath(String filepath) {
         if (!filepath.endsWith("/")) {
             filepath += "/";
         }

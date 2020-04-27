@@ -3,36 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.DB;
+package wqa.bill.db;
 
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.exl2.XlsSheetWriter;
 import nahon.comm.exl2.xlsTable_W;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.db.JDBDataTable;
-import wqa.bill.db.H2DBSaver;
+import wqa.control.DB.DataRecord;
+import wqa.control.DB.IDataHelper;
+import wqa.control.DB.SDataRecordResult;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
+import wqa.dev.data.CollectData;
 
 /**
  *
  * @author chejf
  */
-public class DataReadHelper {
+public class DataReadHelper implements IDataHelper {
 
     private final H2DBSaver db_instance;
-    private final DBHelperFactory parent;
 
-    public DataReadHelper(DBHelperFactory parent, H2DBSaver db_instance) {
+    public DataReadHelper(H2DBSaver db_instance) {
         this.db_instance = db_instance;
-        this.parent = parent;
     }
 
     // <editor-fold defaultstate="collapsed" desc="表信息"> 
     //列出所存储设备列表名称
+    @Override
     public DevID[] ListAllDevice() {
         db_instance.dbLock.lock();
         try {
@@ -45,6 +46,7 @@ public class DataReadHelper {
         }
     }
 
+    @Override
     public void DeleteTable(DevID table_name) throws Exception {
         new JDBDataTable(this.db_instance).DropTable(table_name);
     }
@@ -64,6 +66,7 @@ public class DataReadHelper {
 
     }
 
+    @Override
     public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SDataRecordResult> process) {
         db_instance.dbLock.lock();
         try (ResultSet ret_set = SearchData(table_name, start, stop)) {
@@ -89,11 +92,8 @@ public class DataReadHelper {
             int row = 1;
             //跳跃搜索数据
             while (ret_set.absolute(row)) {
-                //增加一个转换结果
-                SDataRecordResult.DataRecord record = ret.new DataRecord(table_name);
-                record.InitData(ret_set);
                 //保存结果
-                ret.data.add(record);
+                ret.data.add(BuildRecord(table_name, ret_set));
                 row += data_to_jump;
                 //count = 0;
                 process.SetValue(100 * ret_set.getRow() / data_count);
@@ -110,8 +110,8 @@ public class DataReadHelper {
     }
 
     // </editor-fold>  
-    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
+    @Override
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
         db_instance.dbLock.lock();
         try (ResultSet ret_set = SearchData(table_name, start, stop)) {
@@ -128,13 +128,13 @@ public class DataReadHelper {
             String sheet_name = table_name.ToChineseString();
             //创建excel文件
             try (XlsSheetWriter xl_saver = XlsSheetWriter.CreateSheet(file_name, sheet_name)) {
-                String[] names = GetNames(table_name);
+                String[] names = DataRecord.GetNames(table_name);
                 //写列名
                 xlsTable_W table = xl_saver.CreateNewTable(table_name.ToChineseString(), data_count, names);
                 while (ret_set.next()) {
                     tmp_index++;
                     //添加EXCEL行
-                    table.WriterLine(GetValue(table_name, ret_set));
+                    table.WriterLine(BuildRecord(table_name, ret_set).GetValue());
                     if (tmp_index++ % 100 == 0) {
                         process.SetValue((100 * tmp_index) / data_count);
                     }
@@ -148,29 +148,30 @@ public class DataReadHelper {
             process.Finish(true);
         }
     }
-
-    public Object[] GetValue(DevID devid, ResultSet set) throws Exception {
-        String names[] = SDataRecordResult.GetSupportData(devid);
-        Object[] ret = new Object[names.length * 2 + 1];
-        ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(set.getTimestamp(JDBDataTable.Time_Key));
-        for (int i = 0; i < names.length; i++) {
-            int index = SDataRecordResult.GetDataToDBIndex(devid, names[i]);
-            ret[i * 2 + 1] = set.getFloat(JDBDataTable.DataIndexKey + index);
-            String info = set.getString(JDBDataTable.UnitIndexKey + index);
-            ret[i * 2 + 2] = info.contentEquals("") ? "--" : info;
-        }
-        return ret;
-    }
-
-    public String[] GetNames(DevID dev_info) {
-        String[] element = SDataRecordResult.GetSupportData(dev_info);
-        String[] names = new String[element.length * 2 + 1];
-        names[0] = "时间";
-        for (int i = 0; i < element.length; i++) {
-            names[i * 2 + 1] = element[i];
-            names[i * 2 + 2] = "(量程)单位";
-        }
-        return names;
-    }
     // </editor-fold>  
+
+    public DataRecord BuildRecord(DevID id, ResultSet set) throws SQLException {
+        DataRecord record = new DataRecord(id);
+        //读取时间
+        record.time = set.getTimestamp(JDBDataTable.Time_Key);
+
+        //获取静态数据表
+        for (int i = 0; i < record.values.length; i++) {
+            int index = DataRecord.GetDataToDBIndex(id, record.names[i]);
+            //根据显示数据内容查找静态数据表的序号，对应到数据库中的位置
+            record.values[i] = set.getFloat(JDBDataTable.DataIndexKey + index);
+            record.value_strings[i] = set.getString(JDBDataTable.UnitIndexKey + index);
+        }
+
+        return record;
+    }
+
+    @Override
+    public void SaveData(CollectData data) throws Exception {
+        JDBDataTable data_dbhelper = new JDBDataTable(this.db_instance);
+        //然后创建设备数据表
+        data_dbhelper.CreateTableIfNotExist(new DevID(data.dev_type, data.dev_addr, data.serial_num));
+        //添加数据到设备数据表
+        data_dbhelper.AddData(data);
+    }
 }

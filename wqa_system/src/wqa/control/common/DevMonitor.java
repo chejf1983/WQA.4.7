@@ -13,9 +13,7 @@ import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.CDevDataTable;
-import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
-import wqa.dev.data.SDevInfo;
 import wqa.system.WQAPlatform;
 
 /**
@@ -78,7 +76,7 @@ public class DevMonitor {
                 data.alram_info = "添加新设备" + parent.ToString();
             }
             this.last_alarm = data.alarm;
-            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmFind().SaveAlarmInfo(data);
+            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().SaveAlarmInfo(data);
         }
     }
     // </editor-fold>   

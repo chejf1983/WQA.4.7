@@ -9,18 +9,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.H2DBSaver;
 import wqa.bill.io.IOManager;
 import wqa.control.common.DevControlManager;
-import wqa.control.DB.DBHelperFactory;
 import wqa.bill.log.DevLog;
+import wqa.control.DB.DBHelper;
 import wqa.dev.intf.IDeviceSearch;
 
 /**
@@ -57,11 +55,10 @@ public class WQAPlatform {
 
         //初始化设备日志信息
         DevLog.Instance().InitDir(this.def_path + "/cal_log");
-        
+
         this.InitConfig();
 
-        H2DBSaver.SetDBPath(def_path);
-        this.GetDBHelperFactory().Init();
+        this.GetDBHelperFactory().Init(def_path);
         this.isinited = true;
     }
 
@@ -74,11 +71,8 @@ public class WQAPlatform {
 
         this.GetManager().DeleteAllControls();
 
-        try {
-            this.GetDBHelperFactory().Close();
-        } catch (SQLException ex) {
-            Logger.getLogger(WQAPlatform.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.GetDBHelperFactory().Close();
+        
         this.GetThreadPool().shutdown();
     }
 
@@ -87,11 +81,11 @@ public class WQAPlatform {
     }
 
     // <editor-fold defaultstate="collapsed" desc="系统模块"> 
-    private DBHelperFactory data_saver;
+    private DBHelper data_saver;
 
-    public DBHelperFactory GetDBHelperFactory() {
+    public DBHelper GetDBHelperFactory() {
         if (data_saver == null) {
-            data_saver = new DBHelperFactory();
+            data_saver = new DBHelper();
         }
 
         return data_saver;
@@ -105,8 +99,9 @@ public class WQAPlatform {
         }
         return devcontrol_manager;
     }
-    
+
     private IOManager ioManager;
+
     public IOManager GetIOManager() {
         if (ioManager == null) {
             ioManager = new IOManager();
