@@ -111,6 +111,7 @@ public class DataReadHelper implements IDataHelper {
     }
 
     // </editor-fold>  
+    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     @Override
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {

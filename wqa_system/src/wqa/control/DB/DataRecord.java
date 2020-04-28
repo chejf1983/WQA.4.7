@@ -40,6 +40,7 @@ public class DataRecord {
         //赋值量程单位
         this.value_strings = new String[names.length];
 
+        this.time = new Date();
     }
 
     public int GetIndex(String name) {
