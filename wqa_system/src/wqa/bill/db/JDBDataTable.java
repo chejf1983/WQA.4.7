@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import wqa.control.DB.DataRecord;
+import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.dev.data.CollectData;
 
@@ -49,9 +50,9 @@ public class JDBDataTable {
         return devices.toArray(new DevID[0]);
     }
 
-    public void AddData(CollectData data) throws Exception {
+    public void AddData(SDisplayData data) throws Exception {
 //        获取表名称
-        String table_name = ConvertTableName(new DevID(data.dev_type, data.dev_addr, data.serial_num));
+        String table_name = ConvertTableName(data.dev_id);
         //初始化插入SQL语句
         String INSERT_TABLE_SQL = "insert into " + table_name + " values(null, ?";
         for (int i = 0; i < data.datas.length; i++) {

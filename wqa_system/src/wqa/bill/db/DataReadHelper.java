@@ -15,6 +15,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.control.DB.DataRecord;
 import wqa.control.DB.IDataHelper;
 import wqa.control.DB.SDataRecordResult;
+import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.dev.data.CollectData;
@@ -167,10 +168,10 @@ public class DataReadHelper implements IDataHelper {
     }
 
     @Override
-    public void SaveData(CollectData data) throws Exception {
+    public void SaveData(SDisplayData data) throws Exception {
         JDBDataTable data_dbhelper = new JDBDataTable(this.db_instance);
         //然后创建设备数据表
-        data_dbhelper.CreateTableIfNotExist(new DevID(data.dev_type, data.dev_addr, data.serial_num));
+        data_dbhelper.CreateTableIfNotExist(data.dev_id);
         //添加数据到设备数据表
         data_dbhelper.AddData(data);
     }

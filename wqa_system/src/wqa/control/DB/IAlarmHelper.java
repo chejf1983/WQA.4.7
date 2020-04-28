@@ -6,9 +6,9 @@
 package wqa.control.DB;
 
 import java.util.Date;
+import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
-import wqa.dev.data.CollectData;
 
 /**
  *
@@ -24,7 +24,7 @@ public interface IAlarmHelper {
     public void DeleteAlarm(DevID devinfo);
 
 
-    public void SaveAlarmInfo(CollectData info);
+    public void SaveAlarmInfo(SDisplayData info);
     
     //搜索记录
     public void SearchAlarmInfo(DevID dev_name, Date start, Date stop, IMainProcess<AlarmRecord[]> process);

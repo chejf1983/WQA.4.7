@@ -16,6 +16,7 @@ import nahon.comm.faultsystem.LogCenter;
 import static wqa.bill.db.JDBAlarmTable.*;
 import wqa.control.DB.AlarmRecord;
 import wqa.control.DB.IAlarmHelper;
+import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.system.WQAPlatform;
 import wqa.control.data.IMainProcess;
@@ -170,7 +171,7 @@ public class AlarmHelper implements IAlarmHelper {
 
     // <editor-fold defaultstate="collapsed" desc="保存报警信息"> 
     @Override
-    public void SaveAlarmInfo(CollectData info) {
+    public void SaveAlarmInfo(SDisplayData info) {
         db_instance.dbLock.lock();
         try {
             new JDBAlarmTable(db_instance).CreateTable();

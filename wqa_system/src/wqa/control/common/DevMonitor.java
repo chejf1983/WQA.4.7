@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
 import wqa.system.WQAPlatform;
 
@@ -37,14 +38,15 @@ public class DevMonitor {
     public boolean CollectData() {
         data_lock.lock();
         try {
-            this.tmpdata = this.dev.CollectData();
+            CollectData CollectData = this.dev.CollectData();
+            this.tmpdata = CreateDBData(CollectData);
             this.SaveAlarmInfo(tmpdata);
             if (this.tmpdata.alarm != 0) {
                 parent.ChangeState(DevControl.ControlState.ALARM, this.tmpdata.alram_info);
             } else {
                 parent.ChangeState(DevControl.ControlState.CONNECT);
             }
-            DataEvent.CreateEvent(CreateDisplayData(this.tmpdata));
+            DataEvent.CreateEvent(CreateDisplayData(CollectData));
             return true;
         } catch (Exception ex) {
             LogCenter.Instance().PrintLog(Level.SEVERE, "采集数据失败", ex);
@@ -54,12 +56,12 @@ public class DevMonitor {
         }
     }
 
-    private CollectData tmpdata = null;
+    private SDisplayData tmpdata = null;
 
-    public CollectData ReceiveByDB() {
+    public SDisplayData ReceiveByDB() {
         data_lock.lock();
         try {
-            CollectData ret = tmpdata;
+            SDisplayData ret = tmpdata;
             tmpdata = null;
             return ret;
         } finally {
@@ -69,7 +71,7 @@ public class DevMonitor {
 
     private int last_alarm = -1;
 
-    private void SaveAlarmInfo(CollectData data) {
+    private void SaveAlarmInfo(SDisplayData data) {
         if (data.alarm != this.last_alarm) {
             //ainfo.SaveTo(db_instance);
             if (last_alarm == -1 && data.alarm == 0) {
@@ -103,15 +105,27 @@ public class DevMonitor {
         return this.parent;
     }
 
-    private SDisplayData CreateDisplayData(CollectData data){
-        SDisplayData tmp = new SDisplayData(this.parent.GetDevID());
+    private SDisplayData CreateDBData(CollectData data) {
+        SDisplayData tmp = new SDisplayData(new DevID(data.dev_type, data.dev_addr, data.serial_num));
+        tmp.time = data.time;
+        tmp.alarm = data.alarm;
+        tmp.alram_info = data.alram_info;
+        tmp.datas = new SDataElement[data.datas.length];
+        for (int i = 0; i < tmp.datas.length; i++) {
+            tmp.datas[i] = new SDataElement(data.datas[i]);
+        }
+        return tmp;
+    }
+
+    private SDisplayData CreateDisplayData(CollectData data) {
+        SDisplayData tmp = new SDisplayData(new DevID(data.dev_type, data.dev_addr, data.serial_num));
         tmp.time = data.time;
         tmp.alarm = data.alarm;
         tmp.alram_info = data.alram_info;
         String[] display_datas = this.GetSupportDataName();
         tmp.datas = new SDataElement[display_datas.length];
-        for(int i = 0; i < display_datas.length; i++){
-            tmp.datas[i] = data.GetDataElement(display_datas[i]);
+        for (int i = 0; i < display_datas.length; i++) {
+            tmp.datas[i] = new SDataElement(data.GetDataElement(display_datas[i]));
         }
         return tmp;
     }
