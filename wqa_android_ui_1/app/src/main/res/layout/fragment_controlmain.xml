@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.naqing.control.fragment_control_main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10">
+        <RadioGroup
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:weightSum="7">
+            <RadioButton
+                style="@style/config_radio_style"
+                android:id="@+id/config_rb_info"
+                android:drawableLeft="@drawable/config_8"
+                android:layout_weight="1"
+                android:text=" 设备信息"/>
+            <RadioButton
+                style="@style/config_radio_style"
+                android:id="@+id/config_rb_setup"
+                android:drawableLeft="@drawable/config_13"
+                android:layout_weight="1"
+                android:text=" 参数设置"/>903
+            <RadioButton
+                style="@style/config_radio_style"
+                android:id="@+id/config_rb_conn"
+                android:drawableLeft="@drawable/config_1"
+                android:layout_weight="1"
+                android:text=" 通信设置"/>
+            <RadioButton
+                style="@style/config_radio_style"
+                android:id="@+id/config_rb_devs"
+                android:drawableLeft="@drawable/config_5"
+                android:layout_weight="1"
+                android:text=" 传感器"/>
+            <RadioButton
+                style="@style/config_radio_style"
+                android:id="@+id/config_rb_log"
+                android:drawableLeft="@drawable/config_9"
+                android:layout_weight="1"
+                android:text=" 历史记录"/>
+            <RadioButton
+                style="@style/config_radio_style"
+                android:id="@+id/config_rb_da"
+                android:drawableLeft="@drawable/config_3"
+                android:layout_weight="1"
+                android:text=" 继电器"/>
+            <RadioButton
+                style="@style/config_radio_style"
+                android:id="@+id/config_rb_inter"
+                android:drawableLeft="@drawable/config_11"
+                android:layout_weight="1"
+                android:text=" 接口描述"/>
+        </RadioGroup>
+        <FrameLayout
+            android:id="@+id/fragment_control_area"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</FrameLayout>

@@ -5,7 +5,6 @@
  */
 package wqa.bill.db;
 
-import java.sql.ResultSet;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;

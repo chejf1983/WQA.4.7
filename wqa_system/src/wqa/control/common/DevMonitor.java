@@ -78,7 +78,7 @@ public class DevMonitor {
                 data.alram_info = "添加新设备" + parent.ToString();
             }
             this.last_alarm = data.alarm;
-            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().SaveAlarmInfo(data);
+//            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().SaveAlarmInfo(data);
         }
     }
     // </editor-fold>   

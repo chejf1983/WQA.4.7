@@ -44,6 +44,7 @@ public class DevLog {
     public void SetLogSwitch(boolean value){
         this.log_switch = value;
     }
+    
     // <editor-fold defaultstate="collapsed" desc="设置LOG信息"> 
     public static String SyslogFile = ".log";//系统日志文件名称
     private String def_path = "./cal_log";
