@@ -11,7 +11,9 @@ public class ADBHelper implements IJDBHelper {
     private Activity parent;
     private SQLiteHelper dbsaver;
     private ADataDB aDataDB;
-    public ADBHelper(Activity parent){
+    private AAlarmDB aAlarmDB;
+
+    public ADBHelper(Activity parent) {
         this.parent = parent;
     }
 
@@ -19,6 +21,8 @@ public class ADBHelper implements IJDBHelper {
     public void Init(String s) throws Exception {
         dbsaver = new SQLiteHelper(parent, "wqa.db", null, 1);
         aDataDB = new ADataDB(dbsaver);
+        aAlarmDB = new AAlarmDB(dbsaver);
+        aAlarmDB.CreateTable();
     }
 
     @Override
@@ -26,6 +30,7 @@ public class ADBHelper implements IJDBHelper {
         dbsaver.close();
         dbsaver = null;
         aDataDB = null;
+        aAlarmDB = null;
     }
 
     @Override
@@ -34,9 +39,7 @@ public class ADBHelper implements IJDBHelper {
     }
 
     @Override
-    public IAlarmHelper GetAlarmDB() {
-        return null;
-    }
+    public IAlarmHelper GetAlarmDB() { return aAlarmDB; }
 
     @Override
     public IDataHelper GetDataDB() {

@@ -27,6 +27,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     }
 
+    /** 表是否存在*/
     public boolean IsTableExist(String table_name) throws Exception {
         try (SQLiteDatabase db = getReadableDatabase()) {
             String sql = "select count(*) as c from sqlite_master where type ='table' and name ='"
@@ -42,16 +43,22 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
+    /** 表是否为空*/
     public boolean IsTableEmpty(String table_name) throws Exception {
-        String sql = "select * from " + table_name;
-//        CallableStatement prepareCall = conn.prepareCall(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-//        try (ResultSet rs = prepareCall.executeQuery()) {
-//            return !rs.next();
-//        }
-        //ToDo add function code
-        return false;
+        try (SQLiteDatabase db = getReadableDatabase()) {
+            String sql = "select count(*) from " + table_name;
+            Cursor cursor = db.rawQuery(sql, null);
+            if (cursor.moveToNext()) {
+                int count = cursor.getInt(0);
+                if (count > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
+    /** 删除表*/
     public void DropTable(String table_name) throws Exception {
         try (SQLiteDatabase db = getWritableDatabase()) {
             String DEL_TABLE = "drop table " + table_name;
@@ -59,14 +66,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
+    /** 列举所有表*/
     public String[] GetAllTables() throws Exception {
         ArrayList<String> tables = new ArrayList();
         try (SQLiteDatabase db = getReadableDatabase()) {
-//            String sql = "select name from sqlite_master where type ='table'";
-//            Cursor cursor = db.rawQuery(sql, null);
-//            if (cursor.moveToNext()) {
-//
-//            }
             Cursor cursor = db.rawQuery("select * from sqlite_master where type ='table'", null);
             while (cursor.moveToNext()) {
                 tables.add(cursor.getString(1));

@@ -60,8 +60,10 @@ public class activity_nqmain extends AppCompatActivity {
         if (!WQAPlatform.GetInstance().IsInited()) {
             /** 初始化驱动*/
             WQAPlatform.LoadDriver(new ModBusDevFactory());
+            /** 设置Error窗口的Activity*/
             ErrorExecutor.lastparent = this;
             try {
+                /** 初始化SQLite数据库*/
                 ADBHelper adb = new ADBHelper(this);
                 /** 替换数据库*/
                 WQAPlatform.GetInstance().GetDBHelperFactory().SetDB(adb);
