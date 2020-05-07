@@ -231,12 +231,13 @@ public class AlarmSearch extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_Button_refreshActionPerformed
 
+    //获取起止时间
+    Date start_time = null;
+    Date stop_time = null;
+
     //搜索报警信息
     private void Button_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SearchActionPerformed
 
-        //获取起止时间
-        Date start_time = null;
-        Date stop_time = null;
         try {
             start_time = new SimpleDateFormat(TIMEFORMATE).parse(this.TextField_start_time.getText());
             stop_time = new SimpleDateFormat(TIMEFORMATE).parse(this.TextField_end_time.getText());
@@ -258,33 +259,35 @@ public class AlarmSearch extends javax.swing.JPanel {
         }
 
         ProcessDialog.ApplyGlobalProcessBar();
-        //搜索
-        WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().SearchAlarmInfo(this.Dev_List[this.List_devlist.getSelectedIndex()],
-                start_time, stop_time, new IMainProcess<AlarmRecord[]>() {
-            @Override
-            public void SetValue(float pecent) {
-                java.awt.EventQueue.invokeLater(() -> {
-                    if (ProcessDialog.GetGlobalProcessBar() != null) {
-                        ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
-                    }
-                });
-            }
+        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+            //搜索
+            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().SearchAlarmInfo(Dev_List[List_devlist.getSelectedIndex()],
+                    start_time, stop_time, new IMainProcess<AlarmRecord[]>() {
+                @Override
+                public void SetValue(float pecent) {
+                    java.awt.EventQueue.invokeLater(() -> {
+                        if (ProcessDialog.GetGlobalProcessBar() != null) {
+                            ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
+                        }
+                    });
+                }
 
-            @Override
-            public void Finish(AlarmRecord[] ainfo_list) {
-                java.awt.EventQueue.invokeLater(() -> {
-                    //刷新表格
-                    ProcessDialog.ReleaseGlobalProcessBar();
-                    Table_alarm.setModel(new AlarmTable(ainfo_list));
-                    for (int i = 0; i < AlarmTable.table_with.length; i++) {
-                        JTableHeader header = Table_alarm.getTableHeader();
-                        header.setResizingColumn(Table_alarm.getColumnModel().getColumn(i)); // 此行很重要
-                        //设置列宽为表格宽度和数据最大宽度里的最大值
-                        Table_alarm.getColumnModel().getColumn(i).setWidth(AlarmTable.table_with[i]);
-                        //Table_alarm.setModel(null);
-                    }
-                });
-            }
+                @Override
+                public void Finish(AlarmRecord[] ainfo_list) {
+                    java.awt.EventQueue.invokeLater(() -> {
+                        //刷新表格
+                        ProcessDialog.ReleaseGlobalProcessBar();
+                        Table_alarm.setModel(new AlarmTable(ainfo_list));
+                        for (int i = 0; i < AlarmTable.table_with.length; i++) {
+                            JTableHeader header = Table_alarm.getTableHeader();
+                            header.setResizingColumn(Table_alarm.getColumnModel().getColumn(i)); // 此行很重要
+                            //设置列宽为表格宽度和数据最大宽度里的最大值
+                            Table_alarm.getColumnModel().getColumn(i).setWidth(AlarmTable.table_with[i]);
+                            //Table_alarm.setModel(null);
+                        }
+                    });
+                }
+            });
         });
     }//GEN-LAST:event_Button_SearchActionPerformed
 

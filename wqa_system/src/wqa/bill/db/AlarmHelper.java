@@ -20,7 +20,6 @@ import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.system.WQAPlatform;
 import wqa.control.data.IMainProcess;
-import wqa.dev.data.CollectData;
 
 /**
  *
@@ -69,40 +68,34 @@ public class AlarmHelper implements IAlarmHelper {
     //搜索记录
     @Override
     public void SearchAlarmInfo(DevID dev_name, Date start, Date stop, IMainProcess<AlarmRecord[]> process) {
-        WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
-            @Override
-            public void run() {
-                db_instance.dbLock.lock();
-                //搜索报警信息
-                try (ResultSet ret_set = new JDBAlarmTable(db_instance).SearchAlarm(dev_name, start, stop)) {
-                    //检查是否为空
-                    if (!ret_set.first()) {
-                        process.Finish(new AlarmRecord[0]);
-                    }
-
-                    //获取记录条数
-                    ret_set.last();
-                    long data_count = ret_set.getRow();
-                    ret_set.beforeFirst();
-
-                    ArrayList<AlarmRecord> infolist = new ArrayList();
-                    //转换记录
-                    while (ret_set.next()) {
-                        infolist.add(BuildRecord(ret_set));
-                        if (ret_set.getRow() % 10 == 0) {
-                            process.SetValue(100 * ret_set.getRow() / data_count);
-                        }
-                    }
-                    process.Finish(infolist.toArray(new AlarmRecord[0]));
-                } catch (Exception ex) {
-                    LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索失败", ex);
-                    process.Finish(new AlarmRecord[0]);
-                } finally {
-                    db_instance.dbLock.unlock();
-                }
-
+        db_instance.dbLock.lock();
+        //搜索报警信息
+        try (ResultSet ret_set = new JDBAlarmTable(db_instance).SearchAlarm(dev_name, start, stop)) {
+            //检查是否为空
+            if (!ret_set.first()) {
+                process.Finish(new AlarmRecord[0]);
             }
-        });
+
+            //获取记录条数
+            ret_set.last();
+            long data_count = ret_set.getRow();
+            ret_set.beforeFirst();
+
+            ArrayList<AlarmRecord> infolist = new ArrayList();
+            //转换记录
+            while (ret_set.next()) {
+                infolist.add(BuildRecord(ret_set));
+                if (ret_set.getRow() % 10 == 0) {
+                    process.SetValue(100 * ret_set.getRow() / data_count);
+                }
+            }
+            process.Finish(infolist.toArray(new AlarmRecord[0]));
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, "搜索失败", ex);
+            process.Finish(new AlarmRecord[0]);
+        } finally {
+            db_instance.dbLock.unlock();
+        }
     }
 
     private AlarmRecord BuildRecord(ResultSet ret_set) throws SQLException {
