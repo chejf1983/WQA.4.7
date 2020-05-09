@@ -118,10 +118,10 @@ public class activity_nqmain extends AppCompatActivity {
     private boolean ishide = false;
 
     private void initHide() {
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener((View view)->{
-                messagehandler.sendEmptyMessage(HIDSCREEN);
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener((View view)->{
+//                messagehandler.sendEmptyMessage(HIDSCREEN);
+//        });
     }
 
     private int hideNavigation() {

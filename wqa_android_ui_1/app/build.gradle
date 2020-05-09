@@ -35,4 +35,5 @@ dependencies {
     implementation files('libs/commonbean.jar')
     implementation files('libs/wqa_dev_modbus.jar')
     implementation files('libs/wqa_system.jar')
+    implementation 'org.jetbrains:annotations:15.0'
 }

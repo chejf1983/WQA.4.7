@@ -89,6 +89,25 @@ public class AAlarmDB implements IAlarmHelper {
             db_instance.dbLock.unlock();
         }
     }
+
+    @Override
+    public void DeleteAlarm(DevID devID, Date beforetime) {
+        if (!is_inited) {
+            return;
+        }
+
+        db_instance.dbLock.lock();
+        try (SQLiteDatabase db = db_instance.getWritableDatabase()) {
+            String DEL_DATA_SQL = "delete from " + AlarmTable
+                    + " where " + DevInfo_Key + " = " + devID.toString() +
+                    " and " + Time_Key + " <= " + beforetime.getTime();
+            db.execSQL(DEL_DATA_SQL);
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, "删除异常", ex);
+        } finally {
+            db_instance.dbLock.unlock();
+        }
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="保存数据">

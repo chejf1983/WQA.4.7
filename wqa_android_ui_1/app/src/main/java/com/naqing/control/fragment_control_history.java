@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,17 +68,63 @@ public class fragment_control_history extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_control_history, container, false);
 
+        /**初始化时间*/
         initTime();
 
+        /**初始化图表*/
+        ScatterChart chart = root.findViewById(R.id.mLineChar);
+        initChart(chart);
+
+        /**初始化数据库信息*/
         initDevList();
 
         root.findViewById(R.id.mchart_search).setOnClickListener((View view) -> {
             search_history();
         });
 
-        /**初始化图表*/
-        ScatterChart chart = root.findViewById(R.id.mLineChar);
-        initChart(chart);
+        root.findViewById(R.id.mchart_del).setOnClickListener((View view) -> {
+
+            //检查选择的设备是否有效
+            if (select_dev < 0 || dev_lists.length == 0) {
+                return;
+            }
+
+            //获取设置的时间段
+            try {
+                start_time = new SimpleDateFormat(TIMEFORMATE).parse(((TextView) root.findViewById(R.id.mchart_start_time)).getText().toString());
+                stop_time = new SimpleDateFormat(TIMEFORMATE).parse(((TextView) root.findViewById(R.id.mchart_end_time)).getText().toString());
+            } catch (Exception ex) {
+                LogCenter.Instance().SendFaultReport(Level.WARNING, ex.getMessage());
+                return;
+            }
+
+            String s1 = "1.删除" + dev_lists[select_dev].ToChineseString() + "\n所有数据";
+            String s2 = "2.删除" + dev_lists[select_dev].ToChineseString() + "\n" + new SimpleDateFormat(TIMEFORMATE).format(start_time) + "之前数据";
+            String s3 = "3.删除" + dev_lists[select_dev].ToChineseString() + "\n" + new SimpleDateFormat(TIMEFORMATE).format(stop_time) + "之前数据";
+            String s4 = "4.取消";
+            InputDialog.ShowListDialog(parent, new String[]{s1, s2, s3, s4}, (View tview) -> {
+                int index = Integer.valueOf(((TextView) tview).getText().toString().substring(0, 1));
+                if (index == 1) {
+                    try {
+                        WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().DeleteTable(dev_lists[select_dev]);
+                        if (WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB() != null)
+                            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().DeleteAlarm(dev_lists[select_dev]);
+
+                        initDevList();
+                    } catch (Exception ex) {
+                        LogCenter.Instance().SendFaultReport(Level.SEVERE, ex.getMessage());
+                    }
+                }
+                if (index == 2) {
+                    clean_history(dev_lists[select_dev], start_time);
+                }
+                if (index == 3) {
+                    clean_history(dev_lists[select_dev], stop_time);
+                }
+            });
+//            search_history();
+        });
+
         return root;
     }
 
@@ -115,8 +162,7 @@ public class fragment_control_history extends Fragment {
 
     private void initDevList() {
         /** 设置设备列表*/
-        if (dev_lists.length == 0)
-            dev_lists = WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().ListAllDevice();
+        dev_lists = WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().ListAllDevice();
 
         /** 如果没有设备列表，直接返回*/
         TextView dev_view = root.findViewById(R.id.mchart_devs);
@@ -168,16 +214,21 @@ public class fragment_control_history extends Fragment {
         }
     }
 
-    /** 刷新数据*/
+    /**
+     * 刷新数据
+     */
     private void ShowLine(int index) {
         //如果不是搜索进程，发出一个刷新数据的进度条框
         if (mProgressDialog == null && index >= 0 && data_result != null && data_result.data.size() > 0) {
             mProgressDialog = NQProcessDialog.ShowProcessDialog(getContext(), "刷新数据...");
         }
 
+//        System.out.println("申请进程");
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+//            System.out.println("开始绘画");
             //绘制曲线
             DrawLine(data_result, index);
+//            System.out.println("绘画完毕");
             //显示曲线
             messagehandler.sendEmptyMessage(DRAWLINE);
         });
@@ -244,6 +295,43 @@ public class fragment_control_history extends Fragment {
     }
     // </editor-fold>
 
+    // <editor-fold desc="删除数据">
+    private void clean_history(DevID devid, Date time) {
+        if (mProgressDialog != null && !mProgressDialog.isFinished()) {
+            return;
+        }
+
+        mProgressDialog = NQProcessDialog.ShowProcessDialog(getContext(), "删除数据...");
+
+        Future<?> submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+            try {
+                WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().DeleteTable(devid, time);
+            } catch (Exception ex) {
+                LogCenter.Instance().SendFaultReport(Level.SEVERE, ex.getMessage());
+            } finally {
+                mProgressDialog.Finish();
+            }
+        });
+
+        if (!submit.isDone()) {
+            if (mProgressDialog == null)
+                return;
+            mProgressDialog.SetTimout(60000, () -> {
+                if (!submit.isDone()) {
+                    if (mProgressDialog != null) {
+                        mProgressDialog.Finish();
+                        mProgressDialog = null;
+                    }
+                    submit.cancel(true);
+                    ErrorExecutor.PrintErrorInfo("删除数据超时");
+                }
+            });
+        } else {
+            mProgressDialog.Finish();
+        }
+    }
+    // </editor-fold>
+
     // <editor-fold desc="图表">
     private ScatterChart lineChart;
     private XAxis xAxis;                //X轴
@@ -272,10 +360,11 @@ public class fragment_control_history extends Fragment {
         //设置XY轴动画效果
 //        lineChart.animateY(1000);
 //        lineChart.animateX(1000);
+        lineChart.setDescription(null);
 
         leftYAxis = lineChart.getAxisLeft();
         //设置X Y轴网格线为虚线（实体线长度、间隔距离、偏移量：通常使用 0）
-        leftYAxis.enableGridDashedLine(10f, 10f, 0f);
+        //leftYAxis.enableGridDashedLine(10f, 10f, 0f);
         leftYAxis.setTextColor(Color.WHITE);
         leftYAxis.setTextSize(18f);
         //保证Y轴从0开始，不然会上移一点
@@ -286,7 +375,7 @@ public class fragment_control_history extends Fragment {
 
         /***XY轴的设置***/
         xAxis = lineChart.getXAxis();
-        xAxis.enableGridDashedLine(10f, 10f, 0f);
+        //xAxis.enableGridDashedLine(10f, 10f, 0f);
         //X轴设置显示位置在底部
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisMinimum(0f);
@@ -375,6 +464,16 @@ public class fragment_control_history extends Fragment {
         }
         // 每一个LineDataSet代表一条线
         ScatterDataSet lineDataSet = new ScatterDataSet(entries, name);
+        //设置点label的颜色
+        lineDataSet.setValueTextColor(Color.WHITE);
+        //设置精度
+        lineDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return value + "";
+//                return super.getFormattedValue(value);
+            }
+        });
         initLineDataSet(lineDataSet, color);
         ScatterData lineData = new ScatterData(lineDataSet);
         lineChart.setData(lineData);
@@ -398,44 +497,42 @@ public class fragment_control_history extends Fragment {
         }
     }
 
-    private int MaxPointNum = 2048;
+    public static int MaxPointNum = 1024;
 
     private void DrawLine(SDataRecordResult result, int index) {
         //计算曲线耗时比较长，放在线程中，然后触发绘画
         dataList.clear();
-        if (index >= 0 && result.data.size() > 0) {
+        if (index >= 0 && result.data.size() > 1) {
             //获取起止时间
             Date start = new Date();
             start.setTime(result.data.get(0).time.getTime());
             Date end = new Date();
             end.setTime(result.data.get(result.data.size() - 1).time.getTime());
+
             //窗口宽度
             long timespane = (end.getTime() - start.getTime()) / MaxPointNum;
 
             //窗口前移半个周期
             start.setTime(start.getTime() - timespane / 2);
             //数据指针
-            int result_point = 0;
-            for (int i = 0; i <= MaxPointNum * 2; i++) {
-                //数据采样完毕，退出
-                if (result_point >= result.data.size()) {
-                    break;
-                }
+            for (int result_point = 0; result_point < result.data.size();) {
                 //获取一个数据
                 DataRecord record = result.data.get(result_point);
                 //落在窗口内
-                if (record.time.getTime() > start.getTime() &&
-                        record.time.getTime() <= start.getTime() + timespane) {
+                long re_time = record.time.getTime();
+                long st_time = start.getTime();
+
+                if (re_time >= st_time && re_time < st_time + timespane) {
                     //添加数据
                     dataList.add(new IncomeBean(record.time, record.values[index]));
                     //数据指针加长
                     result_point++;
                     //窗口平移
-                    start.setTime(start.getTime() + timespane);
-                } else if (record.time.getTime() > start.getTime() + timespane) {
+                    start.setTime(st_time + timespane);
+                } else if (re_time > st_time + timespane) {
                     //落在窗口后面，增加空数据，窗口平移
                     dataList.add(new IncomeBean(start, Float.NaN));
-                    start.setTime(start.getTime() + timespane);
+                    start.setTime(st_time + timespane);
                 } else {
                     //落在窗口前，数据追加，窗口等待
                     result_point++;
@@ -460,6 +557,7 @@ public class fragment_control_history extends Fragment {
 
         public void handleMessage(Message msg) {
             if (msg.what == DRAWLINE) {
+//                System.out.println("开始显示");
                 lineChart.invalidate();
                 if (mProgressDialog != null) {
                     mProgressDialog.Finish();

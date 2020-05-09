@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.text.InputType;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -232,10 +233,13 @@ public class InputDialog {
 
     // <editor-fold desc="初始话选择列表">
     public static void ShowListDialog(Activity parent, String[] slist, View.OnClickListener list) {
-        new InputDialog().initListDialog(parent, slist, list);
+        new InputDialog().initListDialog(parent, slist, Gravity.CENTER, list);
+    }
+    public static void ShowListDialog(Activity parent, String[] slist, int gravity, View.OnClickListener list) {
+        new InputDialog().initListDialog(parent, slist, gravity, list);
     }
 
-    private void initListDialog(Activity parent, String[] slist, View.OnClickListener list) {
+    private void initListDialog(Activity parent, String[] slist, int gravity, View.OnClickListener list) {
         /** 初始化密码窗体 */
         Display display = parent.getWindowManager().getDefaultDisplay();
         Point display_size = new Point();
@@ -251,7 +255,7 @@ public class InputDialog {
         /** 设置标题*/
         LinearLayout d_title = view.findViewById(R.id.dlg_sel_list);
         for (int i = 0; i <slist.length; i++) {
-            View tt = createButton(parent, slist[i]);
+            View tt = createButton(parent, slist[i], gravity);
             tt.setOnClickListener((View tview)->{
                 list.onClick(tt);
                 dialog.dismiss();
@@ -260,10 +264,11 @@ public class InputDialog {
         }
     }
 
-    private Button createButton(Activity activity, String text) {
+    private Button createButton(Activity activity, String text, int gravity) {
         Button name = new Button(new ContextThemeWrapper(activity, R.style.common_button_style));
         name.setTextColor(Color.WHITE);
         name.setText(text);
+        name.setGravity(gravity);
         return name;
     }
     // </editor-fold>

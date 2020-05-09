@@ -2,7 +2,6 @@ package com.naqing.adb;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.view.Display;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,15 +51,6 @@ public class ADataDB implements IDataHelper {
         }
     }
 
-    @Override
-    public void DeleteTable(DevID devID) throws Exception {
-        db_instance.dbLock.lock();
-        try {
-            db_instance.DropTable(ConvertTableName(devID));
-        } finally {
-            db_instance.dbLock.unlock();
-        }
-    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="搜索">
@@ -205,7 +195,18 @@ public class ADataDB implements IDataHelper {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="删除数据">
-    public void DeleteData(DevID key, Date befortime) throws Exception {
+    @Override
+    public void DeleteTable(DevID devID) throws Exception {
+        db_instance.dbLock.lock();
+        try {
+            db_instance.DropTable(ConvertTableName(devID));
+        } finally {
+            db_instance.dbLock.unlock();
+        }
+    }
+
+    @Override
+    public void DeleteTable(DevID key, Date befortime) throws Exception {
         String DEL_DATA = "delete from " +  ConvertTableName(key)
                 + " where " + Time_Key + " <= ?";
 

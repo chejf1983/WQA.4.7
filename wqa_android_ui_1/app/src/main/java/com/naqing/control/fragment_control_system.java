@@ -22,6 +22,9 @@ import java.util.Date;
 import java.util.logging.Level;
 
 import nahon.comm.faultsystem.LogCenter;
+import wqa.control.DB.DBHelper;
+import wqa.control.DB.IDataHelper;
+import wqa.system.WQAPlatform;
 
 public class fragment_control_system extends Fragment {
     private View root;
@@ -59,6 +62,19 @@ public class fragment_control_system extends Fragment {
         }));
         AddLine(layout, TableElement.CreateSwitchViewLine(parent, "-密码开关-", Security.Instance().IsEnable(), (CompoundButton var1, boolean var2) -> {
             Security.Instance().EnableSecurity(var2);
+        }));
+
+        AddLine(layout, TableElement.CreateTextViewLine(parent, "",""));
+        DBHelper data_db = WQAPlatform.GetInstance().GetDBHelperFactory();
+        AddLine(layout, TableElement.CreateInputViewLine(parent, "-数据库保存时间(秒)-", data_db.GetCollectTimeBySecond() + "", (View var1)->{
+            data_db.SetCollectTime(Integer.valueOf(((TextView)var1).getText().toString()));
+        }));
+
+        View vdb_size = TableElement.CreateTextViewLine(parent, "数据库大小", WQAPlatform.GetInstance().GetDBHelperFactory().GetDBFix().GetDBSize() + "M");
+        AddLine(layout, vdb_size);
+
+        AddLine(layout, TableElement.CreateInputViewLine(parent, "数据库显示密度", fragment_control_history.MaxPointNum + "", (View view)->{
+            fragment_control_history.MaxPointNum = Integer.valueOf(((TextView)view).getText().toString());
         }));
     }
 

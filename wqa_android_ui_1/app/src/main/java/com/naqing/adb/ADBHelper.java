@@ -2,6 +2,8 @@ package com.naqing.adb;
 
 import android.app.Activity;
 
+import java.io.File;
+
 import wqa.control.DB.IAlarmHelper;
 import wqa.control.DB.IDBFix;
 import wqa.control.DB.IDataHelper;
@@ -12,6 +14,8 @@ public class ADBHelper implements IJDBHelper {
     private SQLiteHelper dbsaver;
     private ADataDB aDataDB;
     private AAlarmDB aAlarmDB;
+    private ADBFix aDBFix;
+    public static String dbName = "wqa.db";
 
     public ADBHelper(Activity parent) {
         this.parent = parent;
@@ -19,10 +23,11 @@ public class ADBHelper implements IJDBHelper {
 
     @Override
     public void Init(String s) throws Exception {
-        dbsaver = new SQLiteHelper(parent, "wqa.db", null, 1);
+        dbsaver = new SQLiteHelper(parent, dbName, null, 1);
         aDataDB = new ADataDB(dbsaver);
         aAlarmDB = new AAlarmDB(dbsaver);
         aAlarmDB.CreateTable();
+        aDBFix = new ADBFix(dbsaver, this);
     }
 
     @Override
@@ -35,14 +40,18 @@ public class ADBHelper implements IJDBHelper {
 
     @Override
     public IDBFix GetDBFix() {
-        return null;
+        return aDBFix;
     }
 
     @Override
-    public IAlarmHelper GetAlarmDB() { return aAlarmDB; }
+    public IAlarmHelper GetAlarmDB() { return null; }
 
     @Override
     public IDataHelper GetDataDB() {
         return aDataDB;
+    }
+
+    public long GetDBFileSize(){
+        return parent.getDatabasePath(dbName).length();
     }
 }
