@@ -262,6 +262,12 @@ public class LogPane extends javax.swing.JPanel {
                     for (int i = 0; i < dlm.getRowCount(); i++) {
                         out.write(dlm.getValueAt(i, 0).toString() + "\r\n");
                     }
+                    
+                    out.write("\r\n");                    
+                    out.write("原始IOlog\r\n");
+                    for(String log : WQAPlatform.GetInstance().GetIOManager().GetLaterLog()){                    
+                        out.write(log + "\r\n");
+                    }
                 }
                 MsgBoxFactory.Instance().ShowMsgBox("保存成功!");
             } catch (IOException ex) {

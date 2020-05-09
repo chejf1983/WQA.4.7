@@ -21,6 +21,8 @@ public interface IDataHelper {
     public DevID[] ListAllDevice();
 
     public void DeleteTable(DevID table_name) throws Exception ;
+    
+    public void DeleteTable(DevID table_name, Date beforetime) throws Exception ;
 
     public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SDataRecordResult> process) ;
 

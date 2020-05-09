@@ -176,4 +176,15 @@ public class AlarmHelper implements IAlarmHelper {
         }
     }
     // </editor-fold>  
+
+    @Override
+    public void DeleteAlarm(DevID devinfo, Date beforetime) {db_instance.dbLock.lock();
+        try {
+            new JDBAlarmTable(db_instance).DeleteData(beforetime);
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, "删除异常", ex);
+        } finally {
+            db_instance.dbLock.unlock();
+        }
+    }
 }

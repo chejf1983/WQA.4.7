@@ -19,7 +19,6 @@ import javax.swing.JList;
 import javax.swing.table.JTableHeader;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.common.Chooser;
-import wqa.bill.db.AlarmHelper;
 import wqa.control.data.IMainProcess;
 import wqa.common.InitPaneHelper;
 import wqa.control.DB.AlarmRecord;

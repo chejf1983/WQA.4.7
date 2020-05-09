@@ -22,6 +22,9 @@ public interface IAlarmHelper {
 
     //删除指定设备表
     public void DeleteAlarm(DevID devinfo);
+    
+    //删除指定设备表
+    public void DeleteAlarm(DevID devinfo, Date beforetime);
 
 
     public void SaveAlarmInfo(SDisplayData info);

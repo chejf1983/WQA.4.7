@@ -139,6 +139,10 @@ public class IOManager {
 
                         try {
                             for (String log : buffer_out) {
+                                if(MaxLogNum < temp_log.size()){
+                                    temp_log.remove(0);
+                                }
+                                temp_log.add(log);
                                 //打印log
                                 SendReceive.CreateEvent(log);
                             }
@@ -159,6 +163,12 @@ public class IOManager {
 
             }
         });
+    }
+    
+    private final ArrayList<String> temp_log = new ArrayList();
+    private static int MaxLogNum = 1000;
+    public ArrayList<String> GetLaterLog(){
+        return this.temp_log;
     }
     // </editor-fold>
 

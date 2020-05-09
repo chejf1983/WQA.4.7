@@ -18,7 +18,6 @@ import wqa.control.DB.SDataRecordResult;
 import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
-import wqa.dev.data.CollectData;
 
 /**
  *
@@ -175,5 +174,16 @@ public class DataReadHelper implements IDataHelper {
         data_dbhelper.CreateTableIfNotExist(data.dev_id);
         //添加数据到设备数据表
         data_dbhelper.AddData(data);
+    }
+
+    @Override
+    public void DeleteTable(DevID table_name, Date beforetime) throws Exception {
+        JDBDataTable data_dbhelper = new JDBDataTable(this.db_instance);
+        this.db_instance.dbLock.lock();
+        try {
+            data_dbhelper.DeleteData(table_name, beforetime);
+        } finally {
+            this.db_instance.dbLock.unlock();
+        }
     }
 }
