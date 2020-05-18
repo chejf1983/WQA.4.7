@@ -41,7 +41,12 @@ public class ADBFix implements IDBFix {
     }
 
     @Override
-    public float GetDBSize() {
-        return ((ADBHelper)this.parent).GetDBFileSize() / 1048576;
+    public String GetDBSize() {
+        long fileSize = ((ADBHelper) this.parent).GetDBFileSize();
+        if (fileSize < 1048576) {
+            return fileSize / 1024 + "K";
+        } else {
+            return fileSize / 1048576 + "M";
+        }
     }
 }

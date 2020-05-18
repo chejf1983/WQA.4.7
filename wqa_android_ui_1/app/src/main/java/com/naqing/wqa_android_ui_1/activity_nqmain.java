@@ -6,6 +6,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.naqing.adb.ADBHelper;
 import com.naqing.common.ErrorExecutor;
+import com.naqing.common.InputDialog;
+import com.naqing.common.NQProcessDialog;
 import com.naqing.common.Security;
 import com.naqing.control.fragment_control_main;
 import com.naqing.io.AndroidIO;
@@ -42,50 +44,48 @@ public class activity_nqmain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nqmain);
 
-        this.initSystem();
-
         this.initTime();
-
-        this.initHide();
 
         this.init_switch();
 
+        initSystem();
     }
 
-    /** 初始化系统 */
+
+    /**
+     * 初始化系统
+     */
     private void initSystem() {
         /** 关闭密码显示*/
-        Security.Instance().EnableSecurity(false);
-        /** 初始化系统*/
-        if (!WQAPlatform.GetInstance().IsInited()) {
-            /** 初始化驱动*/
-            WQAPlatform.LoadDriver(new ModBusDevFactory());
-            /** 设置Error窗口的Activity*/
-            ErrorExecutor.lastparent = this;
-            try {
-                /** 初始化SQLite数据库*/
-                ADBHelper adb = new ADBHelper(this);
-                /** 替换数据库*/
-                WQAPlatform.GetInstance().GetDBHelperFactory().SetDB(adb);
-                /** 初始化系统模块(默认文件路径)*/
-                WQAPlatform.GetInstance().InitSystem(this.getFilesDir().getPath());
-                /** 关闭设备定标LOG*/
-                DevLog.Instance().SetLogSwitch(false);
-                /** 初始化错误提示信息*/
-                LogCenter.Instance().RegisterFaultEvent(new EventListener<Level>() {
-                    @Override
-                    public void recevieEvent(Event<Level> event) {
-                        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
-                            ErrorExecutor.PrintErrorInfo( event.Info().toString());
-                        });
-                    }
-                });
+//        Security.Instance().EnableSecurity(false);
 
-                /**初始化Android串口*/
-                AndroidIO.GetInstance().InitIO();
-            } catch (Exception ex) {
-                ErrorExecutor.PrintErrorInfo("初始化失败:" + ex.getMessage().toString());
-            }
+        /** 初始化驱动*/
+        WQAPlatform.LoadDriver(new ModBusDevFactory());
+        /** 设置Error窗口的Activity*/
+        ErrorExecutor.lastparent = this;
+        try {
+            /** 初始化SQLite数据库*/
+            ADBHelper adb = new ADBHelper(this);
+            /** 替换数据库*/
+            WQAPlatform.GetInstance().GetDBHelperFactory().SetDB(adb);
+            /** 初始化系统模块(默认文件路径)*/
+            WQAPlatform.GetInstance().InitSystem(this.getFilesDir().getPath());
+            /** 关闭设备定标LOG*/
+            DevLog.Instance().SetLogSwitch(false);
+            /** 初始化错误提示信息*/
+            LogCenter.Instance().RegisterFaultEvent(new EventListener<Level>() {
+                @Override
+                public void recevieEvent(Event<Level> event) {
+                    WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+                        ErrorExecutor.PrintErrorInfo(event.Info().toString());
+                    });
+                }
+            });
+
+            /**初始化Android串口*/
+            AndroidIO.GetInstance().InitIO();
+        } catch (Exception ex) {
+            ErrorExecutor.PrintErrorInfo("初始化失败:" + ex.getMessage().toString());
         }
     }
 
@@ -115,7 +115,7 @@ public class activity_nqmain extends AppCompatActivity {
     // </editor-fold>
 
     // <editor-fold desc="全屏切换">
-    private boolean ishide = false;
+    private boolean ishide = true;
 
     private void initHide() {
 //        FloatingActionButton fab = findViewById(R.id.fab);
@@ -189,9 +189,13 @@ public class activity_nqmain extends AppCompatActivity {
             if (dev_view) {
                 Security.CheckPassword(activity_nqmain.this, new Handler() {
                     public void handleMessage(Message msg) {
-                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.hide(dev_main);
-                        fragmentTransaction.show(control_main).commit();
+                        if(msg.what == Security.CHECK_OK) {
+                            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.hide(dev_main);
+                            fragmentTransaction.show(control_main).commit();
+                        }else if(msg.what == Security.START_BACKDOOR){
+                            messagehandler.sendEmptyMessage(HIDSCREEN);
+                        }
                     }
                 });
             } else {
@@ -202,7 +206,8 @@ public class activity_nqmain extends AppCompatActivity {
             dev_view = !dev_view;
 
         });
-        // </editor-fold>
+
+        hideNavigation();
     }
     // </editor-fold>
 }

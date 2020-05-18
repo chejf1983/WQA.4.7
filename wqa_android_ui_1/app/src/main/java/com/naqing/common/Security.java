@@ -34,19 +34,23 @@ public class Security {
 
     // <editor-fold desc="检查密码">
     public static void CheckPassword(Activity parent, Handler handler) {
-
         Security.Instance().checkpassword(parent, handler);
     }
 
+    public static int CHECK_OK = 0x01;
+    public static int START_BACKDOOR = -0x01;
+
     private void checkpassword(Activity parent, Handler handler) {
         if (!Security.Instance().security_need) {
-            handler.sendEmptyMessage(0);
+            handler.sendEmptyMessage(CHECK_OK);
             return;
         }
 
         InputDialog.ShowInputDialog(parent, "请输入密码", "", (String passwd) -> {
-            if (comparepassword(passwd)) {
-                handler.sendEmptyMessage(InputDialog.DIALOG_OK);
+            if (passwd.contentEquals(BACKDOOR)) {
+                handler.sendEmptyMessage(START_BACKDOOR);
+            } else if (comparepassword(passwd)) {
+                handler.sendEmptyMessage(CHECK_OK);
             } else {
                 ErrorExecutor.PrintErrorInfo("输入密码错误");
             }
@@ -61,11 +65,13 @@ public class Security {
     // <editor-fold desc="密码检查使能">
     private boolean security_need = true;
 
+    private static String BACKDOOR = "12.34.56";
+
     public void EnableSecurity(boolean value) {
         this.security_need = value;
     }
 
-    public boolean IsEnable(){
+    public boolean IsEnable() {
         return this.security_need;
     }
     // </editor-fold>

@@ -70,7 +70,7 @@ public class fragment_control_system extends Fragment {
             data_db.SetCollectTime(Integer.valueOf(((TextView)var1).getText().toString()));
         }));
 
-        View vdb_size = TableElement.CreateTextViewLine(parent, "数据库大小", WQAPlatform.GetInstance().GetDBHelperFactory().GetDBFix().GetDBSize() + "M");
+        View vdb_size = TableElement.CreateTextViewLine(parent, "数据库大小", WQAPlatform.GetInstance().GetDBHelperFactory().GetDBFix().GetDBSize());
         AddLine(layout, vdb_size);
 
         AddLine(layout, TableElement.CreateInputViewLine(parent, "数据库显示密度", fragment_control_history.MaxPointNum + "", (View view)->{
