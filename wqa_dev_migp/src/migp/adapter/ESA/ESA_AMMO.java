@@ -27,8 +27,10 @@ public class ESA_AMMO extends ESADEV {
 
     // <editor-fold defaultstate="collapsed" desc="内存表"> 
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
-    DMEG NE0 = new DMEG(new NVPA(0, 8), "氨氮系数E0");
-    DMEG NA = new DMEG(new NVPA(8, 8), "氨氮系数A");
+    DMEG NA = new DMEG(new NVPA(0, 8), "氨氮系数A");
+    DMEG NE = new DMEG(new NVPA(8, 8), "氨氮系数E");
+    DMEG NF = new DMEG(new NVPA(16, 8), "氨氮系数F");
+    DMEG NPH = new DMEG(new NVPA(24, 8), "PH补偿值");
     private FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
     // </editor-fold> 
     // </editor-fold> 
@@ -38,7 +40,7 @@ public class ESA_AMMO extends ESADEV {
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
 
-        this.ReadMEG(NA, NE0);
+        this.ReadMEG(NA, NE, NF, NPH);
         this.ReadMEG(NTEMP_CAL);
     }
     // </editor-fold> 
@@ -49,7 +51,9 @@ public class ESA_AMMO extends ESADEV {
         ArrayList<SConfigItem> item = super.GetCalParList(); //To change body of generated methods, choose Tools | Templates.
         item.add(SConfigItem.CreateRWItem(NTEMP_CAL.toString(), this.NTEMP_CAL.GetValue() + "", ""));
         item.add(SConfigItem.CreateRWItem(NA.toString(), NA.GetValue() + "", ""));
-        item.add(SConfigItem.CreateRWItem(NE0.toString(), NE0.GetValue() + "", ""));
+        item.add(SConfigItem.CreateRWItem(NE.toString(), NE.GetValue() + "", ""));
+        item.add(SConfigItem.CreateRWItem(NF.toString(), NF.GetValue() + "", ""));
+        item.add(SConfigItem.CreateRWItem(NPH.toString(), NPH.GetValue() + "", ""));
         return item;
     }
     // </editor-fold> 
@@ -62,8 +66,14 @@ public class ESA_AMMO extends ESADEV {
             if (item.IsKey(NA.toString())) {
                 this.SetConfigREG(NA, item.GetValue());
             }
-            if (item.IsKey(NE0.toString())) {
-                this.SetConfigREG(NE0, item.GetValue());
+            if (item.IsKey(NE.toString())) {
+                this.SetConfigREG(NE, item.GetValue());
+            }
+            if (item.IsKey(NF.toString())) {
+                this.SetConfigREG(NF, item.GetValue());
+            }
+            if (item.IsKey(NPH.toString())) {
+                this.SetConfigREG(NPH, item.GetValue());
             }
             if (item.IsKey(NTEMP_CAL.toString())) {
                 this.SetConfigREG(NTEMP_CAL, item.GetValue());
@@ -108,7 +118,9 @@ public class ESA_AMMO extends ESADEV {
             //参数定标
             this.calph(oradata, testdata);
             ret.children.add(new LogNode(NA.toString(), this.NA.GetValue()));
-            ret.children.add(new LogNode(NE0.toString(), this.NE0.GetValue()));
+            ret.children.add(new LogNode(NE.toString(), this.NE.GetValue()));
+            ret.children.add(new LogNode(NF.toString(), this.NF.GetValue()));
+            ret.children.add(new LogNode(NPH.toString(), this.NPH.GetValue()));
         }
         return ret;
     }
@@ -124,20 +136,29 @@ public class ESA_AMMO extends ESADEV {
     }
 
     private void cal_single(float oradata, float testdata, float temper) throws Exception {
-        double tE0 = (testdata - 7) * NA.GetValue() * (temper + 273.15) + oradata;
-//        this.setE0(tE0);
-        this.SetConfigREG(NE0, tE0 + "");
+        double templog = this.NPH.GetValue() - (0.090387 + 2729.33 / (273.15 + temper));
+        double temp1 = testdata / ((14.01 / 18.04) * (1 + Math.pow(10, templog)));
+        temp1 = Math.log10(temp1);
+
+        double F = oradata - NA.GetValue() * (273.15 + temper) * temp1 - NE.GetValue() * temper;
+
+        this.SetConfigREG(NF, F + "");
     }
 
     private void cal_double(float[] oradata, float[] testdata, float temper) throws Exception {
-        double tA = (oradata[0] - oradata[1]) / (testdata[1] - testdata[0]);
-        tA = tA / (temper + 273.15);
-        double tE0 = oradata[1] * (testdata[0] - 7) - oradata[0] * (testdata[1] - 7);
-        tE0 = tE0 / (testdata[0] - testdata[1]);
-//        this.setE0(tE0);
-//        this.setA(tA);
-        this.SetConfigREG(NE0, tE0 + "");
-        this.SetConfigREG(NA, tA + "");
+        double templog = this.NPH.GetValue() - (0.090387 + 2729.33 / (273.15 + temper));
+
+        double temp1 = testdata[0] / ((14.01 / 18.04) * (1 + Math.pow(10, templog)));
+        temp1 = Math.log10(temp1);
+        double temp2 = testdata[1] / ((14.01 / 18.04) * (1 + Math.pow(10, templog)));
+        temp2 = Math.log10(temp2);
+
+        double A = ((double) (oradata[1] - oradata[0])) / ((temp2 - temp1) * (273.15 + temper));
+        double t = oradata[0] * temp2 - oradata[1] * temp1;
+        double F = t/(temp2 - temp1) - NE.GetValue() * temper;
+        
+        this.SetConfigREG(NA, A + "");
+        this.SetConfigREG(NF, F + "");
     }
     // </editor-fold> 
 }

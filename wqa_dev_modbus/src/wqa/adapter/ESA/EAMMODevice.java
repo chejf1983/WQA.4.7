@@ -5,6 +5,7 @@
  */
 package wqa.adapter.ESA;
 
+import java.util.ArrayList;
 import wqa.adapter.factory.AbsDevice;
 import modebus.pro.NahonConvert;
 import modebus.register.*;
@@ -22,6 +23,7 @@ public class EAMMODevice extends AbsDevice {
     private final FREG PH = new FREG(0x01, 2, "氨氮");       //R
     private final FREG TEMPER = new FREG(0x05, 2, "温度数据");   //R
     private final FREG OPH = new FREG(0x07, 2, "氨氮原始信号(mv)");   //R(mv)
+    private final FREG CLPH = new FREG(0x09, 2, "PH补偿数据");   //R/W
 
     private final FREG[] CLODATA = new FREG[]{new FREG(0x31, 2, "原始数据1"), new FREG(0x35, 2, "原始数据2")};  //R/W
     private final FREG[] CLTDATA = new FREG[]{new FREG(0x33, 2, "定标数据1"), new FREG(0x37, 2, "定标数据2")};  //R/W
@@ -32,6 +34,25 @@ public class EAMMODevice extends AbsDevice {
     public EAMMODevice(IMAbstractIO io, byte addr) {
         super(io, addr);
     }
+
+    // <editor-fold defaultstate="collapsed" desc="设置接口"> 
+    @Override
+    public ArrayList<SConfigItem> GetConfigList() {
+        ArrayList<SConfigItem> list = super.GetConfigList();
+        list.add(SConfigItem.CreateRWItem(CLPH.toString(), CLPH.GetValue().toString(), ""));
+        return list;
+    }
+
+    @Override
+    public void SetConfigList(ArrayList<SConfigItem> list) throws Exception {
+        super.SetConfigList(list);
+        for (SConfigItem item : list) {
+            if (item.IsKey(CLPH.toString())) {
+                this.SetConfigREG(CLPH, item.GetValue());
+            }
+        }
+    }
+    // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="采集接口"> 
     @Override
@@ -55,7 +76,7 @@ public class EAMMODevice extends AbsDevice {
 
     // <editor-fold defaultstate="collapsed" desc="定标接口"> 
     private void CalDevice(float[] oradata, float[] caldata) throws Exception {
-       if (CLODATA.length < oradata.length) {
+        if (CLODATA.length < oradata.length) {
             throw new Exception("定标个数异常");
         }
         for (int i = 0; i < oradata.length; i++) {
@@ -72,7 +93,7 @@ public class EAMMODevice extends AbsDevice {
         this.CLTEMPERSTART.SetValue(0x01);
         this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMPER, CLTEMPERSTART);
     }
-    
+
     @Override
     public LogNode CalParameter(String type, float[] oradata, float[] testdata) throws Exception {
         if (type.contentEquals("温度")) {
