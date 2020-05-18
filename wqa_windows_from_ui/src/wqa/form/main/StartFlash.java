@@ -50,42 +50,39 @@ public class StartFlash extends javax.swing.JFrame {
         this.setBackground(new Color(0, 0, 0, 0));
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //加载驱动
-                    WQAPlatform.LoadDriver(new ModBusDevFactory());
-                    //初始化系统
-                    WQAPlatform.GetInstance().InitSystem();
-                    //注册弹出窗口
-                    LogCenter.Instance().RegisterFaultEvent(new EventListener<Level>() {
-                        @Override
-                        public void recevieEvent(Event<Level> event) {
-                            WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //JOptionPane.showm
-                                    MsgBoxFactory.Instance().ShowMsgBox(event.Info().toString());
-                                }
-                            });
-                        }
-                    });
-                    //初始化界面
-                    MainForm mainForm = new MainForm();
-                    TimeUnit.MILLISECONDS.sleep(100);
-                    //删除快照
-                    StartFlash.this.setVisible(false);
-                    StartFlash.this.dispose();
-                    //显示主窗口
-                    mainForm.setVisible(true);
-                } catch (Exception ex) {
-                    //初始化失败，可能系统进程还未完成
-                    JOptionPane.showMessageDialog(rootPane, "初始化失败:" + ex.getMessage());
-                    StartFlash.this.setVisible(false);
-                    StartFlash.this.dispose();
-                    System.exit(0);
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                //加载驱动
+                WQAPlatform.LoadDriver(new ModBusDevFactory());
+                //初始化系统
+                WQAPlatform.GetInstance().InitSystem();
+                //注册弹出窗口
+                LogCenter.Instance().RegisterFaultEvent(new EventListener<Level>() {
+                    @Override
+                    public void recevieEvent(Event<Level> event) {
+                        WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                //JOptionPane.showm
+                                MsgBoxFactory.Instance().ShowMsgBox(event.Info().toString());
+                            }
+                        });
+                    }
+                });
+                //初始化界面
+                MainForm mainForm = new MainForm();
+                TimeUnit.MILLISECONDS.sleep(100);
+                //删除快照
+                StartFlash.this.setVisible(false);
+                StartFlash.this.dispose();
+                //显示主窗口
+                mainForm.setVisible(true);
+            } catch (Exception ex) {
+                //初始化失败，可能系统进程还未完成
+                JOptionPane.showMessageDialog(rootPane, "初始化失败:" + ex.getMessage());
+                StartFlash.this.setVisible(false);
+                StartFlash.this.dispose();
+                System.exit(0);
             }
         });
     }
