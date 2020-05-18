@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import modebus.pro.ModeBusNode;
 import modebus.register.IREG;
 import wqa.adapter.ESA.DODevice;
+import wqa.adapter.ESA.EAMMODevice;
 import wqa.adapter.ESA.ECDevice;
 import wqa.adapter.ESA.PHDevice;
 import wqa.adapter.ISA.AMMODevice;
@@ -83,6 +84,7 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0202, ECDevice.class.getName());
         class_map.put(0x0203, ECDevice.class.getName());
         class_map.put(0x0208, PHDevice.class.getName());
+        class_map.put(0x0209, EAMMODevice.class.getName());
         class_map.put(0x0210, DODevice.class.getName());
 
         

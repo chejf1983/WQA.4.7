@@ -137,6 +137,11 @@ public class CDevDataTable {
                 new DataInfo("ORP" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
+        new DevInfo(0x0209, "ESA_Ammo", "Ammo",
+                new DataInfo("氨氮", "mg/L", 2, "(0-1000)"),
+                new DataInfo("氨氮" + ORA_Flag, "mv", 0, true, ""),
+                new DataInfo("温度", "℃", 1, "(0-60)"),
+                new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
         new DevInfo(0x0210, "OSA_FDO", "溶解氧FDO",
                 new DataInfo("溶解氧", "mg/L", 0x02, "(0-20)"), //0x102,高位1表示测量值内容没有，就是饱和氧和无氧
                 new DataInfo("溶解氧百分比", "%", 0, ""),
