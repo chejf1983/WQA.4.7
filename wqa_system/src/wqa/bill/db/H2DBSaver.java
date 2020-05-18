@@ -97,13 +97,13 @@ public class H2DBSaver {
 
 
     //return xx MB Label_DBSize.setText(WQAPlatform.GetInstance().GetDBHelper().GetDBFix().GetDBSize() + "MB");
-    public float GetDBSize() {
+    public String GetDBSize() {
         File file = new File("./data.h2.db");
         if (file.exists() && file.isFile()) {
 //            System.out.println("fline" + file.length());
-            return file.length() / 1024 / 1024;
+            return file.length() / 1024 / 1024 + "M";
         }
 
-        return 0;
+        return 0 + "M";
     }
 }

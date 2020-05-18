@@ -60,7 +60,7 @@ public class DBFixHelper implements IDBFix{
 
     //return xx MB
     @Override
-    public float GetDBSize() {
+    public String GetDBSize() {
         return this.db_instance.GetDBSize();
     }
 }

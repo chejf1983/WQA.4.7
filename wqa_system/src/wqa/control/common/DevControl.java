@@ -124,7 +124,7 @@ public class DevControl {
             }
         } catch (Exception ex) {
             ChangeState(ControlState.DISCONNECT);
-            LogCenter.Instance().PrintLog(Level.SEVERE, ex.getMessage());
+            LogCenter.Instance().PrintLog(Level.SEVERE, ex);
         } finally {
             ((ShareIO) device.GetIO()).UnLock();
         }

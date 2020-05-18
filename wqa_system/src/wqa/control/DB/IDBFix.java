@@ -14,5 +14,5 @@ import java.util.Date;
 public interface IDBFix {
     public void DeleteData(Date beforetime, wqa.control.data.IMainProcess process);
     
-    public float GetDBSize();
+    public String GetDBSize();
 }
