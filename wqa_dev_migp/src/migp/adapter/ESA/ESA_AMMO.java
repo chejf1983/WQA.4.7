@@ -30,7 +30,7 @@ public class ESA_AMMO extends ESADEV {
     DMEG NA = new DMEG(new NVPA(0, 8), "氨氮系数A");
     DMEG NE = new DMEG(new NVPA(8, 8), "氨氮系数E");
     DMEG NF = new DMEG(new NVPA(16, 8), "氨氮系数F");
-    DMEG NPH = new DMEG(new NVPA(24, 8), "PH补偿值");
+    FMEG NPH = new FMEG(new NVPA(24, 4), "PH补偿值");
     private FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
     // </editor-fold> 
     // </editor-fold> 

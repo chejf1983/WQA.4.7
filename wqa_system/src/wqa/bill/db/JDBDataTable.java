@@ -86,8 +86,8 @@ public class JDBDataTable {
         String CREATE_TABLE_SQL = "create table if not exists " + table_name
                 + "(id int auto_increment primary key not null, " + Time_Key + " datetime(2)";
         for (int i = 0; i < DataRecord.GetAllData(id).length; i++) {
-            CREATE_TABLE_SQL += ", " + DataIndexKey + i + "varchar(50)";
-            CREATE_TABLE_SQL += ", " + UnitIndexKey + i + "varchar(50)";
+            CREATE_TABLE_SQL += ", " + DataIndexKey + i + " varchar(50)";
+            CREATE_TABLE_SQL += ", " + UnitIndexKey + i + " varchar(50)";
         }
 
         CREATE_TABLE_SQL += ")";
