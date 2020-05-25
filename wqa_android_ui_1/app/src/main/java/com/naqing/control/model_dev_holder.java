@@ -2,6 +2,7 @@ package com.naqing.control;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,10 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.naqing.common.InputDialog;
+import com.naqing.common.IosAlertDialog;
 import com.naqing.monitor.activity_dev_config;
 import com.naqing.wqa_android_ui_1.R;
 
@@ -21,17 +26,17 @@ import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.IDevice;
 import wqa.system.WQAPlatform;
 
-public class model_dev_holder{
+public class model_dev_holder {
     private View deviceView;
     private DevControl control;
     private Activity parentActivity;
 
 
-    public model_dev_holder(Context parent, DevControl control){
+    public model_dev_holder(Context parent, DevControl control) {
         this.control = control;
         parentActivity = (Activity) parent;
         LayoutInflater from = LayoutInflater.from(parent);
-        this.deviceView = from.inflate(R.layout.model_dev,null);
+        this.deviceView = from.inflate(R.layout.model_dev, null);
 
 //        this.deviceView.setBackgroundColor(Color.RED);
         /* Init Device View */
@@ -39,14 +44,26 @@ public class model_dev_holder{
     }
 
     //初始化视图组件
-    private void InitViewComponents(){
+    private void InitViewComponents() {
         TextView dev_name = this.deviceView.findViewById(R.id.md_dev_info);
         String stype = control.GetProType().contentEquals("MIGP") ? "*" : "";
         dev_name.setText(stype + control.ToString());
 
         TextView dev_del = this.deviceView.findViewById(R.id.md_dev_del);
-        dev_del.setOnClickListener((View view)->{
-            WQAPlatform.GetInstance().GetManager().DeleteDevControl(this.control);
+        dev_del.setOnClickListener((View view) -> {
+            new IosAlertDialog(parentActivity).builder().setTitle("提示")
+                    .setMsg("是否确认删除探头？")
+                    .setPositiveButton("确认", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            WQAPlatform.GetInstance().GetManager().DeleteDevControl(control);
+                        }
+                    }).setNegativeButton("取消", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            }).show();
         });
 
         /** 触发状态响应*/
@@ -62,11 +79,11 @@ public class model_dev_holder{
         this.initState(control.GetState(), "");
     }
 
-    public DevControl getCurrentControl(){
+    public DevControl getCurrentControl() {
         return this.control;
     }
 
-    public View getDeviceView(){
+    public View getDeviceView() {
         return this.deviceView;
     }
 
@@ -74,7 +91,7 @@ public class model_dev_holder{
     private void showConfigActivity() {
         /**进入配置状态 */
         activity_dev_config.configbean = this.control.StartConfig();
-        if(activity_dev_config.configbean == null){
+        if (activity_dev_config.configbean == null) {
             return;
         }
 
@@ -94,16 +111,16 @@ public class model_dev_holder{
 
         public void handleMessage(Message msg) {
             if (msg.what == STATE) {
-                Event<DevControl.ControlState> event = (Event<DevControl.ControlState>)msg.obj;
+                Event<DevControl.ControlState> event = (Event<DevControl.ControlState>) msg.obj;
                 initState(event.GetEvent(), event.Info().toString());
             }
         }
     };
     // </editor-fold>
 
-    private void initState(DevControl.ControlState state, String info){
+    private void initState(DevControl.ControlState state, String info) {
         View viewById = deviceView.findViewById(R.id.md_dev_state);
-        switch (state){
+        switch (state) {
             case CONNECT:
                 viewById.setBackground(parentActivity.getResources().getDrawable(R.drawable.circle_green));
                 break;

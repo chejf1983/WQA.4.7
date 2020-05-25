@@ -75,7 +75,8 @@ public class InputDialog {
         /** 设置确认按钮 */
         Button button_ok = view.findViewById(R.id.pwd_button_ok);
         button_ok.setOnClickListener((View v) -> {
-            handler.InputValue(pwd.getText().toString());
+            if (handler != null)
+                handler.InputValue(pwd.getText().toString());
             dialog.dismiss();
         });
 
@@ -156,7 +157,7 @@ public class InputDialog {
         /** 设置确认按钮 */
         Button button_ok = view.findViewById(R.id.pwd_button_ok);
         button_ok.setOnClickListener((View v) -> {
-            if(date.size() > 0) {
+            if (date.size() > 0) {
                 while (date.size() < 2) {
                     date.add("9");
                 }
@@ -235,6 +236,7 @@ public class InputDialog {
     public static void ShowListDialog(Activity parent, String[] slist, View.OnClickListener list) {
         new InputDialog().initListDialog(parent, slist, Gravity.CENTER, list);
     }
+
     public static void ShowListDialog(Activity parent, String[] slist, int gravity, View.OnClickListener list) {
         new InputDialog().initListDialog(parent, slist, gravity, list);
     }
@@ -254,9 +256,9 @@ public class InputDialog {
 
         /** 设置标题*/
         LinearLayout d_title = view.findViewById(R.id.dlg_sel_list);
-        for (int i = 0; i <slist.length; i++) {
+        for (int i = 0; i < slist.length; i++) {
             View tt = createButton(parent, slist[i], gravity);
-            tt.setOnClickListener((View tview)->{
+            tt.setOnClickListener((View tview) -> {
                 list.onClick(tt);
                 dialog.dismiss();
             });

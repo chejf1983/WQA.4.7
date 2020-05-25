@@ -31,6 +31,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.naqing.common.ErrorExecutor;
 import com.naqing.common.InputDialog;
 import com.naqing.common.NQProcessDialog;
+import com.naqing.common.NQProcessDialog2;
 import com.naqing.common.TableElement;
 import com.naqing.wqa_android_ui_1.R;
 
@@ -220,7 +221,7 @@ public class fragment_control_history extends Fragment {
     private void ShowLine(int index) {
         //如果不是搜索进程，发出一个刷新数据的进度条框
         if (mProgressDialog == null && index >= 0 && data_result != null && data_result.data.size() > 0) {
-            mProgressDialog = NQProcessDialog.ShowProcessDialog(getContext(), "刷新数据...");
+            mProgressDialog = NQProcessDialog2.ShowProcessDialog(parent, "刷新数据...");
         }
 
 //        System.out.println("申请进程");
@@ -236,7 +237,7 @@ public class fragment_control_history extends Fragment {
     // </editor-fold>
 
     // <editor-fold desc="搜索设备">
-    NQProcessDialog mProgressDialog;
+    NQProcessDialog2 mProgressDialog;
 
     private SDataRecordResult data_result = null;
 
@@ -258,7 +259,7 @@ public class fragment_control_history extends Fragment {
             return;
         }
 
-        mProgressDialog = NQProcessDialog.ShowProcessDialog(getContext(), "搜索数据...");
+        mProgressDialog = NQProcessDialog2.ShowProcessDialog(parent, "搜索数据...");
 
         Future<?> submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().SearchLimitData(dev_lists[select_dev], start_time, stop_time, MaxPointNum, new IMainProcess<SDataRecordResult>() {
@@ -301,7 +302,7 @@ public class fragment_control_history extends Fragment {
             return;
         }
 
-        mProgressDialog = NQProcessDialog.ShowProcessDialog(getContext(), "删除数据...");
+        mProgressDialog = NQProcessDialog2.ShowProcessDialog(parent, "删除数据...");
 
         Future<?> submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             try {

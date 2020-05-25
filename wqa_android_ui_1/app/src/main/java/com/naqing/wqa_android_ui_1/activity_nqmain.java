@@ -1,13 +1,9 @@
 package com.naqing.wqa_android_ui_1;
 
-import android.app.ActivityManager;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.naqing.adb.ADBHelper;
 import com.naqing.common.ErrorExecutor;
-import com.naqing.common.InputDialog;
-import com.naqing.common.NQProcessDialog;
 import com.naqing.common.Security;
 import com.naqing.control.fragment_control_main;
 import com.naqing.io.AndroidIO;
@@ -50,6 +46,7 @@ public class activity_nqmain extends AppCompatActivity {
 
         initSystem();
     }
+
 
 
     /**

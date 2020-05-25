@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.naqing.common.ErrorExecutor;
 import com.naqing.common.NQProcessDialog;
+import com.naqing.common.NQProcessDialog2;
 import com.naqing.io.AndroidIO;
 import com.naqing.io.ComManager;
 import com.naqing.wqa_android_ui_1.R;
@@ -90,13 +91,13 @@ public class fragment_control_dev extends Fragment {
     }
 
     // <editor-fold desc="搜索进度条">
-    NQProcessDialog mProgressDialog;
+    NQProcessDialog2 mProgressDialog;
     private void search_deivces() {
         if(mProgressDialog != null && !mProgressDialog.isFinished()){
             return;
         }
 
-        mProgressDialog = NQProcessDialog.ShowProcessDialog(getContext(), "搜索设备...");
+        mProgressDialog = NQProcessDialog2.ShowProcessDialog(parent, "搜索设备...");
 
         Future<?> submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             WQAPlatform.GetInstance().GetManager().SearchDevice(new ShareIO[]{AndroidIO.GetInstance().GetDevIO().GetDevConfigIO()}, new IMainProcess<Boolean>() {

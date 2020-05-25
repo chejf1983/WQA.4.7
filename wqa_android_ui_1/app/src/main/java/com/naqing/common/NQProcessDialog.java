@@ -46,7 +46,6 @@ public class NQProcessDialog {
     }
 
     public void SetTimout(int timeout, TimeoutEvent event) {
-
         if (!isFinished())
         /** 增加超时机制 */
             new Timer().schedule(new TimerTask() {
