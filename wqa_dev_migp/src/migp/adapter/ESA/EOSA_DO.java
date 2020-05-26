@@ -81,7 +81,7 @@ public class EOSA_DO extends ESADEV {
     @Override
     public void SetConfigList(ArrayList<SConfigItem> list) throws Exception {
         super.SetConfigList(list);
-        MEG[] reglist = new MEG[]{NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPG, NPTEMPER, NAVR, NDO100, NDO0};
+        MEG[] reglist = new MEG[]{NPASCA, NSALT, NTEMPER_COM, NAVR};
         for (SConfigItem item : list) {
             for (MEG mem : reglist) {
                 if (item.IsKey(mem.toString())) {
@@ -124,7 +124,7 @@ public class EOSA_DO extends ESADEV {
     @Override
     public void SetCalParList(ArrayList<SConfigItem> list) throws Exception {
         super.SetCalParList(list);
-        MEG[] reglist = new MEG[]{NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPG, NPTEMPER, NAVR, NDO100, NDO0};
+        MEG[] reglist = new MEG[]{NA, NB, NCLTEMPER, NPA, NPB, NPC, NPD, NPE, NPF, NPG, NPTEMPER, NDO100, NDO0};
         for (SConfigItem item : list) {
             for (MEG mem : reglist) {
                 if (item.IsKey(mem.toString())) {
