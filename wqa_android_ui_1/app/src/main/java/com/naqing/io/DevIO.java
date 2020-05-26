@@ -19,10 +19,10 @@ public class DevIO {
             io_instance = AndroidIO.GetInstance().GetComManager().FindIO(sioInfo);
             /**如果找不到，设置第一个串口为设备口*/
             if (io_instance == null) {
-                SetDevConfigIO(AndroidIO.GetInstance().GetComManager().GetAllCOM()[0]);
+                SetDevConfigIO(AndroidIO.GetInstance().GetComManager().GetAllCOM()[6]);
             }
         }else{
-            SetDevConfigIO(AndroidIO.GetInstance().GetComManager().GetAllCOM()[0]);
+            SetDevConfigIO(AndroidIO.GetInstance().GetComManager().GetAllCOM()[6]);
         }
         io_instance.Close();
         io_instance.Open();

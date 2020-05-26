@@ -246,12 +246,12 @@ public class InputDialog {
         Display display = parent.getWindowManager().getDefaultDisplay();
         Point display_size = new Point();
         display.getSize(display_size);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, display_size.y * 4 / 5);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         View view = LayoutInflater.from(parent).inflate(R.layout.dialog_select_list, null, false);
         AlertDialog dialog = new AlertDialog.Builder(parent, R.style.TransparentDialog).create();
 
         dialog.show();
-        dialog.getWindow().setLayout(display_size.x * 3 / 5, display_size.y * 4 / 5);
+        dialog.getWindow().setLayout(display_size.x * 3 / 5,  LinearLayout.LayoutParams.WRAP_CONTENT);
         dialog.setContentView(view, lp);
 
         /** 设置标题*/
@@ -264,6 +264,11 @@ public class InputDialog {
             });
             d_title.addView(tt);
         }
+
+        View del = createButton(parent, "取消", gravity);
+        del.setOnClickListener((View tview) -> {
+            dialog.dismiss();
+        });
     }
 
     private Button createButton(Activity activity, String text, int gravity) {

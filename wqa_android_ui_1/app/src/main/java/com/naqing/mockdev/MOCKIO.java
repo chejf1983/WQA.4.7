@@ -57,7 +57,7 @@ public class MOCKIO implements IAbstractIO {
     @Override
     public int ReceiveData(byte[] data, int timeout) throws Exception {
         byte[] mem = this.client.Reply();
-        System.arraycopy(mem, 0, data, 0, mem.length);        
+        System.arraycopy(mem, 0, data, 0, mem.length);
         if (mem.length > 0) {
             PrintLog.printIO("REC:");
             for (int i = 0; i < mem.length; i++) {

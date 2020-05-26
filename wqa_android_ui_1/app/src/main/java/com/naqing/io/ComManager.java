@@ -10,6 +10,8 @@ import com.naqing.mockdev.MOCKIOFactory;
 import java.util.ArrayList;
 import java.util.EventListener;
 
+import android_serialport_api.SerialPortFactory;
+import android_serialport_api.SerialPortFinder;
 import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
 import wqa.system.WQAPlatform;
@@ -19,12 +21,15 @@ import wqa.system.WQAPlatform;
  */
 public class ComManager implements EventListener {
     private ArrayList<ShareIO> localio = new ArrayList();
+    SerialPortFinder io_finder = new SerialPortFinder();
 
     //刷新IO口
     public void InitIO() throws Exception {
         this.localio.clear();
 
-        for (String com : MOCKIOFactory.ListAllCom()) {
+        for (String com : SerialPortFactory.ListAllCom()) {
+            com = com.split(" ")[0];
+//            System.out.println("************************************" + com);
             SIOInfo sioInfo = WQAPlatform.GetInstance().GetIOManager().GetIOConfig(com);
             if (sioInfo == null) {
                 sioInfo = new SIOInfo("COM", com, "9600");
@@ -33,7 +38,7 @@ public class ComManager implements EventListener {
 
             ShareIO io = WQAPlatform.GetInstance().GetIOManager().FindIO(sioInfo);
             if (io == null) {
-                io = WQAPlatform.GetInstance().GetIOManager().ADDShareIO(MOCKIOFactory.BuildCom(sioInfo));
+                io = WQAPlatform.GetInstance().GetIOManager().ADDShareIO(SerialPortFactory.BuildCom(sioInfo));
             }
             this.localio.add(io);
         }

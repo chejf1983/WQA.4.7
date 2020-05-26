@@ -51,18 +51,10 @@ public class model_dev_holder {
 
         TextView dev_del = this.deviceView.findViewById(R.id.md_dev_del);
         dev_del.setOnClickListener((View view) -> {
-            new IosAlertDialog(parentActivity).builder().setTitle("提示")
-                    .setMsg("是否确认删除探头？")
-                    .setPositiveButton("确认", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            WQAPlatform.GetInstance().GetManager().DeleteDevControl(control);
-                        }
-                    }).setNegativeButton("取消", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
+            new IosAlertDialog(parentActivity).builder().setMsg("是否确认删除探头？")
+                    .setPositiveButton("确认", (View v) -> {
+                        WQAPlatform.GetInstance().GetManager().DeleteDevControl(control);
+                    }).setNegativeButton("取消", (View v) -> {
             }).show();
         });
 
@@ -76,7 +68,9 @@ public class model_dev_holder {
                 messagehandler.sendMessage(msg);
             }
         });
-        this.initState(control.GetState(), "");
+        this.
+
+                initState(control.GetState(), "");
     }
 
     public DevControl getCurrentControl() {

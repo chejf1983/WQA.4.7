@@ -102,8 +102,8 @@ public class fragment_control_history extends Fragment {
             String s1 = "1.删除" + dev_lists[select_dev].ToChineseString() + "\n所有数据";
             String s2 = "2.删除" + dev_lists[select_dev].ToChineseString() + "\n" + new SimpleDateFormat(TIMEFORMATE).format(start_time) + "之前数据";
             String s3 = "3.删除" + dev_lists[select_dev].ToChineseString() + "\n" + new SimpleDateFormat(TIMEFORMATE).format(stop_time) + "之前数据";
-            String s4 = "4.取消";
-            InputDialog.ShowListDialog(parent, new String[]{s1, s2, s3, s4}, (View tview) -> {
+
+            InputDialog.ShowListDialog(parent, new String[]{s1, s2, s3}, (View tview) -> {
                 int index = Integer.valueOf(((TextView) tview).getText().toString().substring(0, 1));
                 if (index == 1) {
                     try {
