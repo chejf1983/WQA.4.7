@@ -11,6 +11,8 @@ import comm.win.io.WindowsIOFactory;
 import gnu.io.CommPortIdentifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.IAbstractIO;
 import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
@@ -25,6 +27,16 @@ public class WComManager {
     private static WComManager instance;
 
     private WComManager() {
+        String is_init = WQAPlatform.GetInstance().GetConfig().getProperty("FST", "false");
+        try {
+            if (is_init.contentEquals("true")) {
+                WindowsIOFactory.InitWindowsIODriver(true);
+            } else {
+                WindowsIOFactory.InitWindowsIODriver();
+            }
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+        }
     }
 
     public static WComManager GetInstance() {
@@ -142,12 +154,12 @@ public class WComManager {
     private ArrayList<ShareIO> added_coms = new ArrayList<>();
 
     public boolean AddCom(String com) {
-        for(ShareIO tio : this.GetAllCom()){
-            if(tio.GetConnectInfo().par[0].contentEquals(com)){
+        for (ShareIO tio : this.GetAllCom()) {
+            if (tio.GetConnectInfo().par[0].contentEquals(com)) {
                 return false;
             }
         }
-        
+
         SIOInfo ioinfo = new SIOInfo(SIOInfo.COM, com, "9600");
         //查找配置文件当中的信息
         ShareIO io = FindIO(ioinfo);

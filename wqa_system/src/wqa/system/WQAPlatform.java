@@ -14,7 +14,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.db.H2DBSaver;
 import wqa.bill.io.IOManager;
 import wqa.control.common.DevControlManager;
 import wqa.bill.log.DevLog;
