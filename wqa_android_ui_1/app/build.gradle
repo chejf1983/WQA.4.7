@@ -43,4 +43,5 @@ dependencies {
     implementation files('libs/wqa_dev_modbus.jar')
     implementation files('libs/wqa_system.jar')
     implementation 'org.jetbrains:annotations:15.0'
+    implementation files('libs/wqa_dev_migp.jar')
 }
