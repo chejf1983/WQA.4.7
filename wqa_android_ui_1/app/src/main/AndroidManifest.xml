@@ -11,7 +11,7 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.naqing.monitor.activity_dev_config"></activity>
+        <activity android:name="com.naqing.dev_views.activity_dev_config"></activity>
         <activity
             android:name=".activity_nqmain"
             android:label="@string/title_activity_nqmain"

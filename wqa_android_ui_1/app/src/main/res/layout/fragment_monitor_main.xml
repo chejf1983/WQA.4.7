@@ -4,7 +4,7 @@
     android:id="@+id/fragment_dev_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.naqing.monitor.fragment_monitor_main">
+    tools:context=".fragment_monitor_main">
 
         <LinearLayout
             android:layout_marginTop="10dp"

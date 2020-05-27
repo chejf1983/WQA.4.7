@@ -5,9 +5,7 @@ import android.os.Bundle;
 import com.naqing.adb.ADBHelper;
 import com.naqing.common.ErrorExecutor;
 import com.naqing.common.Security;
-import com.naqing.control.fragment_control_main;
 import com.naqing.io.AndroidIO;
-import com.naqing.monitor.fragment_monitor_main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -180,6 +178,8 @@ public class activity_nqmain extends AppCompatActivity {
         fragmentTransaction.hide(control_main);
         fragmentTransaction.show(dev_main).commit();
 
+
+        model_dev_view_manager.Instance().SetMonHolderAdapter(this.dev_main);
         TextView tool_home = findViewById(R.id.nqmain_home);
         tool_home.setOnClickListener((View view) -> {
 //            System.out.println(((ActivityManager)getSystemService(activity_nqmain.this.ACTIVITY_SERVICE)).getMemoryClass()+ "************************");

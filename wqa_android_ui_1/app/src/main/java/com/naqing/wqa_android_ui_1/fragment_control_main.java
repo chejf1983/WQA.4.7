@@ -1,4 +1,4 @@
-package com.naqing.control;
+package com.naqing.wqa_android_ui_1;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,11 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
+import com.naqing.control.control_info;
+import com.naqing.control.fragment_control_dev;
+import com.naqing.control.fragment_control_history;
+import com.naqing.control.fragment_control_io;
+import com.naqing.control.fragment_control_system;
 import com.naqing.wqa_android_ui_1.R;
 
 public class fragment_control_main extends Fragment {
@@ -56,6 +61,8 @@ public class fragment_control_main extends Fragment {
         this.initRadioButton(R.id.config_rb_inter, R.drawable.config_12, R.drawable.config_11, new control_info());
 
         RadioButton rb_temp = root.findViewById(R.id.config_rb_info);
+
+        model_dev_view_manager.Instance().SetDevHolderAdapter(this.fragment_dev);
         rb_temp.setChecked(true);
     }
 

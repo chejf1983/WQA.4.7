@@ -1,14 +1,11 @@
 package com.naqing.control;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,24 +14,19 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.naqing.common.ErrorExecutor;
-import com.naqing.common.NQProcessDialog;
 import com.naqing.common.NQProcessDialog2;
+import com.naqing.dev_views.model_dev_holder;
+import com.naqing.dev_views.model_dev_view;
 import com.naqing.io.AndroidIO;
-import com.naqing.io.ComManager;
 import com.naqing.wqa_android_ui_1.R;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Future;
 
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
 import wqa.bill.io.ShareIO;
-import wqa.control.common.DevControl;
-import wqa.control.common.DevControlManager;
 import wqa.control.data.IMainProcess;
 import wqa.system.WQAPlatform;
+
 
 public class fragment_control_dev extends Fragment {
 
@@ -53,46 +45,47 @@ public class fragment_control_dev extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_control_dev, container, false);
-        this.dev_list = root.findViewById(R.id.cf_dev_list);
-        this.dev_list.setAdapter(dev_contrl_adapter);
+        ListView dev_list = root.findViewById(R.id.cf_dev_list);
+        dev_list.setAdapter(dev_contrl_adapter);
+
 
         /** 搜索设备 */
         Button search = root.findViewById(R.id.control_dev_search);
         search.setOnClickListener((View view) -> {
-            search_deivces();
+            search_deivces(parent);
         });
 
-        /** 响应设备添加删除事件 */
-        if (eventListener == null) {
-            eventListener = new EventListener<DevControlManager.DevNumChange>() {
-                @Override
-                public void recevieEvent(Event<DevControlManager.DevNumChange> event) {
-                    Message msg = new Message();
-                    msg.obj = event.Info();
-                    switch (event.GetEvent()) {
-                        case ADD:
-                            msg.what = ADD;
-                            break;
-                        case DEL:
-                            msg.what = DEL;
-                            break;
-                    }
-                    messagehandler.sendMessage(msg);
-                }
-            };
-            WQAPlatform.GetInstance().GetManager().StateChange.RegeditListener(eventListener);
-        }
         return root;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    /** 创建设备界面*/
+    public model_dev_holder CreateHoler(model_dev_view control){
+        /**检查是否重复*/
+        for (model_dev_holder tmp_holder : dev_contrl_adapter.dev_holders) {
+            if (tmp_holder.getCurrentControl() == control) {
+                return tmp_holder;
+            }
+        }
+
+        /**添加视图*/
+        model_dev_holder holder = new model_dev_holder(parent, control);
+        dev_contrl_adapter.dev_holders.add(holder);
+        dev_contrl_adapter.notifyDataSetChanged();
+        return holder;
     }
 
-    // <editor-fold desc="搜索进度条">
+    /** 删除设备界面*/
+    public void DelControl(model_dev_holder tmp_holder) {
+        /**检查是否重复*/
+        if(dev_contrl_adapter.dev_holders.contains(tmp_holder)){
+            dev_contrl_adapter.dev_holders.remove(tmp_holder);
+            dev_contrl_adapter.notifyDataSetChanged();
+        }
+    }
+
+    // <editor-fold desc="搜索设备">
     NQProcessDialog2 mProgressDialog;
-    private void search_deivces() {
+    public void search_deivces(Activity parent) {
         if(mProgressDialog != null && !mProgressDialog.isFinished()){
             return;
         }
@@ -120,58 +113,6 @@ public class fragment_control_dev extends Fragment {
             }
         });
     }
-    // </editor-fold>
-
-    // <editor-fold desc="添加删除设备">
-    ListView dev_list;
-    private EventListener<DevControlManager.DevNumChange> eventListener;
-
-    private void AddControl(DevControl control) {
-        /**检查是否重复*/
-        for (model_dev_holder tmp_holder : this.dev_contrl_adapter.dev_holders) {
-            if (tmp_holder.getCurrentControl() == control) {
-                return;
-            }
-        }
-
-        /**添加视图*/
-        model_dev_holder holder = new model_dev_holder(parent, control);
-        this.dev_contrl_adapter.dev_holders.add(holder);
-        this.dev_contrl_adapter.notifyDataSetChanged();
-    }
-
-    private void DelControl(DevControl control) {
-        /**检查是否重复*/
-        for (model_dev_holder tmp_holder : this.dev_contrl_adapter.dev_holders) {
-            if (tmp_holder.getCurrentControl() == control) {
-                this.dev_contrl_adapter.dev_holders.remove(tmp_holder);
-                this.dev_contrl_adapter.notifyDataSetChanged();
-                return;
-            }
-        }
-    }
-
-//    private void insertView(View view){
-//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
-//////              LayoutInflater inflater1=(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//////              LayoutInflater inflater2 = getLayoutInflater();
-//        lp.setMargins(10, 30, 10, 30);
-//        dev_list.addView(view, lp);
-//    }
-
-    private int ADD = 0;
-    private int DEL = 1;
-    private Handler messagehandler = new Handler() {
-
-        public void handleMessage(Message msg) {
-            if (msg.what == ADD) {
-                AddControl((DevControl) msg.obj);
-            }
-            if (msg.what == DEL) {
-                DelControl((DevControl) msg.obj);
-            }
-        }
-    };
     // </editor-fold>
 }
 

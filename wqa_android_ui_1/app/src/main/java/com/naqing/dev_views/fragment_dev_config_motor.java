@@ -1,4 +1,4 @@
-package com.naqing.monitor;
+package com.naqing.dev_views;
 
 import android.app.Activity;
 import android.content.Context;

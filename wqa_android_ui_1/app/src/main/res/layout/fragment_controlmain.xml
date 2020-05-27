@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.naqing.control.fragment_control_main">
+    tools:context=".fragment_control_main">
 
     <LinearLayout
         android:layout_width="match_parent"
