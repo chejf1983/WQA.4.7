@@ -62,6 +62,9 @@ public class model_dev_holder {
         View viewById = deviceView.findViewById(R.id.md_dev_state);
         switch (state) {
             case CONNECT:
+                TextView dev_name = this.deviceView.findViewById(R.id.md_dev_info);
+                String stype = devview.control.GetProType().contentEquals("MIGP") ? "*" : "";
+                dev_name.setText(stype + devview.control.ToString());
                 viewById.setBackground(parentActivity.getResources().getDrawable(R.drawable.circle_green));
                 break;
             case ALARM:

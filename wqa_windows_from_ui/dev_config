@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment/>
-<entry key="COM4P1">9600</entry>
+<entry key="COM4P1">115200</entry>
 <entry key="COM4">COM</entry>
 <entry key="COM4P0">COM4</entry>
 <entry key="IPS">Naqing</entry>

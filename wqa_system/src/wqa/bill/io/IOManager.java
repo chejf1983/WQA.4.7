@@ -208,6 +208,7 @@ public class IOManager {
                 WQAPlatform.GetInstance().GetConfig().setProperty(Key + "P" + i, "");
             }
         }
+        WQAPlatform.GetInstance().SaveConfig();
     }
 
     public SIOInfo GetIOConfig(String Key) {

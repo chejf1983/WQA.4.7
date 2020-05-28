@@ -1,5 +1,6 @@
 package com.naqing.wqa_android_ui_1;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.naqing.adb.ADBHelper;
@@ -7,11 +8,14 @@ import com.naqing.common.ErrorExecutor;
 import com.naqing.common.Security;
 import com.naqing.io.AndroidIO;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,9 +47,9 @@ public class activity_nqmain extends AppCompatActivity {
         this.init_switch();
 
         initSystem();
+
+        model_dev_view_manager.Instance().InitDevs();
     }
-
-
 
     /**
      * 初始化系统
@@ -186,11 +190,11 @@ public class activity_nqmain extends AppCompatActivity {
             if (dev_view) {
                 Security.CheckPassword(activity_nqmain.this, new Handler() {
                     public void handleMessage(Message msg) {
-                        if(msg.what == Security.CHECK_OK) {
+                        if (msg.what == Security.CHECK_OK) {
                             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                             fragmentTransaction.hide(dev_main);
                             fragmentTransaction.show(control_main).commit();
-                        }else if(msg.what == Security.START_BACKDOOR){
+                        } else if (msg.what == Security.START_BACKDOOR) {
                             messagehandler.sendEmptyMessage(HIDSCREEN);
                         }
                     }

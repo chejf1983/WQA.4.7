@@ -76,7 +76,6 @@ public class fragment_dev_alarm extends Fragment {
             return;
         }
         signal = true;
-
         WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().DeleteAlarm(config_table.control.GetDevID(), new Date());
         alarmRecords.clear();
         messagehandler.sendEmptyMessage(READ);

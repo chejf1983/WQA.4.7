@@ -65,6 +65,7 @@ public class model_dev_view {
     }
 
     public void Close() {
+        WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().DeleteAlarm(control.GetDevID(), new Date());
         devHolderAdapter.DelControl(dev_holder);
         for (model_monitor_holder monitor : monitors) {
             monitorHolderAdapter.DelDevice(monitor);

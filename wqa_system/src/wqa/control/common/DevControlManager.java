@@ -119,7 +119,8 @@ public class DevControlManager {
 
         //避免重复添加
         for (DevControl tmp : this.control_list) {
-            if (new DevID(dev.GetDevInfo().dev_type, dev.GetDevInfo().dev_addr, dev.GetDevInfo().serial_num).EqualsTo(tmp.GetDevID())) {
+            if (dev.GetDevInfo().dev_type == tmp.GetDevID().dev_type
+                    && dev.GetDevInfo().dev_addr == tmp.GetDevID().dev_addr) {
                 //已经存在就不再搜索
                 return null;
             }

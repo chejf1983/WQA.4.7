@@ -50,8 +50,10 @@ public class fragment_control_main extends Fragment {
     private fragment_control_history fraggment_history = new fragment_control_history();
     private control_info fragment_info = new control_info();
     private fragment_control_system fragment_system = new fragment_control_system();
+    private Fragment lastfragment;
 
     private void initComponents() {
+        /** 替换fragment*/
         this.initRadioButton(R.id.config_rb_info, R.drawable.config_8, R.drawable.config_7, fragment_info);
         this.initRadioButton(R.id.config_rb_setup, R.drawable.config_14, R.drawable.config_13, fragment_system);
         this.initRadioButton(R.id.config_rb_conn, R.drawable.config_2, R.drawable.config_1, fraggment_io);
@@ -61,7 +63,6 @@ public class fragment_control_main extends Fragment {
         this.initRadioButton(R.id.config_rb_inter, R.drawable.config_12, R.drawable.config_11, new control_info());
 
         RadioButton rb_temp = root.findViewById(R.id.config_rb_info);
-
         model_dev_view_manager.Instance().SetDevHolderAdapter(this.fragment_dev);
         rb_temp.setChecked(true);
     }
@@ -71,15 +72,20 @@ public class fragment_control_main extends Fragment {
      */
     private void initRadioButton(int id, int drawable_check, int drawable_uncheck, Fragment fragment) {
         RadioButton rb_temp = root.findViewById(id);
+
+        FragmentTransaction fragmentTransaction = ((FragmentActivity)parent).getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_control_area,fragment);
+        fragmentTransaction.hide(fragment).commit();
 //        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_control_area, fragment).commit();
         rb_temp.setOnCheckedChangeListener((CompoundButton compoundButton, boolean b) -> {
             RadioButton rb_button = root.findViewById(id);
             if (b) {
                 /** 替换fragment*/
-                FragmentTransaction fragmentTransaction = ((FragmentActivity)parent).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_control_area, fragment).commit();
+                FragmentTransaction fragmentTransaction1 = ((FragmentActivity)parent).getSupportFragmentManager().beginTransaction();
+                if(lastfragment != null) fragmentTransaction1.hide(lastfragment);
+                fragmentTransaction1.show(fragment).commit();
+                lastfragment = fragment;
 
-//                fragmentTransaction.show(fragment).commit();
                 /** 替换图标 */
                 rb_button.setCompoundDrawablesWithIntrinsicBounds(root.getResources().getDrawable(drawable_check), null, getResources().getDrawable(R.drawable.config_15), null);
             } else {
