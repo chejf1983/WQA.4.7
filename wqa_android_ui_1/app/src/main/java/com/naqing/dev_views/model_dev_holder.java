@@ -46,7 +46,7 @@ public class model_dev_holder {
             new IosAlertDialog(parentActivity).builder().setMsg("是否确认删除探头？")
                     .setPositiveButton("确认", (View v) -> {
                         WQAPlatform.GetInstance().GetManager().DeleteDevControl(devview.control);
-                    }).show();
+                    }).setNegativeButton("取消", (View v) -> {}).show();
         });
     }
 

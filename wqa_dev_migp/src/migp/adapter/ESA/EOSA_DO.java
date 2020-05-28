@@ -20,8 +20,8 @@ import wqa.dev.intf.*;
  */
 public class EOSA_DO extends ESADEV {
 
-    public EOSA_DO(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public EOSA_DO(SDevInfo devinfo) {
+        super(devinfo);
     }
     
     // <editor-fold defaultstate="collapsed" desc="VPA"> 

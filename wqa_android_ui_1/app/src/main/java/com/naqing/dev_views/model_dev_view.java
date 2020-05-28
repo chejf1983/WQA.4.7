@@ -9,10 +9,18 @@ import android.os.Message;
 import com.naqing.control.fragment_control_dev;
 import com.naqing.wqa_android_ui_1.fragment_monitor_main;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+
 import nahon.comm.event.Event;
 import nahon.comm.event.EventListener;
+import wqa.control.DB.AlarmRecord;
 import wqa.control.common.DevControl;
 import wqa.control.common.SDisplayData;
+import wqa.control.data.IMainProcess;
+import wqa.system.WQAPlatform;
 
 public class model_dev_view {
     public DevControl control;
@@ -82,6 +90,8 @@ public class model_dev_view {
         }
     };
 
+
+    // <editor-fold desc="设置数据显示类型">
     public model_monitor_holder[] GetMonitors() {
         return this.monitors;
     }
@@ -95,7 +105,7 @@ public class model_dev_view {
             }
         }
     }
-
+    // </editor-fold>
 
     // <editor-fold desc="显示配置界面">
     public void showConfigActivity(Activity parentActivity) {

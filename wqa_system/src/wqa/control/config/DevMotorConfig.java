@@ -31,7 +31,7 @@ public class DevMotorConfig {
 
     public void SetMotoPara(SMotorParameter par) {
         try {
-            ((ShareIO) motorbean.GetIO()).Lock();
+            ((ShareIO) motorbean.GetDevInfo().io).Lock();
             if (par == null) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "入参不能为空");
                 return;
@@ -41,19 +41,19 @@ public class DevMotorConfig {
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "设置参数失败: ", ex);
         } finally {
-            ((ShareIO) motorbean.GetIO()).UnLock();
+            ((ShareIO) motorbean.GetDevInfo().io).UnLock();
         }
     }
 
     public void StartManual() {
         try {
-            ((ShareIO) motorbean.GetIO()).Lock();
+            ((ShareIO) motorbean.GetDevInfo().io).Lock();
             this.motorbean.StartManual();
             this.msg_instance.SetMessage("启动成功");
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "启动失败: ", ex);
         } finally {
-            ((ShareIO) motorbean.GetIO()).UnLock();
+            ((ShareIO) motorbean.GetDevInfo().io).UnLock();
         }
     }
 }

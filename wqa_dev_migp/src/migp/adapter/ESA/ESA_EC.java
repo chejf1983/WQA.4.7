@@ -20,8 +20,8 @@ import wqa.dev.intf.*;
  */
 public class ESA_EC extends ESADEV {
 
-    public ESA_EC(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public ESA_EC(SDevInfo devinfo) {
+        super(devinfo);
     }
 
     // <editor-fold defaultstate="collapsed" desc="NVPA">   

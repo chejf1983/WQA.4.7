@@ -40,13 +40,13 @@ public class DevConfigTable {
 
     public void InitConfigTable(){
         try {
-            ((ShareIO)dev.GetIO()).Lock();
+            ((ShareIO)dev.GetDevInfo().io).Lock();
             this.dev.InitDevice();
 //            this.msg_instance.UpdateConfigEvent.CreateEvent(null);
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {
-            ((ShareIO)dev.GetIO()).UnLock();
+            ((ShareIO)dev.GetDevInfo().io).UnLock();
         }
     }
 
@@ -65,7 +65,7 @@ public class DevConfigTable {
 
     public void SetConfigList(SConfigItem[] list) {
         try {
-            ((ShareIO)dev.GetIO()).Lock();
+            ((ShareIO)dev.GetDevInfo().io).Lock();
 
             ArrayList<SConfigItem> changelist = new ArrayList();
             for (int i = 0; i < list.length; i++) {
@@ -79,7 +79,7 @@ public class DevConfigTable {
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {
-            ((ShareIO)dev.GetIO()).UnLock();
+            ((ShareIO)dev.GetDevInfo().io).UnLock();
         }
     }
 

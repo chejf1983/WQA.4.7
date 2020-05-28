@@ -112,32 +112,26 @@ public class DevControlManager {
     }
 
     //添加新设备
-    private DevControl AddNewDevice(IDevice dev) {
+    public DevControl AddNewDevice(IDevice dev) {
         if (dev == null) {
             return null;
         }
 
-        try {
-            dev.InitDevice();
-            //避免重复添加
-            for (DevControl tmp : this.control_list) {
-                if (new DevID(dev.GetDevInfo().dev_type, dev.GetDevInfo().dev_addr, dev.GetDevInfo().serial_num).EqualsTo(tmp.GetDevID())) {
-                    //已经存在就不再搜索
-                    return null;
-                }
+        //避免重复添加
+        for (DevControl tmp : this.control_list) {
+            if (new DevID(dev.GetDevInfo().dev_type, dev.GetDevInfo().dev_addr, dev.GetDevInfo().serial_num).EqualsTo(tmp.GetDevID())) {
+                //已经存在就不再搜索
+                return null;
             }
-            //生成新控制器
-            DevControl newdev = new DevControl(dev);
-            this.control_list.add(newdev);
-            //超时表示没有搜索到设备
-            System.out.println("找到设备地址:" + dev.GetDevInfo().dev_addr);
-            //通知新设备添加，生成界面
-            StateChange.CreateEvent(DevControlManager.DevNumChange.ADD, newdev);
-            return newdev;
-        } catch (Exception ex) {
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, "设备初始化失败", ex);
-            return null;
         }
+        //生成新控制器
+        DevControl newdev = new DevControl(dev);
+        this.control_list.add(newdev);
+        //超时表示没有搜索到设备
+        System.out.println("找到设备地址:" + dev.GetDevInfo().dev_addr);
+        //通知新设备添加，生成界面
+        StateChange.CreateEvent(DevControlManager.DevNumChange.ADD, newdev);
+        return newdev;
     }
 
     //删除控制器

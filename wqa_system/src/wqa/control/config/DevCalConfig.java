@@ -87,7 +87,7 @@ public class DevCalConfig {
     public void CalParameter(String type, float[] oradata, float[] testdata) {
         LogNode condition = RecordCalLog(type, oradata, testdata);
         try {
-            ((ShareIO) calbean.GetIO()).Lock();
+            ((ShareIO) calbean.GetDevInfo().io).Lock();
             LogNode cal_ret = this.calbean.CalParameter(type, oradata, testdata);
             this.msg_instance.SetMessage("校准成功");
             this.msg_instance.PrintDevLog(condition, cal_ret);
@@ -95,7 +95,7 @@ public class DevCalConfig {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "校准失败", ex);
             this.msg_instance.PrintDevLog(condition, LogNode.CALFAIL());
         } finally {
-            ((ShareIO) calbean.GetIO()).UnLock();
+            ((ShareIO) calbean.GetDevInfo().io).UnLock();
         }
     }
     // </editor-fold>  
@@ -124,13 +124,13 @@ public class DevCalConfig {
         public void run() {
             while (isstart) {
                 try {
-                    ((ShareIO) calbean.GetIO()).Lock();
+                    ((ShareIO) calbean.GetDevInfo().io).Lock();
                     CalDataEvent.CreateEvent(CreateDisplayData(calbean.CollectData()));
                 } catch (Exception ex) {
                     LogCenter.Instance().SendFaultReport(Level.SEVERE, "采集失败", ex);
                     break;
                 } finally {
-                    ((ShareIO) calbean.GetIO()).UnLock();
+                    ((ShareIO) calbean.GetDevInfo().io).UnLock();
                 }
 
                 try {

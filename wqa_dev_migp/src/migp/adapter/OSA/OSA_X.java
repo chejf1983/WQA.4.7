@@ -23,8 +23,8 @@ import wqa.dev.intf.*;
  */
 public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
-    public OSA_X(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public OSA_X(SDevInfo devinfo) {
+        super(devinfo);
     }
 
     // <editor-fold defaultstate="collapsed" desc="寄存器"> 

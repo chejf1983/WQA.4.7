@@ -20,8 +20,8 @@ import wqa.dev.intf.*;
  */
 public class ESA_ORP extends ESADEV {
 
-    public ESA_ORP(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public ESA_ORP(SDevInfo devinfo) {
+        super(devinfo);
     }
 
     // <editor-fold defaultstate="collapsed" desc="寄存器列表"> 

@@ -37,18 +37,26 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     protected final BREG SDTEMPSWT = new BREG(0x42, 1, "手动温补开关"); //R/W
     protected final FREG SDTEMP = new FREG(0x43, 2, "手动温补值", 0, 60);//R/W
 
-    public AbsDevice(IMAbstractIO io, byte addr) {
-        this.base_drv = new ModeBusNode(io, addr);
+    public AbsDevice(SDevInfo info) {
+        this.base_drv = new ModeBusNode(info.io, (byte) info.dev_addr);
+        this.info = info;
     }
 
     @Override
     public void InitDevice() throws Exception {
         //获取eia信息
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SERIANUM, HWVER, SWVER, DEVADDR, BANDRANGEI, DEVTYPE);
+        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SERIANUM, HWVER, SWVER, BANDRANGEI, DEVTYPE);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SDTEMPSWT, SDTEMP);
 
+        //初始化连接信息
+        if (info.dev_type != this.DEVTYPE.GetValue()) {
+            throw new Exception("探头信息不匹配");
+        }
+        
+        //序列号可以替换，说明可以换一个同类型，同地址的探头
+        info.serial_num = this.SERIANUM.GetValue();
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
-        DEVADDR.SetValue((int) this.base_drv.GetCurrentAddr());
+        DEVADDR.SetValue((int) info.dev_addr);
         //波特率序号也根据IO信息来，设备读出来不准确
         MIOInfo comm_info = this.base_drv.GetIO().GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
@@ -63,11 +71,6 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口接口">
-    @Override
-    public IMAbstractIO GetIO() {
-        return this.base_drv.GetIO();
-    }
-
     @Override
     public int ReTestType() {
         try {
@@ -85,12 +88,6 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     @Override
     public SDevInfo GetDevInfo() {
-        //初始化连接信息
-        info.io = this.base_drv.GetIO();
-        info.dev_addr = this.DEVADDR.GetValue();
-        info.dev_type = this.DEVTYPE.GetValue();
-        info.serial_num = this.SERIANUM.GetValue();
-        info.protype = SDevInfo.ProType.MODEBUS;
         return info;
     }
 

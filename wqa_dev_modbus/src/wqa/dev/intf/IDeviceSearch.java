@@ -14,4 +14,5 @@ public interface IDeviceSearch {
     
     public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception;
 
+    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception;
 }

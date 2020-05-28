@@ -15,7 +15,6 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.control.data.DevID;
 import wqa.dev.intf.ICollect;
-import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.IDevice;
 import wqa.system.WQAPlatform;
 
@@ -103,7 +102,7 @@ public class DevControl {
 
     private void MainAction() {
         try {
-            ((ShareIO) device.GetIO()).Lock();
+            ((ShareIO) device.GetDevInfo().io).Lock();
             //连接状态下，获取数据
             if (GetState() == ControlState.CONNECT) {
                 if (!GetCollector().CollectData()) {
@@ -126,7 +125,7 @@ public class DevControl {
             ChangeState(ControlState.DISCONNECT);
             LogCenter.Instance().PrintLog(Level.SEVERE, ex);
         } finally {
-            ((ShareIO) device.GetIO()).UnLock();
+            ((ShareIO) device.GetDevInfo().io).UnLock();
         }
     }
 
@@ -162,7 +161,7 @@ public class DevControl {
         try {
             if (this.run_process == null) {
                 run_process = new Process();
-                this.ChangeState(ControlState.CONNECT);
+//                this.ChangeState(ControlState.CONNECT);
                 WQAPlatform.GetInstance().GetThreadPool().submit(run_process);
             }
         } finally {

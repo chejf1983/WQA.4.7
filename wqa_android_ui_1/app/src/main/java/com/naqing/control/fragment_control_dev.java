@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.naqing.common.ErrorExecutor;
@@ -45,7 +46,7 @@ public class fragment_control_dev extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_control_dev, container, false);
-        ListView dev_list = root.findViewById(R.id.cf_dev_list);
+        GridView dev_list = root.findViewById(R.id.cf_dev_list);
         dev_list.setAdapter(dev_contrl_adapter);
 
 
@@ -70,7 +71,9 @@ public class fragment_control_dev extends Fragment {
         /**添加视图*/
         model_dev_holder holder = new model_dev_holder(parent, control);
         dev_contrl_adapter.dev_holders.add(holder);
-        dev_contrl_adapter.notifyDataSetChanged();
+//        dev_contrl_adapter.notifyDataSetChanged();
+        GridView dev_list = root.findViewById(R.id.cf_dev_list);
+        dev_list.setAdapter(dev_contrl_adapter);
         return holder;
     }
 
@@ -79,7 +82,9 @@ public class fragment_control_dev extends Fragment {
         /**检查是否重复*/
         if(dev_contrl_adapter.dev_holders.contains(tmp_holder)){
             dev_contrl_adapter.dev_holders.remove(tmp_holder);
-            dev_contrl_adapter.notifyDataSetChanged();
+//            dev_contrl_adapter.notifyDataSetChanged();
+            GridView dev_list = root.findViewById(R.id.cf_dev_list);
+            dev_list.setAdapter(dev_contrl_adapter);
         }
     }
 

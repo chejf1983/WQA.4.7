@@ -21,8 +21,8 @@ import wqa.dev.intf.*;
  */
 public class ESA_PH extends ESADEV {
 
-    public ESA_PH(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public ESA_PH(SDevInfo devinfo) {
+        super(devinfo);
     }
 
     // <editor-fold defaultstate="collapsed" desc="内存表"> 

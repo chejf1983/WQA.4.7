@@ -84,6 +84,9 @@ public class activity_dev_config extends AppCompatActivity {
         /** 创建电机控制界面*/
         this.initMotoTable(configbean.GetMotorConfig());
 
+        /** 创建报警信息界面*/
+        initAlarm(dev_view);
+
         /** 创建显示控制界面*/
         initViewSet(dev_view);
     }
@@ -129,24 +132,6 @@ public class activity_dev_config extends AppCompatActivity {
         });
     }
 
-    /**初始化显示设置界面*/
-    private void initViewSet(model_dev_view config){
-        if(config == null){
-            return;
-        }
-
-        RadioButton button = initButton("显示设置");
-        fragement_dev_viewset table = new fragement_dev_viewset(config);
-        fragments.add(table);
-        button.setOnCheckedChangeListener((CompoundButton var1, boolean checked)->{
-            FragmentTransaction fragmentTransaction = activity_dev_config.this.getSupportFragmentManager().beginTransaction();
-            if(checked) {
-                table.reset_calconfig(config);
-                fragmentTransaction.replace(R.id.fragment_dev_config_area, table).commit();
-            }
-        });
-    }
-
     /**初始化电机控制界面*/
     private void initMotoTable(DevMotorConfig config){
         if(config == null){
@@ -164,6 +149,43 @@ public class activity_dev_config extends AppCompatActivity {
             }
         });
     }
+
+    /**初始化报警信息界面*/
+    private void initAlarm(model_dev_view config){
+        if(config == null){
+            return;
+        }
+
+        RadioButton button = initButton("报警信息");
+        fragment_dev_alarm table = new fragment_dev_alarm(config);
+        fragments.add(table);
+        button.setOnCheckedChangeListener((CompoundButton var1, boolean checked)->{
+            FragmentTransaction fragmentTransaction = activity_dev_config.this.getSupportFragmentManager().beginTransaction();
+            if(checked) {
+                table.reset_calconfig(config);
+                fragmentTransaction.replace(R.id.fragment_dev_config_area, table).commit();
+            }
+        });
+    }
+
+    /**初始化显示设置界面*/
+    private void initViewSet(model_dev_view config){
+        if(config == null){
+            return;
+        }
+
+        RadioButton button = initButton("显示设置");
+        fragment_dev_viewset table = new fragment_dev_viewset(config);
+        fragments.add(table);
+        button.setOnCheckedChangeListener((CompoundButton var1, boolean checked)->{
+            FragmentTransaction fragmentTransaction = activity_dev_config.this.getSupportFragmentManager().beginTransaction();
+            if(checked) {
+                table.reset_calconfig(config);
+                fragmentTransaction.replace(R.id.fragment_dev_config_area, table).commit();
+            }
+        });
+    }
+
     // </editor-fold>
 
     /**初始化列表按钮*/

@@ -19,12 +19,12 @@ import com.naqing.common.IosAlertDialog;
 import com.naqing.common.TableElement;
 import com.naqing.wqa_android_ui_1.R;
 
-public class fragement_dev_viewset extends Fragment {
+public class fragment_dev_viewset extends Fragment {
     private model_dev_view config_table;
     private View root;
     private Activity parent;
 
-    public fragement_dev_viewset(model_dev_view config_table) {
+    public fragment_dev_viewset(model_dev_view config_table) {
         this.config_table = config_table;
     }
 

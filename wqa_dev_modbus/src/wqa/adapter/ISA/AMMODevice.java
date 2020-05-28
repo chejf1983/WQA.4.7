@@ -35,8 +35,8 @@ public class AMMODevice extends AbsDevice {
     public final FREG CLTEMP = new FREG(0x3A, 2, "温度定标参数");    //R/W
     public final IREG CLTEMPSTART = new IREG(0x3C, 1, "启动温度定标");//R/W
 
-    public AMMODevice(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public AMMODevice(SDevInfo info) {
+        super(info);
     }
 
     // <editor-fold defaultstate="collapsed" desc="采集控制"> 

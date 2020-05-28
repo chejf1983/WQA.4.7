@@ -70,19 +70,19 @@ public class fragment_monitor_main extends Fragment {
                 return;
             }
         }
-        System.out.println("add" + monitor.data_name);
         monitorHolderAdapter.dev_holders.add(monitor);
         dev_screen.setNumColumns(monitorHolderAdapter.dev_holders.size() > 4 ? 4 : monitorHolderAdapter.dev_holders.size());
-        monitorHolderAdapter.notifyDataSetChanged();
+        dev_screen = root.findViewById(R.id.monitor_main_list);
+        dev_screen.setAdapter(monitorHolderAdapter);
     }
 
     public void DelDevice(model_monitor_holder monitor) {
         for (model_monitor_holder holder : monitorHolderAdapter.dev_holders) {
             if(monitor == holder) {
-                System.out.println("del" + monitor.data_name);
                 monitorHolderAdapter.dev_holders.remove(holder);
                 dev_screen.setNumColumns(monitorHolderAdapter.dev_holders.size() > 4 ? 4 : monitorHolderAdapter.dev_holders.size());
-                monitorHolderAdapter.notifyDataSetChanged();
+                dev_screen = root.findViewById(R.id.monitor_main_list);
+                dev_screen.setAdapter(monitorHolderAdapter);
                 return;
             }
         }

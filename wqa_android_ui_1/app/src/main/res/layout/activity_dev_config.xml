@@ -53,7 +53,7 @@
                 android:id="@+id/dev_config_rbgroup"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2.5"
+                android:layout_weight="2"
                 android:orientation="vertical"
                 android:weightSum="6"></RadioGroup>
 
@@ -61,7 +61,7 @@
                 android:id="@+id/fragment_dev_config_area"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="7.5" />
+                android:layout_weight="8" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

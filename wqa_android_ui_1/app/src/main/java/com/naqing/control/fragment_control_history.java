@@ -107,9 +107,10 @@ public class fragment_control_history extends Fragment {
                 int index = Integer.valueOf(((TextView) tview).getText().toString().substring(0, 1));
                 if (index == 1) {
                     try {
+                        /** 删除探头数据*/
                         WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().DeleteTable(dev_lists[select_dev]);
-                        if (WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB() != null)
-                            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().DeleteAlarm(dev_lists[select_dev]);
+//                        if (WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB() != null)
+//                            WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().DeleteAlarm(dev_lists[select_dev]);
 
                         initDevList();
                     } catch (Exception ex) {
@@ -307,6 +308,7 @@ public class fragment_control_history extends Fragment {
         Future<?> submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             try {
                 WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().DeleteTable(devid, time);
+//                WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().DeleteAlarm(devid, time);
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, ex.getMessage());
             } finally {
@@ -369,7 +371,7 @@ public class fragment_control_history extends Fragment {
         leftYAxis.setTextColor(Color.WHITE);
         leftYAxis.setTextSize(18f);
         //保证Y轴从0开始，不然会上移一点
-        leftYAxis.setAxisMinimum(0f);
+//        leftYAxis.setAxisMinimum(0f);
 
         rightYaxis = lineChart.getAxisRight();
         rightYaxis.setEnabled(false);

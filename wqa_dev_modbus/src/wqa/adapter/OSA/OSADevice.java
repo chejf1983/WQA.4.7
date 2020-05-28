@@ -13,6 +13,7 @@ import wqa.adapter.factory.CDevDataTable;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.CollectData;
+import wqa.dev.data.SDevInfo;
 import wqa.dev.data.SMotorParameter;
 import wqa.dev.data.SMotorParameter.CleanMode;
 import wqa.dev.intf.*;
@@ -44,8 +45,8 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
     private final IREG RANGNUM = new IREG(0x50, 1, "量程个数"); //R
     private final FREG[] RANGN = new FREG[]{new FREG(0x51, 2, "量程1"), new FREG(0x53, 2, "量程2"), new FREG(0x55, 2, "量程3"), new FREG(0x57, 2, "量程4")}; //R
 
-    public OSADevice(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public OSADevice(SDevInfo info) {
+        super(info);
     }
 
     @Override

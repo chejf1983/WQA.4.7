@@ -19,6 +19,7 @@ import wqa.adapter.ESA.ECDevice;
 import wqa.adapter.ESA.PHDevice;
 import wqa.adapter.ISA.AMMODevice;
 import wqa.adapter.OSA.OSADevice;
+import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.*;
 
 /**
@@ -58,13 +59,20 @@ public class ModBusDevFactory implements IDeviceSearch {
     }
 
     //创建设备
-    private IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
+    @Override
+    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
             Class stu = Class.forName(class_name);
-            Constructor constructor = stu.getConstructor(IMAbstractIO.class, byte.class);
-            return (IDevice) constructor.newInstance(io, addr);
+            Constructor constructor = stu.getConstructor(SDevInfo.class);
+            SDevInfo devinfo = new SDevInfo();
+            devinfo.io = io;
+            devinfo.dev_addr = addr;
+            devinfo.dev_type = DevType;
+            devinfo.protype = SDevInfo.ProType.MODEBUS;
+            devinfo.serial_num = "";
+            return (IDevice) constructor.newInstance(devinfo);
         } else {
             if (DevType != -1) {
                 System.out.println(String.format("无法识别设备类型:0x%04X", DevType));

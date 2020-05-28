@@ -81,9 +81,9 @@ public class fragment_dev_config_table extends Fragment {
 
         /** 添加行*/
         configItems = config_table.GetConfigList();
+        /** 设置行高*/
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
         for (int i = 0; i < configItems.length; i++) {
-            /** 设置行高*/
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
             View view = TableElement.CreateLine(parent, configItems[i]);
             if (i % 2 == 0) {
                 /** 偶数层替换背景*/

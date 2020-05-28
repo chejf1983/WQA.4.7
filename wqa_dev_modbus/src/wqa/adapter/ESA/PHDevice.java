@@ -29,8 +29,8 @@ public class PHDevice extends AbsDevice {
     private final FREG CLTEMPER = new FREG(0x3A, 2, "");    //R/W
     private final IREG CLTEMPERSTART = new IREG(0x3C, 1, "");//R/W
 
-    public PHDevice(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public PHDevice(SDevInfo info) {
+        super(info);
     }
 
     // <editor-fold defaultstate="collapsed" desc="采集接口"> 

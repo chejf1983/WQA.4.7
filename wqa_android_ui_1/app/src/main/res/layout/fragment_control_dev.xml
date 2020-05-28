@@ -12,28 +12,29 @@
         android:orientation="vertical"
         android:weightSum="10">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:layout_weight="8.5">
-            <ListView
+
+            <GridView
                 android:id="@+id/cf_dev_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:dividerHeight="20dp"
-                android:orientation="vertical">
-            </ListView>
-        </ScrollView>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numColumns="1"
+                android:stretchMode="columnWidth"></GridView>
+        </LinearLayout>
+
         <Button
             android:id="@+id/control_dev_search"
             style="@style/common_button_style"
             android:layout_width="wrap_content"
-            android:layout_margin="5dp"
             android:layout_height="0dp"
             android:layout_gravity="center"
+            android:layout_margin="5dp"
             android:layout_weight="1.5"
-            android:text="搜索设备"/>
+            android:text="搜索设备" />
     </LinearLayout>
 
 </FrameLayout>

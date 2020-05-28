@@ -23,7 +23,6 @@ import wqa.dev.data.*;
 public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     protected MIGP_CmdSend base_drv;
-    private final IMAbstractIO local_io;
     public static int DEF_TIMEOUT = 400; //ms
     public static int DEF_RETRY = 3;
 
@@ -31,17 +30,12 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     MIGPEia eiainfo = new MIGPEia(this.base_drv);
     public final IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");  //R  
 
-    public AbsDevice(IMAbstractIO io, byte addr) {
-        this.base_drv = new MIGP_CmdSend(MIGPDevFactory.Convert(io), (byte) 0xF0, addr);
-        this.local_io = io;
+    public AbsDevice(SDevInfo devinfo) {
+        this.base_drv = new MIGP_CmdSend(MIGPDevFactory.Convert(devinfo.io), (byte) 0xF0, (byte) devinfo.dev_addr);
+        this.info = devinfo;
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">
-    @Override
-    public IMAbstractIO GetIO() {
-        return this.local_io;
-    }
-
     //初始化设备
     @Override
     public void InitDevice() throws Exception {
@@ -49,7 +43,11 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         this.ReadMEG(VDEVTYPE);
         this.ReadMEG(eiainfo.EBUILDDATE, eiainfo.EBUILDSER, eiainfo.EDEVNAME, eiainfo.EHWVER, eiainfo.ESWVER);
 
-        MIOInfo comm_info = this.local_io.GetIOInfo();
+        if (info.dev_type != this.VDEVTYPE.GetValue()) {
+            throw new Exception("探头信息不匹配");
+        }
+        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
+        MIOInfo comm_info = this.info.io.GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
             //串口的情况下，参数1表示波特率
             String sbandrate = comm_info.par[1];
@@ -71,17 +69,12 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         return MIGPDevFactory.SearchDevType(this.base_drv);
     }
 
+    //初始化连接信息
+    private SDevInfo info = new SDevInfo();
+
     //获取连接信息
     @Override
     public SDevInfo GetDevInfo() {
-        //初始化连接信息
-        SDevInfo info = new SDevInfo();
-        info.io = this.local_io;
-        info.dev_addr = this.base_drv.GetDstAddr();
-        info.dev_type = this.VDEVTYPE.GetValue();
-        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
-//        info.dev_id = new DevID(this.VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
-        info.protype = SDevInfo.ProType.MIGP;
         return info;
     }
 
@@ -209,7 +202,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         }
 
         if (devaddr != this.base_drv.GetDstAddr()) {
-            MIGP_CmdSend base = new MIGP_CmdSend(MIGPDevFactory.Convert(this.local_io), (byte) 0xF0, (byte) devaddr);
+            MIGP_CmdSend base = new MIGP_CmdSend(MIGPDevFactory.Convert(this.info.io), (byte) 0xF0, (byte) devaddr);
             VPA devtype = new VPA(0x00, 2);
             try {
                 base.GetMEM(devtype, devtype.length, DEF_RETRY, DEF_TIMEOUT);

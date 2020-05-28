@@ -44,7 +44,7 @@ public class ADBHelper implements IJDBHelper {
     }
 
     @Override
-    public IAlarmHelper GetAlarmDB() { return null; }
+    public IAlarmHelper GetAlarmDB() { return aAlarmDB; }
 
     @Override
     public IDataHelper GetDataDB() {

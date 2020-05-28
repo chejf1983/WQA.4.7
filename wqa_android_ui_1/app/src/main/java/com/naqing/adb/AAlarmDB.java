@@ -81,7 +81,7 @@ public class AAlarmDB implements IAlarmHelper {
         db_instance.dbLock.lock();
         try (SQLiteDatabase db = db_instance.getWritableDatabase()) {
             String DEL_DATA_SQL = "delete from " + AlarmTable
-                    + " where " + DevInfo_Key + " = " + devID.toString();
+                    + " where " + DevInfo_Key + " = '" + devID.toString() + "'";
             db.execSQL(DEL_DATA_SQL);
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "删除异常", ex);
@@ -99,8 +99,8 @@ public class AAlarmDB implements IAlarmHelper {
         db_instance.dbLock.lock();
         try (SQLiteDatabase db = db_instance.getWritableDatabase()) {
             String DEL_DATA_SQL = "delete from " + AlarmTable
-                    + " where " + DevInfo_Key + " = " + devID.toString() +
-                    " and " + Time_Key + " <= " + beforetime.getTime();
+                    + " where " + DevInfo_Key + " = '" + devID.toString() +
+                    "' and " + Time_Key + " <= " + beforetime.getTime();
             db.execSQL(DEL_DATA_SQL);
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "删除异常", ex);
@@ -137,8 +137,8 @@ public class AAlarmDB implements IAlarmHelper {
         }
 
         String sql = "select * from "
-                + AlarmTable + " where " + DevInfo_Key + " = " + dev_key.toString() //数据类型
-                + " and " + Time_Key + " <= ?";             //截至时间，为空就是当前时间
+                + AlarmTable + " where " + DevInfo_Key + " = '" + dev_key.toString() //数据类型
+                + "' and " + Time_Key + " <= ?";             //截至时间，为空就是当前时间
 
         if (startTime != null) {
             sql += " and " + Time_Key + " >= ?";            //其始时间

@@ -18,25 +18,26 @@ public class ADBFix implements IDBFix {
         this.parent = parent;
     }
 
-
-    public void DeleteData(DevID id) {
-        try {
-            this.parent.GetDataDB().DeleteTable(id);
-        } catch (Exception e) {
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, "数据删除失败" + e.getMessage());
-        }
-
-        try {
-            if (this.parent.GetAlarmDB() != null) {
-                this.parent.GetAlarmDB().DeleteAlarm(id);
-            }
-        } catch (Exception e) {
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, "报警信息删除失败" + e.getMessage());
-        }
-    }
+//    public void DeleteData(DevID id) {
+//        try {
+//            this.parent.GetDataDB().DeleteTable(id);
+//        } catch (Exception e) {
+//            LogCenter.Instance().SendFaultReport(Level.SEVERE, "数据删除失败" + e.getMessage());
+//        }
+//
+//        try {
+//            if (this.parent.GetAlarmDB() != null) {
+//                this.parent.GetAlarmDB().DeleteAlarm(id);
+//            }
+//        } catch (Exception e) {
+//            LogCenter.Instance().SendFaultReport(Level.SEVERE, "报警信息删除失败" + e.getMessage());
+//        }
+//    }
 
     @Override
     public void DeleteData(Date date, IMainProcess iMainProcess) {
+//
+
 
     }
 

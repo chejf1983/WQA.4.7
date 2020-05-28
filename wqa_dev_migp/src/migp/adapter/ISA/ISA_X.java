@@ -22,8 +22,8 @@ import wqa.dev.intf.*;
  */
 public class ISA_X extends AbsDevice {
 
-    public ISA_X(IMAbstractIO io, byte addr) {
-        super(io, addr);
+    public ISA_X(SDevInfo devinfo) {
+        super(devinfo);
 
         this.enablelist.put(0x0300, new String[]{"K+对氨离子", "", "", ""});
         this.enablelist.put(0x0301, new String[]{"K+对氨离子", "氨离子对K+", "", ""});
