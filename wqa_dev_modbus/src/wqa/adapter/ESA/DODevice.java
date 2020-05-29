@@ -102,7 +102,7 @@ public class DODevice extends AbsDevice {
 
         disdata.alarm = ALARM.GetValue();
         int tmptype = 0;
-        if ((this.DEVTYPE.GetValue() & 0xFF) == 0x10) {
+        if ((this.GetDevInfo().dev_type & 0xFF) == 0x10) {
             tmptype = CErrorTable.OSA_E;
         } else {
             tmptype = CErrorTable.ESA_E;

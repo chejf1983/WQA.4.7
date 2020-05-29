@@ -57,10 +57,10 @@ public class EOSA_DO extends ESADEV {
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
-        this.ReadMEG(VVATOKEN);
-        if (this.VVATOKEN.GetValue() > 0) {
-            this.VDEVTYPE.SetValue(this.VDEVTYPE.GetValue() + 0xA000);
-        }
+//        this.ReadMEG(VVATOKEN);
+//        if (this.VVATOKEN.GetValue() > 0) {
+//            this.VDEVTYPE.SetValue(this.VDEVTYPE.GetValue() + 0xA000);
+//        }
         this.ReadMEG(NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPG, NPTEMPER, NAVR, NDO100, NDO0);
     }
 
@@ -166,7 +166,7 @@ public class EOSA_DO extends ESADEV {
         }
 
         disdata.alarm = MALARM.GetValue(); //报警信息
-        String info = CErrorTable.GetInstance().GetErrorString(((this.VDEVTYPE.GetValue() & DMask) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

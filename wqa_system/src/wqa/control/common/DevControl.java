@@ -60,11 +60,11 @@ public class DevControl {
         this.device = device;
     }
 
-    public DevID GetDevID(){
+    public DevID GetDevID() {
         return new DevID(device.GetDevInfo().dev_type, device.GetDevInfo().dev_addr, device.GetDevInfo().serial_num);
     }
-    
-    public String GetProType(){
+
+    public String GetProType() {
         return this.device.GetDevInfo().protype.toString();
     }
 
@@ -77,14 +77,12 @@ public class DevControl {
     // <editor-fold defaultstate="collapsed" desc="动作"> 
     private void KeepAlive() throws Exception {
         //其他状态下，开心跳检查重连设备
-        for (int i = 0; i < 2; i++) {
-            if (ReConnect()) {
-                if (GetState() == ControlState.DISCONNECT) {
-                    device.InitDevice();
-                    ChangeState(ControlState.CONNECT);
-                }
-                return;
+        if (ReConnect()) {
+            if (GetState() == ControlState.DISCONNECT) {
+                device.InitDevice();
+                ChangeState(ControlState.CONNECT);
             }
+            return;
         }
         //心跳包多一次检查
         ChangeState(ControlState.DISCONNECT);
@@ -92,12 +90,7 @@ public class DevControl {
     }
 
     public boolean ReConnect() {
-        try {
-            int devtype = this.device.ReTestType();
-            return this.device.GetDevInfo().dev_type == devtype;
-        } catch (Exception ex) {
-            return false;
-        }
+        return this.device.ReTestType();
     }
 
     private void MainAction() {
@@ -108,17 +101,13 @@ public class DevControl {
                 if (!GetCollector().CollectData()) {
                     ChangeState(ControlState.DISCONNECT);
                 }
-            }
-            if (GetState() == ControlState.ALARM) {
+            } else if (GetState() == ControlState.ALARM) {
                 if (!GetCollector().CollectData()) {
                     ChangeState(ControlState.DISCONNECT);
                 }
-            }
-
-            if (GetState() == ControlState.DISCONNECT) {
+            } else if (GetState() == ControlState.DISCONNECT) {
                 KeepAlive();
-            }
-            if (GetState() == ControlState.CONFIG) {
+            } else if (GetState() == ControlState.CONFIG) {
                 KeepAlive();
             }
         } catch (Exception ex) {
@@ -199,7 +188,7 @@ public class DevControl {
                     this.configmodel.GetDevCalConfig().SetStartGetData(false);
                 }
                 this.configmodel.CloseEvent.CreateEvent(null);
-                
+
                 if (this.GetState() == DevControl.ControlState.CONFIG) {
                     this.ChangeState(DevControl.ControlState.CONNECT);
                 }

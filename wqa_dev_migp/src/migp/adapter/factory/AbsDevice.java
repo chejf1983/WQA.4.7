@@ -7,6 +7,7 @@ package migp.adapter.factory;
 
 import base.migp.impl.MIGPBoot;
 import base.migp.impl.MIGPEia;
+import base.migp.mem.EIA;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.*;
@@ -28,7 +29,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     public static int DMask = 0xFF00;
     MIGPEia eiainfo = new MIGPEia(this.base_drv);
-    public final IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");  //R  
+//    public final IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");  //R  
 
     public AbsDevice(SDevInfo devinfo) {
         this.base_drv = new MIGP_CmdSend(MIGPDevFactory.Convert(devinfo.io), (byte) 0xF0, (byte) devinfo.dev_addr);
@@ -40,13 +41,13 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     @Override
     public void InitDevice() throws Exception {
         //获取eia信息
-        this.ReadMEG(VDEVTYPE);
+//        this.ReadMEG(VDEVTYPE);
         this.ReadMEG(eiainfo.EBUILDDATE, eiainfo.EBUILDSER, eiainfo.EDEVNAME, eiainfo.EHWVER, eiainfo.ESWVER);
 
-        if (info.dev_type != this.VDEVTYPE.GetValue()) {
-            throw new Exception("探头信息不匹配");
-        }
-        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
+//        if (info.dev_type != this.this.GetDevInfo().dev_type) {
+//            throw new Exception("探头信息不匹配");
+//        }
+//        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
         MIOInfo comm_info = this.info.io.GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
             //串口的情况下，参数1表示波特率
@@ -65,8 +66,27 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     //获取设备类型
     @Override
-    public int ReTestType() {
-        return MIGPDevFactory.SearchDevType(this.base_drv);
+    public boolean ReTestType() {
+        IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
+        IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
+        SMEG EBUILDSER = new SMEG(new EIA(0x20, 0x10), "序列号");
+//        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
+//        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
+        try {
+            this.base_drv.ReadMEG(1, 200, VDEVTYPE);
+            base_drv.ReadMEG(1, 200, EBUILDSER);
+            //创建一个基础协议包
+            if (VDEVTYPE.GetValue() == 0x110 || VDEVTYPE.GetValue() == 0x210) {
+                base_drv.ReadMEG(1, 200, VDOATOKEN);
+                if (VDOATOKEN.GetValue() > 0) {
+                    VDEVTYPE.SetValue(VDEVTYPE.GetValue() + 0xA000);
+                }
+            }
+            return VDEVTYPE.GetValue() == this.info.dev_type && EBUILDSER.GetValue().contentEquals(info.serial_num);
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return false;
+        }
     }
 
     //初始化连接信息
@@ -82,7 +102,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     @Override
     public DataInfo[] GetCalDataList() {
         ArrayList<DataInfo> list = new ArrayList();
-        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.VDEVTYPE.GetValue()).data_list;
+        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list;
 //        int[] data_cal_num = new int[data_list.length];
         for (int i = 0; i < data_list.length; i++) {
             if (data_list[i].cal_num > 0) {
@@ -96,7 +116,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     // <editor-fold defaultstate="collapsed" desc="内部接口">
     //只返回不同测量类型的数据(没有原始值这个标志的数据)
     protected String[] GetDataNames() {
-        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.VDEVTYPE.GetValue()).data_list;
+        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list;
         ArrayList<String> data_names = new ArrayList();
         for (DataInfo data_list1 : data_list) {
             if (!data_list1.data_name.endsWith(CDevDataTable.ORA_Flag)) {
@@ -107,7 +127,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     }
 
     protected CollectData BuildDisplayData() {
-        CollectData disdata = new CollectData(VDEVTYPE.GetValue(), this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
+        CollectData disdata = new CollectData(this.GetDevInfo().dev_type, this.base_drv.GetDstAddr(), this.eiainfo.EBUILDSER.GetValue());
 
         return disdata;
     }
@@ -131,7 +151,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         list.add(SConfigItem.CreateRWItem(eiainfo.EBUILDDATE.toString(), eiainfo.EBUILDDATE.GetValue(), ""));
         list.add(SConfigItem.CreateRItem(eiainfo.ESWVER.toString(), eiainfo.ESWVER.GetValue(), ""));
         list.add(SConfigItem.CreateRItem(eiainfo.EHWVER.toString(), eiainfo.EHWVER.GetValue(), ""));
-        list.add(SConfigItem.CreateRItem(VDEVTYPE.toString(), String.format("0X%04X", this.VDEVTYPE.GetValue()), ""));
+        list.add(SConfigItem.CreateRItem("设备类型", String.format("0X%04X", this.GetDevInfo().dev_type), ""));
         return list;
     }
 

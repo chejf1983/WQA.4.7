@@ -5,8 +5,11 @@
  */
 package migp.adapter.factory;
 
+import base.migp.mem.EIA;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
+import base.migp.reg.IMEG;
+import base.migp.reg.SMEG;
 import base.pro.absractio.AbstractIO;
 import base.pro.absractio.IOInfo;
 import base.pro.convert.NahonConvert;
@@ -52,7 +55,7 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x1201, ESA_ORP.class.getName());
         class_map.put(0x1202, ESA_EC.class.getName());
         class_map.put(0x1203, EOSA_DO.class.getName());
-        
+
         class_map.put(0x0100, OSA_X.class.getName());
         class_map.put(0x0102, OSA_X.class.getName());
         class_map.put(0x0104, OSA_X.class.getName());
@@ -103,12 +106,31 @@ public class MIGPDevFactory implements IDeviceSearch {
         MIGP_CmdSend base = new MIGP_CmdSend(Convert(io), (byte) 0xF0, addr);
         //搜索设备基本信息，根据基本信息创建虚拟设备
 //        return null;
-        return this.BuildDevice(io, (byte) addr, SearchDevType(base));
+        IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
+        IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
+        SMEG EBUILDSER = new SMEG(new EIA(0x20, 0x10), "序列号");
+//        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
+//        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
+        try {
+            base.ReadMEG(1, 200, VDEVTYPE);
+            base.ReadMEG(1, 200, EBUILDSER);
+            //创建一个基础协议包
+            if (VDEVTYPE.GetValue() == 0x110 || VDEVTYPE.GetValue() == 0x210) {
+                base.ReadMEG(1, 200, VDOATOKEN);
+                if (VDOATOKEN.GetValue() > 0) {
+                    VDEVTYPE.SetValue(VDEVTYPE.GetValue() + 0xA000);
+                }
+            }
+            return this.BuildDevice(io, (byte) addr, VDEVTYPE.GetValue(), EBUILDSER.GetValue());
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return null;
+        }
     }
 
     //创建设备
     @Override
-    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
+    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType, String SerialNum) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
@@ -120,7 +142,7 @@ public class MIGPDevFactory implements IDeviceSearch {
             devinfo.dev_addr = addr;
             devinfo.dev_type = DevType;
             devinfo.protype = SDevInfo.ProType.MODEBUS;
-            devinfo.serial_num = "";
+            devinfo.serial_num = SerialNum;
             return (IDevice) constructor.newInstance(devinfo);
         } else {
             //没有找到设备类，返回空
@@ -130,30 +152,6 @@ public class MIGPDevFactory implements IDeviceSearch {
             }
             //System.out.println(String.format("0x%04X", DevType));
             return null;
-        }
-    }
-
-    //获取设备类型函数
-    public static int SearchDevType(MIGP_CmdSend sender) {
-        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
-        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
-        try {
-            //创建一个基础协议包
-            byte[] ret = sender.GetMEM(VPA00, VPA00.length, 1, 200);
-
-            //搜索设备基本信息，根据基本信息创建虚拟设备
-            int devtype = NahonConvert.ByteArrayToUShort(ret, 0);
-            //检查是否是A版本的溶解氧
-            if (devtype == 0x110 || devtype == 0x210) {
-                ret = sender.GetMEM(VPA20, VPA20.length, DEF_RETRY, DEF_TIMEOUT);
-                if (NahonConvert.ByteArrayToUShort(ret, 0) > 0) {
-                    devtype = devtype + 0xA000;
-                }
-            }
-            return devtype;
-        } catch (Exception ex) {
-            System.out.println(ex);
-            return -1;
         }
     }
 

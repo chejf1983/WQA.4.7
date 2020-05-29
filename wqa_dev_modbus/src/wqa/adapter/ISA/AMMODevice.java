@@ -53,7 +53,7 @@ public class AMMODevice extends AbsDevice {
         disdata.datas[2].mainData = NahonConvert.TimData(NH4.GetValue(), 2);
         disdata.datas[3].mainData = NahonConvert.TimData(ONH4.GetValue(), 2);
 
-        if (this.DEVTYPE.GetValue() == 0x0301) {
+        if (this.GetDevInfo().dev_type == 0x0301) {
             disdata.datas[4].mainData = NahonConvert.TimData(K.GetValue(), 2);
             disdata.datas[5].mainData = NahonConvert.TimData(OK.GetValue(), 2);
         }
@@ -62,7 +62,7 @@ public class AMMODevice extends AbsDevice {
         disdata.datas[disdata.datas.length - 1].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
 
         disdata.alarm = ALARM.GetValue();
-        String info = CErrorTable.GetInstance().GetErrorString(((this.DEVTYPE.GetValue() & 0xFF00) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & 0xFF00) << 8) | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

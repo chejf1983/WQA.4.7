@@ -31,7 +31,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     protected final SREG SWVER = new SREG(0x21, 2, "软件版本");//R
     protected final IREG DEVADDR = new IREG(0x23, 1, "设备地址", 1, 32);//R/W
     protected final IREG BANDRANGEI = new IREG(0x24, 1, "波特率", 0, SBandRate.length - 1);//R/W
-    protected final IREG DEVTYPE = new IREG(0x25, 1, "设备类型");//R
+//    protected final IREG DEVTYPE = new IREG(0x25, 1, "设备类型");//R
 
     protected final FREG OTEMPER = new FREG(0x40, 2, "温度原始值");//R 
     protected final BREG SDTEMPSWT = new BREG(0x42, 1, "手动温补开关"); //R/W
@@ -45,16 +45,9 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     @Override
     public void InitDevice() throws Exception {
         //获取eia信息
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SERIANUM, HWVER, SWVER, BANDRANGEI, DEVTYPE);
+        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SERIANUM, HWVER, SWVER, BANDRANGEI);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SDTEMPSWT, SDTEMP);
 
-        //初始化连接信息
-        if (info.dev_type != this.DEVTYPE.GetValue()) {
-            throw new Exception("探头信息不匹配");
-        }
-        
-        //序列号可以替换，说明可以换一个同类型，同地址的探头
-        info.serial_num = this.SERIANUM.GetValue();
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
         DEVADDR.SetValue((int) info.dev_addr);
         //波特率序号也根据IO信息来，设备读出来不准确
@@ -72,16 +65,18 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     // <editor-fold defaultstate="collapsed" desc="公共接口接口">
     @Override
-    public int ReTestType() {
+    public boolean ReTestType() {
         try {
             //读设备类型寄存器
             IREG TDEVTYPE = new IREG(0x25, 1, "设备类型");
+            SREG SERIANUM = new SREG(0x18, 8, "序列号");//R
             this.base_drv.ReadREG(1, DEF_TIMEOUT, TDEVTYPE);
+            this.base_drv.ReadREG(1, DEF_TIMEOUT, SERIANUM);
 //            this.base_drv.ReadMemory(DEF_TIMEOUT, RETRY_TIME, RETRY_TIME, DEF_TIMEOUT)
             //返回值
-            return TDEVTYPE.GetValue();
+            return TDEVTYPE.GetValue() == this.info.dev_type && SERIANUM.GetValue().contentEquals(this.info.serial_num);
         } catch (Exception ex) {
-            return -1;
+            return false;
         }
     }
     private SDevInfo info = new SDevInfo();
@@ -93,7 +88,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     //只返回不同测量类型的数据(没有原始值这个标志的数据)
     public String[] GetDataNames() {
-        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.DEVTYPE.GetValue()).data_list;
+        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list;
         ArrayList<String> data_names = new ArrayList();
         for (int i = 0; i < data_list.length; i++) {
             if (!data_list[i].data_name.endsWith(CDevDataTable.ORA_Flag)) {
@@ -106,7 +101,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     @Override
     public DataInfo[] GetCalDataList() {
         ArrayList<DataInfo> list = new ArrayList();
-        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.DEVTYPE.GetValue()).data_list;
+        DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list;
 //        int[] data_cal_num = new int[data_list.length];
         for (int i = 0; i < data_list.length; i++) {
             if (data_list[i].cal_num > 0) {
@@ -117,18 +112,18 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     }
 
     public CollectData BuildDisplayData() {
-        return new CollectData(this.DEVTYPE.GetValue(), this.DEVADDR.GetValue(), this.SERIANUM.GetValue());
+        return new CollectData(this.GetDevInfo().dev_type, this.DEVADDR.GetValue(), this.SERIANUM.GetValue());
     }
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="设备信息接口"> 
     public ArrayList<SConfigItem> GetInfoList() {
         ArrayList<SConfigItem> list = new ArrayList();
-        list.add(SConfigItem.CreateRItem(DEVNAME.toString(), CDevDataTable.GetInstance().namemap.get(DEVTYPE.GetValue()).dev_name_ch, ""));
+        list.add(SConfigItem.CreateRItem(DEVNAME.toString(), CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).dev_name_ch, ""));
         list.add(SConfigItem.CreateRItem(SERIANUM.toString(), SERIANUM.GetValue(), ""));
         list.add(SConfigItem.CreateRItem(SWVER.toString(), SWVER.GetValue(), ""));
         list.add(SConfigItem.CreateRItem(HWVER.toString(), HWVER.GetValue(), ""));
-        list.add(SConfigItem.CreateRItem(DEVTYPE.toString(), String.format("0X%04X", DEVTYPE.GetValue()), ""));
+        list.add(SConfigItem.CreateRItem("设备类型", String.format("0X%04X", this.GetDevInfo().dev_type), ""));
         return list;
     }
 

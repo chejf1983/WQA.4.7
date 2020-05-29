@@ -81,7 +81,7 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
             }
             return ret;
         } else {
-            return CDevDataTable.GetInstance().namemap.get(this.DEVTYPE.GetValue()).data_list[0].data_range;            
+            return CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list[0].data_range;            
         }
     }
 
@@ -182,7 +182,7 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
         disdata.datas[3].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
 
         disdata.alarm = ALARM.GetValue();
-        String info = CErrorTable.GetInstance().GetErrorString(((this.DEVTYPE.GetValue() & 0xFF00) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & 0xFF00) << 8) | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }
