@@ -95,7 +95,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     //获取连接信息
     @Override
     public SDevInfo GetDevInfo() {
-        return info;
+        return this.info;
     }
 
     //定标点个数
@@ -230,6 +230,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             } catch (Exception ex) {
                 new MIGPBoot(this.base_drv).SetDevNum((byte) devaddr);
                 this.base_drv.SetDstAddr((byte) devaddr);
+                this.info.dev_addr = devaddr;
             }
         }
     }

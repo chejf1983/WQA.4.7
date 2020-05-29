@@ -154,6 +154,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
                 } catch (Exception ex) {
                     this.SetConfigREG(DEVADDR, item.GetValue());
                     this.base_drv.addr = DEVADDR.GetValue().byteValue();
+                    this.info.dev_addr = DEVADDR.GetValue().byteValue();
                 }
             }
 
