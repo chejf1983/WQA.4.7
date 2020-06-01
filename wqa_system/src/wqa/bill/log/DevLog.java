@@ -52,7 +52,7 @@ public class DevLog {
     private int maxfilenum = 50;
     private final ReentrantLock calog_lock = new ReentrantLock(true);
 
-    private int left_line = 1000;
+    private int left_line = 200;
     private int maxLinenum = left_line + 100;
 
     public void InitDir(String filepath) {
