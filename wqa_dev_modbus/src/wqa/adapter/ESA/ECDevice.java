@@ -46,10 +46,8 @@ public class ECDevice extends AbsDevice {
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
-        this.is_newVersion = this.IsOverVersion(104);//D104
-
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ECRANG, CMPTEMP, PAREC, SALTRANGE, CMPTDS);
-        if(this.is_newVersion){
+        if(this.IsOverVersion(104)){
             if(this.ECRANG.GetValue() < 0 && this.ECRANG.GetValue() >= EC_UNIT_STRING.length){
                 this.ECRANG.SetValue(0);
             }
@@ -57,18 +55,6 @@ public class ECDevice extends AbsDevice {
                 this.SALTRANGE.SetValue(0);
             }
         }
-    }
-
-    private boolean IsOverVersion(int version_threshold) {
-        if (this.SWVER.GetValue().startsWith("D")) {
-            try {
-                int version = Integer.valueOf(this.SWVER.GetValue().substring(1));
-                return version >= version_threshold;
-            } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-        return false;
     }
     // </editor-fold> 
 
@@ -86,7 +72,7 @@ public class ECDevice extends AbsDevice {
         //盐度
         disdata.datas[4].mainData = NahonConvert.TimData(SALT.GetValue(), 2);
 
-        if (this.is_newVersion) {
+        if (this.IsOverVersion(104)) {
             disdata.datas[0].unit = EC_UNIT_STRING[this.ECRANG.GetValue()];
             int max_range = 500;
             if(ECRANG.GetValue() == 0x00){max_range = (max_range * 1000);}
@@ -103,7 +89,6 @@ public class ECDevice extends AbsDevice {
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="设置接口"> 
-    private boolean is_newVersion = false;
 //    private ModeBus_EC.ECConfig ec_config;
     public static final String[] EC_UNIT_STRING = new String[]{"us/cm", "ms/cm", "ms/m"};
     public static final String[] SALT_UNIT_STRING = new String[]{"ppt", "psu", "mg/L"};
@@ -118,7 +103,7 @@ public class ECDevice extends AbsDevice {
     @Override
     public ArrayList<SConfigItem> GetConfigList() {
         ArrayList<SConfigItem> list = super.GetConfigList();
-        if (is_newVersion) {
+        if (this.IsOverVersion(104)) {
             list.add(SConfigItem.CreateSItem(ECRANG.toString(), EC_UNIT_STRING[this.ECRANG.GetValue()], "", EC_UNIT_STRING));
             list.add(SConfigItem.CreateRWItem(PAREC.toString(), PAREC.GetValue().toString(), ""));
             list.add(SConfigItem.CreateSItem(SALTRANGE.toString(), SALT_UNIT_STRING[SALTRANGE.GetValue()], "", SALT_UNIT_STRING));

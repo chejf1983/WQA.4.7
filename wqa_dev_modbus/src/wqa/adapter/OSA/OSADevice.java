@@ -6,6 +6,7 @@
 package wqa.adapter.OSA;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import modebus.pro.NahonConvert;
 import modebus.register.*;
 import wqa.adapter.factory.AbsDevice;
@@ -58,39 +59,44 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGE, AVR, CMODE, CTIME, CINTVAL);
 
         //初始化最大量程信息
-        this.range_info = this.init_range_string();
-
-        //保证量程合法，不合法，默认为0
-        if (this.RANGE.GetValue() < 0 || this.RANGE.GetValue() >= range_info.length) {
-            throw new Exception("量程信息异常,设备量程是" + this.RANGE.GetValue() + "支持的量程是" + this.range_info.length);
-        }
+        this.range_strings = this.init_range_string();
     }
 
-    public String[] range_info = new String[0];
+    // <editor-fold defaultstate="collapsed" desc="量程数据"> 
+    private String[] range_strings;
 
-    //初始化量程信息
-    private String[] init_range_string() throws Exception {
+    public String get_range_string(int index) {
+        if (index < 0 || index >= range_strings.length) {
+            return "未知量程" + index;
+        }
+        return range_strings[index];
+    }
 
-        if (this.RANGNUM.GetValue() > 0 && this.RANGNUM.GetValue() <= 4) {
-            String[] ret = new String[this.RANGNUM.GetValue()];
-            if(ret.length > 4){
-                throw new Exception("量程信息异常:" + ret.length);
+    //获取量程字符串描述
+    private String[] init_range_string() {
+        if (this.IsOverVersion(10)) {
+            if (this.RANGNUM.GetValue() >= 0 && this.RANGNUM.GetValue() < 4) {
+                String[] ret = new String[this.RANGNUM.GetValue() + 1];
+                for (int i = 0; i < ret.length; i++) {
+                    ret[i] = "(0-" + RANGN[i].GetValue() + ")";
+                }
+                return ret;
+            } else {
+                java.util.logging.Logger.getGlobal().log(Level.WARNING, "RANGNUM个数显示错误:{0}", RANGNUM.GetValue());
+                return CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list[0].data_range;
             }
-            for (int i = 0; i < ret.length; i++) {
-                ret[i] = "(0-" + RANGN[i].GetValue() + ")";
-            }
-            return ret;
         } else {
-            return CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list[0].data_range;            
+            return CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list[0].data_range;
         }
     }
+    // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="浊度额外设置"> 
     //private String[] dataRange = new String[]{"(0-100)NTU", "(0-500)NTU", "(0-2000)NTU", "(0-4000)NTU"};
     @Override
     public ArrayList<SConfigItem> GetConfigList() {
         ArrayList<SConfigItem> list = super.GetConfigList(); //To change body of generated methods, choose Tools | Templates.
-        list.add(SConfigItem.CreateSItem(RANGE.toString(), range_info[this.RANGE.GetValue()], "", range_info));
+        list.add(SConfigItem.CreateSItem(RANGE.toString(), get_range_string(this.RANGE.GetValue()), "", range_strings));
         list.add(SConfigItem.CreateRWItem(AVR.toString(), AVR.GetValue().toString(), ""));
         return list;
     }
@@ -107,8 +113,8 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
 
             //设置量程范围
             if (item.IsKey(RANGE.toString())) {
-                for (int i = 0; i < this.range_info.length; i++) {
-                    if (item.GetValue().contentEquals(this.range_info[i])) {
+                for (int i = 0; i < this.range_strings.length; i++) {
+                    if (item.GetValue().contentEquals(this.range_strings[i])) {
                         this.SetConfigREG(RANGE, String.valueOf(i));
                         break;
                     }
@@ -175,7 +181,7 @@ public class OSADevice extends AbsDevice implements IDevMotorConfig {
 //        CommonDataPacket sph_data = this.trub_drv.GetData();
 
         disdata.datas[0].mainData = NahonConvert.TimData(MDATA.GetValue(), 2);
-        disdata.datas[0].range_info = range_info[this.RANGE.GetValue()];
+        disdata.datas[0].range_info = this.get_range_string(this.RANGE.GetValue());
 
         disdata.datas[1].mainData = NahonConvert.TimData(ODATA.GetValue(), 2);
         disdata.datas[2].mainData = NahonConvert.TimData(TEMPER.GetValue(), 2);

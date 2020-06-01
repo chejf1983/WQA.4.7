@@ -89,6 +89,18 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         return sinfo;
     }
 
+    public boolean IsOverVersion(int version_threshold) {
+        if (this.SWVER.GetValue().startsWith("D")) {
+            try {
+                int version = Integer.valueOf(this.SWVER.GetValue().substring(1));
+                return version >= version_threshold;
+            } catch (NumberFormatException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        return false;
+    }
+
     //只返回不同测量类型的数据(没有原始值这个标志的数据)
     public String[] GetDataNames() {
         DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(this.GetDevInfo().dev_type).data_list;

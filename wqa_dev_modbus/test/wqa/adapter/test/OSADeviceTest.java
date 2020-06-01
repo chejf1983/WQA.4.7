@@ -62,7 +62,7 @@ public class OSADeviceTest {
         commontest.check_configlist();
         ArrayList<SConfigItem> config = instance.GetConfigList();
         dev_mock.ReadREGS();
-        commontest.check_item(config, dev_mock.RANGE, instance.range_info[dev_mock.RANGE.GetValue()]);
+        commontest.check_item(config, dev_mock.RANGE, instance.get_range_string(dev_mock.RANGE.GetValue()));
         commontest.check_item(config, dev_mock.AVR);
     }
     // </editor-fold> 
@@ -77,7 +77,7 @@ public class OSADeviceTest {
     public void test_setconfig() throws Exception {        
         commontest.setconfiglist_setup();
         ArrayList<SConfigItem> config = instance.GetConfigList();
-        commontest.set_item(config, dev_mock.RANGE, instance.range_info[1]);
+        commontest.set_item(config, dev_mock.RANGE, instance.get_range_string(1));
         commontest.set_item(config, dev_mock.AVR, "3");
         
         instance.SetConfigList(config);

@@ -111,6 +111,18 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         }
         return list.toArray(new DataInfo[0]);
     }
+    
+    public boolean IsOverVersion(int version_threshold) {
+        if (this.eiainfo.ESWVER.GetValue().startsWith("D")) {
+            try {
+                int version = Integer.valueOf(this.eiainfo.ESWVER.GetValue().substring(1));
+                return version >= version_threshold;
+            } catch (NumberFormatException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        return false;
+    }
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="内部接口">
