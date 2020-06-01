@@ -6,6 +6,8 @@
 package wqa.adapter.ESA;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import wqa.adapter.factory.AbsDevice;
 import modebus.pro.NahonConvert;
 import modebus.register.*;
@@ -49,9 +51,11 @@ public class ECDevice extends AbsDevice {
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ECRANG, CMPTEMP, PAREC, SALTRANGE, CMPTDS);
         if(this.IsOverVersion(104)){
             if(this.ECRANG.GetValue() < 0 && this.ECRANG.GetValue() >= EC_UNIT_STRING.length){
+                Logger.getGlobal().log(Level.SEVERE, "ECRANG无效值{0}，修改为0", ECRANG.GetValue());
                 this.ECRANG.SetValue(0);
             }
             if(this.SALTRANGE.GetValue() < 0 && this.SALTRANGE.GetValue() >= SALT_UNIT_STRING.length){
+                Logger.getGlobal().log(Level.SEVERE, "SALTRANGE无效值{0}，修改为0", ECRANG.GetValue());
                 this.SALTRANGE.SetValue(0);
             }
         }
