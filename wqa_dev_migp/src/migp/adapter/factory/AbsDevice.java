@@ -44,9 +44,9 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 //        this.ReadMEG(VDEVTYPE);
         this.ReadMEG(eiainfo.EBUILDDATE, eiainfo.EBUILDSER, eiainfo.EDEVNAME, eiainfo.EHWVER, eiainfo.ESWVER);
 
-//        if (info.dev_type != this.this.GetDevInfo().dev_type) {
-//            throw new Exception("探头信息不匹配");
-//        }
+        if (!GetDevInfo().serial_num.contentEquals(this.eiainfo.EBUILDSER.GetValue())) {
+            throw new Exception("探头信息不匹配");
+        }
 //        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
         MIOInfo comm_info = this.GetDevInfo().io.GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
@@ -95,8 +95,6 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     //获取连接信息
     @Override
     public SDevInfo GetDevInfo() {
-        this.sinfo.serial_num = this.eiainfo.EBUILDSER.GetValue();
-        this.sinfo.dev_addr = this.base_drv.GetDstAddr();
         return this.sinfo;
     }
 

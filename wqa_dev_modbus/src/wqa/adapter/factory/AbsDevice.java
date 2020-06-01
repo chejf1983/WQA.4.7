@@ -48,6 +48,9 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SERIANUM, HWVER, SWVER, BANDRANGEI);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SDTEMPSWT, SDTEMP);
 
+        if (!GetDevInfo().serial_num.contentEquals(SERIANUM.GetValue())) {
+            throw new Exception("探头信息不匹配");
+        }
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
         DEVADDR.SetValue((int) this.GetDevInfo().dev_addr);
         //波特率序号也根据IO信息来，设备读出来不准确
@@ -69,12 +72,12 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         try {
             //读设备类型寄存器
             IREG TDEVTYPE = new IREG(0x25, 1, "设备类型");
-            SREG SERIANUM = new SREG(0x18, 8, "序列号");//R
+            SREG TSERIANUM = new SREG(0x18, 8, "序列号");//R
             this.base_drv.ReadREG(1, DEF_TIMEOUT, TDEVTYPE);
-            this.base_drv.ReadREG(1, DEF_TIMEOUT, SERIANUM);
+            this.base_drv.ReadREG(1, DEF_TIMEOUT, TSERIANUM);
 //            this.base_drv.ReadMemory(DEF_TIMEOUT, RETRY_TIME, RETRY_TIME, DEF_TIMEOUT)
             //返回值
-            return TDEVTYPE.GetValue() == this.GetDevInfo().dev_type && SERIANUM.GetValue().contentEquals(this.GetDevInfo().serial_num);
+            return TDEVTYPE.GetValue() == this.GetDevInfo().dev_type && TSERIANUM.GetValue().contentEquals(this.GetDevInfo().serial_num);
         } catch (Exception ex) {
             return false;
         }
@@ -83,8 +86,6 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     @Override
     public SDevInfo GetDevInfo() {
-        this.sinfo.dev_addr = this.base_drv.addr;
-        this.sinfo.serial_num = this.SERIANUM.GetValue();
         return sinfo;
     }
 
