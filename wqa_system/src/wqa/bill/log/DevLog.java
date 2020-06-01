@@ -41,17 +41,18 @@ public class DevLog {
     }
 
     private boolean log_switch = true;
-    public void SetLogSwitch(boolean value){
+
+    public void SetLogSwitch(boolean value) {
         this.log_switch = value;
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="设置LOG信息"> 
     public static String SyslogFile = ".log";//系统日志文件名称
     private String def_path = "./cal_log";
     private int maxfilenum = 50;
     private final ReentrantLock calog_lock = new ReentrantLock(true);
 
-    private int left_line = 100;
+    private int left_line = 1000;
     private int maxLinenum = left_line + 100;
 
     public void InitDir(String filepath) {
@@ -105,7 +106,7 @@ public class DevLog {
         if (!log_switch) {
             return;
         }
-        
+
         File logfile = this.GetLogFile(id.ToChineseString());
 
         if (logfile != null) {
@@ -139,13 +140,13 @@ public class DevLog {
 
     private void PrintNode(FileWriter fileWriter, String tab, LogNode log) throws IOException {
         fileWriter.write(tab + FormateLog(log.name, log.value));
-        log.children.forEach(node -> {
+        for (LogNode node : log.children) {
             try {
                 PrintNode(fileWriter, tab + "    ", node);
             } catch (IOException ex) {
                 Logger.getLogger(DevLog.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
+        }
     }
 
     private void CleanLog(DevID id, ArrayList<String> logs) {
@@ -157,13 +158,11 @@ public class DevLog {
         //只留下最少行数
         File logfile = this.GetLogFile(id.toString());
         if (logfile != null) {
-            try {
-                FileWriter fileWriter = new FileWriter(logfile);
+            try (FileWriter fileWriter = new FileWriter(logfile)) {
                 for (int i = logs.size() - left_line; i < logs.size(); i++) {
                     fileWriter.write(logs.get(i) + "\r\n");
                 }
                 fileWriter.flush();
-                fileWriter.close();
             } catch (IOException ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
             }
@@ -197,6 +196,13 @@ public class DevLog {
         }
 
         return resultStr;
+    }
+
+    public void DelFile(DevID id) {
+        File logfile = this.GetLogFile(id.ToChineseString());
+        if (logfile != null) {
+            logfile.delete();
+        }
     }
     // </editor-fold>    
 }
