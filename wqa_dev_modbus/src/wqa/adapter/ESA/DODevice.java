@@ -50,14 +50,6 @@ public class DODevice extends AbsDevice {
     }
 
     // <editor-fold defaultstate="collapsed" desc="溶氧额外设置"> 
-//    private static String[] CONFIGSTRING = new String[]{
-//        "大气压力",
-//        "盐度",
-//        "平均次数"
-//    };
-//    private float salt;  //盐度
-//    private float pasca; //大气压
-//    private int avr;  //温度补偿
     @Override
     public ArrayList<SConfigItem> GetConfigList() {
         ArrayList<SConfigItem> list = super.GetConfigList();

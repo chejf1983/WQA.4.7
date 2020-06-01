@@ -33,7 +33,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     public AbsDevice(SDevInfo devinfo) {
         this.base_drv = new MIGP_CmdSend(MIGPDevFactory.Convert(devinfo.io), (byte) 0xF0, (byte) devinfo.dev_addr);
-        this.info = devinfo;
+        this.sinfo = devinfo;
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">
@@ -48,7 +48,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 //            throw new Exception("探头信息不匹配");
 //        }
 //        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
-        MIOInfo comm_info = this.info.io.GetIOInfo();
+        MIOInfo comm_info = this.GetDevInfo().io.GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
             //串口的情况下，参数1表示波特率
             String sbandrate = comm_info.par[1];
@@ -82,7 +82,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
                     VDEVTYPE.SetValue(VDEVTYPE.GetValue() + 0xA000);
                 }
             }
-            return VDEVTYPE.GetValue() == this.info.dev_type && EBUILDSER.GetValue().contentEquals(info.serial_num);
+            return VDEVTYPE.GetValue() == this.GetDevInfo().dev_type && EBUILDSER.GetValue().contentEquals(GetDevInfo().serial_num);
         } catch (Exception ex) {
             System.out.println(ex);
             return false;
@@ -90,12 +90,14 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     }
 
     //初始化连接信息
-    private SDevInfo info = new SDevInfo();
+    private SDevInfo sinfo = new SDevInfo();
 
     //获取连接信息
     @Override
     public SDevInfo GetDevInfo() {
-        return this.info;
+        this.sinfo.serial_num = this.eiainfo.EBUILDSER.GetValue();
+        this.sinfo.dev_addr = this.base_drv.GetDstAddr();
+        return this.sinfo;
     }
 
     //定标点个数
@@ -163,6 +165,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             }
             if (item.IsKey(eiainfo.EBUILDSER.toString())) {
                 SetConfigREG(eiainfo.EBUILDSER, item.GetValue());
+                this.sinfo.serial_num = eiainfo.EBUILDSER.GetValue();
             }
             if (item.IsKey(eiainfo.EBUILDDATE.toString())) {
                 SetConfigREG(eiainfo.EBUILDDATE, item.GetValue());
@@ -222,7 +225,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         }
 
         if (devaddr != this.base_drv.GetDstAddr()) {
-            MIGP_CmdSend base = new MIGP_CmdSend(MIGPDevFactory.Convert(this.info.io), (byte) 0xF0, (byte) devaddr);
+            MIGP_CmdSend base = new MIGP_CmdSend(MIGPDevFactory.Convert(this.GetDevInfo().io), (byte) 0xF0, (byte) devaddr);
             VPA devtype = new VPA(0x00, 2);
             try {
                 base.GetMEM(devtype, devtype.length, DEF_RETRY, DEF_TIMEOUT);
@@ -230,7 +233,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             } catch (Exception ex) {
                 new MIGPBoot(this.base_drv).SetDevNum((byte) devaddr);
                 this.base_drv.SetDstAddr((byte) devaddr);
-                this.info.dev_addr = devaddr;
+                this.sinfo.dev_addr = devaddr;
             }
         }
     }

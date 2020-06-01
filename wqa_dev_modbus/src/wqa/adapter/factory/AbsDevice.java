@@ -39,7 +39,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     public AbsDevice(SDevInfo info) {
         this.base_drv = new ModeBusNode(info.io, (byte) info.dev_addr);
-        this.info = info;
+        this.sinfo = info;
     }
 
     @Override
@@ -49,7 +49,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SDTEMPSWT, SDTEMP);
 
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
-        DEVADDR.SetValue((int) info.dev_addr);
+        DEVADDR.SetValue((int) this.GetDevInfo().dev_addr);
         //波特率序号也根据IO信息来，设备读出来不准确
         MIOInfo comm_info = this.base_drv.GetIO().GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
@@ -74,16 +74,18 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             this.base_drv.ReadREG(1, DEF_TIMEOUT, SERIANUM);
 //            this.base_drv.ReadMemory(DEF_TIMEOUT, RETRY_TIME, RETRY_TIME, DEF_TIMEOUT)
             //返回值
-            return TDEVTYPE.GetValue() == this.info.dev_type && SERIANUM.GetValue().contentEquals(this.info.serial_num);
+            return TDEVTYPE.GetValue() == this.GetDevInfo().dev_type && SERIANUM.GetValue().contentEquals(this.GetDevInfo().serial_num);
         } catch (Exception ex) {
             return false;
         }
     }
-    private SDevInfo info = new SDevInfo();
+    private SDevInfo sinfo = new SDevInfo();
 
     @Override
     public SDevInfo GetDevInfo() {
-        return info;
+        this.sinfo.dev_addr = this.base_drv.addr;
+        this.sinfo.serial_num = this.SERIANUM.GetValue();
+        return sinfo;
     }
 
     //只返回不同测量类型的数据(没有原始值这个标志的数据)
@@ -154,7 +156,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
                 } catch (Exception ex) {
                     this.SetConfigREG(DEVADDR, item.GetValue());
                     this.base_drv.addr = DEVADDR.GetValue().byteValue();
-                    this.info.dev_addr = DEVADDR.GetValue().byteValue();
+                    this.sinfo.dev_addr = this.base_drv.addr;
                 }
             }
 

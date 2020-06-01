@@ -100,6 +100,9 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
     // <editor-fold defaultstate="collapsed" desc="量程数据"> 
     //获取量程字符串描述（量程档位）
     private String get_range_string(int index) {
+        if (index < 0 || index >= VDRANGE_MIN.length) {
+            return "未知量程" + index;
+        }
         return "(" + VDRANGE_MIN[index].GetValue() + "-" + NRANGE_MAX[index].GetValue() + ")";
     }
 

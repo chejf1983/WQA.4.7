@@ -9,7 +9,6 @@ import base.migp.mem.*;
 import base.migp.reg.*;
 import migp.adapter.factory.AbsDevice;
 import wqa.dev.data.SDevInfo;
-import wqa.dev.intf.IMAbstractIO;
 
 /**
  *

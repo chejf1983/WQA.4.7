@@ -57,10 +57,7 @@ public class EOSA_DO extends ESADEV {
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
-//        this.ReadMEG(VVATOKEN);
-//        if (this.VVATOKEN.GetValue() > 0) {
-//            this.VDEVTYPE.SetValue(this.VDEVTYPE.GetValue() + 0xA000);
-//        }
+        this.ReadMEG(VVATOKEN);
         this.ReadMEG(NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPG, NPTEMPER, NAVR, NDO100, NDO0);
     }
 

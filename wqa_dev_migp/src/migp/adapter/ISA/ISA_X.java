@@ -106,6 +106,9 @@ public class ISA_X extends AbsDevice {
     // <editor-fold defaultstate="collapsed" desc="量程数据">
     //获取量程字符串描述（量程档位）
     private String get_range_string(int index) {
+        if (index < 0 || index >= VDRANGE_MIN.length) {
+            return "未知量程" + index;
+        }
         return "(" + VDRANGE_MIN[index].GetValue() + "-" + VDRANGE_MAX[index].GetValue() + ")";
     }
     // </editor-fold> 
@@ -147,9 +150,9 @@ public class ISA_X extends AbsDevice {
         item.add(SConfigItem.CreateInfoItem(""));
         for (int i = 0; i < datanames.length - 1; i++) {
             item.add(SConfigItem.CreateInfoItem(datanames[i]));
-            item.add(SConfigItem.CreateRWItem(datanames[i] + NAS[1].toString(), this.NAS[i].GetValue() + "", ""));
-            item.add(SConfigItem.CreateRWItem(datanames[i] + NES[2].toString(), this.NES[i].GetValue() + "", ""));
-            item.add(SConfigItem.CreateRWItem(datanames[i] + NFS[3].toString(), this.NFS[i].GetValue() + "", ""));
+            item.add(SConfigItem.CreateRWItem(datanames[i] + NAS[i].toString(), this.NAS[i].GetValue() + "", ""));
+            item.add(SConfigItem.CreateRWItem(datanames[i] + NES[i].toString(), this.NES[i].GetValue() + "", ""));
+            item.add(SConfigItem.CreateRWItem(datanames[i] + NFS[i].toString(), this.NFS[i].GetValue() + "", ""));
             item.add(SConfigItem.CreateInfoItem(""));
         }
         return item;
@@ -189,18 +192,22 @@ public class ISA_X extends AbsDevice {
         this.ReadMEG(SR1, SR2, SR3, SR4, SR5);
 
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //ph测量值
+        disdata.datas[0].range_info = this.get_range_string(0);
         disdata.datas[1].mainData = NahonConvert.TimData(SR1.GetValue(), 2);     //ph_ora测量值
 
         disdata.datas[2].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //氨氮测量值
+        disdata.datas[2].range_info = this.get_range_string(1);
         disdata.datas[3].mainData = NahonConvert.TimData(SR2.GetValue(), 2);     //氨氮_ora测量值
 
         if (disdata.datas.length > 6) {
             disdata.datas[4].mainData = NahonConvert.TimData(MPAR3.GetValue(), 2);   //
+            disdata.datas[4].range_info = this.get_range_string(2);
             disdata.datas[5].mainData = NahonConvert.TimData(SR3.GetValue(), 2);     //
         }
 
         if (disdata.datas.length > 8) {
             disdata.datas[6].mainData = NahonConvert.TimData(MPAR4.GetValue(), 2);   //
+            disdata.datas[6].range_info = this.get_range_string(3);
             disdata.datas[7].mainData = NahonConvert.TimData(SR4.GetValue(), 2);     //
         }
 
@@ -231,7 +238,7 @@ public class ISA_X extends AbsDevice {
                 if (type.contentEquals(this.GetDataNames()[i])) {
                     this.cal_data(i, oradata, testdata, oradata.length);
                     String[] datanames = this.GetDataNames();
-                    this.ReadMEG(NAS[i],NES[i],NFS[i]);
+                    this.ReadMEG(NAS[i], NES[i], NFS[i]);
                     ret.children.add(new LogNode(datanames[i] + NAS[i].toString(), this.NAS[i].GetValue()));
                     ret.children.add(new LogNode(datanames[i] + NES[i].toString(), this.NES[i].GetValue()));
                     ret.children.add(new LogNode(datanames[i] + NFS[i].toString(), this.NFS[i].GetValue()));

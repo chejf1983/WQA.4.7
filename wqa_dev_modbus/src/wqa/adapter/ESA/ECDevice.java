@@ -49,6 +49,14 @@ public class ECDevice extends AbsDevice {
         this.is_newVersion = this.IsOverVersion(104);//D104
 
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ECRANG, CMPTEMP, PAREC, SALTRANGE, CMPTDS);
+        if(this.is_newVersion){
+            if(this.ECRANG.GetValue() < 0 && this.ECRANG.GetValue() >= EC_UNIT_STRING.length){
+                this.ECRANG.SetValue(0);
+            }
+            if(this.SALTRANGE.GetValue() < 0 && this.SALTRANGE.GetValue() >= SALT_UNIT_STRING.length){
+                this.SALTRANGE.SetValue(0);
+            }
+        }
     }
 
     private boolean IsOverVersion(int version_threshold) {
