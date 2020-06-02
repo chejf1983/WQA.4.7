@@ -109,18 +109,6 @@ public class DataSearch extends javax.swing.JPanel {
         }
     }
 
-    //更新探头的数据类型
-    private void UpdateSelectIndex() {
-        if (List_devlist.getSelectedIndex() < 0) {
-            return;
-        }
-        this.ComboBox_devtypes.removeAllItems();
-        String[] GetSupportData = DataHelper.GetSupportDataName(this.Dev_list[this.List_devlist.getSelectedIndex()].dev_type);
-        for (String data_name : GetSupportData) {
-            this.ComboBox_devtypes.addItem(data_name);
-        }
-    }
-
     // </editor-fold> 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -321,7 +309,7 @@ public class DataSearch extends javax.swing.JPanel {
 
     //搜索
     private void Button_SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SearchActionPerformed
-        UpdateSelectIndex();
+//        UpdateSelectIndex();
 
         try {
             start_time = new SimpleDateFormat(TIMEFORMATE).parse(this.TextField_start_time.getText());
@@ -349,30 +337,37 @@ public class DataSearch extends javax.swing.JPanel {
             //开始搜索
             WQAPlatform.GetInstance().GetDBHelperFactory().GetDataDB().SearchLimitData(Dev_list[List_devlist.getSelectedIndex()],//选择的设备
                     start_time, stop_time, DataSearch.Max_ChartPoint, new IMainProcess<SDataRecordResult>() {
-                        @Override
-                        public void SetValue(float pecent) {
-                            java.awt.EventQueue.invokeLater(() -> {
-                                //更新进度条
-                                if (ProcessDialog.GetGlobalProcessBar() != null) {
-                                    ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
-                                }
-                            });
+                @Override
+                public void SetValue(float pecent) {
+                    java.awt.EventQueue.invokeLater(() -> {
+                        //更新进度条
+                        if (ProcessDialog.GetGlobalProcessBar() != null) {
+                            ProcessDialog.GetGlobalProcessBar().GetProcessBar().setValue((int) pecent);
                         }
-                        
-                        @Override
-                        public void Finish(SDataRecordResult data_ret) {
-                            java.awt.EventQueue.invokeLater(() -> {
-                                //更新数据
-                                data_set = data_ret.data.toArray(new DataRecord[0]);
-                                //刷新图标
-                                ComboBox_devtypesItemStateChanged(null);
-                                Label_DataNum.setText(data_ret.search_num + "");
-                                ProcessDialog.ReleaseGlobalProcessBar();
-                                //JOptionPane.showMessageDialog(null, "new:" + (System.currentTimeMillis() - start));
-                            });
-                        }
-                        
                     });
+                }
+
+                @Override
+                public void Finish(SDataRecordResult data_ret) {
+                    java.awt.EventQueue.invokeLater(() -> {
+                        //更新数据
+                        data_set = data_ret.data.toArray(new DataRecord[0]);
+
+                        ComboBox_devtypes.removeAllItems();
+                        if (data_set.length > 0) {
+                            for (String data_name : data_set[0].names) {
+                                ComboBox_devtypes.addItem(data_name);
+                            }
+                        }
+                        //刷新图标
+                        ComboBox_devtypesItemStateChanged(null);
+                        Label_DataNum.setText(data_ret.search_num + "");
+                        ProcessDialog.ReleaseGlobalProcessBar();
+                        //JOptionPane.showMessageDialog(null, "new:" + (System.currentTimeMillis() - start));
+                    });
+                }
+
+            });
         });
     }//GEN-LAST:event_Button_SearchActionPerformed
 
