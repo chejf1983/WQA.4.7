@@ -62,25 +62,16 @@ public class DataRecord {
         }
         return ret;
     }
-
-    public String[] GetNames() {
-        String[] tnames = new String[names.length * 2 + 1];
-        tnames[0] = "时间";
-        for (int i = 0; i < names.length; i++) {
-            tnames[i * 2 + 1] = names[i];
-            tnames[i * 2 + 2] = "(量程)单位";
-        }
-        return tnames;
-    }
     
     public static String[] GetNames(DevID dev_info) {
         String[] tnames = GetSupportData(dev_info);
-        tnames[0] = "时间";
+        String[] names = new String[tnames.length * 2 + 1];
+        names[0] = "时间";
         for (int i = 0; i < tnames.length; i++) {
-            tnames[i * 2 + 1] = tnames[i];
-            tnames[i * 2 + 2] = "(量程)单位";
+            names[i * 2 + 1] = tnames[i];
+            names[i * 2 + 2] = "(量程)单位";
         }
-        return tnames;
+        return names;
     }
 
     public static String[] GetSupportData(DevID dev_id) {

@@ -5,6 +5,7 @@
  */
 package wqa.control.common;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -98,11 +99,11 @@ public class DevControl {
             ((ShareIO) device.GetDevInfo().io).Lock();
             //连接状态下，获取数据
             if (GetState() == ControlState.CONNECT) {
-                if (!GetCollector().CollectData()) {
+                if (!GetCollector().CollectData(this.LastTime)) {
                     ChangeState(ControlState.DISCONNECT);
                 }
             } else if (GetState() == ControlState.ALARM) {
-                if (!GetCollector().CollectData()) {
+                if (!GetCollector().CollectData(this.LastTime)) {
                     ChangeState(ControlState.DISCONNECT);
                 }
             } else if (GetState() == ControlState.DISCONNECT) {
@@ -118,22 +119,31 @@ public class DevControl {
         }
     }
 
+    private Date LastTime = new Date();
+
     private class Process implements Runnable {
 
         boolean is_start = true;
 
         @Override
         public void run() {
+            LastTime.setTime(((long) (new Date().getTime() / 1000)) * 1000);
             while (is_start) {
                 state_lock.lock();
                 try {
-                    MainAction();
+                    if (new Date().getTime() >= LastTime.getTime()) {
+                        //更新时间
+                        while (new Date().getTime() >= LastTime.getTime()) {
+                            LastTime.setTime(LastTime.getTime() + 2 * 1000);
+                        }
+                        MainAction();
+                    }
                 } finally {
                     state_lock.unlock();
                 }
 
                 try {
-                    TimeUnit.SECONDS.sleep(2);
+                    TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(DevMonitor.class.getName()).log(Level.SEVERE, null, ex);
                 }

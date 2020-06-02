@@ -6,6 +6,7 @@
 package wqa.control.common;
 
 import java.util.ArrayList;
+import java.util.Date;
 import wqa.dev.data.CollectData;
 import wqa.dev.intf.ICollect;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,10 +36,11 @@ public class DevMonitor {
     // <editor-fold defaultstate="collapsed" desc="采集数据"> 
     public EventCenter<SDisplayData> DataEvent = new EventCenter();
 
-    public boolean CollectData() {
+    public boolean CollectData(Date time) {
         data_lock.lock();
         try {
             CollectData CollectData = this.dev.CollectData();
+            CollectData.time = time;
             this.tmpdata = CreateDBData(CollectData);
             this.SaveAlarmInfo(tmpdata);
             if (this.tmpdata.alarm != 0) {

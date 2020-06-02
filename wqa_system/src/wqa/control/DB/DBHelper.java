@@ -61,10 +61,10 @@ public class DBHelper {
     private Date LastTime = new Date();
     private IJDBHelper db_instance;
 
-    public void SetDB(IJDBHelper helper){
+    public void SetDB(IJDBHelper helper) {
         this.db_instance = helper;
     }
-    
+
     public void Init(String path) throws Exception {
         if (!this.is_record_start) {
             //设置启动标志
@@ -84,17 +84,22 @@ public class DBHelper {
             WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
                 @Override
                 public void run() {
+                    LastTime.setTime(((long) (new Date().getTime() / 1000)) * 1000);
+
                     while (!WQAPlatform.GetInstance().GetThreadPool().isShutdown()) {
                         //如果时间差超过时间间隔(ms),启动一次采集
-                        if (new Date().getTime() - LastTime.getTime() > time_span * 1000) {
+                        if (new Date().getTime() >= LastTime.getTime()) {
                             //更新时间
-                            LastTime = new Date();
+                            while (new Date().getTime() >= LastTime.getTime()) {
+                                LastTime.setTime(LastTime.getTime() + 2 * 1000);
+                            }
+
                             CollectData();
                         }
 
                         //休息
                         try {
-                            TimeUnit.SECONDS.sleep(1);
+                            TimeUnit.MILLISECONDS.sleep(500);
                         } catch (InterruptedException ex) {
                             LogCenter.Instance().PrintLog(Level.SEVERE, ex);
                         }
@@ -111,7 +116,6 @@ public class DBHelper {
         for (DevControl control : controls) {
             //获取DB缓存栈
             SDisplayData data = control.GetCollector().ReceiveByDB();
-
             //如果没有数据，不保存
             if (data == null) {
                 continue;

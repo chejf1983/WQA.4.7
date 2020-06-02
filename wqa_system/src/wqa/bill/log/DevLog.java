@@ -111,13 +111,11 @@ public class DevLog {
 
         if (logfile != null) {
             calog_lock.lock();
-            try {
-                FileWriter fileWriter = new FileWriter(logfile, true);
+            try (FileWriter fileWriter = new FileWriter(logfile, true)) {
                 LogNode node = new LogNode("时间", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 node.children.addAll(Arrays.asList(log));
                 PrintNode(fileWriter, node);
                 fileWriter.flush();
-                fileWriter.close();
             } catch (IOException ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
             } finally {
