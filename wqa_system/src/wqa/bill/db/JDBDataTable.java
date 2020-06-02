@@ -11,10 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import wqa.control.DB.DataRecord;
+import wqa.control.common.DataHelper;
 import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
-import wqa.dev.data.CollectData;
 
 /**
  *
@@ -85,7 +84,7 @@ public class JDBDataTable {
 
         String CREATE_TABLE_SQL = "create table if not exists " + table_name
                 + "(id int auto_increment primary key not null, " + Time_Key + " datetime(2)";
-        for (int i = 0; i < DataRecord.GetAllData(id).length; i++) {
+        for (int i = 0; i < DataHelper.GetAllData(id.dev_type).length; i++) {
             CREATE_TABLE_SQL += ", " + DataIndexKey + i + " varchar(50)";
             CREATE_TABLE_SQL += ", " + UnitIndexKey + i + " varchar(50)";
         }

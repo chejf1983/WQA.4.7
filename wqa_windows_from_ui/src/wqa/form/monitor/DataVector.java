@@ -25,25 +25,25 @@ public class DataVector {
 
     private final ReentrantLock datalist_lock = new ReentrantLock();
     private final ArrayList<SDisplayData> datasource = new ArrayList();
-    private final boolean[] visable;
-    private final String[] data_names;
+    private boolean[] visable = new boolean[0];
+    private String[] data_names = new String[0];
     private final int maxlen = 1800;
     public final DevMonitor dev_type;
 
     public DataVector(DevMonitor dev_type) {
         this.dev_type = dev_type;
-        String[] data_infos = dev_type.GetSupportDataName();
-        data_names = new String[data_infos.length];
-        visable = new boolean[data_infos.length];
-        for (int i = 0; i < data_infos.length; i++) {
-            data_names[i] = data_infos[i];
-            visable[i] = true;
-            select_name = data_names[0];
-        }
+//        String[] data_infos = DataHelper.GetSupportDataName(dev_type.GetParent1().GetDevID().dev_type);
+//        data_names = new String[data_infos.length];
+//        visable = new boolean[data_infos.length];
+//        for (int i = 0; i < data_infos.length; i++) {
+//            data_names[i] = data_infos[i];
+//            visable[i] = true;
+//            select_name = data_names[0];
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
-    public String[] GetSupportDataName() {
+    public String[] GetVisableName() {
         ArrayList<String> names = new ArrayList();
         for (int i = 0; i < data_names.length; i++) {
             if (visable[i]) {
@@ -58,6 +58,15 @@ public class DataVector {
         if (data.dev_id.dev_type != this.dev_type.GetParent1().GetDevID().dev_type) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "异常数据,无法显示");
             return;
+        } else {
+            if (this.GetLastData() == null) {
+                data_names = data.GetNames();
+                visable = new boolean[data_names.length];
+                for (int i = 0; i < data_names.length; i++) {
+                    visable[i] = true;
+                }
+                select_name = data_names[0];
+            }
         }
         datalist_lock.lock();
         try {
@@ -169,9 +178,11 @@ public class DataVector {
             SDisplayData lastdata = GetLastData();
             rows.clear();
             if (lastdata != null) {
-                for (SDataElement data : lastdata.datas) {
-//                    SDataElement data = lastdata.GetDataElement(name);
-                    this.rows.add(new Object[]{data.name, data.mainData + data.unit, data.range_info});
+                for (int i = 0; i < lastdata.datas.length; i++) {
+                    SDataElement data = lastdata.datas[i];
+                    if (visable[i]) {
+                        this.rows.add(new Object[]{data.name, data.mainData + data.unit, data.range_info});
+                    }
                 }
             }
             this.fireTableDataChanged();

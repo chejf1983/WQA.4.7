@@ -15,6 +15,7 @@ import nahon.comm.faultsystem.LogCenter;
 import wqa.control.DB.DataRecord;
 import wqa.control.DB.IDataHelper;
 import wqa.control.DB.SDataRecordResult;
+import wqa.control.common.DataHelper;
 import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
@@ -158,7 +159,7 @@ public class DataReadHelper implements IDataHelper {
 
         //获取静态数据表
         for (int i = 0; i < record.values.length; i++) {
-            int index = DataRecord.GetDataToDBIndex(id, record.names[i]);
+            int index = DataHelper.GetDataToDBIndex(id.dev_type, record.names[i]);
             //根据显示数据内容查找静态数据表的序号，对应到数据库中的位置
             record.values[i] = set.getFloat(JDBDataTable.DataIndexKey + index);
             record.value_strings[i] = set.getString(JDBDataTable.UnitIndexKey + index);

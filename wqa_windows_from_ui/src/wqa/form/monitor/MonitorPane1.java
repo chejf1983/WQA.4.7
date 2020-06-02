@@ -25,6 +25,7 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.chart.axis.DateAxis;
 import wqa.chart.DataChart;
 import wqa.common.JImagePane;
+import wqa.control.common.DataHelper;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.common.DevMonitor;
 import wqa.control.common.SDisplayData;
@@ -105,12 +106,13 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private void UpdateComboBox() {
         m_chart.GetComboBox().removeAllItems();
         //初始化曲线下拉框
-        String[] names = currentdev.GetSupportDataName();
+//        String[] names = DataHelper.GetSupportDataName(currentdev.GetParent1().GetDevID().dev_type);
+        String[] names = data_vector.GetVisableName();
         for (String name : names) {
             m_chart.GetComboBox().addItem(name);
         }
 
-        if (currentdev.GetSupportDataName().length > 0) {
+        if (names.length > 0) {
             data_vector.SetSelectName(names[0]);
             m_chart.GetComboBox().setSelectedItem(names[0]);
         } else {

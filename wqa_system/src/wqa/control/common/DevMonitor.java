@@ -5,7 +5,6 @@
  */
 package wqa.control.common;
 
-import java.util.ArrayList;
 import java.util.Date;
 import wqa.dev.data.CollectData;
 import wqa.dev.intf.ICollect;
@@ -13,7 +12,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.factory.CDevDataTable;
 import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
 import wqa.system.WQAPlatform;
@@ -87,24 +85,6 @@ public class DevMonitor {
     }
     // </editor-fold>   
 
-    public String[] GetSupportDataName() {
-        //单位信息
-        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(this.parent.GetDevID().dev_type);
-        ArrayList<String> list = new ArrayList();
-        if (d_infos != null) {
-            for (CDevDataTable.DataInfo info : d_infos.data_list) {
-                if (info.internal_only) {
-                    if (WQAPlatform.GetInstance().is_internal) {
-                        list.add(info.data_name);
-                    }
-                } else {
-                    list.add(info.data_name);
-                }
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
     public DevControl GetParent1() {
         return this.parent;
     }
@@ -125,8 +105,8 @@ public class DevMonitor {
         SDisplayData tmp = new SDisplayData(new DevID(data.dev_type, data.dev_addr, data.serial_num));
         tmp.time = data.time;
         tmp.alarm = data.alarm;
-        tmp.alram_info = data.alram_info;
-        String[] display_datas = this.GetSupportDataName();
+        tmp.alram_info = data.alram_info;        
+        String[] display_datas = DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
         tmp.datas = new SDataElement[display_datas.length];
         for (int i = 0; i < display_datas.length; i++) {
             tmp.datas[i] = new SDataElement(data.GetDataElement(display_datas[i]));

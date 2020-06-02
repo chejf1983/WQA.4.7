@@ -49,7 +49,7 @@ public class MTable extends javax.swing.JPanel {
     }
 
     private void UpdateData() {
-        String[] names = this.data_vector.GetSupportDataName();
+        String[] names = this.data_vector.GetVisableName();
         SDisplayData data = this.data_vector.GetLastData();
         if (data == null) {
             return;

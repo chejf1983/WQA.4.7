@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.control.common.DataHelper;
 import wqa.control.data.DevID;
 import wqa.system.WQAPlatform;
 
@@ -34,7 +35,7 @@ public class DataRecord {
         //获取DB显示数据
         this.dev_info = dev_info;
 
-        this.names = GetSupportData(dev_info);
+        this.names = DataHelper.GetSupportDataName(dev_info.dev_type);
         //赋值数据值
         this.values = new Float[names.length];
         //赋值量程单位
@@ -64,7 +65,7 @@ public class DataRecord {
     }
     
     public static String[] GetNames(DevID dev_info) {
-        String[] tnames = GetSupportData(dev_info);
+        String[] tnames = DataHelper.GetSupportDataName(dev_info.dev_type);
         String[] names = new String[tnames.length * 2 + 1];
         names[0] = "时间";
         for (int i = 0; i < tnames.length; i++) {
@@ -73,43 +74,4 @@ public class DataRecord {
         }
         return names;
     }
-
-    public static String[] GetSupportData(DevID dev_id) {
-        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
-        ArrayList<String> list = new ArrayList();
-        if (d_infos != null) {
-            for (CDevDataTable.DataInfo info : d_infos.data_list) {
-                if (info.internal_only) {
-                    if (WQAPlatform.GetInstance().is_internal) {
-                        list.add(info.data_name);
-                    }
-                } else {
-                    list.add(info.data_name);
-                }
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
-    public static String[] GetAllData(DevID dev_id) {
-        CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_id.dev_type);
-        ArrayList<String> list = new ArrayList();
-        if (d_infos != null) {
-            for (CDevDataTable.DataInfo info : d_infos.data_list) {
-                list.add(info.data_name);
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
-    public static int GetDataToDBIndex(DevID dev_id, String data_name) {
-        String[] all_datas = GetAllData(dev_id);
-        for (int i = 0; i < all_datas.length; i++) {
-            if (all_datas[i].contentEquals(data_name)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
 }

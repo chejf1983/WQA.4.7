@@ -25,6 +25,7 @@ import org.jfree.data.time.TimeSeries;
 import wqa.common.Chooser;
 import wqa.control.DB.DataRecord;
 import wqa.control.DB.SDataRecordResult;
+import wqa.control.common.DataHelper;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.form.main.MainForm;
@@ -114,7 +115,7 @@ public class DataSearch extends javax.swing.JPanel {
             return;
         }
         this.ComboBox_devtypes.removeAllItems();
-        String[] GetSupportData = DataRecord.GetSupportData(this.Dev_list[this.List_devlist.getSelectedIndex()]);
+        String[] GetSupportData = DataHelper.GetSupportDataName(this.Dev_list[this.List_devlist.getSelectedIndex()].dev_type);
         for (String data_name : GetSupportData) {
             this.ComboBox_devtypes.addItem(data_name);
         }
