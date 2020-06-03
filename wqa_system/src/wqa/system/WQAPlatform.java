@@ -40,12 +40,6 @@ public class WQAPlatform {
         return instance;
     }
 
-    // <editor-fold defaultstate="collapsed" desc="IO驱动和设备驱动"> 
-    public static void LoadDriver(IDeviceSearch factory) {
-        DevControlManager.SetDevDriver(factory);
-    }
-    // </editor-fold>  
-
     public void InitSystem(String path) throws Exception {
         this.def_path = path;
 

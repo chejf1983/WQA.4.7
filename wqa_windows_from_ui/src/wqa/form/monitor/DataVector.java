@@ -32,14 +32,6 @@ public class DataVector {
 
     public DataVector(DevMonitor dev_type) {
         this.dev_type = dev_type;
-//        String[] data_infos = DataHelper.GetSupportDataName(dev_type.GetParent1().GetDevID().dev_type);
-//        data_names = new String[data_infos.length];
-//        visable = new boolean[data_infos.length];
-//        for (int i = 0; i < data_infos.length; i++) {
-//            data_names[i] = data_infos[i];
-//            visable[i] = true;
-//            select_name = data_names[0];
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
@@ -150,15 +142,6 @@ public class DataVector {
             } finally {
                 datalist_lock.unlock();
             }
-
-            //为曲线增加空白数据
-//            Date begine = this.datasource.get(0).time;
-//            int current_start = mainline.getItemCount();
-//            for (int i = current_start; i < this.maxlen; i++) {
-//                Date empty_time = new Date();
-//                empty_time.setTime(begine.getTime() - i * 1000 * 2);
-//                mainline.addOrUpdate(new Second(empty_time), 0);
-//            }
         }
 
         return mainline;

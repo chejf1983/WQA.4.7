@@ -6,12 +6,9 @@
 package wqa.control.DB;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import wqa.adapter.factory.CDevDataTable;
 import wqa.control.common.DataHelper;
 import wqa.control.data.DevID;
-import wqa.system.WQAPlatform;
 
 /**
  *

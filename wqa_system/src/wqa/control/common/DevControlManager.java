@@ -21,21 +21,21 @@ import wqa.dev.intf.IDeviceSearch;
  */
 public class DevControlManager {
 
-    private static IDeviceSearch dev_drv;
+//    private static IDeviceSearch dev_drv;
     private static final int max_addr = 0x20;
 
-    public static void SetDevDriver(IDeviceSearch instance) {
-        dev_drv = instance;
-    }
+//    public static void SetDevDriver(IDeviceSearch instance) {
+//        dev_drv = instance;
+//    }
 
-    public static IDeviceSearch GetDevDriver() {
-        return dev_drv;
-    }
+//    public static IDeviceSearch GetDevDriver() {
+//        return dev_drv;
+//    }
 
     // <editor-fold defaultstate="collapsed" desc="搜索设备"> 
-    public void SearchDevice(ShareIO[] iolist, IMainProcess<Boolean> process) {
+    public void SearchDevice(IDeviceSearch dev_drv, ShareIO[] iolist, IMainProcess<Boolean> process) {
         //检查驱动
-        if (DevControlManager.dev_drv == null) {
+        if (dev_drv == null) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "没有加载驱动");
             if (process != null) {
                 process.Finish(false);
@@ -44,7 +44,6 @@ public class DevControlManager {
         }
 
         //罗列所有物理口
-//        ShareIO[] iolist = IOManager.GetInstance().GetAllIO();
         float max_num = iolist.length * max_addr;
         float search_num = 0;
 
@@ -62,7 +61,7 @@ public class DevControlManager {
                     }
                     try {
                         //搜索设备基本信息，根据基本信息创建虚拟设备
-                        AddNewDevice(DevControlManager.dev_drv.SearchOneDev(io, (byte) i));
+                        AddNewDevice(dev_drv.SearchOneDev(io, (byte) i));
 
                         TimeUnit.MILLISECONDS.sleep(100);
                     } catch (Exception ex) {
@@ -88,9 +87,31 @@ public class DevControlManager {
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "设备初始化失败", ex);
             }
-        };
+        }
         if (process != null) {
             process.Finish(true);
+        }
+    }
+
+    public int max_auto_num = 12;
+
+    public void AutoConnect(ShareIO io) throws InterruptedException {
+        for (int i = 1; i < 12; i++) {
+            if (io.IsClosed()) {
+                return;
+            }
+            io.Lock();
+            try {
+                //搜索设备基本信息，根据基本信息创建虚拟设备
+//                AddNewDevice(DevControlManager.dev_drv.SearchOneDev(io, (byte) i));
+            } catch (Exception ex) {
+                //超时表示没有搜索到设备
+                System.out.println(ex);
+            } finally {
+                io.UnLock();
+            }
+            
+            TimeUnit.MILLISECONDS.sleep(200 + this.control_list.size() * 200);
         }
     }
     // </editor-fold> 

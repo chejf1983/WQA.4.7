@@ -33,6 +33,7 @@ import migp.adapter.factory.MIGPDevFactory;
 import wqa.adapter.factory.ModBusDevFactory;
 import static wqa.common.JImagePane.*;
 import wqa.control.data.IMainProcess;
+import wqa.dev.intf.IDeviceSearch;
 import wqa.form.db.DataSearch;
 import wqa.form.iolist.IOConfigDialog;
 import wqa.form.monitor.MonitorPaneDesk;
@@ -152,13 +153,14 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // <editor-fold defaultstate="collapsed" desc="按钮相应">
+    private IDeviceSearch drv = null;
     private void LB_SearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LB_SearchMouseClicked
         IOConfigDialog dialog = new IOConfigDialog(this, true);
         dialog.setVisible(true);
         if (dialog.GetResult() == IOConfigDialog.SEARCH_MODBUS) {
-            WQAPlatform.LoadDriver(new ModBusDevFactory());
+            drv = (new ModBusDevFactory());
         } else if (dialog.GetResult() == IOConfigDialog.SEARCH_MIGP) {
-            WQAPlatform.LoadDriver(new MIGPDevFactory());
+            drv = (new MIGPDevFactory());
         } else {
             return;
         }
@@ -168,7 +170,7 @@ public class MainForm extends javax.swing.JFrame {
 
             ProcessDialog.ApplyGlobalProcessBar();
             Future submit = WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
-                WQAPlatform.GetInstance().GetManager().SearchDevice(WQAPlatform.GetInstance().GetIOManager().GetAllOpenIO(), new IMainProcess() {
+                WQAPlatform.GetInstance().GetManager().SearchDevice(drv, WQAPlatform.GetInstance().GetIOManager().GetAllOpenIO(), new IMainProcess() {
                     @Override
                     public void SetValue(float pecent) {
                         java.awt.EventQueue.invokeLater(() -> {
@@ -180,19 +182,16 @@ public class MainForm extends javax.swing.JFrame {
 
                     @Override
                     public void Finish(Object result) {
-                        java.awt.EventQueue.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                ProcessDialog.ReleaseGlobalProcessBar();
-                                LB_Search.setEnabled(true);
-                            }
+                        java.awt.EventQueue.invokeLater(() -> {
+                            ProcessDialog.ReleaseGlobalProcessBar();
+                            LB_Search.setEnabled(true);
                         });
                     }
                 });
             });
 
             int opio = WComManager.GetInstance().GetAllOpenCom().length;
-           
+
             /**
              * 增加超时机制
              */

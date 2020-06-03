@@ -55,7 +55,7 @@ public class ModBusDevFactory implements IDeviceSearch {
         ModeBusNode base = new ModeBusNode(io, addr);
         IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
         SREG SERIANUM = new SREG(0x18, 8, "序列号");//R
-        base.ReadREG(1, 250, DEVTYPE);
+        base.ReadREG(1, 200, DEVTYPE);
         //搜索设备基本信息，根据基本信息创建虚拟设备
         return this.BuildDevice(io, (byte) addr, DEVTYPE.GetValue());
     }

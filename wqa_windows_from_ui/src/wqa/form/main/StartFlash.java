@@ -52,20 +52,15 @@ public class StartFlash extends javax.swing.JFrame {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
             try {
-                //加载驱动
-                WQAPlatform.LoadDriver(new ModBusDevFactory());
                 //初始化系统
                 WQAPlatform.GetInstance().InitSystem();
                 //注册弹出窗口
                 LogCenter.Instance().RegisterFaultEvent(new EventListener<Level>() {
                     @Override
                     public void recevieEvent(Event<Level> event) {
-                        WQAPlatform.GetInstance().GetThreadPool().submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                //JOptionPane.showm
-                                MsgBoxFactory.Instance().ShowMsgBox(event.Info().toString());
-                            }
+                        WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
+                            //JOptionPane.showm
+                            MsgBoxFactory.Instance().ShowMsgBox(event.Info().toString());
                         });
                     }
                 });

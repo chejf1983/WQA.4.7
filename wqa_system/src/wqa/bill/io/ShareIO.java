@@ -25,9 +25,9 @@ public class ShareIO implements IMAbstractIO {
     public ShareIO(IAbstractIO io) {
         this.io = io;
     }
-  
+
     // <editor-fold defaultstate="collapsed" desc="IO控制">   
-    public void Lock() throws Exception {
+    public void Lock() {
         share_lock.lock();
     }
 
@@ -35,7 +35,7 @@ public class ShareIO implements IMAbstractIO {
         if (share_lock.isLocked()) {
             share_lock.unlock();
         }
-    }  
+    }
 
     public void Open() throws Exception {
         this.io.Open();
@@ -44,7 +44,7 @@ public class ShareIO implements IMAbstractIO {
     public void Close() {
         this.io.Close();
     }
-    
+
     public SIOInfo GetConnectInfo() {
         return this.io.GetConnectInfo();
     }
@@ -84,7 +84,7 @@ public class ShareIO implements IMAbstractIO {
     public boolean IsClosed() {
         return this.io.IsClosed();
     }
-    
+
     @Override
     public MIOInfo GetIOInfo() {
         SIOInfo info = this.io.GetConnectInfo();
