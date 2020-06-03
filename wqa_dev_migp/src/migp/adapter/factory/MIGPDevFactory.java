@@ -136,7 +136,7 @@ public class MIGPDevFactory implements IDeviceSearch {
             devinfo.io = io;
             devinfo.dev_addr = addr;
             devinfo.dev_type = DevType;
-            devinfo.protype = SDevInfo.ProType.MODEBUS;
+            devinfo.protype = SDevInfo.ProType.MIGP;
             devinfo.serial_num = "";
             return (IDevice) constructor.newInstance(devinfo);
         } else {

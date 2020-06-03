@@ -70,7 +70,6 @@ public class IOManager {
     private HashMap<String, IChangeConfig> changeArray = new HashMap();
 
     public interface IChangeConfig {
-
         String changeConfig(ShareIO io_instance, SIOInfo info);
     }
 
