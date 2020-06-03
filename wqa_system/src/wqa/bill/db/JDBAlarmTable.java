@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
-import wqa.dev.data.CollectData;
 
 /**
  *

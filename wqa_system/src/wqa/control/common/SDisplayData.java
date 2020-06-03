@@ -50,7 +50,6 @@ public class SDisplayData {
                 return data;
             }
         }
-
         return null;
     }
 }
