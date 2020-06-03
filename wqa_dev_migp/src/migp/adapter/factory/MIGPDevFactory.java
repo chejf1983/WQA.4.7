@@ -105,12 +105,10 @@ public class MIGPDevFactory implements IDeviceSearch {
 //        return null;
         IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
         IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
-        SMEG EBUILDSER = new SMEG(new EIA(0x20, 0x10), "序列号");
 //        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
 //        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
         try {
             base.ReadMEG(1, 200, VDEVTYPE);
-            base.ReadMEG(1, 200, EBUILDSER);
             //创建一个基础协议包
             if (VDEVTYPE.GetValue() == 0x110 || VDEVTYPE.GetValue() == 0x210) {
                 base.ReadMEG(1, 200, VDOATOKEN);
@@ -118,7 +116,7 @@ public class MIGPDevFactory implements IDeviceSearch {
                     VDEVTYPE.SetValue(VDEVTYPE.GetValue() + 0xA000);
                 }
             }
-            return this.BuildDevice(io, (byte) addr, VDEVTYPE.GetValue(), EBUILDSER.GetValue());
+            return this.BuildDevice(io, (byte) addr, VDEVTYPE.GetValue());
         } catch (Exception ex) {
             System.out.println(ex);
             return null;
@@ -127,7 +125,7 @@ public class MIGPDevFactory implements IDeviceSearch {
 
     //创建设备
     @Override
-    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType, String SerialNum) throws Exception {
+    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
@@ -139,7 +137,7 @@ public class MIGPDevFactory implements IDeviceSearch {
             devinfo.dev_addr = addr;
             devinfo.dev_type = DevType;
             devinfo.protype = SDevInfo.ProType.MODEBUS;
-            devinfo.serial_num = SerialNum;
+            devinfo.serial_num = "";
             return (IDevice) constructor.newInstance(devinfo);
         } else {
             //没有找到设备类，返回空

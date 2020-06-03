@@ -41,13 +41,14 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     @Override
     public void InitDevice() throws Exception {
         //获取eia信息
-//        this.ReadMEG(VDEVTYPE);
+         IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
+        this.ReadMEG(VDEVTYPE);
         this.ReadMEG(eiainfo.EBUILDDATE, eiainfo.EBUILDSER, eiainfo.EDEVNAME, eiainfo.EHWVER, eiainfo.ESWVER);
 
-        if (!GetDevInfo().serial_num.contentEquals(this.eiainfo.EBUILDSER.GetValue())) {
+        if (GetDevInfo().dev_type != (VDEVTYPE.GetValue())) {
             throw new Exception("探头信息不匹配");
         }
-//        info.serial_num = this.eiainfo.EBUILDSER.GetValue();
+        sinfo.serial_num = this.eiainfo.EBUILDSER.GetValue();
         MIOInfo comm_info = this.GetDevInfo().io.GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
             //串口的情况下，参数1表示波特率
@@ -69,12 +70,10 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     public boolean ReTestType() {
         IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
         IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
-        SMEG EBUILDSER = new SMEG(new EIA(0x20, 0x10), "序列号");
 //        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
 //        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
         try {
             this.base_drv.ReadMEG(1, 200, VDEVTYPE);
-            base_drv.ReadMEG(1, 200, EBUILDSER);
             //创建一个基础协议包
             if (VDEVTYPE.GetValue() == 0x110 || VDEVTYPE.GetValue() == 0x210) {
                 base_drv.ReadMEG(1, 200, VDOATOKEN);
@@ -82,7 +81,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
                     VDEVTYPE.SetValue(VDEVTYPE.GetValue() + 0xA000);
                 }
             }
-            return VDEVTYPE.GetValue() == this.GetDevInfo().dev_type && EBUILDSER.GetValue().contentEquals(GetDevInfo().serial_num);
+            return VDEVTYPE.GetValue() == this.GetDevInfo().dev_type;
         } catch (Exception ex) {
             System.out.println(ex);
             return false;

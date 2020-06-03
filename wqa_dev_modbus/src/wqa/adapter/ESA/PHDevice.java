@@ -10,7 +10,6 @@ import modebus.pro.NahonConvert;
 import modebus.register.*;
 import wqa.adapter.factory.*;
 import wqa.dev.data.*;
-import wqa.dev.intf.*;
 
 /**
  *

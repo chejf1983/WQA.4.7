@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
-import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.dev.intf.IDevice;
 import wqa.dev.intf.IDeviceSearch;

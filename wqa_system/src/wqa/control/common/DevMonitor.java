@@ -38,7 +38,7 @@ public class DevMonitor {
         data_lock.lock();
         try {
             CollectData CollectData = this.dev.CollectData();
-            CollectData.time = time;
+            CollectData.time.setTime(time.getTime());
             this.tmpdata = CreateDBData(CollectData);
             this.SaveAlarmInfo(tmpdata);
             if (this.tmpdata.alarm != 0) {

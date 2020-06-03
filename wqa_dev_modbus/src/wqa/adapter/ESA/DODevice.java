@@ -26,10 +26,7 @@ public class DODevice extends AbsDevice {
     private final FREG DOPEC = new FREG(0x03, 2, "溶解氧数据(%)");       //R
     private final FREG TEMPER = new FREG(0x05, 2, "温度数据");   //R
     private final FREG ODO = new FREG(0x07, 2, "溶解氧原始信号(nA)");   //R(nA)
-
-//    private final Register Avr = new Register(0x0c, 1); //R/W
     private final FREG PASCA = new FREG(0x09, 2, "大气压力");   //R/W
-//    private final Register TempCompen = new Register(0x0A, 2);   //R/W
     private final FREG SALT = new FREG(0x0B, 2, "盐度");   //R/W
     private final IREG AVR = new IREG(0x0D, 1, "平均次数");   //R/W
 

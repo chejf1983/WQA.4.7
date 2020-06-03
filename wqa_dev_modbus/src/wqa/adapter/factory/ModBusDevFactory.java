@@ -56,14 +56,13 @@ public class ModBusDevFactory implements IDeviceSearch {
         IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
         SREG SERIANUM = new SREG(0x18, 8, "序列号");//R
         base.ReadREG(1, 250, DEVTYPE);
-        base.ReadREG(1, 250, SERIANUM);
         //搜索设备基本信息，根据基本信息创建虚拟设备
-        return this.BuildDevice(io, (byte) addr, DEVTYPE.GetValue(), SERIANUM.GetValue());
+        return this.BuildDevice(io, (byte) addr, DEVTYPE.GetValue());
     }
 
     //创建设备
     @Override
-    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType, String SerialNum) throws Exception {
+    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
@@ -74,7 +73,7 @@ public class ModBusDevFactory implements IDeviceSearch {
             devinfo.dev_addr = addr;
             devinfo.dev_type = DevType;
             devinfo.protype = SDevInfo.ProType.MODEBUS;
-            devinfo.serial_num = SerialNum;
+            devinfo.serial_num = "";
             return (IDevice) constructor.newInstance(devinfo);
         } else {
             if (DevType != -1) {
