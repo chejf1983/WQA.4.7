@@ -226,7 +226,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             MIGP_CmdSend base = new MIGP_CmdSend(MIGPDevFactory.Convert(this.GetDevInfo().io), (byte) 0xF0, (byte) devaddr);
             VPA devtype = new VPA(0x00, 2);
             try {
-                base.GetMEM(devtype, devtype.length, DEF_RETRY, DEF_TIMEOUT);
+                base.GetMEM(devtype, devtype.length, 1, DEF_TIMEOUT);
                 throw new Exception("该地址已经存在!");
             } catch (Exception ex) {
                 new MIGPBoot(this.base_drv).SetDevNum((byte) devaddr);

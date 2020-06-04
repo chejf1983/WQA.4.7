@@ -117,7 +117,7 @@ public class DevControlManager {
     private ArrayList<ShareIO> iolist = new ArrayList();
     private final ReentrantLock iolock = new ReentrantLock(true);
 
-    public void AddIO(ShareIO io) {
+    public void AddAutoSearchIO(ShareIO io) {
         iolock.lock();
         try {
             for (ShareIO tio : iolist) {
@@ -131,7 +131,7 @@ public class DevControlManager {
         }
     }
 
-    public void DelIO(ShareIO io) {
+    public void DelAutoSearchIO(ShareIO io) {
         iolock.lock();
         try {
             iolist.remove(io);
@@ -142,11 +142,11 @@ public class DevControlManager {
 
     private IDeviceSearch dev_drv;
 
-    public IDeviceSearch GetDevDrv() {
+    public IDeviceSearch GetAutoSearchDriver() {
         return this.dev_drv;
     }
 
-    public void SetDriver(IDeviceSearch dev_drv) {
+    public void ChangeAutoSeachDriver(IDeviceSearch dev_drv) {
         if (!isstart) {
             isstart = true;
             this.InitProcess();
@@ -175,7 +175,7 @@ public class DevControlManager {
                     if (getio != null) {
                         AutoConnect(getio);
                         if (!getio.IsClosed()) {
-                            AddIO(getio);
+                            AddAutoSearchIO(getio);
                         }
                     }
                     try {

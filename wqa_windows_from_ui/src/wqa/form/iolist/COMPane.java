@@ -135,7 +135,7 @@ public class COMPane extends javax.swing.JPanel {
             try {
                 WComManager.GetInstance().ChangeBandrate(io, this.ComboBox_bandrate.getSelectedItem().toString());
                 io.Open();
-                WQAPlatform.GetInstance().GetManager().AddIO(io);
+                WQAPlatform.GetInstance().GetManager().AddAutoSearchIO(io);
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, "打开串口失败", ex);
             }

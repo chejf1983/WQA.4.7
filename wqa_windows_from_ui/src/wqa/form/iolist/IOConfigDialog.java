@@ -56,7 +56,7 @@ public class IOConfigDialog extends javax.swing.JDialog {
         this.ToggleButton_AMIGP.setVisible(WQAPlatform.GetInstance().is_internal);
 
         this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().GetMaxAutoNum() + "");
-        IDeviceSearch GetDevDrv = WQAPlatform.GetInstance().GetManager().GetDevDrv();
+        IDeviceSearch GetDevDrv = WQAPlatform.GetInstance().GetManager().GetAutoSearchDriver();
         if (GetDevDrv != null) {
             if (GetDevDrv.ProType().contentEquals("MIGP")) {
                 ToggleButton_AMIGP.setSelected(true);
@@ -279,11 +279,11 @@ public class IOConfigDialog extends javax.swing.JDialog {
         }
         if (ToggleButton_AMIGP.isSelected()) {
             ToggleButton_AMODBUS.setSelected(false);
-            WQAPlatform.GetInstance().GetManager().SetDriver(new MIGPDevFactory());
+            WQAPlatform.GetInstance().GetManager().ChangeAutoSeachDriver(new MIGPDevFactory());
         } else {
-            WQAPlatform.GetInstance().GetManager().SetDriver(null);
+            WQAPlatform.GetInstance().GetManager().ChangeAutoSeachDriver(null);
         }
-        TextField_MaxAddr.setEnabled(WQAPlatform.GetInstance().GetManager().GetDevDrv() == null);
+        TextField_MaxAddr.setEnabled(WQAPlatform.GetInstance().GetManager().GetAutoSearchDriver() == null);
     }//GEN-LAST:event_ToggleButton_AMIGPActionPerformed
 
     private void ToggleButton_AMODBUSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButton_AMODBUSActionPerformed
@@ -296,11 +296,11 @@ public class IOConfigDialog extends javax.swing.JDialog {
 
         if (ToggleButton_AMODBUS.isSelected()) {
             ToggleButton_AMIGP.setSelected(false);
-            WQAPlatform.GetInstance().GetManager().SetDriver(new ModBusDevFactory());
+            WQAPlatform.GetInstance().GetManager().ChangeAutoSeachDriver(new ModBusDevFactory());
         } else {
-            WQAPlatform.GetInstance().GetManager().SetDriver(null);
+            WQAPlatform.GetInstance().GetManager().ChangeAutoSeachDriver(null);
         }
-        TextField_MaxAddr.setEnabled(WQAPlatform.GetInstance().GetManager().GetDevDrv() == null);
+        TextField_MaxAddr.setEnabled(WQAPlatform.GetInstance().GetManager().GetAutoSearchDriver() == null);
     }//GEN-LAST:event_ToggleButton_AMODBUSActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
