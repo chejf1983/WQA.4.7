@@ -45,13 +45,13 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     @Override
     public void InitDevice() throws Exception {
         //获取eia信息
-        IREG DEVTYPE = new IREG(0x25, 1, "设备类型");//R
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SERIANUM, HWVER, SWVER, BANDRANGEI, DEVTYPE);
+//        IREG DEVTYPE = new IREG(0x25, 1, "设备类型");//R
+        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SERIANUM, HWVER, SWVER, BANDRANGEI);
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, SDTEMPSWT, SDTEMP);
 
-        if (GetDevInfo().dev_type != DEVTYPE.GetValue()) {
-            throw new Exception("探头信息不匹配");
-        }
+//        if (GetDevInfo().dev_type != DEVTYPE.GetValue()) {
+//            throw new Exception("探头信息不匹配");
+//        }
         
         this.sinfo.serial_num = SERIANUM.GetValue();
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确

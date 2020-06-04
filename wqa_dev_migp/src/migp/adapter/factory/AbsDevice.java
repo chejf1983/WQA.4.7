@@ -40,13 +40,13 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     @Override
     public void InitDevice() throws Exception {
         //获取eia信息
-         IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
-        this.ReadMEG(VDEVTYPE);
+//        IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
+//        this.ReadMEG(VDEVTYPE);
         this.ReadMEG(eiainfo.EBUILDDATE, eiainfo.EBUILDSER, eiainfo.EDEVNAME, eiainfo.EHWVER, eiainfo.ESWVER);
 
-        if (GetDevInfo().dev_type != (VDEVTYPE.GetValue())) {
-            throw new Exception("探头信息不匹配");
-        }
+//        if (GetDevInfo().dev_type != (VDEVTYPE.GetValue())) {
+//            throw new Exception("探头信息不匹配");
+//        }
         sinfo.serial_num = this.eiainfo.EBUILDSER.GetValue();
         MIOInfo comm_info = this.GetDevInfo().io.GetIOInfo();
         if (comm_info.iotype.equals(MIOInfo.COM)) {
