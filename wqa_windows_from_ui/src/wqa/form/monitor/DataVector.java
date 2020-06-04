@@ -58,6 +58,7 @@ public class DataVector {
                     visable[i] = true;
                 }
                 select_name = data_names[0];
+                ElementChange.CreateEvent(null);
             }
         }
         datalist_lock.lock();

@@ -96,8 +96,6 @@ public class MonitorPane1 extends javax.swing.JPanel {
             data_vector.Clean();
         });
 
-        this.UpdateComboBox();
-
         //显示到展示区
         this.DisplayArea.add("CHART", this.m_chart);
 //        m_chart.setVisible(false);

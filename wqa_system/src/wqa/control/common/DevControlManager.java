@@ -75,6 +75,8 @@ public class DevControlManager {
                         DevControl newcontrol = AddNewDevice(input_drv.SearchOneDev(io, (byte) i));
                         if (newcontrol != null) {
                             newcontrol.Start();
+                        } else {
+                            System.out.println("地址没有设备:" + i);
                         }
                         TimeUnit.MILLISECONDS.sleep(10);
                     } catch (Exception ex) {
@@ -84,7 +86,7 @@ public class DevControlManager {
                 }
             } catch (Exception ex) {
                 //IO打开失败，开始下一个IO口
-                System.out.println(ex.getMessage());
+//                System.out.println(ex.getMessage());
                 //break;
             } finally {
                 io.UnLock();
@@ -128,6 +130,16 @@ public class DevControlManager {
             iolock.unlock();
         }
     }
+
+    public void DelIO(ShareIO io) {
+        iolock.lock();
+        try {
+            iolist.remove(io);
+        } finally {
+            iolock.unlock();
+        }
+    }
+
     private IDeviceSearch dev_drv;
 
     public IDeviceSearch GetDevDrv() {
@@ -188,7 +200,7 @@ public class DevControlManager {
                 boolean isexist = false;
                 for (DevControl control : control_list) {
                     if (control.GetDevID().dev_addr == i) {
-                        isexist = true;
+                        isexist = control.GetProType().contentEquals(this.dev_drv.ProType());
                         break;
                     }
                 }
@@ -200,8 +212,6 @@ public class DevControlManager {
                 DevControl newcontrol = AddNewDevice(dev_drv.SearchOneDev(io, (byte) i));
                 if (newcontrol != null) {
                     newcontrol.Start();
-                } else {
-                    System.out.println("地址没有设备:" + i);
                 }
                 TimeUnit.MILLISECONDS.sleep(10);
             } catch (Exception ex) {

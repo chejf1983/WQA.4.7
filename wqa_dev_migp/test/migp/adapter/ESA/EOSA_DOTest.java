@@ -31,7 +31,7 @@ public class EOSA_DOTest {
     }
 
     // <editor-fold defaultstate="collapsed" desc="初始化">
-    public static EOSA_DO instance;
+    public static ESA_DO instance;
     public static DOMock dev_mock;
     public static ABS_Test commontest;
 
@@ -42,7 +42,7 @@ public class EOSA_DOTest {
         io.Open();
         IDevice devs = new MIGPDevFactory().SearchOneDev((io), (byte) 02);
         if (devs != null) {
-            instance = (EOSA_DO) devs;
+            instance = (ESA_DO) devs;
             instance.InitDevice();
             commontest = new ABS_Test(instance, dev_mock);
         }

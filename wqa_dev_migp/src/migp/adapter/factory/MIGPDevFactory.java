@@ -5,11 +5,9 @@
  */
 package migp.adapter.factory;
 
-import base.migp.mem.EIA;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.IMEG;
-import base.migp.reg.SMEG;
 import base.pro.absractio.AbstractIO;
 import base.pro.absractio.IOInfo;
 import java.lang.reflect.Constructor;
@@ -19,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import migp.adapter.ESA.*;
-import migp.adapter.ISA.ISA_X;
-import migp.adapter.OSA.OSA_X;
+import migp.adapter.ISA.*;
+import migp.adapter.OSA.*;
 import wqa.dev.data.MIOInfo;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.IDevice;
@@ -39,20 +37,20 @@ public class MIGPDevFactory implements IDeviceSearch {
     public MIGPDevFactory() {
         class_map.put(0x0200, ESA_PH.class.getName());
         class_map.put(0x0220, ESA_PH.class.getName());
-        class_map.put(0x0201, EOSA_DO.class.getName());
+        class_map.put(0x0201, OSA_FDOI.class.getName());
         class_map.put(0x0202, ESA_EC.class.getName());
         class_map.put(0x0221, ESA_EC.class.getName());
         class_map.put(0x0203, ESA_EC.class.getName());
         class_map.put(0x0204, ESA_CHL.class.getName());
         class_map.put(0x0208, ESA_ORP.class.getName());
         class_map.put(0x0209, ESA_AMMO.class.getName());
-        class_map.put(0x0210, EOSA_DO.class.getName());
-        class_map.put(0xA210, EOSA_DO.class.getName());
+        class_map.put(0x0210, OSA_FDOI.class.getName());
+        class_map.put(0xA210, OSA_FDOII.class.getName());
 
         class_map.put(0x1200, ESA_PH.class.getName());
         class_map.put(0x1201, ESA_ORP.class.getName());
         class_map.put(0x1202, ESA_EC.class.getName());
-        class_map.put(0x1203, EOSA_DO.class.getName());
+        class_map.put(0x1203, ESA_DO.class.getName());
 
         class_map.put(0x0100, OSA_X.class.getName());
         class_map.put(0x0102, OSA_X.class.getName());
@@ -61,8 +59,8 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x0108, OSA_X.class.getName());
         class_map.put(0x010A, OSA_X.class.getName());
         class_map.put(0x010E, OSA_X.class.getName());
-        class_map.put(0x0110, EOSA_DO.class.getName());
-        class_map.put(0xA110, EOSA_DO.class.getName());
+        class_map.put(0x0110, ESA_DO.class.getName());
+        class_map.put(0xA110, OSA_FDOII.class.getName());
 
         class_map.put(0x0300, ISA_X.class.getName());
         class_map.put(0x0301, ISA_X.class.getName());

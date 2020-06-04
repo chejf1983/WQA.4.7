@@ -149,13 +149,13 @@ public class CDevDataTable {
                 new DataInfo("NH3-N" + ORA_Flag, "mv", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
-        new DevInfo(0x0210, "OSA_FDO", "溶解氧FDO",
+        new DevInfo(0x0210, "ESA_FDO", "溶解氧FDO",
                 new DataInfo("溶解氧", "mg/L", 0x02, "(0-20)"), //0x102,高位1表示测量值内容没有，就是饱和氧和无氧
                 new DataInfo("溶解氧百分比", "%", 0, ""),
                 new DataInfo("溶解氧" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
-        new DevInfo(0xA210, "OSA_FDO", "溶解氧FDO",
+        new DevInfo(0xA210, "OSA_FDOII", "溶解氧FDO",
                 new DataInfo("溶解氧", "mg/L", 0x02, "(0-20)"), //0x102,高位1表示测量值内容没有，就是饱和氧和无氧
                 new DataInfo("溶解氧百分比", "%", 0, ""),
                 new DataInfo("溶解氧" + ORA_Flag, "", 0, true, ""),
@@ -203,13 +203,13 @@ public class CDevDataTable {
                 new DataInfo("悬浮物" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
-        new DevInfo(0x0110, "OSA_FDO", "溶解氧FDO",
+        new DevInfo(0x0110, "OSA_FDOI", "溶解氧FDO",
                 new DataInfo("溶解氧", "mg/L", 0x02, "(0-20)"), //0x102,高位1表示测量值内容没有，就是饱和氧和无氧
                 new DataInfo("溶解氧百分比", "%", 0, ""),
                 new DataInfo("溶解氧" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("温度", "℃", 1, "(0-60)"),
                 new DataInfo("温度" + ORA_Flag, "", 0, true, "")),
-        new DevInfo(0xA110, "OSA_FDO", "溶解氧FDO",
+        new DevInfo(0xA110, "OSA_FDOII", "溶解氧FDO",
                 new DataInfo("溶解氧", "mg/L", 0x02, "(0-20)"), //0x102,高位1表示测量值内容没有，就是饱和氧和无氧
                 new DataInfo("溶解氧百分比", "%", 0, ""),
                 new DataInfo("溶解氧" + ORA_Flag, "", 0, true, ""),
