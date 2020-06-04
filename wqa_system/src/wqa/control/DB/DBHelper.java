@@ -38,7 +38,6 @@ public class DBHelper {
         if (this.time_span != time_span) {
             this.time_span = time_span;
             WQAPlatform.GetInstance().GetConfig().setProperty(Time_Span_Key, String.valueOf(time_span));
-            WQAPlatform.GetInstance().SaveConfig();
         }
     }
 

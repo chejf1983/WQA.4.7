@@ -18,7 +18,6 @@ import wqa.bill.io.IOManager;
 import wqa.control.common.DevControlManager;
 import wqa.bill.log.DevLog;
 import wqa.control.DB.DBHelper;
-import wqa.dev.intf.IDeviceSearch;
 
 /**
  *
@@ -49,8 +48,6 @@ public class WQAPlatform {
         //初始化设备日志信息
         DevLog.Instance().InitDir(this.def_path + "/cal_log");
 
-        this.InitConfig();
-
         this.GetDBHelperFactory().Init(def_path);
         this.isinited = true;
     }
@@ -60,12 +57,12 @@ public class WQAPlatform {
     }
 
     public void CloseSystem() {
-        this.SaveConfig();
+        this.GetConfig().SaveConfig();
 
         this.GetManager().DeleteAllControls();
 
         this.GetDBHelperFactory().Close();
-        
+
         this.GetThreadPool().shutdown();
     }
 
@@ -116,31 +113,48 @@ public class WQAPlatform {
 
     public boolean is_internal = false;
 
-    private Properties Config = new Properties();
+    public class Config extends Properties {
 
-    public Properties GetConfig() {
-        return this.Config;
-    }
+        private Properties Config = new Properties();
 
-    private void InitConfig() {
-        File file = new File(this.def_path, "dev_config");
-        if (file.exists()) {
-            try {
-                Config.loadFromXML(new FileInputStream(file));
-                this.is_internal = Config.getProperty("IPS", "").contentEquals("Naqing");
-            } catch (IOException ex) {
-                LogCenter.Instance().PrintLog(Level.SEVERE, "没有找到配置文件", ex);
+        private void InitConfig() {
+            File file = new File(def_path, "dev_config");
+            if (file.exists()) {
+                try {
+                    Config.loadFromXML(new FileInputStream(file));
+                    is_internal = Config.getProperty("IPS", "").contentEquals("Naqing");
+                } catch (IOException ex) {
+                    LogCenter.Instance().PrintLog(Level.SEVERE, "没有找到配置文件", ex);
+                }
             }
         }
-    }
 
-    public void SaveConfig() {
-        File file = new File(this.def_path, "dev_config");
-        try {
-            Config.storeToXML(new FileOutputStream(file), "");
-        } catch (IOException ex) {
-            LogCenter.Instance().PrintLog(Level.SEVERE, "保存配置失败！", ex);
+        private void SaveConfig() {
+            File file = new File(def_path, "dev_config");
+            try {
+                Config.storeToXML(new FileOutputStream(file), "");
+            } catch (IOException ex) {
+                LogCenter.Instance().PrintLog(Level.SEVERE, "保存配置失败！", ex);
+            }
+        }
+
+        @Override
+        public synchronized Object setProperty(String string, String string1) {
+            Object ret = super.setProperty(string, string1); //To change body of generated methods, choose Tools | Templates.
+            this.SaveConfig();
+            return ret;
         }
     }
+
+    private Config config;
+
+    public Config GetConfig() {
+        if (config == null) {
+            config = new Config();
+            config.InitConfig();
+        }
+        return this.config;
+    }
+
     // </editor-fold>  
 }

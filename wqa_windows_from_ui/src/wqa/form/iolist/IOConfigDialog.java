@@ -53,8 +53,9 @@ public class IOConfigDialog extends javax.swing.JDialog {
 //        this.IO_PaneDesk.setBounds(200, 200, 500, 500);
 
         this.Button_MIGP.setVisible(WQAPlatform.GetInstance().is_internal);
+        this.ToggleButton_AMIGP.setVisible(WQAPlatform.GetInstance().is_internal);
 
-        this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().max_auto_num + "");
+        this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().GetMaxAutoNum() + "");
         IDeviceSearch GetDevDrv = WQAPlatform.GetInstance().GetManager().GetDevDrv();
         if (GetDevDrv != null) {
             if (GetDevDrv.ProType().contentEquals("MIGP")) {
@@ -271,10 +272,10 @@ public class IOConfigDialog extends javax.swing.JDialog {
 
     private void ToggleButton_AMIGPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButton_AMIGPActionPerformed
         try {
-            WQAPlatform.GetInstance().GetManager().max_auto_num = Integer.valueOf(this.TextField_MaxAddr.getText());
+            WQAPlatform.GetInstance().GetManager().SetMaxAutoNum(Integer.valueOf(this.TextField_MaxAddr.getText()));
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "非法输入");
-            this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().max_auto_num + "");
+            this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().GetMaxAutoNum() + "");
         }
         if (ToggleButton_AMIGP.isSelected()) {
             ToggleButton_AMODBUS.setSelected(false);
@@ -282,14 +283,15 @@ public class IOConfigDialog extends javax.swing.JDialog {
         } else {
             WQAPlatform.GetInstance().GetManager().SetDriver(null);
         }
+        TextField_MaxAddr.setEnabled(WQAPlatform.GetInstance().GetManager().GetDevDrv() == null);
     }//GEN-LAST:event_ToggleButton_AMIGPActionPerformed
 
     private void ToggleButton_AMODBUSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButton_AMODBUSActionPerformed
         try {
-            WQAPlatform.GetInstance().GetManager().max_auto_num = Integer.valueOf(this.TextField_MaxAddr.getText());
+            WQAPlatform.GetInstance().GetManager().SetMaxAutoNum(Integer.valueOf(this.TextField_MaxAddr.getText()));
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "非法输入");
-            this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().max_auto_num + "");
+            this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().GetMaxAutoNum() + "");
         }
 
         if (ToggleButton_AMODBUS.isSelected()) {
@@ -298,6 +300,7 @@ public class IOConfigDialog extends javax.swing.JDialog {
         } else {
             WQAPlatform.GetInstance().GetManager().SetDriver(null);
         }
+        TextField_MaxAddr.setEnabled(WQAPlatform.GetInstance().GetManager().GetDevDrv() == null);
     }//GEN-LAST:event_ToggleButton_AMODBUSActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

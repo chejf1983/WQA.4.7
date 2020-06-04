@@ -24,6 +24,10 @@ import wqa.system.WQAPlatform;
  */
 public class DevControlManager {
 
+    public DevControlManager() {
+        max_auto_num = Integer.valueOf(WQAPlatform.GetInstance().GetConfig().getProperty(AUTOMAX, "14"));
+    }
+
     // <editor-fold defaultstate="collapsed" desc="搜索设备"> 
     private static final int MAX_ADDR = 0x20;
 
@@ -96,7 +100,17 @@ public class DevControlManager {
         }
     }
 
-    public int max_auto_num = 12;
+    private String AUTOMAX = "AUTOMAX";
+    private int max_auto_num = 14;
+
+    public void SetMaxAutoNum(int num) {
+        this.max_auto_num = num;
+        WQAPlatform.GetInstance().GetConfig().setProperty(AUTOMAX, num + "");
+    }
+
+    public int GetMaxAutoNum() {
+        return this.max_auto_num;
+    }
 
     private ArrayList<ShareIO> iolist = new ArrayList();
     private final ReentrantLock iolock = new ReentrantLock(true);
@@ -163,7 +177,7 @@ public class DevControlManager {
     }
 
     private void AutoConnect(ShareIO io) {
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i <= max_auto_num; i++) {
             if (io.IsClosed() || dev_drv == null) {
                 return;
             }
@@ -186,7 +200,7 @@ public class DevControlManager {
                 DevControl newcontrol = AddNewDevice(dev_drv.SearchOneDev(io, (byte) i));
                 if (newcontrol != null) {
                     newcontrol.Start();
-                }else{
+                } else {
                     System.out.println("地址没有设备:" + i);
                 }
                 TimeUnit.MILLISECONDS.sleep(10);
