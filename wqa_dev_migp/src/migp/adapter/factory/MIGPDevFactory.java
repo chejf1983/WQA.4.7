@@ -119,7 +119,7 @@ public class MIGPDevFactory implements IDeviceSearch {
             }
             return this.BuildDevice(io, (byte) addr, VDEVTYPE.GetValue());
         } catch (Exception ex) {
-            System.out.println(ex);
+//            System.out.println(ex);
             return null;
         }
     }
@@ -196,6 +196,11 @@ public class MIGPDevFactory implements IDeviceSearch {
 //                return 65535;
             }
         };
+    }
+
+    @Override
+    public String ProType() {
+        return SDevInfo.ProType.MIGP.toString();
     }
     // </editor-fold> 
 

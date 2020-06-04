@@ -22,7 +22,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     protected ModeBusNode base_drv;
     public static int DEF_TIMEOUT = 400;
-    public static int RETRY_TIME = 3;
+    public static int RETRY_TIME = 2;
     //波特率范围
     public static final String[] SBandRate = new String[]{"4800", "9600", "19200", "38400", "57600", "115200"};
     protected final SREG DEVNAME = new SREG(0x10, 8, "设备名称");//R   

@@ -9,9 +9,12 @@ import java.awt.Color;
 import wqa.common.ListFlowLayout;
 import java.awt.FlowLayout;
 import java.util.logging.Level;
+import migp.adapter.factory.MIGPDevFactory;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.adapter.factory.ModBusDevFactory;
 import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
+import wqa.dev.intf.IDeviceSearch;
 import wqa.system.WQAPlatform;
 import wqa.winio.adapter.WComManager;
 
@@ -50,6 +53,17 @@ public class IOConfigDialog extends javax.swing.JDialog {
 //        this.IO_PaneDesk.setBounds(200, 200, 500, 500);
 
         this.Button_MIGP.setVisible(WQAPlatform.GetInstance().is_internal);
+
+        this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().max_auto_num + "");
+        IDeviceSearch GetDevDrv = WQAPlatform.GetInstance().GetManager().GetDevDrv();
+        if (GetDevDrv != null) {
+            if (GetDevDrv.ProType().contentEquals("MIGP")) {
+                ToggleButton_AMIGP.setSelected(true);
+            } else {
+
+                ToggleButton_AMODBUS.setSelected(true);
+            }
+        }
     }
 
     private void RefreshIO() {
@@ -94,6 +108,7 @@ public class IOConfigDialog extends javax.swing.JDialog {
         IO_PaneDesk = new javax.swing.JPanel();
         ToggleButton_AMODBUS = new javax.swing.JToggleButton();
         ToggleButton_AMIGP = new javax.swing.JToggleButton();
+        TextField_MaxAddr = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -143,6 +158,11 @@ public class IOConfigDialog extends javax.swing.JDialog {
         ScrollPane.setViewportView(IO_PaneDesk);
 
         ToggleButton_AMODBUS.setText("ModBus自动搜索");
+        ToggleButton_AMODBUS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ToggleButton_AMODBUSActionPerformed(evt);
+            }
+        });
 
         ToggleButton_AMIGP.setText("MIGP自动搜索");
         ToggleButton_AMIGP.addActionListener(new java.awt.event.ActionListener() {
@@ -150,6 +170,8 @@ public class IOConfigDialog extends javax.swing.JDialog {
                 ToggleButton_AMIGPActionPerformed(evt);
             }
         });
+
+        TextField_MaxAddr.setText("12");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,7 +198,9 @@ public class IOConfigDialog extends javax.swing.JDialog {
                                     .addComponent(ToggleButton_AMODBUS, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(Button_ModBus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Button_Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(Button_Cancel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                                    .addComponent(TextField_MaxAddr)))))
                     .addComponent(ScrollPane, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -188,7 +212,9 @@ public class IOConfigDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(ToggleButton_AMODBUS)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ToggleButton_AMODBUS)
+                            .addComponent(TextField_MaxAddr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(Button_ModBus)
@@ -229,7 +255,7 @@ public class IOConfigDialog extends javax.swing.JDialog {
     private void Button_AddComActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AddComActionPerformed
         // TODO add your handling code here:
         String COMName = TextField_ComName.getText().trim();
-        if (WComManager.GetInstance().AddCom(COMName)){
+        if (WComManager.GetInstance().AddCom(COMName)) {
             this.RefreshIO();
             try {
                 int nm = Integer.valueOf(COMName.substring(3));
@@ -238,14 +264,41 @@ public class IOConfigDialog extends javax.swing.JDialog {
             } catch (Exception ex) {
 
             }
-        }else{
+        } else {
             LogCenter.Instance().ShowMessBox(Level.SEVERE, "串口已经存在");
         }
     }//GEN-LAST:event_Button_AddComActionPerformed
 
     private void ToggleButton_AMIGPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButton_AMIGPActionPerformed
-        
+        try {
+            WQAPlatform.GetInstance().GetManager().max_auto_num = Integer.valueOf(this.TextField_MaxAddr.getText());
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, "非法输入");
+            this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().max_auto_num + "");
+        }
+        if (ToggleButton_AMIGP.isSelected()) {
+            ToggleButton_AMODBUS.setSelected(false);
+            WQAPlatform.GetInstance().GetManager().SetDriver(new MIGPDevFactory());
+        } else {
+            WQAPlatform.GetInstance().GetManager().SetDriver(null);
+        }
     }//GEN-LAST:event_ToggleButton_AMIGPActionPerformed
+
+    private void ToggleButton_AMODBUSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleButton_AMODBUSActionPerformed
+        try {
+            WQAPlatform.GetInstance().GetManager().max_auto_num = Integer.valueOf(this.TextField_MaxAddr.getText());
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, "非法输入");
+            this.TextField_MaxAddr.setText(WQAPlatform.GetInstance().GetManager().max_auto_num + "");
+        }
+
+        if (ToggleButton_AMODBUS.isSelected()) {
+            ToggleButton_AMIGP.setSelected(false);
+            WQAPlatform.GetInstance().GetManager().SetDriver(new ModBusDevFactory());
+        } else {
+            WQAPlatform.GetInstance().GetManager().SetDriver(null);
+        }
+    }//GEN-LAST:event_ToggleButton_AMODBUSActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Button_AddCom;
@@ -255,6 +308,7 @@ public class IOConfigDialog extends javax.swing.JDialog {
     private javax.swing.JPanel IO_PaneDesk;
     private javax.swing.JScrollPane ScrollPane;
     private javax.swing.JTextField TextField_ComName;
+    private javax.swing.JTextField TextField_MaxAddr;
     private javax.swing.JToggleButton ToggleButton_AMIGP;
     private javax.swing.JToggleButton ToggleButton_AMODBUS;
     private javax.swing.JLabel jLabel1;

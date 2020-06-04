@@ -7,7 +7,6 @@ package migp.adapter.factory;
 
 import base.migp.impl.MIGPBoot;
 import base.migp.impl.MIGPEia;
-import base.migp.mem.EIA;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.*;
@@ -25,7 +24,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     protected MIGP_CmdSend base_drv;
     public static int DEF_TIMEOUT = 400; //ms
-    public static int DEF_RETRY = 3;
+    public static int DEF_RETRY = 2;
 
     public static int DMask = 0xFF00;
     MIGPEia eiainfo = new MIGPEia(this.base_drv);

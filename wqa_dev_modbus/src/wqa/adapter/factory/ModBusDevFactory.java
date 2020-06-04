@@ -28,6 +28,7 @@ import wqa.dev.intf.*;
  * @author chejf
  */
 public class ModBusDevFactory implements IDeviceSearch {
+
     //搜索指定物理口
     @Override
     public IDevice[] SearchDevice(IMAbstractIO io) {
@@ -82,11 +83,16 @@ public class ModBusDevFactory implements IDeviceSearch {
             //System.out.println(String.format("0x%04X", DevType));
             return null;
         }
+    }   
+    
+    @Override
+    public String ProType() {
+        return SDevInfo.ProType.MODEBUS.toString();
     }
 
     // <editor-fold defaultstate="collapsed" desc="设备类目录">
     private final HashMap<Integer, String> class_map = new HashMap<>();
-    
+
     public ModBusDevFactory() {
         class_map.put(0x0200, PHDevice.class.getName());
         class_map.put(0x0201, DODevice.class.getName());
@@ -97,12 +103,11 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0209, EAMMODevice.class.getName());
         class_map.put(0x0210, DODevice.class.getName());
 
-        
         class_map.put(0x1200, PHDevice.class.getName());
         class_map.put(0x1201, PHDevice.class.getName());
         class_map.put(0x1202, ECDevice.class.getName());
         class_map.put(0x1203, DODevice.class.getName());
-        
+
         class_map.put(0x0100, OSADevice.class.getName());
         class_map.put(0x0102, OSADevice.class.getName());
         class_map.put(0x0104, OSADevice.class.getName());
@@ -116,4 +121,6 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0301, AMMODevice.class.getName());
     }
     // </editor-fold> 
+
+
 }
