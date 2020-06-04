@@ -42,6 +42,9 @@ public class WQAPlatform {
     public void InitSystem(String path) throws Exception {
         this.def_path = path;
 
+        this.GetConfig().InitConfig(def_path);
+        is_internal = this.GetConfig().getProperty("IPS", "").contentEquals("Naqing");
+
         LogCenter.Instance().SetLogPath(this.def_path + "/log");
         LogCenter.Instance().PrintLog(Level.INFO, "开始记录LOG");
 
@@ -57,8 +60,6 @@ public class WQAPlatform {
     }
 
     public void CloseSystem() {
-        this.GetConfig().SaveConfig();
-
         this.GetManager().DeleteAllControls();
 
         this.GetDBHelperFactory().Close();
@@ -113,45 +114,11 @@ public class WQAPlatform {
 
     public boolean is_internal = false;
 
-    public class Config extends Properties {
-
-        private Properties Config = new Properties();
-
-        private void InitConfig() {
-            File file = new File(def_path, "dev_config");
-            if (file.exists()) {
-                try {
-                    Config.loadFromXML(new FileInputStream(file));
-                    is_internal = Config.getProperty("IPS", "").contentEquals("Naqing");
-                } catch (IOException ex) {
-                    LogCenter.Instance().PrintLog(Level.SEVERE, "没有找到配置文件", ex);
-                }
-            }
-        }
-
-        private void SaveConfig() {
-            File file = new File(def_path, "dev_config");
-            try {
-                Config.storeToXML(new FileOutputStream(file), "");
-            } catch (IOException ex) {
-                LogCenter.Instance().PrintLog(Level.SEVERE, "保存配置失败！", ex);
-            }
-        }
-
-        @Override
-        public synchronized Object setProperty(String string, String string1) {
-            Object ret = super.setProperty(string, string1); //To change body of generated methods, choose Tools | Templates.
-            this.SaveConfig();
-            return ret;
-        }
-    }
-
     private Config config;
 
     public Config GetConfig() {
         if (config == null) {
             config = new Config();
-            config.InitConfig();
         }
         return this.config;
     }
