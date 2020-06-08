@@ -49,15 +49,29 @@ public class ModBusDevFactory implements IDeviceSearch {
         return devlist.toArray(new IDevice[0]);
     }
 
+    IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
+    IMAbstractIO lastio;
+    ModeBusNode base;
     //搜索一个设备
+
     @Override
     public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception {
         //创建一个基础协议包
-        ModeBusNode base = new ModeBusNode(io, addr);
-        IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
-        base.ReadREG(1, 200, DEVTYPE);
-        //搜索设备基本信息，根据基本信息创建虚拟设备
-        return this.BuildDevice(io, (byte) addr, DEVTYPE.GetValue());
+        if (lastio == io) {
+            base.addr = (addr);
+        } else {
+            //创建一个基础协议包
+            base = new ModeBusNode(io, addr);
+            lastio = io;
+        }
+        try {
+            base.ReadREG(1, 200, DEVTYPE);
+            //搜索设备基本信息，根据基本信息创建虚拟设备
+            return this.BuildDevice(io, (byte) addr, DEVTYPE.GetValue());
+        } catch (Exception ex) {
+//            System.out.println(ex);
+            return null;
+        }
     }
 
     //创建设备
@@ -83,8 +97,8 @@ public class ModBusDevFactory implements IDeviceSearch {
             //System.out.println(String.format("0x%04X", DevType));
             return null;
         }
-    }   
-    
+    }
+
     @Override
     public String ProType() {
         return SDevInfo.ProType.MODEBUS.toString();
@@ -121,6 +135,5 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0301, AMMODevice.class.getName());
     }
     // </editor-fold> 
-
 
 }

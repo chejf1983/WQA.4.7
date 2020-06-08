@@ -95,15 +95,24 @@ public class MIGPDevFactory implements IDeviceSearch {
         return devlist.toArray(new IDevice[0]);
     }
 
+    IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
+    IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
+    IMAbstractIO lastio;
+    MIGP_CmdSend base;
+
     //搜索一个设备
     @Override
     public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception {
-        //创建一个基础协议包
-        MIGP_CmdSend base = new MIGP_CmdSend(Convert(io), (byte) 0xF0, addr);
+        if (lastio == io) {
+            base.SetDstAddr(addr);
+        } else {
+            //创建一个基础协议包
+            base = new MIGP_CmdSend(Convert(io), (byte) 0xF0, addr);
+            lastio = io;
+        }
+
         //搜索设备基本信息，根据基本信息创建虚拟设备
 //        return null;
-        IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
-        IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
 //        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
 //        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
         try {
