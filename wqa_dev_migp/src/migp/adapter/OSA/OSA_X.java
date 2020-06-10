@@ -365,7 +365,6 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
         double newB = 0;
         double newC = testdata[0] - newA * oradata[0];
 //        this.set_calpar(temper, newA, newB, newC);
-//        System.out.println("A:" + newA + " B:" + newB + " C:" + newC);
 
         this.SetConfigREG(this.NCLTEMPER[this.NRANGE.GetValue()], String.valueOf(temper));
         this.SetConfigREG(this.NCLPARA[this.NRANGE.GetValue()], String.valueOf(newA));

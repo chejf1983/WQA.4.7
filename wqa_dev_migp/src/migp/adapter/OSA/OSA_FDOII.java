@@ -80,7 +80,6 @@ public class OSA_FDOII extends ESADEV {
             }
             return VDEVTYPE.GetValue() == this.GetDevInfo().dev_type;
         } catch (Exception ex) {
-            System.out.println(ex);
             return false;
         }
     }

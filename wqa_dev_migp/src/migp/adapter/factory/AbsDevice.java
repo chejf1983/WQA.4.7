@@ -72,7 +72,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
             this.base_drv.ReadMEG(retry, 200, VDEVTYPE);
             return VDEVTYPE.GetValue() == this.GetDevInfo().dev_type;
         } catch (Exception ex) {
-            System.out.println(ex);
+//            System.out.println(ex);
             return false;
         }
     }
