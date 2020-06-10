@@ -64,16 +64,16 @@ public class OSA_FDOII extends ESADEV {
 
     //获取设备类型
     @Override
-    public boolean ReTestType() {
+    public boolean ReTestType(int retry) {
         IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
         IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
 //        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
 //        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
         try {
-            this.base_drv.ReadMEG(1, 200, VDEVTYPE);
+            this.base_drv.ReadMEG(retry, 200, VDEVTYPE);
             //创建一个基础协议包
             if (VDEVTYPE.GetValue() == 0x110 || VDEVTYPE.GetValue() == 0x210) {
-                base_drv.ReadMEG(1, 200, VDOATOKEN);
+                base_drv.ReadMEG(retry, 200, VDOATOKEN);
                 if (VDOATOKEN.GetValue() > 0) {
                     VDEVTYPE.SetValue(VDEVTYPE.GetValue() + 0xA000);
                 }

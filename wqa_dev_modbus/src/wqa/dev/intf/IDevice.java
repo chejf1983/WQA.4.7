@@ -22,7 +22,7 @@ public interface IDevice {
     public IConfigList[] GetConfigLists();  
     
     //重新获取设备
-    public boolean ReTestType();       
+    public boolean ReTestType(int retry);       
     // </editor-fold>      
     
     // <editor-fold defaultstate="collapsed" desc="基本信息">    

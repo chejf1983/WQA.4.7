@@ -21,8 +21,8 @@ import wqa.dev.intf.*;
 public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     protected ModeBusNode base_drv;
-    public static int DEF_TIMEOUT = 400;
-    public static int RETRY_TIME = 2;
+    public static int DEF_TIMEOUT = 300;
+    public static int RETRY_TIME = 3;
     //波特率范围
     public static final String[] SBandRate = new String[]{"4800", "9600", "19200", "38400", "57600", "115200"};
     protected final SREG DEVNAME = new SREG(0x10, 8, "设备名称");//R   
@@ -71,11 +71,11 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     // <editor-fold defaultstate="collapsed" desc="公共接口接口">
     @Override
-    public boolean ReTestType() {
+    public boolean ReTestType(int retry) {
         try {
             //读设备类型寄存器
             IREG TDEVTYPE = new IREG(0x25, 1, "设备类型");
-            this.base_drv.ReadREG(1, DEF_TIMEOUT, TDEVTYPE);
+            this.base_drv.ReadREG(retry, DEF_TIMEOUT, TDEVTYPE);
 //            this.base_drv.ReadMemory(DEF_TIMEOUT, RETRY_TIME, RETRY_TIME, DEF_TIMEOUT)
             //返回值
             return TDEVTYPE.GetValue() == this.GetDevInfo().dev_type;

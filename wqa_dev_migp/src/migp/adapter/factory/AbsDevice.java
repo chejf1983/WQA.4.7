@@ -23,8 +23,8 @@ import wqa.dev.data.*;
 public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     protected MIGP_CmdSend base_drv;
-    public static int DEF_TIMEOUT = 400; //ms
-    public static int DEF_RETRY = 2;
+    public static int DEF_TIMEOUT = 300; //ms
+    public static int DEF_RETRY = 3;
 
     public static int DMask = 0xFF00;
     MIGPEia eiainfo = new MIGPEia(this.base_drv);
@@ -66,10 +66,10 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
     //获取设备类型
     @Override
-    public boolean ReTestType() {
+    public boolean ReTestType(int retry) {
         IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
         try {
-            this.base_drv.ReadMEG(1, 200, VDEVTYPE);
+            this.base_drv.ReadMEG(retry, 200, VDEVTYPE);
             return VDEVTYPE.GetValue() == this.GetDevInfo().dev_type;
         } catch (Exception ex) {
             System.out.println(ex);
