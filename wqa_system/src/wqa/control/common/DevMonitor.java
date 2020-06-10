@@ -96,7 +96,7 @@ public class DevMonitor {
         tmp.alram_info = data.alram_info;
         tmp.datas = new SDataElement[data.datas.length];
         for (int i = 0; i < tmp.datas.length; i++) {
-            tmp.datas[i] = new SDataElement(data.datas[i]);
+            tmp.datas[i] = data.datas[i];
         }
         return tmp;
     }
@@ -109,7 +109,7 @@ public class DevMonitor {
         String[] display_datas = DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
         tmp.datas = new SDataElement[display_datas.length];
         for (int i = 0; i < display_datas.length; i++) {
-            tmp.datas[i] = new SDataElement(data.GetDataElement(display_datas[i]));
+            tmp.datas[i] = data.GetDataElement(display_datas[i]);
         }
         return tmp;
     }

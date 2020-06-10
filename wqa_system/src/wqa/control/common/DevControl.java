@@ -78,20 +78,25 @@ public class DevControl {
     // <editor-fold defaultstate="collapsed" desc="动作"> 
     private void KeepAlive() throws Exception {
         //其他状态下，开心跳检查重连设备
-        if (ReConnect()) {
-            if (GetState() == ControlState.DISCONNECT) {
+        //在断开情况下
+        if (GetState() == ControlState.DISCONNECT) {
+            //检查到一次成功，就重连设备
+            if (ReConnect(1)) {
                 device.InitDevice();
                 ChangeState(ControlState.CONNECT);
             }
-            return;
+        } else {
+            //在配置状态下，重连3次失败才认为设备断开
+            if (!ReConnect(3)) {
+                //心跳包多一次检查
+                ChangeState(ControlState.DISCONNECT);
+                StopConfig();
+            }
         }
-        //心跳包多一次检查
-        ChangeState(ControlState.DISCONNECT);
-        StopConfig();
     }
 
-    public boolean ReConnect() {
-        return this.device.ReTestType();
+    public boolean ReConnect(int retry) {
+        return this.device.ReTestType(retry);
     }
 
     private void MainAction() {
@@ -116,6 +121,7 @@ public class DevControl {
             LogCenter.Instance().PrintLog(Level.SEVERE, ex);
         } finally {
             ((ShareIO) device.GetDevInfo().io).UnLock();
+
         }
     }
 
@@ -150,9 +156,9 @@ public class DevControl {
             }
         }
     }
-    // </editor-fold>    
+// </editor-fold>    
 
-    // <editor-fold defaultstate="collapsed" desc="输入">
+// <editor-fold defaultstate="collapsed" desc="输入">
     private Process run_process = null;
 
     public void Start() {

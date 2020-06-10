@@ -7,6 +7,10 @@ package wqa.form.monitor;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -16,6 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.PopupFactory;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -25,7 +30,6 @@ import nahon.comm.faultsystem.LogCenter;
 import org.jfree.chart.axis.DateAxis;
 import wqa.chart.DataChart;
 import wqa.common.JImagePane;
-import wqa.control.common.DataHelper;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.common.DevMonitor;
 import wqa.control.common.SDisplayData;
@@ -48,6 +52,8 @@ public class MonitorPane1 extends javax.swing.JPanel {
      */
     private final MonitorPaneDesk parent;
     private final DataVector data_vector;
+    JLabel alarm_label = new JLabel("连接正常");
+    javax.swing.Popup pop = null;
 
     public MonitorPane1(MonitorPaneDesk parent, DevMonitor dev) {
         this.currentdev = dev;
@@ -228,9 +234,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private void UpdateData(SDisplayData data) {
         //刷新报警界面
         if (data.alarm != 0) {
-            Label_AlarmInfo.setToolTipText(data.alram_info);
+            alarm_label.setText(data.alram_info);
         } else {
-            Label_AlarmInfo.setToolTipText(null);
+            alarm_label.setText("连接正常");
         }
 
         dsiplay_lock.lock();
@@ -271,6 +277,8 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
         Lable_Title.setText("jLabel1");
 
+        Label_AlarmInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         Button_min.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/monitor/resource/m_min.png"))); // NOI18N
         Button_min.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -297,10 +305,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
         Head_PaneLayout.setHorizontalGroup(
             Head_PaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Head_PaneLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(Label_AlarmInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Label_AlarmInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Lable_Title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Lable_Title, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -447,6 +454,51 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
         ChaneChartMode();
 
+        alarm_label.setBackground(Color.white);
+        alarm_label.setForeground(Color.BLACK);
+        alarm_label.setOpaque(true);
+
+        //自定义popmenu
+        Body_Pane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                super.mouseEntered(me); //To change body of generated methods, choose Tools | Templates.
+                if (pop != null) {
+                    pop.hide();
+                    pop = null;
+                }
+            }
+        });
+        Lable_Title.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                super.mouseEntered(me); //To change body of generated methods, choose Tools | Templates.
+                if (pop != null) {
+                    pop.hide();
+                    pop = null;
+                }
+            }
+        });
+        this.Label_AlarmInfo.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent me
+            ) {
+                if (me.getButton() == MouseEvent.BUTTON1) {
+                    if (pop != null) {
+                        pop.hide();
+                        pop = null;
+                    }
+
+                    pop = PopupFactory.getSharedInstance().getPopup(Label_AlarmInfo, alarm_label,
+                            Label_AlarmInfo.getLocationOnScreen().x, Label_AlarmInfo.getLocationOnScreen().y);
+                    pop.show();
+//                    PopupMenu.show(alarm_label, me.getX(), me.getY());
+                }
+                //jPopupMenu.show(jList,e.getX(),e.getY());
+            }
+        });
+
         this.ChangeState(state.connect);
     }
 
@@ -461,6 +513,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
         }
         this.Button_max.setVisible(chart_visable);
         this.Button_min.setVisible(chart_visable);
+
     }
 
     private enum state {
