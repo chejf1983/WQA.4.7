@@ -133,7 +133,7 @@ public class CDevDataTable {
                 new DataInfo("温度" + ORA_Flag, "", 0, true, ""),
                 new DataInfo("盐度", "ppt", 0, "(0-75)")),
         new DevInfo(0x0204, "ESA_CHLORI", "余氯",
-                new DataInfo("余氯", "ppm", 1, "(0-5)"),
+                new DataInfo("余氯", "ppm", 2, "(0-5)"),
                 new DataInfo("余氯" + ORA_Flag, "mV", 0, true, ""),
                 new DataInfo("pH", "", 2, "(0-14)"),
                 new DataInfo("pH" + ORA_Flag, "mV", 0, true, ""),
