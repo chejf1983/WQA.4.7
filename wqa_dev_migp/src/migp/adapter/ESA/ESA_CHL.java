@@ -137,7 +137,7 @@ public class ESA_CHL extends ESADEV {
         return ret;
     }
 
-    // <editor-fold defaultstate="collapsed" desc="定标ph"> 
+    // <editor-fold defaultstate="collapsed" desc="定标chl"> 
     private void calchl(float[] oradata, float[] testdata) throws Exception {
         float temper = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
         if (oradata.length == 1) {
@@ -150,6 +150,9 @@ public class ESA_CHL extends ESADEV {
     private void calchl_single(float oradata, float testdata, float temper) throws Exception {
         double fT = temper + 273.15;
         double temp = 1 + Math.pow(10, (MPAR2.GetValue() - ((3000.0 / fT) - 10.0686 + (0.0253 * fT))));
+        if (testdata == 0) {
+            testdata = 0.001f;
+        }
         double dHOCL = (testdata / temp);
 //        this.setE0(tE0);
         double TS = ((oradata - (N0.GetValue() * 1000))) / dHOCL;
@@ -160,13 +163,19 @@ public class ESA_CHL extends ESADEV {
     private void calchl_double(float[] oradata, float[] testdata, float temper) throws Exception {
         double fT = temper + 273.15;
         double temp = 1 + Math.pow(10, (MPAR2.GetValue() - ((3000.0 / fT) - 10.0686 + (0.0253 * fT))));
+        if (testdata[0] == 0) {
+            testdata[0] = 0.001f;
+        }
+        if (testdata[1] == 0) {
+            testdata[1] = 0.001f;
+        }
         double dHOCL0 = (testdata[0] / temp);
         double dHOCL1 = (testdata[1] / temp);
         double temp2 = dHOCL1 / dHOCL0;
 //        this.setA(tA);
         double tZ = (oradata[1] - (temp2 * oradata[0])) / (1 - temp2) / 1000.0;
         double ts = ((oradata[0] - (tZ * 1000))) / dHOCL0;
-        
+
         this.SetConfigREG(N0, tZ + "");
         this.SetConfigREG(NS, ts + "");
         this.SetConfigREG(NT, temper + "");
