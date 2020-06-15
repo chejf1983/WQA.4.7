@@ -5,7 +5,6 @@
  */
 package wqa.adapter.model;
 
-import base.migp.mem.MEM;
 import base.migp.node.MIGPCodec;
 import base.migp.node.MIGPPacket;
 import base.migp.node.MIGP_CmdSend;

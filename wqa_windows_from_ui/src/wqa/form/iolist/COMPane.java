@@ -141,6 +141,7 @@ public class COMPane extends javax.swing.JPanel {
             }
         } else {
             io.Close();
+            WQAPlatform.GetInstance().GetManager().DelAutoSearchIO(io);
         }
         UpdateState();
     }//GEN-LAST:event_ToggleButton_OpenActionPerformed

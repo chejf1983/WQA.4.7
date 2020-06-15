@@ -167,6 +167,7 @@ public class DevControlManager {
                     try {
                         if (!iolist.isEmpty()) {
                             getio = iolist.remove(0);
+                            iolist.add(getio);
                         }
                     } finally {
                         iolock.unlock();
@@ -174,9 +175,6 @@ public class DevControlManager {
 
                     if (getio != null) {
                         AutoConnect(getio);
-                        if (!getio.IsClosed()) {
-                            AddAutoSearchIO(getio);
-                        }
                     }
                     try {
                         TimeUnit.MILLISECONDS.sleep(200);
