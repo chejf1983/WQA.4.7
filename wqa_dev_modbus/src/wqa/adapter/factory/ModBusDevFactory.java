@@ -13,13 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import modebus.pro.ModeBusNode;
 import modebus.register.IREG;
-import wqa.adapter.ESA.DODevice;
-import wqa.adapter.ESA.EAMMODevice;
-import wqa.adapter.ESA.ECDevice;
-import wqa.adapter.ESA.ECHLORI;
-import wqa.adapter.ESA.PHDevice;
+import wqa.adapter.ESA.*;
 import wqa.adapter.ISA.AMMODevice;
-import wqa.adapter.OSA.OSADevice;
+import wqa.adapter.OSA.*;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.*;
 
@@ -117,10 +113,12 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0209, EAMMODevice.class.getName());
         class_map.put(0x0210, DODevice.class.getName());
 
+        //MPA
         class_map.put(0x1200, PHDevice.class.getName());
         class_map.put(0x1201, PHDevice.class.getName());
         class_map.put(0x1202, ECDevice.class.getName());
         class_map.put(0x1203, DODevice.class.getName());
+        class_map.put(0x1100, MPAOSADevice.class.getName());
 
         class_map.put(0x0100, OSADevice.class.getName());
         class_map.put(0x0102, OSADevice.class.getName());
@@ -129,7 +127,6 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0108, OSADevice.class.getName());
         class_map.put(0x010A, OSADevice.class.getName());
         class_map.put(0x010E, OSADevice.class.getName());
-        class_map.put(0x1100, OSADevice.class.getName());
         class_map.put(0x0110, DODevice.class.getName());
 
         class_map.put(0x0300, AMMODevice.class.getName());
