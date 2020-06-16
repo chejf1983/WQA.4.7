@@ -40,16 +40,18 @@ public class OSA_FDOII extends ESADEV {
     FMEG NSALT = new FMEG(new NVPA(32, 4), "盐度");
     FMEG NTEMPER_COM = new FMEG(new NVPA(36, 4), "温度补偿系数");
 
-    DMEG NPA = new DMEG(new NVPA(40, 8), "溶氧系数A");
-    DMEG NPB = new DMEG(new NVPA(48, 8), "溶氧系数B");
-    DMEG NPC = new DMEG(new NVPA(56, 8), "溶氧系数C");
-    DMEG NPD = new DMEG(new NVPA(64, 8), "溶氧系数D");
-    DMEG NPE = new DMEG(new NVPA(72, 8), "溶氧系数E");
+//    DMEG NPA = new DMEG(new NVPA(48, 8), "溶氧系数A");
+    DMEG NPA = new DMEG(new NVPA(48, 8), "溶氧系数A");
+    DMEG NPB = new DMEG(new NVPA(56, 8), "溶氧系数B");
+    DMEG NPC = new DMEG(new NVPA(64, 8), "溶氧系数C");
+    DMEG NPD = new DMEG(new NVPA(72, 8), "溶氧系数D");
+    DMEG NPE = new DMEG(new NVPA(80, 8), "溶氧系数E");
+    DMEG NPF = new DMEG(new NVPA(88, 8), "溶氧系数F");
 
-    FMEG NPA2 = new FMEG(new NVPA(80, 4), "二次校准系数A");
-    FMEG NPB2 = new FMEG(new NVPA(84, 4), "二次校准系数B");
-    FMEG NDO100 = new FMEG(new NVPA(88, 4), "饱和相位");
-    FMEG NDO0 = new FMEG(new NVPA(92, 4), "无氧相位");
+//    FMEG NPA2 = new FMEG(new NVPA(80, 4), "二次校准系数A");
+//    FMEG NPB2 = new FMEG(new NVPA(84, 4), "二次校准系数B");
+//    FMEG NDO100 = new FMEG(new NVPA(128, 4), "饱和相位");
+//    FMEG NDO0 = new FMEG(new NVPA(132, 4), "无氧相位");
 
     FMEG NPTEMPER = new FMEG(new NVPA(96, 4), "温度校准系数");
     IMEG NAVR = new IMEG(new NVPA(100, 2), "平均次数");
@@ -59,7 +61,7 @@ public class OSA_FDOII extends ESADEV {
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
 //        this.ReadMEG(VVATOKEN);
-        this.ReadMEG(NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPA2, NPB2, NDO100, NDO0, NPTEMPER, NAVR);
+        this.ReadMEG(NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPTEMPER, NAVR);
     }
 
     //获取设备类型
@@ -127,11 +129,12 @@ public class OSA_FDOII extends ESADEV {
         item.add(SConfigItem.CreateRWItem(NPC.toString(), NPC.GetValue().toString(), ""));
         item.add(SConfigItem.CreateRWItem(NPD.toString(), NPD.GetValue().toString(), ""));
         item.add(SConfigItem.CreateRWItem(NPE.toString(), NPE.GetValue().toString(), ""));
-        item.add(SConfigItem.CreateRWItem(NPA2.toString(), NPA2.GetValue().toString(), ""));
-        item.add(SConfigItem.CreateRWItem(NPB2.toString(), NPB2.GetValue().toString(), ""));
+        item.add(SConfigItem.CreateRWItem(NPF.toString(), NPF.GetValue().toString(), ""));
+//        item.add(SConfigItem.CreateRWItem(NPA2.toString(), NPA2.GetValue().toString(), ""));
+//        item.add(SConfigItem.CreateRWItem(NPB2.toString(), NPB2.GetValue().toString(), ""));
 
-        item.add(SConfigItem.CreateRWItem(NDO100.toString(), NDO100.GetValue().toString(), ""));
-        item.add(SConfigItem.CreateRWItem(NDO0.toString(), NDO0.GetValue().toString(), ""));
+//        item.add(SConfigItem.CreateRWItem(NDO100.toString(), NDO100.GetValue().toString(), ""));
+//        item.add(SConfigItem.CreateRWItem(NDO0.toString(), NDO0.GetValue().toString(), ""));
 
         return item;
     }
@@ -139,7 +142,7 @@ public class OSA_FDOII extends ESADEV {
     @Override
     public void SetCalParList(ArrayList<SConfigItem> list) throws Exception {
         super.SetCalParList(list);
-        MEG[] reglist = new MEG[]{NA, NB, NCLTEMPER, NPA, NPB, NPC, NPD, NPE, NPA2, NPB2, NPTEMPER, NDO100, NDO0};
+        MEG[] reglist = new MEG[]{NA, NB, NCLTEMPER, NPA, NPB, NPC, NPD, NPE, NPF, NPTEMPER};
         for (SConfigItem item : list) {
             for (MEG mem : reglist) {
                 if (item.IsKey(mem.toString())) {
@@ -182,7 +185,7 @@ public class OSA_FDOII extends ESADEV {
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="定标接口"> 
-        // <editor-fold defaultstate="collapsed" desc="静态数据"> 
+    // <editor-fold defaultstate="collapsed" desc="静态数据"> 
     private static double g_cfkPa[] = new double[]{
         50.5, 55.5, 60.5, 65.5, 70.5, 75.5, 80.5, 85.5, 90.5, 95.5, 100.5, 105.5, 110.5
     };
