@@ -31,7 +31,7 @@ public class CalPanel extends javax.swing.JPanel {
     private String selecttype;
     //选择的点数
     private int select_point;
-    
+
     public CalPanel(DevCalConfig calbean) {
         initComponents();
         this.calbean = calbean;
@@ -40,14 +40,16 @@ public class CalPanel extends javax.swing.JPanel {
 
         //遍历可定标类型
         for (String type : this.calbean.GetCalType()) {
-            ComboBox_DataType.addItem(type);
+            if (!type.contains("温度")) {
+                ComboBox_DataType.addItem(type);
+            }
         }
 
         //默认选择第一个定标数据
         this.ComboBox_DataType.setSelectedIndex(0);
         //保存选择类型
         this.selecttype = this.ComboBox_DataType.getSelectedItem().toString();
-        
+
         this.ComboBox_DataType.addItemListener((ItemEvent ie) -> {
             if (ie.getStateChange() == ItemEvent.SELECTED) {
                 //保存选择类型
@@ -78,9 +80,12 @@ public class CalPanel extends javax.swing.JPanel {
                         });
                         //显示当前采样值
                         Label_value.setText(data.mainData + data.unit);
+
                         //显示当前温度
                         SDataElement temp = event.GetEvent().GetDataElement("温度");
+                        SDataElement temp_o = event.GetEvent().GetOraDataElement("温度");
                         Label_temper.setText(temp.mainData + temp.unit);
+                        temp_item.SetValue(temp_o.mainData, temp.mainData);
                     }
                 });
             }
@@ -97,17 +102,19 @@ public class CalPanel extends javax.swing.JPanel {
 
         //更新定标点数
         this.InitCalNum();
+
+        this.InitTempItem();
     }
 
     //初始化定标点数
     private void InitCalNum() {
         //刷新定标点个数
         this.ComboBox_CalNum.removeAllItems();
-        
+
         for (int i = 1; i <= this.calbean.GetCalMaxNum(this.selecttype); i++) {
             this.ComboBox_CalNum.addItem(String.valueOf(i));
         }
-        
+
         if (this.ComboBox_CalNum.getItemCount() > 0) {
             this.ComboBox_CalNum.setSelectedIndex(0);
             this.select_point = Integer.valueOf(this.ComboBox_CalNum.getSelectedItem().toString());
@@ -117,7 +124,7 @@ public class CalPanel extends javax.swing.JPanel {
         //初始化定标采样item
         this.InitCalItem();
     }
-    
+
     private ArrayList<CalItem> itemlist = new ArrayList();
 
     //初始化定标采样item
@@ -138,6 +145,15 @@ public class CalPanel extends javax.swing.JPanel {
         this.Cal_Panel.updateUI();
     }
 
+    private CalItem temp_item;
+
+    private void InitTempItem() {
+        this.CalTemp_Panel.setLayout(new ListFlowLayout(FlowLayout.LEADING, 1, 5, true, false));
+        this.CalTemp_Panel.removeAll();
+        temp_item = new CalItem(1);
+        this.CalTemp_Panel.add(temp_item);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -151,12 +167,16 @@ public class CalPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         ComboBox_CalNum = new javax.swing.JComboBox<>();
-        Button_cal = new javax.swing.JButton();
+        Button_TempCal = new javax.swing.JButton();
         Cal_Panel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         Label_temper = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         Label_value = new javax.swing.JLabel();
+        CalTemp_Panel = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        Button_DataCal = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
 
         ComboBox_DataType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -166,10 +186,10 @@ public class CalPanel extends javax.swing.JPanel {
 
         ComboBox_CalNum.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        Button_cal.setText("校准");
-        Button_cal.addActionListener(new java.awt.event.ActionListener() {
+        Button_TempCal.setText("温度校准");
+        Button_TempCal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Button_calActionPerformed(evt);
+                Button_TempCalActionPerformed(evt);
             }
         });
 
@@ -177,20 +197,53 @@ public class CalPanel extends javax.swing.JPanel {
         Cal_Panel.setLayout(Cal_PanelLayout);
         Cal_PanelLayout.setHorizontalGroup(
             Cal_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 334, Short.MAX_VALUE)
         );
         Cal_PanelLayout.setVerticalGroup(
             Cal_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 148, Short.MAX_VALUE)
+            .addGap(0, 251, Short.MAX_VALUE)
         );
 
-        jLabel3.setText("温度:");
+        jLabel3.setText("当前温度:");
 
         Label_temper.setText(" ");
 
         jLabel4.setText("当前值:");
 
         Label_value.setText(" ");
+
+        javax.swing.GroupLayout CalTemp_PanelLayout = new javax.swing.GroupLayout(CalTemp_Panel);
+        CalTemp_Panel.setLayout(CalTemp_PanelLayout);
+        CalTemp_PanelLayout.setHorizontalGroup(
+            CalTemp_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        CalTemp_PanelLayout.setVerticalGroup(
+            CalTemp_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        jLabel5.setText("温度校准:");
+
+        Button_DataCal.setText("参数校准");
+        Button_DataCal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_DataCalActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(34, 88, 149));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 6, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -199,58 +252,99 @@ public class CalPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Cal_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(5, 5, 5)
-                        .addComponent(Label_value, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(166, 166, 166)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Label_temper, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                        .addGap(5, 5, 5)
-                        .addComponent(Button_cal, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(Label_temper, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(42, 42, 42))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(CalTemp_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Cal_Panel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ComboBox_CalNum, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ComboBox_DataType, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addGap(5, 5, 5)
+                                        .addComponent(Label_value, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(Button_DataCal, javax.swing.GroupLayout.Alignment.TRAILING)))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ComboBox_CalNum, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ComboBox_DataType, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(Button_TempCal, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ComboBox_CalNum, ComboBox_DataType});
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {Button_DataCal, Button_TempCal});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ComboBox_DataType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ComboBox_DataType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(Label_value)
+                        .addComponent(jLabel4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ComboBox_CalNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(11, 11, 11)
+                    .addComponent(jLabel2)
+                    .addComponent(Button_DataCal))
+                .addGap(10, 10, 10)
                 .addComponent(Cal_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(Label_value)
-                    .addComponent(jLabel3)
-                    .addComponent(Label_temper)
-                    .addComponent(jLabel4)
-                    .addComponent(Button_cal))
-                .addGap(5, 5, 5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(5, 5, 5)
+                        .addComponent(CalTemp_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(Button_TempCal))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(jLabel3)
+                        .addComponent(Label_temper)))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void Button_calActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_calActionPerformed
+    private void Button_TempCalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_TempCalActionPerformed
+        float[] oradata = new float[1];
+        float[] testdata = new float[1];
+        try {
+            if (!this.temp_item.IsSet()) {
+                LogCenter.Instance().ShowMessBox(Level.INFO, "温度校准点没有确认,无法进行校准,请先点击'停止'按钮.");
+                return;
+            }
+            float[] input = this.temp_item.GetInputData();
+            oradata[0] = input[0];
+            testdata[0] = input[1];
+            calbean.CalParameter("温度", oradata, testdata);
+        } catch (Exception ex) {
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+        }
+    }//GEN-LAST:event_Button_TempCalActionPerformed
+
+    private void Button_DataCalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_DataCalActionPerformed
         float[] oradata = new float[this.select_point];
         float[] testdata = new float[this.select_point];
         try {
@@ -258,7 +352,7 @@ public class CalPanel extends javax.swing.JPanel {
                 if (!this.itemlist.get(i).IsSet()) {
                     LogCenter.Instance().ShowMessBox(Level.INFO, "校准点-" + (i + 1) + " 没有确认,无法进行校准,请先点击'停止'按钮.");
                     return;
-                }                
+                }
                 float[] input = this.itemlist.get(i).GetInputData();
                 oradata[i] = input[0];
                 testdata[i] = input[1];
@@ -267,10 +361,12 @@ public class CalPanel extends javax.swing.JPanel {
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         }
-    }//GEN-LAST:event_Button_calActionPerformed
+    }//GEN-LAST:event_Button_DataCalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Button_cal;
+    private javax.swing.JButton Button_DataCal;
+    private javax.swing.JButton Button_TempCal;
+    private javax.swing.JPanel CalTemp_Panel;
     private javax.swing.JPanel Cal_Panel;
     private javax.swing.JComboBox<String> ComboBox_CalNum;
     private javax.swing.JComboBox<String> ComboBox_DataType;
@@ -280,5 +376,7 @@ public class CalPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

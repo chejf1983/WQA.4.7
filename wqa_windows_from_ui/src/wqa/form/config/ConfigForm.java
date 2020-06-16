@@ -78,7 +78,7 @@ public class ConfigForm extends javax.swing.JDialog {
         );
         WorkPaneLayout.setVerticalGroup(
             WorkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 322, Short.MAX_VALUE)
+            .addGap(0, 379, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
