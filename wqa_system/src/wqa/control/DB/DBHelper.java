@@ -114,7 +114,7 @@ public class DBHelper {
         DevControl[] controls = WQAPlatform.GetInstance().GetManager().GetAllControls();
         for (DevControl control : controls) {
             //获取DB缓存栈
-            SDisplayData data = control.GetCollector().ReceiveByDB();
+            DataRecord data = control.GetCollector().ReceiveByDB();
             //如果没有数据，不保存
             if (data == null) {
                 continue;

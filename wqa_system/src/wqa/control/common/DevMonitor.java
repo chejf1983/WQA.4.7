@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.control.DB.DataRecord;
 import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
 import wqa.system.WQAPlatform;
@@ -40,13 +41,14 @@ public class DevMonitor {
             CollectData CollectData = this.dev.CollectData();
             CollectData.time.setTime(time.getTime());
             this.tmpdata = CreateDBData(CollectData);
-            this.SaveAlarmInfo(tmpdata);
-            if (this.tmpdata.alarm != 0) {
-                parent.ChangeState(DevControl.ControlState.ALARM, this.tmpdata.alram_info);
+            SDisplayData display_data = CreateDisplayData(CollectData);
+            this.SaveAlarmInfo(display_data);
+            if (display_data.alarm != 0) {
+                parent.ChangeState(DevControl.ControlState.ALARM, display_data.alram_info);
             } else {
                 parent.ChangeState(DevControl.ControlState.CONNECT);
             }
-            DataEvent.CreateEvent(CreateDisplayData(CollectData));
+            DataEvent.CreateEvent(display_data);
             return true;
         } catch (Exception ex) {
             LogCenter.Instance().PrintLog(Level.SEVERE, "采集数据失败", ex);
@@ -56,12 +58,12 @@ public class DevMonitor {
         }
     }
 
-    private SDisplayData tmpdata = null;
+    private DataRecord tmpdata = null;
 
-    public SDisplayData ReceiveByDB() {
+    public DataRecord ReceiveByDB() {
         data_lock.lock();
         try {
-            SDisplayData ret = tmpdata;
+            DataRecord ret = tmpdata;
             tmpdata = null;
             return ret;
         } finally {
@@ -89,14 +91,17 @@ public class DevMonitor {
         return this.parent;
     }
 
-    private SDisplayData CreateDBData(CollectData data) {
-        SDisplayData tmp = new SDisplayData(new DevID(data.dev_type, data.dev_addr, data.serial_num));
+    private DataRecord CreateDBData(CollectData data) {
+        DataRecord tmp = new DataRecord();
+        tmp.dev_info = new DevID(data.dev_type, data.dev_addr, data.serial_num);
         tmp.time = data.time;
-        tmp.alarm = data.alarm;
-        tmp.alram_info = data.alram_info;
-        tmp.datas = new SDataElement[data.datas.length];
-        for (int i = 0; i < tmp.datas.length; i++) {
-            tmp.datas[i] = data.datas[i];
+        tmp.names = new String[data.datas.length];
+        tmp.values = new Float[data.datas.length];
+        tmp.value_strings = new String[data.datas.length];
+        for (int i = 0; i < tmp.names.length; i++) {
+            tmp.names[i] = data.datas[i].name;
+            tmp.values[i] = data.datas[i].mainData;
+            tmp.value_strings[i] = data.datas[i].range_info + data.datas[i].unit;
         }
         return tmp;
     }

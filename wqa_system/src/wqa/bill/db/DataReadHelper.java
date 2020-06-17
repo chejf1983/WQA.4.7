@@ -7,6 +7,7 @@ package wqa.bill.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.exl2.XlsSheetWriter;
@@ -111,7 +112,6 @@ public class DataReadHelper implements IDataHelper {
     }
 
     // </editor-fold>  
-    
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 
     @Override
     public void ExportToFile(String file_name, DevID table_name, Date start, Date stop, IMainProcess process) {
@@ -130,13 +130,34 @@ public class DataReadHelper implements IDataHelper {
             String sheet_name = table_name.ToChineseString();
             //创建excel文件
             try (XlsSheetWriter xl_saver = XlsSheetWriter.CreateSheet(file_name, sheet_name)) {
-                String[] names = DataRecord.GetNames(table_name);
-                //写列名
+
+                //获取列名
+                String[] tnames = DataHelper.GetSupportDataName(table_name.dev_type);
+                String[] names = new String[tnames.length * 2 + 1];
+                names[0] = "时间";
+                for (int i = 0; i < tnames.length; i++) {
+                    names[i * 2 + 1] = tnames[i];
+                    names[i * 2 + 2] = "(量程)单位";
+                }
                 xlsTable_W table = xl_saver.CreateNewTable(table_name.ToChineseString(), data_count, names);
+
+                //写数据
                 while (ret_set.next()) {
                     tmp_index++;
+
+                    //添加时间
+                    Object[] ret = new Object[names.length];
+                    ret[0] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ret_set.getTimestamp(JDBDataTable.Time_Key));
+                    //添加项目
+                    for (int i = 0; i < tnames.length; i++) {
+                        int index = DataHelper.GetDataToDBIndex(table_name.dev_type, tnames[i]);
+                        //根据显示数据内容查找静态数据表的序号，对应到数据库中的位置
+                        ret[2 * i + 1] = ret_set.getFloat(JDBDataTable.DataIndexKey + index);
+                        ret[2 * i + 2] = ret_set.getString(JDBDataTable.UnitIndexKey + index);
+                    }
                     //添加EXCEL行
-                    table.WriterLine(BuildRecord(table_name, ret_set).GetValue());
+                    table.WriterLine(ret);
+                    //更新进度条
                     if (tmp_index++ % 100 == 0) {
                         process.SetValue((100 * tmp_index) / data_count);
                     }
@@ -152,13 +173,16 @@ public class DataReadHelper implements IDataHelper {
     }
     // </editor-fold>  
 
-    public DataRecord BuildRecord(DevID id, ResultSet set) throws SQLException {
-        DataRecord record = new DataRecord(id);
+    private DataRecord BuildRecord(DevID id, ResultSet set) throws SQLException {
+        DataRecord record = new DataRecord();
         //读取时间
+        record.dev_info = id;
         record.time = set.getTimestamp(JDBDataTable.Time_Key);
-
+        record.names = DataHelper.GetSupportDataName(id.dev_type);
+        record.values = new Float[record.names.length];
+        record.value_strings = new String[record.names.length];
         //获取静态数据表
-        for (int i = 0; i < record.values.length; i++) {
+        for (int i = 0; i < record.names.length; i++) {
             int index = DataHelper.GetDataToDBIndex(id.dev_type, record.names[i]);
             //根据显示数据内容查找静态数据表的序号，对应到数据库中的位置
             record.values[i] = set.getFloat(JDBDataTable.DataIndexKey + index);
@@ -169,10 +193,10 @@ public class DataReadHelper implements IDataHelper {
     }
 
     @Override
-    public void SaveData(SDisplayData data) throws Exception {
+    public void SaveData(DataRecord data) throws Exception {
         JDBDataTable data_dbhelper = new JDBDataTable(this.db_instance);
         //然后创建设备数据表
-        data_dbhelper.CreateTableIfNotExist(data.dev_id);
+        data_dbhelper.CreateTableIfNotExist(data.dev_info);
         //添加数据到设备数据表
         data_dbhelper.AddData(data);
     }

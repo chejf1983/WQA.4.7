@@ -25,7 +25,6 @@ import org.jfree.data.time.TimeSeries;
 import wqa.common.Chooser;
 import wqa.control.DB.DataRecord;
 import wqa.control.DB.SDataRecordResult;
-import wqa.control.common.DataHelper;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 import wqa.form.main.MainForm;

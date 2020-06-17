@@ -6,7 +6,6 @@
 package wqa.control.DB;
 
 import java.util.Date;
-import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 
@@ -26,7 +25,7 @@ public interface IDataHelper {
 
     public void SearchLimitData(DevID table_name, Date start, Date stop, int limit_num, wqa.control.data.IMainProcess<SDataRecordResult> process) ;
 
-    public void SaveData(SDisplayData data) throws Exception ;
+    public void SaveData(DataRecord data) throws Exception ;
     // </editor-fold>  
     
     // <editor-fold defaultstate="collapsed" desc="转换到Excel"> 

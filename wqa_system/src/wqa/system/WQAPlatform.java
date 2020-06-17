@@ -42,12 +42,12 @@ public class WQAPlatform {
     public void InitSystem(String path) throws Exception {
         this.def_path = path;
 
-        this.GetConfig().InitConfig(def_path);
-        is_internal = this.GetConfig().getProperty("IPS", "").contentEquals("Naqing");
-
         LogCenter.Instance().SetLogPath(this.def_path + "/log");
         LogCenter.Instance().PrintLog(Level.INFO, "开始记录LOG");
 
+        this.GetConfig().InitConfig(def_path);
+        is_internal = this.GetConfig().getProperty("IPS", "").contentEquals("Naqing");
+        
         //初始化设备日志信息
         DevLog.Instance().InitDir(this.def_path + "/cal_log");
 

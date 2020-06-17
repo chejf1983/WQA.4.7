@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import wqa.control.DB.DataRecord;
 import wqa.control.common.DataHelper;
-import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 
 /**
@@ -49,12 +49,12 @@ public class JDBDataTable {
         return devices.toArray(new DevID[0]);
     }
 
-    public void AddData(SDisplayData data) throws Exception {
+    public void AddData(DataRecord data) throws Exception {
 //        获取表名称
-        String table_name = ConvertTableName(data.dev_id);
+        String table_name = ConvertTableName(data.dev_info);
         //初始化插入SQL语句
         String INSERT_TABLE_SQL = "insert into " + table_name + " values(null, ?";
-        for (int i = 0; i < data.datas.length; i++) {
+        for (int i = 0; i < data.names.length; i++) {
             INSERT_TABLE_SQL += ", ?, ?";
         }
         INSERT_TABLE_SQL += ")";
@@ -66,10 +66,10 @@ public class JDBDataTable {
         prepareCall.setTimestamp(1, new java.sql.Timestamp(data.time.getTime()));
 
         //赋值有效数据
-        for (int i = 0; i < data.datas.length; i++) {
+        for (int i = 0; i < data.names.length; i++) {
             //遍历静态表位置
-            prepareCall.setFloat(i * 2 + 2, data.datas[i].mainData);
-            prepareCall.setString(i * 2 + 3, data.datas[i].range_info + data.datas[i].unit);
+            prepareCall.setFloat(i * 2 + 2, data.values[i]);
+            prepareCall.setString(i * 2 + 3, data.value_strings[i]);
         }
 
         prepareCall.execute();
