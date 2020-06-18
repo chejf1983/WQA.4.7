@@ -5,6 +5,8 @@
  */
 package wqa.adapter.OSA;
 
+import java.util.ArrayList;
+import modebus.register.IREG;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.data.SMotorParameter;
 import wqa.dev.data.SMotorParameter.CleanMode;
@@ -14,9 +16,22 @@ import wqa.dev.intf.*;
  *
  * @author chejf
  */
-public class OSADevice extends MOSADevice implements IDevMotorConfig {    
+public class OSADevice extends MOSADevice implements IDevMotorConfig {
+
+    protected final IREG CMODE = new IREG(0x08, 1, "清扫模式", 0, 2);//R/W
+    protected final IREG CTIME = new IREG(0x09, 1, "清扫次数", 1, 100);//R/W
+    protected final IREG CINTVAL = new IREG(0x0A, 1, "清扫间隔", 10, 60 * 24);//R/W
+
     public OSADevice(SDevInfo info) {
         super(info);
+    }
+
+    @Override
+    public void InitDevice() throws Exception {
+        super.InitDevice();
+
+        //初始化寄存器
+        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, CMODE, CTIME, CINTVAL);
     }
 
     // <editor-fold defaultstate="collapsed" desc="电机控制"> 

@@ -26,26 +26,23 @@ import wqa.dev.intf.SConfigItem;
  */
 public class MOSADevice extends AbsDevice {
     
-    protected final IREG ALARM = new IREG(0x00, 1, "报警码");//R
-    protected final FREG MDATA = new FREG(0x01, 2, "主参数数据(OSA-Turb:浊度、OSA-TS：悬浮物/浊度、OSA-ChlA：叶绿素、OSA-Cyano：蓝绿藻、OSA-Oil: 水中油)");      //R
-    protected final FREG TEMPER = new FREG(0x03, 2, "当前温度");//R
-    protected final IREG ODATA = new IREG(0x05, 1, "原始光强数据");//R
+    private final IREG ALARM = new IREG(0x00, 1, "报警码");//R
+    private final FREG MDATA = new FREG(0x01, 2, "主参数数据(OSA-Turb:浊度、OSA-TS：悬浮物/浊度、OSA-ChlA：叶绿素、OSA-Cyano：蓝绿藻、OSA-Oil: 水中油)");      //R
+    private final FREG TEMPER = new FREG(0x03, 2, "当前温度");//R
+    private final IREG ODATA = new IREG(0x05, 1, "原始光强数据");//R
 
-    protected final IREG RANGE = new IREG(0x06, 1, "量程");//R/W
-    protected final IREG AVR = new IREG(0x07, 1, "平均次数", 1, 100);//R/W
-    protected final IREG CMODE = new IREG(0x08, 1, "清扫模式", 0, 2);//R/W
-    protected final IREG CTIME = new IREG(0x09, 1, "清扫次数", 1, 100);//R/W
-    protected final IREG CINTVAL = new IREG(0x0A, 1, "清扫间隔", 10, 60 * 24);//R/W
+    private final IREG RANGE = new IREG(0x06, 1, "量程");//R/W
+    private final IREG AVR = new IREG(0x07, 1, "平均次数", 1, 100);//R/W
 
-    protected final IREG CLRANGE = new IREG(0x30, 1, "定标量程"); //R/W
-    protected final IREG[] CLODATA = new IREG[]{new IREG(0x31, 1, "原始光强1"), new IREG(0x34, 1, "原始光强2"), new IREG(0x37, 1, "原始光强3")}; //R/W
-    protected final FREG[] CLTDATA = new FREG[]{new FREG(0x32, 2, "定标数据1"), new FREG(0x35, 2, "定标数据2"), new FREG(0x38, 2, "定标数据3")}; //R/W
-    protected final IREG CLSTART = new IREG(0x3A, 1, "启动定标", 1, 3); //R/W
-    protected final FREG CLTEMPER = new FREG(0x3B, 2, "温度定标参数");    //R/W
-    protected final IREG CLTEMPERSTART = new IREG(0x3D, 1, "温度启动定标");//R/W
+    private final IREG CLRANGE = new IREG(0x30, 1, "定标量程"); //R/W
+    private final IREG[] CLODATA = new IREG[]{new IREG(0x31, 1, "原始光强1"), new IREG(0x34, 1, "原始光强2"), new IREG(0x37, 1, "原始光强3")}; //R/W
+    private final FREG[] CLTDATA = new FREG[]{new FREG(0x32, 2, "定标数据1"), new FREG(0x35, 2, "定标数据2"), new FREG(0x38, 2, "定标数据3")}; //R/W
+    private final IREG CLSTART = new IREG(0x3A, 1, "启动定标", 1, 3); //R/W
+    private final FREG CLTEMPER = new FREG(0x3B, 2, "温度定标参数");    //R/W
+    private final IREG CLTEMPERSTART = new IREG(0x3D, 1, "温度启动定标");//R/W
 
-    protected final IREG RANGNUM = new IREG(0x50, 1, "量程个数"); //R
-    protected final FREG[] RANGN = new FREG[]{new FREG(0x51, 2, "量程1"), new FREG(0x53, 2, "量程2"), new FREG(0x55, 2, "量程3"), new FREG(0x57, 2, "量程4")}; //R
+    private final IREG RANGNUM = new IREG(0x50, 1, "量程个数"); //R
+    private final FREG[] RANGN = new FREG[]{new FREG(0x51, 2, "量程1"), new FREG(0x53, 2, "量程2"), new FREG(0x55, 2, "量程3"), new FREG(0x57, 2, "量程4")}; //R
 
     public MOSADevice(SDevInfo info) {
         super(info);
@@ -57,7 +54,7 @@ public class MOSADevice extends AbsDevice {
 
         //初始化寄存器
         this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGNUM, RANGN[0], RANGN[1], RANGN[2], RANGN[3]);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGE, AVR, CMODE, CTIME, CINTVAL);
+        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGE, AVR);
 
         //初始化最大量程信息
         this.range_strings = this.init_range_string();
@@ -155,17 +152,17 @@ public class MOSADevice extends AbsDevice {
         } else {
 //            this.trub_drv.SetCalRange(rangeindex);
 //            this.trub_drv.CalDevice(oradata, testdata);
-            CalDevice(this.RANGE.GetValue(), oradata, testdata);
+            CalDevice(oradata, testdata);
         }
         return LogNode.CALOK();
     }
 
-    private void CalDevice(int index, float[] oradata, float[] caldata) throws Exception {
+    private void CalDevice(float[] oradata, float[] caldata) throws Exception {
         if (CLODATA.length < oradata.length) {
             throw new Exception("定标个数异常");
         }
 
-        this.CLRANGE.SetValue(index);
+        this.CLRANGE.SetValue(this.RANGE.GetValue());
         for (int i = 0; i < oradata.length; i++) {
             CLODATA[i].SetValue((int) oradata[i]);
             CLTDATA[i].SetValue(caldata[i]);

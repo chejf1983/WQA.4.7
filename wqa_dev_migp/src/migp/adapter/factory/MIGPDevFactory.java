@@ -35,6 +35,7 @@ public class MIGPDevFactory implements IDeviceSearch {
     private final HashMap<Integer, String> class_map = new HashMap<>();
 
     public MIGPDevFactory() {
+        //ESA
         class_map.put(0x0200, ESA_PH.class.getName());
         class_map.put(0x0220, ESA_PH.class.getName());
         class_map.put(0x0201, OSA_FDOI.class.getName());
@@ -46,13 +47,13 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x0209, ESA_AMMO.class.getName());
         class_map.put(0x0210, OSA_FDOI.class.getName());
         class_map.put(0xA210, OSA_FDOII.class.getName());
-
+        //MESA
         class_map.put(0x1200, ESA_PH.class.getName());
         class_map.put(0x1201, ESA_ORP.class.getName());
         class_map.put(0x1202, ESA_EC.class.getName());
-        class_map.put(0x1203, ESA_DO.class.getName());
-        class_map.put(0x1100, MOSA_X.class.getName());
+        class_map.put(0x1203, OSA_FDOII.class.getName());
 
+        //OSA
         class_map.put(0x0100, OSA_X.class.getName());
         class_map.put(0x0102, OSA_X.class.getName());
         class_map.put(0x0104, OSA_X.class.getName());
@@ -62,7 +63,10 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x010E, OSA_X.class.getName());
         class_map.put(0x0110, ESA_DO.class.getName());
         class_map.put(0xA110, OSA_FDOII.class.getName());
+        //MOSA
+        class_map.put(0x1100, MOSA_X.class.getName());
 
+        //ISA
         class_map.put(0x0300, ISA_X.class.getName());
         class_map.put(0x0301, ISA_X.class.getName());
         class_map.put(0x0308, ISA_X.class.getName());

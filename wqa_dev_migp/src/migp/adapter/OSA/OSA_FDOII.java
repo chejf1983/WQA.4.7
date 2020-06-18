@@ -52,7 +52,6 @@ public class OSA_FDOII extends ESADEV {
 //    FMEG NPB2 = new FMEG(new NVPA(84, 4), "二次校准系数B");
 //    FMEG NDO100 = new FMEG(new NVPA(128, 4), "饱和相位");
 //    FMEG NDO0 = new FMEG(new NVPA(132, 4), "无氧相位");
-
     FMEG NPTEMPER = new FMEG(new NVPA(96, 4), "温度校准系数");
     IMEG NAVR = new IMEG(new NVPA(100, 2), "平均次数");
 
@@ -68,13 +67,13 @@ public class OSA_FDOII extends ESADEV {
     @Override
     public boolean ReTestType(int retry) {
         IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
-        IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
 //        VPA VPA00 = new VPA(0x00, 2);//设备类型地址
 //        VPA VPA20 = new VPA(0x14, 2);//溶氧A版本标志
         try {
             this.base_drv.ReadMEG(retry, 200, VDEVTYPE);
             //创建一个基础协议包
             if (VDEVTYPE.GetValue() == 0x110 || VDEVTYPE.GetValue() == 0x210) {
+                IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
                 base_drv.ReadMEG(retry, 200, VDOATOKEN);
                 if (VDOATOKEN.GetValue() > 0) {
                     VDEVTYPE.SetValue(VDEVTYPE.GetValue() + 0xA000);
@@ -135,7 +134,6 @@ public class OSA_FDOII extends ESADEV {
 
 //        item.add(SConfigItem.CreateRWItem(NDO100.toString(), NDO100.GetValue().toString(), ""));
 //        item.add(SConfigItem.CreateRWItem(NDO0.toString(), NDO0.GetValue().toString(), ""));
-
         return item;
     }
 
