@@ -43,7 +43,8 @@ public class PHDeviceTest  {
         if (devs != null) {
             instance = (PHDevice) devs;
             instance.InitDevice();
-            commontest = new ABS_Test(instance, dev_mock);
+            commontest = new ABS_Test();
+            commontest.SetABS_Test(instance, dev_mock);
         }
     }
     // </editor-fold> 

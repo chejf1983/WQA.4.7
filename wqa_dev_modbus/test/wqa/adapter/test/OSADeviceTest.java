@@ -44,7 +44,8 @@ public class OSADeviceTest {
         if (devs != null) {
             instance = (OSADevice) devs;
             instance.InitDevice();
-            commontest = new ABS_Test(instance, dev_mock);
+            commontest = new ABS_Test();
+            commontest.SetABS_Test(instance, dev_mock);
         }
     }
     // </editor-fold> 

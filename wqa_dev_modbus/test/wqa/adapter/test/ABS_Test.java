@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import modebus.register.REG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import org.junit.Test;
 import wqa.adapter.devmock.DevMock;
 import wqa.adapter.factory.AbsDevice;
 import wqa.adapter.model.PrintLog;
@@ -21,16 +22,21 @@ import wqa.dev.intf.*;
  * @author chejf
  */
 public class ABS_Test {
+    public AbsDevice instance;
+    public DevMock dev_mock;
 
-public ABS_Test(AbsDevice instance, DevMock dev_mock) throws Exception {
+    public void SetABS_Test(AbsDevice instance, DevMock dev_mock) throws Exception {
         PrintLog.SetPrintlevel(PrintLog.PRINTLOG);
         this.instance = instance;
         this.dev_mock = dev_mock;
     }
+    
+    @Test
+    public void test_mock() throws Exception {
+        PrintLog.println("测试ABSTest");
+    }
 
-    public AbsDevice instance;
-    public DevMock dev_mock;
-
+    
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     public void check_infolist() throws Exception {
         PrintLog.println("***********************************");
