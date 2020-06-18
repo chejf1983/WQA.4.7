@@ -12,7 +12,7 @@ import wqa.dev.intf.*;
  *
  * @author chejf
  */
-public class OSA_X extends MPA_X implements IDevMotorConfig {
+public class OSA_X extends MOSA_X implements IDevMotorConfig {
 
     public OSA_X(SDevInfo devinfo) {
         super(devinfo);

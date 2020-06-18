@@ -104,6 +104,7 @@ public class ModBusDevFactory implements IDeviceSearch {
     private final HashMap<Integer, String> class_map = new HashMap<>();
 
     public ModBusDevFactory() {
+        //ESA
         class_map.put(0x0200, PHDevice.class.getName());
         class_map.put(0x0201, DODevice.class.getName());
         class_map.put(0x0202, ECDevice.class.getName());
@@ -112,13 +113,13 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x0208, PHDevice.class.getName());
         class_map.put(0x0209, EAMMODevice.class.getName());
         class_map.put(0x0210, DODevice.class.getName());
-
-        //MPA
+        //MPA_ESA
         class_map.put(0x1200, PHDevice.class.getName());
         class_map.put(0x1201, PHDevice.class.getName());
         class_map.put(0x1202, ECDevice.class.getName());
         class_map.put(0x1203, DODevice.class.getName());
 
+        //OSA
         class_map.put(0x0100, OSADevice.class.getName());
         class_map.put(0x0102, OSADevice.class.getName());
         class_map.put(0x0104, OSADevice.class.getName());
@@ -128,8 +129,15 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x010E, OSADevice.class.getName());
         class_map.put(0x0110, DODevice.class.getName());
         
-        class_map.put(0x1100, MPAOSADevice.class.getName());
+        //MPA_OSA
+        class_map.put(0x1100, MOSADevice.class.getName());
+        class_map.put(0x1101, DODevice.class.getName());
+        class_map.put(0x1102, MOSADevice.class.getName());
+        class_map.put(0x1103, MOSADevice.class.getName());
+        class_map.put(0x1104, MOSADevice.class.getName());
+        class_map.put(0x1105, MOSADevice.class.getName());
 
+        //ISA
         class_map.put(0x0300, AMMODevice.class.getName());
         class_map.put(0x0301, AMMODevice.class.getName());
     }

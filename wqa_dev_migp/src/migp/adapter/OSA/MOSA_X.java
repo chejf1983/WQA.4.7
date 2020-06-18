@@ -28,8 +28,8 @@ import wqa.dev.intf.SConfigItem;
  *
  * @author chejf
  */
-public class MPA_X extends AbsDevice{
-     public MPA_X(SDevInfo devinfo) {
+public class MOSA_X extends AbsDevice{
+     public MOSA_X(SDevInfo devinfo) {
         super(devinfo);
     }
 

@@ -24,7 +24,7 @@ import wqa.dev.intf.SConfigItem;
  *
  * @author chejf
  */
-public class MPAOSADevice extends AbsDevice {
+public class MOSADevice extends AbsDevice {
     
     protected final IREG ALARM = new IREG(0x00, 1, "报警码");//R
     protected final FREG MDATA = new FREG(0x01, 2, "主参数数据(OSA-Turb:浊度、OSA-TS：悬浮物/浊度、OSA-ChlA：叶绿素、OSA-Cyano：蓝绿藻、OSA-Oil: 水中油)");      //R
@@ -47,7 +47,7 @@ public class MPAOSADevice extends AbsDevice {
     protected final IREG RANGNUM = new IREG(0x50, 1, "量程个数"); //R
     protected final FREG[] RANGN = new FREG[]{new FREG(0x51, 2, "量程1"), new FREG(0x53, 2, "量程2"), new FREG(0x55, 2, "量程3"), new FREG(0x57, 2, "量程4")}; //R
 
-    public MPAOSADevice(SDevInfo info) {
+    public MOSADevice(SDevInfo info) {
         super(info);
     }
 

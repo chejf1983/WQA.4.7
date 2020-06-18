@@ -14,7 +14,7 @@ import wqa.dev.intf.*;
  *
  * @author chejf
  */
-public class OSADevice extends MPAOSADevice implements IDevMotorConfig {    
+public class OSADevice extends MOSADevice implements IDevMotorConfig {    
     public OSADevice(SDevInfo info) {
         super(info);
     }
