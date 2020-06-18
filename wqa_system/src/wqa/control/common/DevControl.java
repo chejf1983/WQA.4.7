@@ -113,6 +113,11 @@ public class DevControl {
                 }
             } else if (GetState() == ControlState.DISCONNECT) {
                 KeepAlive();
+                if (GetState() == ControlState.CONNECT) {
+                    if (!GetCollector().CollectData(this.LastTime)) {
+                        ChangeState(ControlState.DISCONNECT);
+                    }
+                }
             } else if (GetState() == ControlState.CONFIG) {
                 KeepAlive();
             }
