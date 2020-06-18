@@ -11,6 +11,7 @@ import migp.adapter.factory.AbsDevice;
 import migp.adapter.mock.DevMock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import org.junit.Test;
 import wqa.dev.intf.SConfigItem;
 
 /**
@@ -19,14 +20,25 @@ import wqa.dev.intf.SConfigItem;
  */
 public class ABS_Test {
 
-    public ABS_Test(AbsDevice instance, DevMock dev_mock) throws Exception {
+    public AbsDevice absinstance;
+    public DevMock absdev_mock;
+
+    public void SetPar(AbsDevice instance, DevMock dev_mock) throws Exception {
         PrintLog.SetPrintlevel(PrintLog.PRINTLOG);
         absinstance = instance;
         absdev_mock = dev_mock;
     }
+    
+    public void printItemlist(ArrayList<SConfigItem> list) {
+        for (SConfigItem item : list) {
+            PrintLog.println(item.inputtype + "-" + item.data_name + "[读取结果]:" + item.GetValue() + item.range + item.unit);
+        }
+    }
 
-    public AbsDevice absinstance;
-    public DevMock absdev_mock;
+    @Test
+    public void test_mock() throws Exception {
+        PrintLog.println("测试ABSTest");
+    }
 
     // <editor-fold defaultstate="collapsed" desc="读取info测试">
     public void check_infolist() throws Exception {
@@ -120,7 +132,7 @@ public class ABS_Test {
     public void check_item(ArrayList<SConfigItem> list, MEG reg, String testvalue) throws Exception {
         check_item(list, reg.toString(), testvalue);
     }
-        
+
     public void check_item(ArrayList<SConfigItem> list, String name, String testvalue) throws Exception {
         for (SConfigItem item : list) {
             if (item.IsKey(name)) {

@@ -44,7 +44,8 @@ public class ESA_ECTest {
         if (devs != null) {
             instance = (ESA_EC) devs;
             instance.InitDevice();
-            commontest = new ABS_Test(instance, dev_mock);
+            commontest = new ABS_Test();
+            commontest.SetPar(instance, dev_mock);
         }
     }
     // </editor-fold> 

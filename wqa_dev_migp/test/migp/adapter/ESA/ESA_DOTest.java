@@ -22,9 +22,9 @@ import wqa.dev.intf.*;
  *
  * @author chejf
  */
-public class EOSA_DOTest {
+public class ESA_DOTest {
 
-    public EOSA_DOTest() throws Exception {
+    public ESA_DOTest() throws Exception {
         if (dev_mock == null) {
             this.InitDevice();
         }
@@ -44,7 +44,8 @@ public class EOSA_DOTest {
         if (devs != null) {
             instance = (ESA_DO) devs;
             instance.InitDevice();
-            commontest = new ABS_Test(instance, dev_mock);
+            commontest = new ABS_Test();
+            commontest.SetPar(instance, dev_mock);
         }
     }
     // </editor-fold> 
@@ -58,12 +59,7 @@ public class EOSA_DOTest {
         commontest.check_item(config, dev_mock.EBUILDSER);
         commontest.check_item(config, dev_mock.EBUILDDATE);
         commontest.check_item(config, dev_mock.ESWVER);
-        commontest.check_item(config, dev_mock.EHWVER);
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            commontest.check_item(config, dev_mock.VDEVTYPE, String.format("0X%04X", dev_mock.VDEVTYPE.GetValue() + 0xA000));
-        } else {
-            commontest.check_item(config, dev_mock.VDEVTYPE, String.format("0X%04X", dev_mock.VDEVTYPE.GetValue()));
-        }
+        commontest.check_item(config, dev_mock.EHWVER);        
     }
     // </editor-fold> 
 
@@ -84,10 +80,6 @@ public class EOSA_DOTest {
         ArrayList<SConfigItem> list = instance.GetConfigList();
         commontest.check_item(list, dev_mock.NPASCA);
         commontest.check_item(list, dev_mock.NSALT);
-        commontest.check_item(list, dev_mock.NTEMPER_COM);
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            commontest.check_item(list, dev_mock.NAVR);
-        }
     }
     // </editor-fold> 
 
@@ -99,10 +91,6 @@ public class EOSA_DOTest {
         ArrayList<SConfigItem> list = instance.GetConfigList();
         commontest.set_item(list, dev_mock.NPASCA, "11.0");
         commontest.set_item(list, dev_mock.NSALT, "22.0");
-        commontest.set_item(list, dev_mock.NTEMPER_COM, "33.0");
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            commontest.set_item(list, dev_mock.NAVR, "44");
-        }
 
         instance.SetConfigList(list);
         dev_mock.ReadREGS();
@@ -111,11 +99,6 @@ public class EOSA_DOTest {
         commontest.setconfiglist_check();
         assertEquals(dev_mock.NPASCA.GetValue().toString(), "11.0");
         assertEquals(dev_mock.NSALT.GetValue().toString(), "22.0");
-        assertEquals(dev_mock.NTEMPER_COM.GetValue().toString(), "33.0");
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            assertEquals(dev_mock.NAVR.GetValue().toString(), "44");
-        }
-
     }
     // </editor-fold> 
 
@@ -128,17 +111,6 @@ public class EOSA_DOTest {
         commontest.check_item(list, dev_mock.NA);
         commontest.check_item(list, dev_mock.NB);
         commontest.check_item(list, dev_mock.NCLTEMPER);
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            commontest.check_item(list, dev_mock.NPA);
-            commontest.check_item(list, dev_mock.NPB);
-            commontest.check_item(list, dev_mock.NPC);
-            commontest.check_item(list, dev_mock.NPD);
-            commontest.check_item(list, dev_mock.NPE);
-            commontest.check_item(list, dev_mock.NPF);
-            commontest.check_item(list, dev_mock.NPG);
-            commontest.check_item(list, dev_mock.NDO100);
-            commontest.check_item(list, dev_mock.NDO0);
-        }
     }
     // </editor-fold> 
 
@@ -151,17 +123,6 @@ public class EOSA_DOTest {
         commontest.set_item(list, dev_mock.NA, "13.1");
         commontest.set_item(list, dev_mock.NB, "11.0");
         commontest.set_item(list, dev_mock.NCLTEMPER, "12.1");
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            commontest.set_item(list, dev_mock.NPA, "33.01");
-            commontest.set_item(list, dev_mock.NPB, "33.02");
-            commontest.set_item(list, dev_mock.NPC, "33.03");
-            commontest.set_item(list, dev_mock.NPD, "33.04");
-            commontest.set_item(list, dev_mock.NPE, "33.05");
-            commontest.set_item(list, dev_mock.NPF, "33.06");
-            commontest.set_item(list, dev_mock.NPG, "33.07");
-            commontest.set_item(list, dev_mock.NDO100, "333.03");
-            commontest.set_item(list, dev_mock.NDO0, "133.01");
-        }
 
         //下发
         instance.SetCalParList(list);
@@ -171,17 +132,6 @@ public class EOSA_DOTest {
         assertEquals(dev_mock.NA.GetValue().toString(), "13.1");
         assertEquals(dev_mock.NB.GetValue().toString(), "11.0");
         assertEquals(dev_mock.NCLTEMPER.GetValue().toString(), "12.1");
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            assertEquals(dev_mock.NPA.GetValue().toString(), "33.01");
-            assertEquals(dev_mock.NPB.GetValue().toString(), "33.02");
-            assertEquals(dev_mock.NPC.GetValue().toString(), "33.03");
-            assertEquals(dev_mock.NPD.GetValue().toString(), "33.04");
-            assertEquals(dev_mock.NPE.GetValue().toString(), "33.05");
-            assertEquals(dev_mock.NPF.GetValue().toString(), "33.06");
-            assertEquals(dev_mock.NPG.GetValue().toString(), "33.07");
-            assertEquals(dev_mock.NDO100.GetValue().toString(), "333.03");
-            assertEquals(dev_mock.NDO0.GetValue().toString(), "133.01");
-        }
     }
     // </editor-fold> 
 
@@ -196,9 +146,7 @@ public class EOSA_DOTest {
 
         CollectData result = instance.CollectData();
         MEG[] regs = new MEG[]{dev_mock.MPAR1, dev_mock.MPAR2, dev_mock.SR1, dev_mock.MPAR3, dev_mock.SR2};
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            regs = new MEG[]{dev_mock.MPAR1, dev_mock.MPAR2, dev_mock.SR1, dev_mock.MPAR3, dev_mock.SR2, dev_mock.SR3, dev_mock.SR4, dev_mock.SR5, dev_mock.SR6, dev_mock.SR7};
-        }
+        
         for (int i = 0; i < result.datas.length; i++) {
             SDataElement data = result.datas[i];
             PrintLog.println(data.name + ":" + data.mainData + ":" + data.unit + ":" + data.range_info

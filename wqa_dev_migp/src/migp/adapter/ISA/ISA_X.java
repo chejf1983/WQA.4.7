@@ -38,9 +38,9 @@ public class ISA_X extends AbsDevice {
         this.com_list.put(0x0301, new String[]{"K+对氨离子系数", "氨离子对K+系数"});
         this.com_list.put(0x0308, new String[]{"Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数"});
         this.com_list.put(0x0309, new String[]{"Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数"});
-        this.com_list.put(0x0310, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子", "硝酸根离子对Cl-系数"});
-        this.com_list.put(0x0311, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子", "硝酸根离子对Cl-系数"});
-        this.com_list.put(0x0312, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子", "硝酸根离子对Cl-系数"});
+        this.com_list.put(0x0310, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数"});
+        this.com_list.put(0x0311, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数"});
+        this.com_list.put(0x0312, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数"});
         this.com_list.put(0x0320, new String[]{});
     }
 
@@ -159,13 +159,13 @@ public class ISA_X extends AbsDevice {
         String[] enable_list = enablelist.get(this.GetDevInfo().dev_type);
         if (enable_list != null) {
             for (int i = 0; i < enable_list.length; i++) {
-                item.add(SConfigItem.CreateRWItem(enable_list[i], this.NPAR_COM_ENABLE[i].GetValue() + "", ""));
+                item.add(SConfigItem.CreateRWItem(enable_list[i], this.NPAR_COM_ENABLE[i].GetValue().toString(), ""));
             }
         }
         String[] scom_list = com_list.get(this.GetDevInfo().dev_type);
         if (scom_list != null) {
             for (int i = 0; i < scom_list.length; i++) {
-                item.add(SConfigItem.CreateRWItem(scom_list[i], this.NPAR_COM[i].GetValue() + "", ""));
+                item.add(SConfigItem.CreateRWItem(scom_list[i], this.NPAR_COM[i].GetValue().toString(), ""));
             }
         }
         return item;
@@ -187,14 +187,18 @@ public class ISA_X extends AbsDevice {
                 if (item.IsKey(datanames[i] + NFS[i].toString())) {
                     this.SetConfigREG(NFS[i], item.GetValue());
                 }
-                String[] enable_list = enablelist.get(this.GetDevInfo().dev_type);
-                if (enable_list != null) {
+            }
+            String[] enable_list = enablelist.get(this.GetDevInfo().dev_type);
+            if (enable_list != null) {
+                for (int i = 0; i < enable_list.length; i++) {
                     if (item.IsKey(enable_list[i])) {
                         this.SetConfigREG(NPAR_COM_ENABLE[i], item.GetValue());
                     }
                 }
-                String[] scom_list = com_list.get(this.GetDevInfo().dev_type);
-                if (scom_list != null) {
+            }
+            String[] scom_list = com_list.get(this.GetDevInfo().dev_type);
+            if (scom_list != null) {
+                for (int i = 0; i < scom_list.length; i++) {
                     if (item.IsKey(scom_list[i])) {
                         this.SetConfigREG(NPAR_COM[i], item.GetValue());
                     }

@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import migp.adapter.factory.AbsDevice;
 import static migp.adapter.factory.AbsDevice.DMask;
-import migp.adapter.factory.TemperCalibrateCalculate;
-import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
-import static wqa.adapter.factory.AbsDevice.RETRY_TIME;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.CollectData;
 import wqa.dev.data.LogNode;
@@ -60,7 +57,7 @@ public class MOSA_X extends AbsDevice {
     IMEG SR4 = new IMEG(new SRA(0x0E, 2), "原始光强信号(低电平)");
     FMEG SR5 = new FMEG(new SRA(0x10, 4), "温度原始信号");
 
-    IMEG SCLTYPE = new IMEG(new SRA(22, 2), "定标类型");
+//    IMEG SCLTYPE = new IMEG(new SRA(22, 2), "定标类型");
     IMEG SCLNUM = new IMEG(new SRA(24, 2), "定标点数");
     FMEG SCLODATA[] = new FMEG[]{new FMEG(new SRA(26, 4), "原始信号1"), new FMEG(new SRA(34, 4), "原始信号2"), new FMEG(new SRA(42, 4), "原始信号3")};
     FMEG SCLTDATA[] = new FMEG[]{new FMEG(new SRA(30, 4), "定标数据1"), new FMEG(new SRA(38, 4), "定标数据2"), new FMEG(new SRA(46, 4), "定标数据3")};
@@ -80,17 +77,14 @@ public class MOSA_X extends AbsDevice {
 
     FMEG NTEMPER_COMP = new FMEG(new NVPA(124, 4), "温度补偿系数");
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
+    IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "量程数量", 0, 3);
+    FMEG[] NRANGE_MAX = new FMEG[]{new FMEG(new NVPA(141, 4), "量程上限1"), new FMEG(new NVPA(145, 4), "量程上限2"), new FMEG(new NVPA(149, 4), "量程上限3"), new FMEG(new NVPA(153, 4), "量程上限4")};
 
     public static int AMPPAR = 4096;
-    IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"),
-        new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
-
-    IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "量程数量", 0, 3);
-    FMEG[] NRANGE_MAX = new FMEG[]{new FMEG(new NVPA(141, 4), "主参数1量程上限"), new FMEG(new NVPA(145, 4), "主参数2量程上限"),
-        new FMEG(new NVPA(149, 4), "主参数3量程上限"), new FMEG(new NVPA(153, 4), "主参数4量程上限")};
+    IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"), new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
     // </editor-fold> 
     // </editor-fold> 
-
+    
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
@@ -111,7 +105,7 @@ public class MOSA_X extends AbsDevice {
 
     // <editor-fold defaultstate="collapsed" desc="量程数据"> 
     //获取量程字符串描述（量程档位）
-    String get_range_string(int index) {
+    private String get_range_string(int index) {
         if (index < 0 || index >= VDRANGE_MIN.length) {
             return "未知量程" + index;
         }
@@ -247,12 +241,10 @@ public class MOSA_X extends AbsDevice {
 
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //OSA值
         disdata.datas[0].range_info = get_range_string(NRANGE.GetValue());         //量程
-
-        disdata.datas[1].mainData = NahonConvert.TimData(this.SR3.GetValue() - SR4.GetValue(), 2); //OSA原始值(光强高电平-低电平)
+        disdata.datas[1].mainData = this.SR3.GetValue(); //OSA原始值(光强高电平-低电平)
 
         disdata.datas[2].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //温度值
         disdata.datas[2].range_info = "(" + this.VTRANGE_MIN.GetValue() + "-" + this.VTRANGE_MAX.GetValue() + ")"; //量程
-
         disdata.datas[3].mainData = NahonConvert.TimData(SR5.GetValue(), 2); //温度原始值
 
         disdata.alarm = MALARM.GetValue(); //报警信息
@@ -303,7 +295,7 @@ public class MOSA_X extends AbsDevice {
     private LogNode[] CalTemer(float caltemper) throws Exception {
         this.SCLTEMPER.SetValue(caltemper);
         this.SCLTEMPERSTART.SetValue(0x01);
-        this.base_drv.SetMEG(RETRY_TIME, DEF_TIMEOUT, SCLTEMPER, SCLTEMPERSTART);
+        this.SetMEG(SCLTEMPER, SCLTEMPERSTART);
 
         //NVPA初始化
         this.ReadMEG(NTEMPER_PAR);

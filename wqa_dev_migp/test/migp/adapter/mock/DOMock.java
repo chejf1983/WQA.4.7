@@ -26,23 +26,8 @@ public class DOMock extends DevMock {
     public FMEG NCLTEMPER = new FMEG(new NVPA(24, 4), "定标点温度");
     public FMEG NPASCA = new FMEG(new NVPA(28, 4), "大气压力");
     public FMEG NSALT = new FMEG(new NVPA(32, 4), "盐度");
-    public FMEG NTEMPER_COM = new FMEG(new NVPA(36, 4), "温度补偿系数");
 
-    public DMEG NPA = new DMEG(new NVPA(40, 8), "溶氧系数A");
-    public DMEG NPB = new DMEG(new NVPA(48, 8), "溶氧系数B");
-    public DMEG NPC = new DMEG(new NVPA(56, 8), "溶氧系数C");
-    public DMEG NPD = new DMEG(new NVPA(64, 8), "溶氧系数D");
-    public DMEG NPE = new DMEG(new NVPA(72, 8), "溶氧系数E");
-    public DMEG NPF = new DMEG(new NVPA(80, 8), "溶氧系数F");
-    public DMEG NPG = new DMEG(new NVPA(88, 8), "溶氧系数G");
-
-//    FREG c_2A = new MIGP_MEM(new NVPA(80, 4), "二次系数A");
-//    FREG c_2B = new MIGP_MEM(new NVPA(84, 4), "二次系数B");
-    public FMEG NPTEMPER = new FMEG(new NVPA(96, 4), "温度修正系数");
-    public IMEG NAVR = new IMEG(new NVPA(100, 2), "平均次数");
-
-    public FMEG NDO100 = new FMEG(new NVPA(128, 4), "饱和相位");
-    public FMEG NDO0 = new FMEG(new NVPA(132, 4), "无氧相位");
+    public FMEG NPTEMPER = new FMEG(new NVPA(96, 4), "温度校准系数");
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="VPA"> 
@@ -50,7 +35,6 @@ public class DOMock extends DevMock {
     public FMEG VDRANGE_MAX = new FMEG(new VPA(0x06, 4), "主参数量程上限");
     public FMEG VTRANGE_MIN = new FMEG(new VPA(0x22, 4), "温度参数量程下限");
     public FMEG VTRANGE_MAX = new FMEG(new VPA(0x26, 4), "温度参数量程上限");
-    public IMEG VVATOKEN = new IMEG(new VPA(0x14, 2), "内部版本标志");
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="MDA"> 
@@ -72,14 +56,14 @@ public class DOMock extends DevMock {
 
     public DOMock() {
         super();
-        this.client.RegisterREGS(NB, NA, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPG, NPTEMPER, NAVR, NDO100, NDO0,
-                VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX, VVATOKEN,
+        this.client.RegisterREGS(NB, NA, NCLTEMPER, NPASCA, NSALT,  NPTEMPER,
+                VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX, 
                 MALARM, MPAR1, MPAR2, MPAR3,
                 SR1, SR2, SR3, SR4, SR5, SR6, SR7);
     }
 
-    public MEG[] list = new MEG[]{NB, NA, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPG, NPTEMPER, NAVR, NDO100, NDO0,
-        VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX, VVATOKEN,
+    public MEG[] list = new MEG[]{NB, NA, NCLTEMPER, NPASCA, NSALT,  NPTEMPER,
+        VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX, 
         MALARM, MPAR1, MPAR2, MPAR3,
         SR1, SR2, SR3, SR4, SR5, SR6, SR7};
 
@@ -93,7 +77,7 @@ public class DOMock extends DevMock {
 
         VDEVTYPE.SetValue(0x0110);
         ///////////////////////////////////////////////////////////        
-        VVATOKEN.SetValue(1);
+//        VVATOKEN.SetValue(1);
         MALARM.SetValue(0);
         WriteREGS();
     }

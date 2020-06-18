@@ -44,7 +44,8 @@ public class ISA_XTest {
         if (devs != null) {
             instance = (ISA_X) devs;
             instance.InitDevice();
-            commontest = new ABS_Test(instance, dev_mock);
+            commontest = new ABS_Test();
+            commontest.SetPar(instance, dev_mock);
         }
     }
     // </editor-fold> 
@@ -101,6 +102,7 @@ public class ISA_XTest {
     public void test_readcalpar() throws Exception {
         commontest.check_configlist();
         ArrayList<SConfigItem> list = instance.GetCalParList();
+//        commontest.printItemlist(list);
         commontest.check_item(list, dev_mock.NTEMP_CAL);
         for (int i = 0; i < instance.GetCalDataList().length - 1; i++) {
             commontest.check_item(list, instance.GetCalDataList()[i].data_name + dev_mock.NAS[i].toString(), dev_mock.NAS[i].GetValue().toString());
