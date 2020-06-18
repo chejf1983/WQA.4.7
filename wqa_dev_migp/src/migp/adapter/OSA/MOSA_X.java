@@ -18,6 +18,8 @@ import java.util.Arrays;
 import migp.adapter.factory.AbsDevice;
 import static migp.adapter.factory.AbsDevice.DMask;
 import migp.adapter.factory.TemperCalibrateCalculate;
+import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
+import static wqa.adapter.factory.AbsDevice.RETRY_TIME;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.CollectData;
 import wqa.dev.data.LogNode;
@@ -28,8 +30,9 @@ import wqa.dev.intf.SConfigItem;
  *
  * @author chejf
  */
-public class MOSA_X extends AbsDevice{
-     public MOSA_X(SDevInfo devinfo) {
+public class MOSA_X extends AbsDevice {
+
+    public MOSA_X(SDevInfo devinfo) {
         super(devinfo);
     }
 
@@ -51,21 +54,24 @@ public class MOSA_X extends AbsDevice{
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="SRA"> 
-    FMEG SR1 = new FMEG(new SRA(0x00, 4), "2.5V基准电压");
-    FMEG SR2 = new FMEG(new SRA(0x04, 4), "4.096V基准电压");
+//    FMEG SR1 = new FMEG(new SRA(0x00, 4), "2.5V基准电压");
+//    FMEG SR2 = new FMEG(new SRA(0x04, 4), "4.096V基准电压");
     IMEG SR3 = new IMEG(new SRA(0x0C, 2), "原始光强信号(高电平)");
     IMEG SR4 = new IMEG(new SRA(0x0E, 2), "原始光强信号(低电平)");
     FMEG SR5 = new FMEG(new SRA(0x10, 4), "温度原始信号");
+
+    IMEG SCLTYPE = new IMEG(new SRA(22, 2), "定标类型");
+    IMEG SCLNUM = new IMEG(new SRA(24, 2), "定标点数");
+    FMEG SCLODATA[] = new FMEG[]{new FMEG(new SRA(26, 4), "原始信号1"), new FMEG(new SRA(34, 4), "原始信号2"), new FMEG(new SRA(42, 4), "原始信号3")};
+    FMEG SCLTDATA[] = new FMEG[]{new FMEG(new SRA(30, 4), "定标数据1"), new FMEG(new SRA(38, 4), "定标数据2"), new FMEG(new SRA(46, 4), "定标数据3")};
+    IMEG SCLSTART = new IMEG(new SRA(50, 2), "启动定标"); //W
+    FMEG SCLTEMPER = new FMEG(new SRA(52, 4), "温度定标数据");    //R/W
+    IMEG SCLTEMPERSTART = new IMEG(new SRA(56, 2), "温度启动定标");//R/W
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     IMEG NRANGE = new IMEG(new NVPA(0, 2), "量程档位", 0, 3);
     IMEG NAVR = new IMEG(new NVPA(2, 2), "平均次数", 1, 100);
-
-    IMEG NCMODE = new IMEG(new NVPA(4, 2), "清扫模式", 0, 2);
-    IMEG NCTIME = new IMEG(new NVPA(6, 2), "清扫次数", 1, 100);
-    IMEG NCINTERVAL = new IMEG(new NVPA(8, 2), "清扫间隔(分钟)", 1, 24 * 60);
-    IMEG NCBRUSH = new IMEG(new NVPA(10, 2), "清扫刷偏移量", 0, 1000);
 
     FMEG[] NCLTEMPER = new FMEG[]{new FMEG(new NVPA(12, 4), "定标温度1"), new FMEG(new NVPA(40, 4), "定标温度2"), new FMEG(new NVPA(68, 4), "定标温度3"), new FMEG(new NVPA(96, 4), "定标温度4")};
     DMEG[] NCLPARA = new DMEG[]{new DMEG(new NVPA(16, 8), "定标系数A1"), new DMEG(new NVPA(44, 8), "定标系数A2"), new DMEG(new NVPA(72, 8), "定标系数A3"), new DMEG(new NVPA(100, 8), "定标系数A4")};
@@ -93,7 +99,7 @@ public class MOSA_X extends AbsDevice{
         this.ReadMEG(VDRANGE_MIN[0], VDRANGE_MIN[1], VDRANGE_MIN[2], VDRANGE_MIN[3],
                 VDRANGE_MAX[0], VDRANGE_MAX[1], VDRANGE_MAX[2], VDRANGE_MAX[3], VTRANGE_MIN, VTRANGE_MAX);
         //NVPA初始化
-        this.ReadMEG(NRANGE, NAVR, NCMODE, NCTIME, NCINTERVAL, NCBRUSH,
+        this.ReadMEG(NRANGE, NAVR,
                 NCLTEMPER[0], NCLTEMPER[1], NCLTEMPER[2], NCLTEMPER[3],
                 NCLPARA[0], NCLPARA[1], NCLPARA[2], NCLPARA[3],
                 NCLPARB[0], NCLPARB[1], NCLPARB[2], NCLPARB[3],
@@ -105,7 +111,7 @@ public class MOSA_X extends AbsDevice{
 
     // <editor-fold defaultstate="collapsed" desc="量程数据"> 
     //获取量程字符串描述（量程档位）
-    private String get_range_string(int index) {
+    String get_range_string(int index) {
         if (index < 0 || index >= VDRANGE_MIN.length) {
             return "未知量程" + index;
         }
@@ -237,7 +243,7 @@ public class MOSA_X extends AbsDevice{
         //读取数据
         this.ReadMEG(MALARM, MPAR1, MPAR2);
         //原始数据
-        this.ReadMEG(SR1, SR2, SR3, SR4, SR5);
+        this.ReadMEG(SR3, SR4, SR5);
 
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //OSA值
         disdata.datas[0].range_info = get_range_string(NRANGE.GetValue());         //量程
@@ -262,94 +268,46 @@ public class MOSA_X extends AbsDevice{
         LogNode ret = LogNode.CALOK();
         if (type.contentEquals("温度")) {
             //温度定标
-            float cal_par = new TemperCalibrateCalculate().Calculate(testdata, oradata);
-            this.SetConfigREG(this.NTEMPER_PAR, String.valueOf(cal_par));
-            ret.children.add(new LogNode(NRANGE_NUM.toString(), cal_par));
+            ret.children.addAll(Arrays.asList(CalTemer(testdata[0])));
         } else {
-            ret.children.addAll(Arrays.asList(cal_osa(oradata, testdata)));
+            ret.children.addAll(Arrays.asList(CalDevice(oradata, testdata)));
         }
         return ret;
     }
 
-    private LogNode[] cal_osa(float[] oradata, float[] testdata) throws Exception {
-        //原始数据
-        this.ReadMEG(MPAR2);
-        float cal_tmp = NahonConvert.TimData(MPAR2.GetValue(), 2);   //温度值
-        switch (oradata.length) {
-            case 1:
-                this.single_cal(oradata, testdata, cal_tmp);
-                break;
-            case 2:
-                this.double_cal(oradata, testdata, cal_tmp);
-                break;
-            default:
-                this.triple_cal(oradata, testdata, cal_tmp);
-                break;
+    private LogNode[] CalDevice(float[] oradata, float[] caldata) throws Exception {
+        if (SCLODATA.length < oradata.length) {
+            throw new Exception("定标个数异常");
         }
 
+        for (int i = 0; i < oradata.length; i++) {
+            SCLODATA[i].SetValue(oradata[i]);
+            SCLTDATA[i].SetValue(caldata[i]);
+        }
+        SCLSTART.SetValue(oradata.length);
+        this.SetMEG(SCLODATA[0], SCLODATA[1], SCLODATA[2], SCLTDATA[0], SCLTDATA[1], SCLTDATA[2], SCLSTART);
+
+        //NVPA初始化
+        this.ReadMEG(NCLTEMPER[0], NCLTEMPER[1], NCLTEMPER[2], NCLTEMPER[3],
+                NCLPARA[0], NCLPARA[1], NCLPARA[2], NCLPARA[3],
+                NCLPARB[0], NCLPARB[1], NCLPARB[2], NCLPARB[3],
+                NCLPARC[0], NCLPARC[1], NCLPARC[2], NCLPARC[3]);
+
         return new LogNode[]{new LogNode("当前量程", get_range_string(NRANGE.GetValue())),
-            new LogNode("当前温度", cal_tmp),
+            new LogNode(NCLTEMPER[NRANGE.GetValue()].toString(), NCLTEMPER[NRANGE.GetValue()]),
             new LogNode(NCLPARA[NRANGE.GetValue()].toString(), NCLPARA[NRANGE.GetValue()]),
             new LogNode(NCLPARB[NRANGE.GetValue()].toString(), NCLPARB[NRANGE.GetValue()]),
             new LogNode(NCLPARC[NRANGE.GetValue()].toString(), NCLPARC[NRANGE.GetValue()])};
     }
 
-    private void single_cal(float[] oradata, float[] testdata, float temper) throws Exception {
-        double current = 0;
-        double A = this.NCLPARA[this.NRANGE.GetValue()].GetValue();
-        double B = this.NCLPARB[this.NRANGE.GetValue()].GetValue();
-        double C = this.NCLPARC[this.NRANGE.GetValue()].GetValue();
-        if (B == 0) {
-            current = A * oradata[0] + C;
-        } else {
-            current = A / (B - oradata[0]) + C;
-        }
+    private LogNode[] CalTemer(float caltemper) throws Exception {
+        this.SCLTEMPER.SetValue(caltemper);
+        this.SCLTEMPERSTART.SetValue(0x01);
+        this.base_drv.SetMEG(RETRY_TIME, DEF_TIMEOUT, SCLTEMPER, SCLTEMPERSTART);
 
-        double newC = testdata[0] - current + C;
-
-        this.SetConfigREG(this.NCLTEMPER[this.NRANGE.GetValue()], String.valueOf(temper));
-        this.SetConfigREG(this.NCLPARC[this.NRANGE.GetValue()], String.valueOf(newC));
-//        this.set_calpar(temper, this.A[this.drange_index], this.B[this.drange_index], newC);
-    }
-
-    private void double_cal(float[] oradata, float[] testdata, float temper) throws Exception {
-        if (oradata[0] - oradata[1] == 0) {
-            throw new Exception("原始值不能相同");
-        }
-
-        double newA = (testdata[0] - testdata[1]) / (oradata[0] - oradata[1]);
-        double newB = 0;
-        double newC = testdata[0] - newA * oradata[0];
-//        this.set_calpar(temper, newA, newB, newC);
-
-        this.SetConfigREG(this.NCLTEMPER[this.NRANGE.GetValue()], String.valueOf(temper));
-        this.SetConfigREG(this.NCLPARA[this.NRANGE.GetValue()], String.valueOf(newA));
-        this.SetConfigREG(this.NCLPARB[this.NRANGE.GetValue()], String.valueOf(newB));
-        this.SetConfigREG(this.NCLPARC[this.NRANGE.GetValue()], String.valueOf(newC));
-//        this.set_cal_temp(this.NRANGE.GetValue(), temper);
-//        this.set_A(this.NRANGE.GetValue(), newA);
-//        this.set_B(this.NRANGE.GetValue(), newB);
-//        this.set_C(this.NRANGE.GetValue(), newC);
-    }
-
-    private void triple_cal(float[] oradata, float[] testdata, float temper) throws Exception {
-        if (oradata[0] - oradata[1] == 0 || oradata[1] - oradata[2] == 0) {
-            throw new Exception("原始值不能相同");
-        }
-
-        double temp = (testdata[0] - testdata[1]) * (oradata[1] - oradata[2])
-                / ((testdata[1] - testdata[2]) * (oradata[0] - oradata[1]));
-
-        double newB = (temp * oradata[0] - oradata[2]) / (temp - 1.0);
-        double newA = (testdata[0] - testdata[1]) * (newB - oradata[0])
-                * (newB - oradata[1]) / (oradata[0] - oradata[1]);
-        double newC = testdata[1] - newA / (newB - oradata[1]);
-
-//        this.set_calpar(temper, newA, newB, newC);
-        this.SetConfigREG(this.NCLTEMPER[this.NRANGE.GetValue()], String.valueOf(temper));
-        this.SetConfigREG(this.NCLPARA[this.NRANGE.GetValue()], String.valueOf(newA));
-        this.SetConfigREG(this.NCLPARB[this.NRANGE.GetValue()], String.valueOf(newB));
-        this.SetConfigREG(this.NCLPARC[this.NRANGE.GetValue()], String.valueOf(newC));
+        //NVPA初始化
+        this.ReadMEG(NTEMPER_PAR);
+        return new LogNode[]{new LogNode(NTEMPER_PAR.toString(), NTEMPER_PAR.GetValue())};
     }
     // </editor-fold> 
 
