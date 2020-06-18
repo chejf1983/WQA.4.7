@@ -13,7 +13,6 @@ public class SDataElement {
 
     public String name = "";
     public float mainData = 0;
-    public boolean internal_only;
     public String unit = "";
     public String range_info = "";
 
@@ -23,7 +22,6 @@ public class SDataElement {
     public SDataElement(SDataElement other) {
         this.name = other.name;
         this.mainData = other.mainData;
-        this.internal_only = other.internal_only;
         this.unit = other.unit;
         this.range_info = other.range_info;
     }

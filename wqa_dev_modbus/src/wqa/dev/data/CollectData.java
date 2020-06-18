@@ -33,7 +33,6 @@ public class CollectData {
             for (int i = 0; i < data_list.length; i++) {
                 datas[i] = new SDataElement();
                 datas[i].name = data_list[i].data_name;
-                datas[i].internal_only = data_list[i].internal_only;
                 datas[i].unit = data_list[i].data_unit;
                 datas[i].range_info = data_list[i].data_range[0];
             }

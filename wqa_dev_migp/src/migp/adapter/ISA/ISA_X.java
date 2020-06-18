@@ -25,19 +25,19 @@ public class ISA_X extends AbsDevice {
     public ISA_X(SDevInfo devinfo) {
         super(devinfo);
 
-        this.enablelist.put(0x0300, new String[]{"K+对氨离子", "", "", ""});
-        this.enablelist.put(0x0301, new String[]{"K+对氨离子", "氨离子对K+", "", ""});
-        this.enablelist.put(0x0308, new String[]{"Cl-对硝酸根离子", "", "", ""});
-        this.enablelist.put(0x0309, new String[]{"Cl-对硝酸根离子", "硝酸根离子对Cl-", "", ""});
-        this.enablelist.put(0x0310, new String[]{"K+对氨离子", "Cl-对硝酸根离子", "", ""});
-        this.enablelist.put(0x0311, new String[]{"K+对氨离子", "Cl-对硝酸根离子", "氨离子对K+", ""});
-        this.enablelist.put(0x0312, new String[]{"K+对氨离子", "Cl-对硝酸根离子", "硝酸根离子对Cl-", ""});
+        this.enablelist.put(0x0300, new String[]{"K+对氨离子"});
+        this.enablelist.put(0x0301, new String[]{"K+对氨离子", "氨离子对K+"});
+        this.enablelist.put(0x0308, new String[]{"Cl-对硝酸根离子"});
+        this.enablelist.put(0x0309, new String[]{"Cl-对硝酸根离子", "硝酸根离子对Cl-"});
+        this.enablelist.put(0x0310, new String[]{"K+对氨离子", "Cl-对硝酸根离子"});
+        this.enablelist.put(0x0311, new String[]{"K+对氨离子", "Cl-对硝酸根离子", "氨离子对K+"});
+        this.enablelist.put(0x0312, new String[]{"K+对氨离子", "Cl-对硝酸根离子", "硝酸根离子对Cl-"});
         this.enablelist.put(0x0320, new String[]{});
 
-        this.com_list.put(0x0300, new String[]{"K+对氨离子系数", "氨离子对K+系数", "", ""});
-        this.com_list.put(0x0301, new String[]{"K+对氨离子系数", "氨离子对K+系数", "", ""});
-        this.com_list.put(0x0308, new String[]{"Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数", "", ""});
-        this.com_list.put(0x0309, new String[]{"Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数", "", ""});
+        this.com_list.put(0x0300, new String[]{"K+对氨离子系数", "氨离子对K+系数"});
+        this.com_list.put(0x0301, new String[]{"K+对氨离子系数", "氨离子对K+系数"});
+        this.com_list.put(0x0308, new String[]{"Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数"});
+        this.com_list.put(0x0309, new String[]{"Cl-对硝酸根离子系数", "硝酸根离子对Cl-系数"});
         this.com_list.put(0x0310, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子", "硝酸根离子对Cl-系数"});
         this.com_list.put(0x0311, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子", "硝酸根离子对Cl-系数"});
         this.com_list.put(0x0312, new String[]{"K+对氨离子系数", "氨离子对K+系数", "Cl-对硝酸根离子", "硝酸根离子对Cl-系数"});
@@ -155,6 +155,19 @@ public class ISA_X extends AbsDevice {
             item.add(SConfigItem.CreateRWItem(datanames[i] + NFS[i].toString(), this.NFS[i].GetValue() + "", ""));
             item.add(SConfigItem.CreateInfoItem(""));
         }
+
+        String[] enable_list = enablelist.get(this.GetDevInfo().dev_type);
+        if (enable_list != null) {
+            for (int i = 0; i < enable_list.length; i++) {
+                item.add(SConfigItem.CreateRWItem(enable_list[i], this.NPAR_COM_ENABLE[i].GetValue() + "", ""));
+            }
+        }
+        String[] scom_list = com_list.get(this.GetDevInfo().dev_type);
+        if (scom_list != null) {
+            for (int i = 0; i < scom_list.length; i++) {
+                item.add(SConfigItem.CreateRWItem(scom_list[i], this.NPAR_COM[i].GetValue() + "", ""));
+            }
+        }
         return item;
     }
 
@@ -173,6 +186,18 @@ public class ISA_X extends AbsDevice {
                 }
                 if (item.IsKey(datanames[i] + NFS[i].toString())) {
                     this.SetConfigREG(NFS[i], item.GetValue());
+                }
+                String[] enable_list = enablelist.get(this.GetDevInfo().dev_type);
+                if (enable_list != null) {
+                    if (item.IsKey(enable_list[i])) {
+                        this.SetConfigREG(NPAR_COM_ENABLE[i], item.GetValue());
+                    }
+                }
+                String[] scom_list = com_list.get(this.GetDevInfo().dev_type);
+                if (scom_list != null) {
+                    if (item.IsKey(scom_list[i])) {
+                        this.SetConfigREG(NPAR_COM[i], item.GetValue());
+                    }
                 }
             }
             if (item.IsKey(NTEMP_CAL.toString())) {

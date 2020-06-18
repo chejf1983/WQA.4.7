@@ -18,7 +18,6 @@ import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.CollectData;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.SDevInfo;
-import wqa.dev.data.SMotorParameter;
 import wqa.dev.intf.SConfigItem;
 
 /**

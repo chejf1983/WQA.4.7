@@ -118,7 +118,6 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x1201, PHDevice.class.getName());
         class_map.put(0x1202, ECDevice.class.getName());
         class_map.put(0x1203, DODevice.class.getName());
-        class_map.put(0x1100, MPAOSADevice.class.getName());
 
         class_map.put(0x0100, OSADevice.class.getName());
         class_map.put(0x0102, OSADevice.class.getName());
@@ -128,6 +127,8 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x010A, OSADevice.class.getName());
         class_map.put(0x010E, OSADevice.class.getName());
         class_map.put(0x0110, DODevice.class.getName());
+        
+        class_map.put(0x1100, MPAOSADevice.class.getName());
 
         class_map.put(0x0300, AMMODevice.class.getName());
         class_map.put(0x0301, AMMODevice.class.getName());
