@@ -19,11 +19,8 @@ import java.util.logging.Logger;
 import migp.adapter.ESA.*;
 import migp.adapter.ISA.*;
 import migp.adapter.OSA.*;
-import wqa.dev.data.MIOInfo;
-import wqa.dev.data.SDevInfo;
-import wqa.dev.intf.IDevice;
-import wqa.dev.intf.IDeviceSearch;
-import wqa.dev.intf.IMAbstractIO;
+import wqa.dev.data.*;
+import wqa.dev.intf.*;
 
 /**
  *

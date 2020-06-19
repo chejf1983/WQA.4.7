@@ -5,8 +5,7 @@
  */
 package migp.adapter.factory;
 
-import base.migp.impl.MIGPBoot;
-import base.migp.impl.MIGPEia;
+import base.migp.impl.*;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.*;

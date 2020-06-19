@@ -13,9 +13,7 @@ import java.util.Arrays;
 import migp.adapter.factory.AbsDevice;
 import static migp.adapter.factory.AbsDevice.DMask;
 import wqa.adapter.factory.CErrorTable;
-import wqa.dev.data.CollectData;
-import wqa.dev.data.LogNode;
-import wqa.dev.data.SDevInfo;
+import wqa.dev.data.*;
 import wqa.dev.intf.SConfigItem;
 
 /**
@@ -93,7 +91,7 @@ public class MOSAII_X extends AbsDevice {
     FMEG[] NRANGE_MAX2 = new FMEG[]{new FMEG(new NVPA(285, 4), "参数2量程上限1"), new FMEG(new NVPA(289, 4), "参数2量程上限2"), new FMEG(new NVPA(293, 4), "参数2量程上限3"), new FMEG(new NVPA(297, 4), "参数2量程上限4")};
     //****************************************************************************************************************
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
-    public static int AMPPAR = 4096;
+    public static int AMPPAR = 4095;
     // </editor-fold> 
     // </editor-fold> 
 
@@ -302,6 +300,7 @@ public class MOSAII_X extends AbsDevice {
                         famply = AMPPAR / Float.valueOf(item.GetValue());
                     }
                     int amply = (int) (famply + 0.5);
+                    amply = amply > AMPPAR ? AMPPAR : amply;
                     this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
                 }
             }

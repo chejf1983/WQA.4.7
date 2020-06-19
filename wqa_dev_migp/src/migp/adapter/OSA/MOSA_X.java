@@ -5,22 +5,15 @@
  */
 package migp.adapter.OSA;
 
-import base.migp.mem.MDA;
-import base.migp.mem.NVPA;
-import base.migp.mem.SRA;
-import base.migp.mem.VPA;
-import base.migp.reg.DMEG;
-import base.migp.reg.FMEG;
-import base.migp.reg.IMEG;
+import base.migp.mem.*;
+import base.migp.reg.*;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import java.util.Arrays;
 import migp.adapter.factory.AbsDevice;
 import static migp.adapter.factory.AbsDevice.DMask;
 import wqa.adapter.factory.CErrorTable;
-import wqa.dev.data.CollectData;
-import wqa.dev.data.LogNode;
-import wqa.dev.data.SDevInfo;
+import wqa.dev.data.*;
 import wqa.dev.intf.SConfigItem;
 
 /**
@@ -80,7 +73,7 @@ public class MOSA_X extends AbsDevice {
     IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "量程数量", 0, 3);
     FMEG[] NRANGE_MAX = new FMEG[]{new FMEG(new NVPA(141, 4), "量程上限1"), new FMEG(new NVPA(145, 4), "量程上限2"), new FMEG(new NVPA(149, 4), "量程上限3"), new FMEG(new NVPA(153, 4), "量程上限4")};
 
-    public static int AMPPAR = 4096;
+    public static int AMPPAR = 4095;
     IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"), new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
     // </editor-fold> 
     // </editor-fold> 
@@ -223,6 +216,7 @@ public class MOSA_X extends AbsDevice {
                         famply = AMPPAR / Float.valueOf(item.GetValue());
                     }
                     int amply = (int) (famply + 0.5);
+                    amply = amply > AMPPAR ? AMPPAR : amply;
                     this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
                 }
             }

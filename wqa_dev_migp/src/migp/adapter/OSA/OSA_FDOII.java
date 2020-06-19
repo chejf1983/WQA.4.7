@@ -5,21 +5,15 @@
  */
 package migp.adapter.OSA;
 
-import base.migp.mem.NVPA;
-import base.migp.mem.VPA;
-import base.migp.reg.DMEG;
-import base.migp.reg.FMEG;
-import base.migp.reg.IMEG;
-import base.migp.reg.MEG;
+import base.migp.mem.*;
+import base.migp.reg.*;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import migp.adapter.ESA.ESADEV;
 import static migp.adapter.factory.AbsDevice.DMask;
 import migp.adapter.factory.TemperCalibrateCalculate;
 import wqa.adapter.factory.CErrorTable;
-import wqa.dev.data.CollectData;
-import wqa.dev.data.LogNode;
-import wqa.dev.data.SDevInfo;
+import wqa.dev.data.*;
 import wqa.dev.intf.SConfigItem;
 
 /**
