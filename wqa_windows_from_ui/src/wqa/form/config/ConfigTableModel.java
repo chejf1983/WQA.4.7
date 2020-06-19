@@ -16,7 +16,7 @@ public class ConfigTableModel extends AbstractTableModel {
 
     private SConfigItem[] list = new SConfigItem[0];
     private String[] names = new String[]{"名称(范围)", "数值"};
-    public static int[] column_len = {140, 150};
+    public static int[] column_len = {200, 140};
 
     public ConfigTableModel(SConfigItem[] list) {
         this.list = list;

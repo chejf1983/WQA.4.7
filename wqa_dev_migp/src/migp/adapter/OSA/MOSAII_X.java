@@ -118,7 +118,7 @@ public class MOSAII_X extends AbsDevice {
                 NCLPARA2[0], NCLPARA2[1], NCLPARA2[2], NCLPARA2[3],
                 NCLPARB2[0], NCLPARB2[1], NCLPARB2[2], NCLPARB2[3],
                 NCLPARC2[0], NCLPARC2[1], NCLPARC2[2], NCLPARC2[3],
-                NRANGE_NUM2,
+                NRANGE_NUM2, NTEMPER_COMP2,
                 NAMPLIFY2[0], NAMPLIFY2[1], NAMPLIFY2[2], NAMPLIFY2[3],
                 NRANGE_MAX2[0], NRANGE_MAX2[1], NRANGE_MAX2[2], NRANGE_MAX2[3]);
     }
