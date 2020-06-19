@@ -33,10 +33,10 @@ public class MOSAIIDevice extends AbsDevice {
     private final IREG ODATA1 = new IREG(0x07, 1, "原始光强数据1");//R
     private final IREG ODATA2 = new IREG(0x08, 1, "原始光强数据2");//R
 
-    private final IREG RANGE1 = new IREG(0x09, 1, "量程1");//R/W
-    private final IREG RANGE2 = new IREG(0x0A, 1, "量程2");//R/W
-    private final IREG AVR1 = new IREG(0x0B, 1, "平均次数1", 1, 100);//R/W
-    private final IREG AVR2 = new IREG(0x0C, 1, "平均次数2", 1, 100);//R/W
+    private final IREG RANGE1 = new IREG(0x09, 1, "量程");//R/W
+    private final IREG RANGE2 = new IREG(0x0A, 1, "量程");//R/W
+    private final IREG AVR1 = new IREG(0x0B, 1, "平均次数", 1, 100);//R/W
+    private final IREG AVR2 = new IREG(0x0C, 1, "平均次数", 1, 100);//R/W
 
     private final IREG CLDTYPE = new IREG(0x2F, 1, "定标参数"); //R/W
     private final IREG CLRANGE = new IREG(0x30, 1, "定标量程"); //R/W
@@ -120,25 +120,28 @@ public class MOSAIIDevice extends AbsDevice {
     @Override
     public ArrayList<SConfigItem> GetConfigList() {
         ArrayList<SConfigItem> list = super.GetConfigList(); //To change body of generated methods, choose Tools | Templates.
-        list.add(SConfigItem.CreateSItem(RANGE1.toString(), get_range_string(this.RANGE1.GetValue()), "", range_strings1));
-        list.add(SConfigItem.CreateRWItem(AVR1.toString(), AVR1.GetValue().toString(), ""));
-        list.add(SConfigItem.CreateSItem(RANGE2.toString(), get_range_string(this.RANGE2.GetValue()), "", range_strings2));
-        list.add(SConfigItem.CreateRWItem(AVR2.toString(), AVR2.GetValue().toString(), ""));
+        String[] data_names = this.GetDataNames();
+        list.add(SConfigItem.CreateSItem(data_names[0] + RANGE1.toString(), get_range_string(this.RANGE1.GetValue()), "", range_strings1));
+        list.add(SConfigItem.CreateRWItem(data_names[0] + AVR1.toString(), AVR1.GetValue().toString(), ""));
+        list.add(SConfigItem.CreateSItem(data_names[1] + RANGE2.toString(), get_range_string(this.RANGE2.GetValue()), "", range_strings2));
+        list.add(SConfigItem.CreateRWItem(data_names[1] + AVR2.toString(), AVR2.GetValue().toString(), ""));
         return list;
     }
 
     @Override
     public void SetConfigList(ArrayList<SConfigItem> list) throws Exception {
         super.SetConfigList(list);
+        String[] data_names = this.GetDataNames();
+
         for (SConfigItem item : list) {
             //设置平均次数
-            if (item.IsKey(this.AVR1.toString())) {
+            if (item.IsKey(data_names[0] + this.AVR1.toString())) {
                 this.SetConfigREG(AVR1, item.GetValue());
 
             }
 
             //设置量程范围
-            if (item.IsKey(RANGE1.toString())) {
+            if (item.IsKey(data_names[0] + RANGE1.toString())) {
                 for (int i = 0; i < this.range_strings1.length; i++) {
                     if (item.GetValue().contentEquals(this.range_strings1[i])) {
                         this.SetConfigREG(RANGE1, String.valueOf(i));
@@ -148,13 +151,13 @@ public class MOSAIIDevice extends AbsDevice {
             }
 
             //设置平均次数
-            if (item.IsKey(this.AVR2.toString())) {
+            if (item.IsKey(data_names[1] + this.AVR2.toString())) {
                 this.SetConfigREG(AVR2, item.GetValue());
 
             }
 
             //设置量程范围
-            if (item.IsKey(RANGE2.toString())) {
+            if (item.IsKey(data_names[1] + RANGE2.toString())) {
                 for (int i = 0; i < this.range_strings2.length; i++) {
                     if (item.GetValue().contentEquals(this.range_strings2[i])) {
                         this.SetConfigREG(RANGE2, String.valueOf(i));
@@ -215,7 +218,7 @@ public class MOSAIIDevice extends AbsDevice {
             this.CLDTYPE.SetValue(1);
             this.CLRANGE.SetValue(this.RANGE2.GetValue());
         }
-        
+
         for (int i = 0; i < oradata.length; i++) {
             CLODATA[i].SetValue((int) oradata[i]);
             CLTDATA[i].SetValue(caldata[i]);

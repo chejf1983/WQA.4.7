@@ -64,31 +64,31 @@ public class MOSAII_X extends AbsDevice {
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
-    IMEG NRANGE = new IMEG(new NVPA(0, 2), "参数1量程档位", 0, 3);
-    IMEG NAVR = new IMEG(new NVPA(2, 2), "参数1平均次数", 1, 100);
+    IMEG NRANGE = new IMEG(new NVPA(0, 2), "量程档位", 0, 3);
+    IMEG NAVR = new IMEG(new NVPA(2, 2), "平均次数", 1, 100);
 
-    FMEG[] NCLTEMPER = new FMEG[]{new FMEG(new NVPA(12, 4), "参数1定标温度1"), new FMEG(new NVPA(40, 4), "参数1定标温度2"), new FMEG(new NVPA(68, 4), "参数1定标温度3"), new FMEG(new NVPA(96, 4), "参数1定标温度4")};
-    DMEG[] NCLPARA = new DMEG[]{new DMEG(new NVPA(16, 8), "参数1定标系数A1"), new DMEG(new NVPA(44, 8), "参数1定标系数A2"), new DMEG(new NVPA(72, 8), "参数1定标系数A3"), new DMEG(new NVPA(100, 8), "参数1定标系数A4")};
-    DMEG[] NCLPARB = new DMEG[]{new DMEG(new NVPA(24, 8), "参数1定标系数B1"), new DMEG(new NVPA(52, 8), "参数1定标系数B2"), new DMEG(new NVPA(80, 8), "参数1定标系数B3"), new DMEG(new NVPA(108, 8), "参数1定标系数B4")};
-    DMEG[] NCLPARC = new DMEG[]{new DMEG(new NVPA(32, 8), "参数1定标系数C1"), new DMEG(new NVPA(60, 8), "参数1定标系数C2"), new DMEG(new NVPA(88, 8), "参数1定标系数C3"), new DMEG(new NVPA(116, 8), "参数1定标系数C4")};
+    FMEG[] NCLTEMPER = new FMEG[]{new FMEG(new NVPA(12, 4), "定标温度1"), new FMEG(new NVPA(40, 4), "定标温度2"), new FMEG(new NVPA(68, 4), "定标温度3"), new FMEG(new NVPA(96, 4), "定标温度4")};
+    DMEG[] NCLPARA = new DMEG[]{new DMEG(new NVPA(16, 8), "定标系数A1"), new DMEG(new NVPA(44, 8), "定标系数A2"), new DMEG(new NVPA(72, 8), "定标系数A3"), new DMEG(new NVPA(100, 8), "定标系数A4")};
+    DMEG[] NCLPARB = new DMEG[]{new DMEG(new NVPA(24, 8), "定标系数B1"), new DMEG(new NVPA(52, 8), "定标系数B2"), new DMEG(new NVPA(80, 8), "定标系数B3"), new DMEG(new NVPA(108, 8), "定标系数B4")};
+    DMEG[] NCLPARC = new DMEG[]{new DMEG(new NVPA(32, 8), "定标系数C1"), new DMEG(new NVPA(60, 8), "定标系数C2"), new DMEG(new NVPA(88, 8), "定标系数C3"), new DMEG(new NVPA(116, 8), "定标系数C4")};
 
-    FMEG NTEMPER_COMP = new FMEG(new NVPA(124, 4), "参数1温度补偿系数");
-    IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "参数1放大倍数1"), new IMEG(new NVPA(135, 2), "参数1放大倍数2"), new IMEG(new NVPA(137, 2), "参数1放大倍数3"), new IMEG(new NVPA(139, 2), "参数1放大倍数4")};
-    IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "参数1量程数量", 0, 3);
-    FMEG[] NRANGE_MAX = new FMEG[]{new FMEG(new NVPA(141, 4), "参数1量程上限1"), new FMEG(new NVPA(145, 4), "参数1量程上限2"), new FMEG(new NVPA(149, 4), "参数1量程上限3"), new FMEG(new NVPA(153, 4), "参数1量程上限4")};
+    FMEG NTEMPER_COMP = new FMEG(new NVPA(124, 4), "温度补偿系数");
+    IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"), new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
+    IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "量程数量", 0, 3);
+    FMEG[] NRANGE_MAX = new FMEG[]{new FMEG(new NVPA(141, 4), "量程上限1"), new FMEG(new NVPA(145, 4), "量程上限2"), new FMEG(new NVPA(149, 4), "量程上限3"), new FMEG(new NVPA(153, 4), "量程上限4")};
     //****************************************************************************************************************
-    IMEG NRANGE2 = new IMEG(new NVPA(4, 2), "参数2量程档位", 0, 3);
-    IMEG NAVR2 = new IMEG(new NVPA(6, 2), "参数2平均次数", 1, 100);
+    IMEG NRANGE2 = new IMEG(new NVPA(4, 2), "量程档位", 0, 3);
+    IMEG NAVR2 = new IMEG(new NVPA(6, 2), "平均次数", 1, 100);
 
-    FMEG[] NCLTEMPER2 = new FMEG[]{new FMEG(new NVPA(160, 4), "参数2定标温度1"), new FMEG(new NVPA(188, 4), "参数2定标温度2"), new FMEG(new NVPA(216, 4), "参数2定标温度3"), new FMEG(new NVPA(244, 4), "参数2定标温度4")};
-    DMEG[] NCLPARA2 = new DMEG[]{new DMEG(new NVPA(164, 8), "参数2定标系数A1"), new DMEG(new NVPA(192, 8), "参数2定标系数A2"), new DMEG(new NVPA(220, 8), "参数2定标系数A3"), new DMEG(new NVPA(248, 8), "参数2定标系数A4")};
-    DMEG[] NCLPARB2 = new DMEG[]{new DMEG(new NVPA(172, 8), "参数2定标系数B1"), new DMEG(new NVPA(200, 8), "参数2定标系数B2"), new DMEG(new NVPA(228, 8), "参数2定标系数B3"), new DMEG(new NVPA(256, 8), "参数2定标系数B4")};
-    DMEG[] NCLPARC2 = new DMEG[]{new DMEG(new NVPA(180, 8), "参数2定标系数C1"), new DMEG(new NVPA(208, 8), "参数2定标系数C2"), new DMEG(new NVPA(236, 8), "参数2定标系数C3"), new DMEG(new NVPA(264, 8), "参数2定标系数C4")};
+    FMEG[] NCLTEMPER2 = new FMEG[]{new FMEG(new NVPA(160, 4), "定标温度1"), new FMEG(new NVPA(188, 4), "定标温度2"), new FMEG(new NVPA(216, 4), "定标温度3"), new FMEG(new NVPA(244, 4), "定标温度4")};
+    DMEG[] NCLPARA2 = new DMEG[]{new DMEG(new NVPA(164, 8), "定标系数A1"), new DMEG(new NVPA(192, 8), "定标系数A2"), new DMEG(new NVPA(220, 8), "定标系数A3"), new DMEG(new NVPA(248, 8), "定标系数A4")};
+    DMEG[] NCLPARB2 = new DMEG[]{new DMEG(new NVPA(172, 8), "定标系数B1"), new DMEG(new NVPA(200, 8), "定标系数B2"), new DMEG(new NVPA(228, 8), "定标系数B3"), new DMEG(new NVPA(256, 8), "定标系数B4")};
+    DMEG[] NCLPARC2 = new DMEG[]{new DMEG(new NVPA(180, 8), "定标系数C1"), new DMEG(new NVPA(208, 8), "定标系数C2"), new DMEG(new NVPA(236, 8), "定标系数C3"), new DMEG(new NVPA(264, 8), "定标系数C4")};
 
-    FMEG NTEMPER_COMP2 = new FMEG(new NVPA(272, 4), "参数2温度补偿系数");
-    IMEG[] NAMPLIFY2 = new IMEG[]{new IMEG(new NVPA(277, 2), "参数2放大倍数1"), new IMEG(new NVPA(279, 2), "参数2放大倍数2"), new IMEG(new NVPA(281, 2), "参数2放大倍数3"), new IMEG(new NVPA(283, 2), "参数2放大倍数4")};
-    IMEG NRANGE_NUM2 = new IMEG(new NVPA(276, 1), "参数2量程数量", 0, 3);
-    FMEG[] NRANGE_MAX2 = new FMEG[]{new FMEG(new NVPA(285, 4), "参数2量程上限1"), new FMEG(new NVPA(289, 4), "参数2量程上限2"), new FMEG(new NVPA(293, 4), "参数2量程上限3"), new FMEG(new NVPA(297, 4), "参数2量程上限4")};
+    FMEG NTEMPER_COMP2 = new FMEG(new NVPA(272, 4), "温度补偿系数");
+    IMEG[] NAMPLIFY2 = new IMEG[]{new IMEG(new NVPA(277, 2), "放大倍数1"), new IMEG(new NVPA(279, 2), "放大倍数2"), new IMEG(new NVPA(281, 2), "放大倍数3"), new IMEG(new NVPA(283, 2), "放大倍数4")};
+    IMEG NRANGE_NUM2 = new IMEG(new NVPA(276, 1), "量程数量", 0, 3);
+    FMEG[] NRANGE_MAX2 = new FMEG[]{new FMEG(new NVPA(285, 4), "量程上限1"), new FMEG(new NVPA(289, 4), "量程上限2"), new FMEG(new NVPA(293, 4), "量程上限3"), new FMEG(new NVPA(297, 4), "量程上限4")};
     //****************************************************************************************************************
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
     public static int AMPPAR = 4095;
@@ -163,22 +163,24 @@ public class MOSAII_X extends AbsDevice {
     // <editor-fold defaultstate="collapsed" desc="配置接口"> 
     @Override
     public ArrayList<SConfigItem> GetConfigList() {
-        ArrayList<SConfigItem> item = super.GetConfigList(); //To change body of generated methods, choose Tools | Templates.
-        item.add(SConfigItem.CreateSItem(NRANGE.toString(), this.get_range_string(NRANGE.GetValue()), "", this.get_range_string()));
-        item.add(SConfigItem.CreateRWItem(NAVR.toString(), NAVR.GetValue().toString(), NAVR.min + "-" + NAVR.max));
-        item.add(SConfigItem.CreateRWItem(NTEMPER_COMP.toString(), NTEMPER_COMP.GetValue().toString(), ""));
-        item.add(SConfigItem.CreateSItem(NRANGE2.toString(), this.get_range_string(NRANGE2.GetValue()), "", this.get_range_string2()));
-        item.add(SConfigItem.CreateRWItem(NAVR2.toString(), NAVR2.GetValue().toString(), NAVR2.min + "-" + NAVR2.max));
-        item.add(SConfigItem.CreateRWItem(NTEMPER_COMP2.toString(), NTEMPER_COMP2.GetValue().toString(), ""));
+        ArrayList<SConfigItem> item = super.GetConfigList();
+        String[] data_names = this.GetDataNames();
+        item.add(SConfigItem.CreateSItem(data_names[0] + NRANGE.toString(), this.get_range_string(NRANGE.GetValue()), "", this.get_range_string()));
+        item.add(SConfigItem.CreateRWItem(data_names[0] + NAVR.toString(), NAVR.GetValue().toString(), NAVR.min + "-" + NAVR.max));
+        item.add(SConfigItem.CreateRWItem(data_names[0] + NTEMPER_COMP.toString(), NTEMPER_COMP.GetValue().toString(), ""));
+        item.add(SConfigItem.CreateSItem(data_names[1] + NRANGE2.toString(), this.get_range_string(NRANGE2.GetValue()), "", this.get_range_string2()));
+        item.add(SConfigItem.CreateRWItem(data_names[1] + NAVR2.toString(), NAVR2.GetValue().toString(), NAVR2.min + "-" + NAVR2.max));
+        item.add(SConfigItem.CreateRWItem(data_names[1] + NTEMPER_COMP2.toString(), NTEMPER_COMP2.GetValue().toString(), ""));
         return item;
     }
 
     @Override
     public void SetConfigList(ArrayList<SConfigItem> list) throws Exception {
         super.SetConfigList(list);
+        String[] data_names = this.GetDataNames();
 
         for (SConfigItem item : list) {
-            if (item.IsKey(NRANGE.toString())) {
+            if (item.IsKey(data_names[0] + NRANGE.toString())) {
                 String[] _range_string = this.get_range_string();
                 for (int i = 0; i < _range_string.length; i++) {
                     if (item.GetValue().contentEquals(_range_string[i])) {
@@ -187,7 +189,7 @@ public class MOSAII_X extends AbsDevice {
                     }
                 }
             }
-            if (item.IsKey(NRANGE2.toString())) {
+            if (item.IsKey(data_names[1] + NRANGE2.toString())) {
                 String[] _range_string = this.get_range_string2();
                 for (int i = 0; i < _range_string.length; i++) {
                     if (item.GetValue().contentEquals(_range_string[i])) {
@@ -196,16 +198,16 @@ public class MOSAII_X extends AbsDevice {
                     }
                 }
             }
-            if (item.IsKey(NAVR.toString())) {
+            if (item.IsKey(data_names[0] + NAVR.toString())) {
                 this.SetConfigREG(NAVR, item.GetValue());
             }
-            if (item.IsKey(NAVR2.toString())) {
+            if (item.IsKey(data_names[1] + NAVR2.toString())) {
                 this.SetConfigREG(NAVR2, item.GetValue());
             }
-            if (item.IsKey(NTEMPER_COMP.toString())) {
+            if (item.IsKey(data_names[0] + NTEMPER_COMP.toString())) {
                 this.SetConfigREG(NTEMPER_COMP, item.GetValue());
             }
-            if (item.IsKey(NTEMPER_COMP2.toString())) {
+            if (item.IsKey(data_names[1] + NTEMPER_COMP2.toString())) {
                 this.SetConfigREG(NTEMPER_COMP2, item.GetValue());
             }
         }
@@ -222,37 +224,37 @@ public class MOSAII_X extends AbsDevice {
 
         //****************************************************************************************************************
         item.add(SConfigItem.CreateInfoItem(GetDataNames[0] + "校准参数列表:"));
-        item.add(SConfigItem.CreateRWItem(NRANGE_NUM.toString(), (NRANGE_NUM.GetValue() + 1) + "", (NRANGE_NUM.min + 1) + "-" + (NRANGE_NUM.max + 1)));
+        item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NRANGE_NUM.toString(), (NRANGE_NUM.GetValue() + 1) + "", (NRANGE_NUM.min + 1) + "-" + (NRANGE_NUM.max + 1)));
         item.add(SConfigItem.CreateInfoItem(""));
 
         for (int i = 0; i < this.NAMPLIFY.length; i++) {
-            item.add(SConfigItem.CreateRWItem(NRANGE_MAX[i].toString(), NRANGE_MAX[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLTEMPER[i].toString(), NCLTEMPER[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLPARA[i].toString(), NCLPARA[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLPARB[i].toString(), NCLPARB[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLPARC[i].toString(), NCLPARC[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NRANGE_MAX[i].toString(), NRANGE_MAX[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NCLTEMPER[i].toString(), NCLTEMPER[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NCLPARA[i].toString(), NCLPARA[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NCLPARB[i].toString(), NCLPARB[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NCLPARC[i].toString(), NCLPARC[i].GetValue().toString(), ""));
             if (NAMPLIFY[i].GetValue() == 0) {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
+                item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR / NAMPLIFY[i].GetValue()) + "", ""));
+                item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), (int) (AMPPAR / NAMPLIFY[i].GetValue()) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }
         //****************************************************************************************************************
         item.add(SConfigItem.CreateInfoItem(GetDataNames[1] + "校准参数列表:"));
-        item.add(SConfigItem.CreateRWItem(NRANGE_NUM2.toString(), (NRANGE_NUM2.GetValue() + 1) + "", (NRANGE_NUM2.min + 1) + "-" + (NRANGE_NUM2.max + 1)));
+        item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NRANGE_NUM2.toString(), (NRANGE_NUM2.GetValue() + 1) + "", (NRANGE_NUM2.min + 1) + "-" + (NRANGE_NUM2.max + 1)));
         item.add(SConfigItem.CreateInfoItem(""));
 
         for (int i = 0; i < this.NAMPLIFY2.length; i++) {
-            item.add(SConfigItem.CreateRWItem(NRANGE_MAX2[i].toString(), NRANGE_MAX2[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLTEMPER2[i].toString(), NCLTEMPER2[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLPARA2[i].toString(), NCLPARA2[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLPARB2[i].toString(), NCLPARB2[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(NCLPARC2[i].toString(), NCLPARC2[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NRANGE_MAX2[i].toString(), NRANGE_MAX2[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NCLTEMPER2[i].toString(), NCLTEMPER2[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NCLPARA2[i].toString(), NCLPARA2[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NCLPARB2[i].toString(), NCLPARB2[i].GetValue().toString(), ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NCLPARC2[i].toString(), NCLPARC2[i].GetValue().toString(), ""));
             if (NAMPLIFY2[i].GetValue() == 0) {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY2[i].toString(), (int) (AMPPAR) + "", ""));
+                item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NAMPLIFY2[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY2[i].toString(), (int) (AMPPAR / NAMPLIFY2[i].GetValue()) + "", ""));
+                item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NAMPLIFY2[i].toString(), (int) (AMPPAR / NAMPLIFY2[i].GetValue()) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }
@@ -262,13 +264,13 @@ public class MOSAII_X extends AbsDevice {
     @Override
     public void SetCalParList(ArrayList<SConfigItem> list) throws Exception {
         super.SetConfigList(list);
-
+        String[] GetDataNames = this.GetDataNames();
         for (SConfigItem item : list) {
             if (item.IsKey(NTEMPER_PAR.toString())) {
                 this.SetConfigREG(NTEMPER_PAR, item.GetValue());
             }
-
-            if (item.IsKey(NRANGE_NUM.toString())) {
+            //*************************************************************************
+            if (item.IsKey(GetDataNames[0] + NRANGE_NUM.toString())) {
                 int num = Integer.valueOf(item.GetValue());
                 if (num > NRANGE_NUM.min && num <= NRANGE_NUM.max + 1) {
                     this.SetConfigREG(NRANGE_NUM, (num - 1) + "");
@@ -278,22 +280,22 @@ public class MOSAII_X extends AbsDevice {
             }
 
             for (int i = 0; i < this.NAMPLIFY.length; i++) {
-                if (item.IsKey(NRANGE_MAX[i].toString())) {
+                if (item.IsKey(GetDataNames[0] + NRANGE_MAX[i].toString())) {
                     this.SetConfigREG(NRANGE_MAX[i], item.GetValue());
                 }
-                if (item.IsKey(NCLTEMPER[i].toString())) {
+                if (item.IsKey(GetDataNames[0] + NCLTEMPER[i].toString())) {
                     this.SetConfigREG(NCLTEMPER[i], item.GetValue());
                 }
-                if (item.IsKey(NCLPARA[i].toString())) {
+                if (item.IsKey(GetDataNames[0] + NCLPARA[i].toString())) {
                     this.SetConfigREG(NCLPARA[i], item.GetValue());
                 }
-                if (item.IsKey(NCLPARB[i].toString())) {
+                if (item.IsKey(GetDataNames[0] + NCLPARB[i].toString())) {
                     this.SetConfigREG(NCLPARB[i], item.GetValue());
                 }
-                if (item.IsKey(NCLPARC[i].toString())) {
+                if (item.IsKey(GetDataNames[0] + NCLPARC[i].toString())) {
                     this.SetConfigREG(NCLPARC[i], item.GetValue());
                 }
-                if (item.IsKey(NAMPLIFY[i].toString())) {
+                if (item.IsKey(GetDataNames[0] + NAMPLIFY[i].toString())) {
                     float tmp = Float.valueOf(item.GetValue());
                     float famply = AMPPAR;
                     if (tmp != 0) {
@@ -305,7 +307,8 @@ public class MOSAII_X extends AbsDevice {
                 }
             }
 
-            if (item.IsKey(NRANGE_NUM2.toString())) {
+            //*************************************************************************
+            if (item.IsKey(GetDataNames[1] + NRANGE_NUM2.toString())) {
                 int num = Integer.valueOf(item.GetValue());
                 if (num > NRANGE_NUM2.min && num <= NRANGE_NUM2.max + 1) {
                     this.SetConfigREG(NRANGE_NUM2, (num - 1) + "");
@@ -315,22 +318,22 @@ public class MOSAII_X extends AbsDevice {
             }
 
             for (int i = 0; i < this.NAMPLIFY2.length; i++) {
-                if (item.IsKey(NRANGE_MAX2[i].toString())) {
+                if (item.IsKey(GetDataNames[1] + NRANGE_MAX2[i].toString())) {
                     this.SetConfigREG(NRANGE_MAX2[i], item.GetValue());
                 }
-                if (item.IsKey(NCLTEMPER2[i].toString())) {
+                if (item.IsKey(GetDataNames[1] + NCLTEMPER2[i].toString())) {
                     this.SetConfigREG(NCLTEMPER2[i], item.GetValue());
                 }
-                if (item.IsKey(NCLPARA2[i].toString())) {
+                if (item.IsKey(GetDataNames[1] + NCLPARA2[i].toString())) {
                     this.SetConfigREG(NCLPARA2[i], item.GetValue());
                 }
-                if (item.IsKey(NCLPARB2[i].toString())) {
+                if (item.IsKey(GetDataNames[1] + NCLPARB2[i].toString())) {
                     this.SetConfigREG(NCLPARB2[i], item.GetValue());
                 }
-                if (item.IsKey(NCLPARC2[i].toString())) {
+                if (item.IsKey(GetDataNames[1] + NCLPARC2[i].toString())) {
                     this.SetConfigREG(NCLPARC2[i], item.GetValue());
                 }
-                if (item.IsKey(NAMPLIFY2[i].toString())) {
+                if (item.IsKey(GetDataNames[1] + NAMPLIFY2[i].toString())) {
                     float tmp = Float.valueOf(item.GetValue());
                     float famply = AMPPAR;
                     if (tmp != 0) {
