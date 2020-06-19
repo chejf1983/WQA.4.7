@@ -55,7 +55,7 @@ public class MOSAII_X extends AbsDevice {
     FMEG SR5 = new FMEG(new SRA(0x10, 4), "温度原始信号");
 
     IMEG SCLTYPE = new IMEG(new SRA(22, 2), "定标类型");
-    IMEG SCLNUM = new IMEG(new SRA(24, 2), "定标点数");
+    IMEG SCLRANG = new IMEG(new SRA(24, 2), "定标量程");
     FMEG SCLODATA[] = new FMEG[]{new FMEG(new SRA(26, 4), "原始信号1"), new FMEG(new SRA(34, 4), "原始信号2"), new FMEG(new SRA(42, 4), "原始信号3")};
     FMEG SCLTDATA[] = new FMEG[]{new FMEG(new SRA(30, 4), "定标数据1"), new FMEG(new SRA(38, 4), "定标数据2"), new FMEG(new SRA(46, 4), "定标数据3")};
     IMEG SCLSTART = new IMEG(new SRA(50, 2), "启动定标"); //W
@@ -396,8 +396,10 @@ public class MOSAII_X extends AbsDevice {
         String[] GetDataNames = this.GetDataNames();
         if (type.contains(GetDataNames[0])) {
             this.SCLTYPE.SetValue(0);
+            SCLRANG.SetValue(this.NRANGE.GetValue());
         } else {
             this.SCLTYPE.SetValue(1);
+            SCLRANG.SetValue(this.NRANGE2.GetValue());
         }
 
         for (int i = 0; i < oradata.length; i++) {
@@ -405,7 +407,7 @@ public class MOSAII_X extends AbsDevice {
             SCLTDATA[i].SetValue(caldata[i]);
         }
         SCLSTART.SetValue(oradata.length);
-        this.SetMEG(SCLTYPE, SCLODATA[0], SCLODATA[1], SCLODATA[2], SCLTDATA[0], SCLTDATA[1], SCLTDATA[2], SCLSTART);
+        this.SetMEG(SCLTYPE, SCLRANG, SCLODATA[0], SCLODATA[1], SCLODATA[2], SCLTDATA[0], SCLTDATA[1], SCLTDATA[2], SCLSTART);
 
         if (type.contains(GetDataNames[0])) {
             //NVPA初始化

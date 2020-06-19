@@ -51,7 +51,7 @@ public class MOSA_X extends AbsDevice {
     FMEG SR5 = new FMEG(new SRA(0x10, 4), "温度原始信号");
 
 //    IMEG SCLTYPE = new IMEG(new SRA(22, 2), "定标类型");
-    IMEG SCLNUM = new IMEG(new SRA(24, 2), "定标点数");
+    IMEG SCLRANG = new IMEG(new SRA(24, 2), "定标量程");
     FMEG SCLODATA[] = new FMEG[]{new FMEG(new SRA(26, 4), "原始信号1"), new FMEG(new SRA(34, 4), "原始信号2"), new FMEG(new SRA(42, 4), "原始信号3")};
     FMEG SCLTDATA[] = new FMEG[]{new FMEG(new SRA(30, 4), "定标数据1"), new FMEG(new SRA(38, 4), "定标数据2"), new FMEG(new SRA(46, 4), "定标数据3")};
     IMEG SCLSTART = new IMEG(new SRA(50, 2), "启动定标"); //W
@@ -77,7 +77,7 @@ public class MOSA_X extends AbsDevice {
     IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"), new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
     // </editor-fold> 
     // </editor-fold> 
-    
+
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
@@ -266,12 +266,13 @@ public class MOSA_X extends AbsDevice {
             throw new Exception("定标个数异常");
         }
 
+        SCLRANG.SetValue(this.NRANGE.GetValue());
         for (int i = 0; i < oradata.length; i++) {
             SCLODATA[i].SetValue(oradata[i]);
             SCLTDATA[i].SetValue(caldata[i]);
         }
         SCLSTART.SetValue(oradata.length);
-        this.SetMEG(SCLODATA[0], SCLODATA[1], SCLODATA[2], SCLTDATA[0], SCLTDATA[1], SCLTDATA[2], SCLSTART);
+        this.SetMEG(SCLRANG, SCLODATA[0], SCLODATA[1], SCLODATA[2], SCLTDATA[0], SCLTDATA[1], SCLTDATA[2], SCLSTART);
 
         //NVPA初始化
         this.ReadMEG(NCLTEMPER[0], NCLTEMPER[1], NCLTEMPER[2], NCLTEMPER[3],
