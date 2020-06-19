@@ -153,7 +153,7 @@ public class MOSAII_X extends AbsDevice {
     private String[] get_range_string2() {
         String[] tmp = new String[this.NRANGE_NUM2.GetValue() + 1];
         for (int i = 0; i < tmp.length; i++) {
-            tmp[i] = get_range_string(i);
+            tmp[i] = get_range_string2(i);
         }
 
         return tmp;
@@ -168,7 +168,7 @@ public class MOSAII_X extends AbsDevice {
         item.add(SConfigItem.CreateSItem(data_names[0] + NRANGE.toString(), this.get_range_string(NRANGE.GetValue()), "", this.get_range_string()));
         item.add(SConfigItem.CreateRWItem(data_names[0] + NAVR.toString(), NAVR.GetValue().toString(), NAVR.min + "-" + NAVR.max));
         item.add(SConfigItem.CreateRWItem(data_names[0] + NTEMPER_COMP.toString(), NTEMPER_COMP.GetValue().toString(), ""));
-        item.add(SConfigItem.CreateSItem(data_names[1] + NRANGE2.toString(), this.get_range_string(NRANGE2.GetValue()), "", this.get_range_string2()));
+        item.add(SConfigItem.CreateSItem(data_names[1] + NRANGE2.toString(), this.get_range_string2(NRANGE2.GetValue()), "", this.get_range_string2()));
         item.add(SConfigItem.CreateRWItem(data_names[1] + NAVR2.toString(), NAVR2.GetValue().toString(), NAVR2.min + "-" + NAVR2.max));
         item.add(SConfigItem.CreateRWItem(data_names[1] + NTEMPER_COMP2.toString(), NTEMPER_COMP2.GetValue().toString(), ""));
         return item;
@@ -361,7 +361,7 @@ public class MOSAII_X extends AbsDevice {
         disdata.datas[1].mainData = this.SR3.GetValue(); //OSA原始值1
 
         disdata.datas[2].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //OSA值2
-        disdata.datas[2].range_info = get_range_string(NRANGE2.GetValue());       //量程2
+        disdata.datas[2].range_info = get_range_string2(NRANGE2.GetValue());       //量程2
         disdata.datas[3].mainData = this.SR4.GetValue(); //OSA原始值2
 
         disdata.datas[4].mainData = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
@@ -428,7 +428,7 @@ public class MOSAII_X extends AbsDevice {
                     NCLPARC2[0], NCLPARC2[1], NCLPARC2[2], NCLPARC2[3]);
 
             return new LogNode[]{new LogNode("定标参数", type),
-                new LogNode("当前量程", get_range_string(NRANGE2.GetValue())),
+                new LogNode("当前量程", get_range_string2(NRANGE2.GetValue())),
                 new LogNode(NCLTEMPER2[NRANGE.GetValue()].toString(), NCLTEMPER2[NRANGE.GetValue()]),
                 new LogNode(NCLPARA2[NRANGE.GetValue()].toString(), NCLPARA2[NRANGE.GetValue()]),
                 new LogNode(NCLPARB2[NRANGE.GetValue()].toString(), NCLPARB2[NRANGE.GetValue()]),
