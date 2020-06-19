@@ -39,12 +39,12 @@ public class ECHLORI extends AbsDevice {
     @Override
     public CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, CHL, PH, TEMPER, OCHL, OPH);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
+        this.ReadREG(ALARM, CHL, PH, TEMPER, OCHL, OPH);
+        this.ReadREG(OTEMPER);
 
         disdata.datas[0].mainData = NahonConvert.TimData(CHL.GetValue(), 2);
         disdata.datas[1].mainData = NahonConvert.TimData(OCHL.GetValue(), 2);
-        
+
         disdata.datas[2].mainData = NahonConvert.TimData(PH.GetValue(), 2);
         disdata.datas[3].mainData = NahonConvert.TimData(OPH.GetValue(), 2);
 
@@ -68,16 +68,19 @@ public class ECHLORI extends AbsDevice {
             CLTDATA[i].SetValue(caldata[i]);
         }
 
-        if(type.contentEquals(this.GetDataNames()[0])) CTYPE.SetValue(0);
-        else CTYPE.SetValue(1);
+        if (type.contentEquals(this.GetDataNames()[0])) {
+            CTYPE.SetValue(0);
+        } else {
+            CTYPE.SetValue(1);
+        }
         this.CLSTART.SetValue(oradata.length);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CTYPE, CLODATA[0], CLODATA[1], CLTDATA[0], CLTDATA[1], CLSTART);
+        this.SetREG(CTYPE, CLODATA[0], CLODATA[1], CLTDATA[0], CLTDATA[1], CLSTART);
     }
 
     private void CalTemer(float caltemper) throws Exception {
         this.CLTEMPER.SetValue(caltemper);
         this.CLTEMPERSTART.SetValue(0x01);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMPER, CLTEMPERSTART);
+        this.SetREG(CLTEMPER, CLTEMPERSTART);
     }
 
     @Override

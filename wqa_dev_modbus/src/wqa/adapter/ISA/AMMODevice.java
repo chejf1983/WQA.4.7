@@ -43,8 +43,8 @@ public class AMMODevice extends AbsDevice {
     public CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
 //        AmmoPacket ammo_data = this.ammo_drv.GetData();
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, PH, NH4, K, TEMPER, OPH, ONH4, OK);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
+        this.ReadREG(ALARM, PH, NH4, K, TEMPER, OPH, ONH4, OK);
+        this.ReadREG(OTEMPER);
 
         disdata.datas[0].mainData = NahonConvert.TimData(PH.GetValue(), 2);
         disdata.datas[1].mainData = NahonConvert.TimData(OPH.GetValue(), 2);
@@ -94,13 +94,13 @@ public class AMMODevice extends AbsDevice {
 
         this.CLTYPE.SetValue(caltype);
         this.CLSTART.SetValue(oradata.length);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTYPE, CLODATA[0], CLODATA[1], CLTDATA[0], CLTDATA[1], CLSTART);
+        this.SetREG(CLTYPE, CLODATA[0], CLODATA[1], CLTDATA[0], CLTDATA[1], CLSTART);
     }
 
     private void CalTemer(float caltemper) throws Exception {
         this.CLTEMP.SetValue(caltemper);
         this.CLTEMPSTART.SetValue(0x01);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMP, CLTEMPSTART);
+        this.SetREG(CLTEMP, CLTEMPSTART);
     }
     // </editor-fold> 
 }

@@ -5,7 +5,6 @@
  */
 package wqa.adapter.OSA;
 
-import java.util.ArrayList;
 import modebus.register.IREG;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.data.SMotorParameter;
@@ -31,7 +30,7 @@ public class OSADevice extends MOSADevice implements IDevMotorConfig {
         super.InitDevice();
 
         //初始化寄存器
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, CMODE, CTIME, CINTVAL);
+        this.ReadREG(CMODE, CTIME, CINTVAL);
     }
 
     // <editor-fold defaultstate="collapsed" desc="电机控制"> 
@@ -63,7 +62,7 @@ public class OSADevice extends MOSADevice implements IDevMotorConfig {
 
         //设置模式
         this.CMODE.SetValue(par.mode == CleanMode.Auto ? 0 : 1);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CMODE, CTIME, CINTVAL);
+        this.SetREG(CMODE, CTIME, CINTVAL);
     }
 
     @Override

@@ -25,7 +25,7 @@ import wqa.dev.intf.SConfigItem;
  * @author chejf
  */
 public class MOSADevice extends AbsDevice {
-    
+
     private final IREG ALARM = new IREG(0x00, 1, "报警码");//R
     private final FREG MDATA = new FREG(0x01, 2, "主参数数据(OSA-Turb:浊度、OSA-TS：悬浮物/浊度、OSA-ChlA：叶绿素、OSA-Cyano：蓝绿藻、OSA-Oil: 水中油)");      //R
     private final FREG TEMPER = new FREG(0x03, 2, "当前温度");//R
@@ -53,8 +53,8 @@ public class MOSADevice extends AbsDevice {
         super.InitDevice();
 
         //初始化寄存器
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGNUM, RANGN[0], RANGN[1], RANGN[2], RANGN[3]);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGE, AVR);
+        this.ReadREG(RANGNUM, RANGN[0], RANGN[1], RANGN[2], RANGN[3]);
+        this.ReadREG(RANGE, AVR);
 
         //初始化最大量程信息
         this.range_strings = this.init_range_string();
@@ -126,8 +126,8 @@ public class MOSADevice extends AbsDevice {
     @Override
     public CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, MDATA, TEMPER, ODATA);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
+        this.ReadREG(ALARM, MDATA, TEMPER, ODATA);
+        this.ReadREG(OTEMPER);
 //        CommonDataPacket sph_data = this.trub_drv.GetData();
 
         disdata.datas[0].mainData = NahonConvert.TimData(MDATA.GetValue(), 2);
@@ -170,15 +170,14 @@ public class MOSADevice extends AbsDevice {
 //            System.arraycopy(NahonConvert.FloatToByteArray(caldata[i]), 0, data, i * 6 + 2, 4);
         }
         CLSTART.SetValue(oradata.length);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLRANGE, CLODATA[0], CLODATA[1], CLODATA[2], CLTDATA[0], CLTDATA[1], CLTDATA[2], CLSTART);
+        this.SetREG(CLRANGE, CLODATA[0], CLODATA[1], CLODATA[2], CLTDATA[0], CLTDATA[1], CLTDATA[2], CLSTART);
     }
 
     private void CalTemer(float caltemper) throws Exception {
         this.CLTEMPER.SetValue(caltemper);
         this.CLTEMPERSTART.SetValue(0x01);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMPER, CLTEMPERSTART);
+        this.SetREG(CLTEMPER, CLTEMPERSTART);
     }
     // </editor-fold>  
 
-    
 }

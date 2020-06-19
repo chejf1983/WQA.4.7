@@ -58,8 +58,8 @@ public class EAMMODevice extends AbsDevice {
     @Override
     public CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, PH, TEMPER, OPH);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
+        this.ReadREG(ALARM, PH, TEMPER, OPH);
+        this.ReadREG(OTEMPER);
 
         disdata.datas[0].mainData = NahonConvert.TimData(PH.GetValue(), 2);
         disdata.datas[1].mainData = NahonConvert.TimData(OPH.GetValue(), 2);
@@ -85,13 +85,13 @@ public class EAMMODevice extends AbsDevice {
         }
 
         this.CLSTART.SetValue(oradata.length);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLODATA[0], CLODATA[1], CLTDATA[0], CLTDATA[1], CLSTART);
+        this.SetREG(CLODATA[0], CLODATA[1], CLTDATA[0], CLTDATA[1], CLSTART);
     }
 
     private void CalTemer(float caltemper) throws Exception {
         this.CLTEMPER.SetValue(caltemper);
         this.CLTEMPERSTART.SetValue(0x01);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMPER, CLTEMPERSTART);
+        this.SetREG(CLTEMPER, CLTEMPERSTART);
     }
 
     @Override

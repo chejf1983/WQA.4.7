@@ -60,8 +60,8 @@ public class MOSAIIDevice extends AbsDevice {
         super.InitDevice();
 
         //初始化寄存器
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGNUM1, RANGN1[0], RANGN1[1], RANGN1[2], RANGN1[3], RANGNUM2, RANGN2[0], RANGN2[1], RANGN2[2], RANGN2[3]);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, RANGE1, AVR1, RANGE2, AVR2);
+        this.ReadREG(RANGNUM1, RANGN1[0], RANGN1[1], RANGN1[2], RANGN1[3], RANGNUM2, RANGN2[0], RANGN2[1], RANGN2[2], RANGN2[3]);
+        this.ReadREG(RANGE1, AVR1, RANGE2, AVR2);
 
         //初始化最大量程信息
         this.range_strings1 = this.init_range_string();
@@ -173,8 +173,8 @@ public class MOSAIIDevice extends AbsDevice {
     @Override
     public CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, MDATA1, TEMPER, ODATA1, MDATA2, ODATA2);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
+        this.ReadREG(ALARM, MDATA1, TEMPER, ODATA1, MDATA2, ODATA2);
+        this.ReadREG(OTEMPER);
 //        CommonDataPacket sph_data = this.trub_drv.GetData();
 
         disdata.datas[0].mainData = NahonConvert.TimData(MDATA1.GetValue(), 2);
@@ -226,13 +226,13 @@ public class MOSAIIDevice extends AbsDevice {
 //            System.arraycopy(NahonConvert.FloatToByteArray(caldata[i]), 0, data, i * 6 + 2, 4);
         }
         CLSTART.SetValue(oradata.length);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLDTYPE, CLRANGE, CLODATA[0], CLODATA[1], CLODATA[2], CLTDATA[0], CLTDATA[1], CLTDATA[2], CLSTART);
+        this.SetREG(CLDTYPE, CLRANGE, CLODATA[0], CLODATA[1], CLODATA[2], CLTDATA[0], CLTDATA[1], CLTDATA[2], CLSTART);
     }
 
     private void CalTemer(float caltemper) throws Exception {
         this.CLTEMPER.SetValue(caltemper);
         this.CLTEMPERSTART.SetValue(0x01);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMPER, CLTEMPERSTART);
+        this.SetREG(CLTEMPER, CLTEMPERSTART);
     }
     // </editor-fold>  
 

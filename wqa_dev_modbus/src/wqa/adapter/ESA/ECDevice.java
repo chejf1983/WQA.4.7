@@ -48,13 +48,13 @@ public class ECDevice extends AbsDevice {
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ECRANG, CMPTEMP, PAREC, SALTRANGE, CMPTDS);
-        if(this.IsOverVersion(104)){
-            if(this.ECRANG.GetValue() < 0 && this.ECRANG.GetValue() >= EC_UNIT_STRING.length){
+        this.ReadREG(ECRANG, CMPTEMP, PAREC, SALTRANGE, CMPTDS);
+        if (this.IsOverVersion(104)) {
+            if (this.ECRANG.GetValue() < 0 && this.ECRANG.GetValue() >= EC_UNIT_STRING.length) {
                 Logger.getGlobal().log(Level.SEVERE, "ECRANG无效值{0}，修改为0", ECRANG.GetValue());
                 this.ECRANG.SetValue(0);
             }
-            if(this.SALTRANGE.GetValue() < 0 && this.SALTRANGE.GetValue() >= SALT_UNIT_STRING.length){
+            if (this.SALTRANGE.GetValue() < 0 && this.SALTRANGE.GetValue() >= SALT_UNIT_STRING.length) {
                 Logger.getGlobal().log(Level.SEVERE, "SALTRANGE无效值{0}，修改为0", ECRANG.GetValue());
                 this.SALTRANGE.SetValue(0);
             }
@@ -66,8 +66,8 @@ public class ECDevice extends AbsDevice {
     @Override
     public CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, EC, SALT, TEMPER, OEC);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
+        this.ReadREG(ALARM, EC, SALT, TEMPER, OEC);
+        this.ReadREG(OTEMPER);
         disdata.datas[0].mainData = NahonConvert.TimData(EC.GetValue(), 2);
         disdata.datas[1].mainData = NahonConvert.TimData(OEC.GetValue(), 2);
 
@@ -79,8 +79,12 @@ public class ECDevice extends AbsDevice {
         if (this.IsOverVersion(104)) {
             disdata.datas[0].unit = EC_UNIT_STRING[this.ECRANG.GetValue()];
             int max_range = 500;
-            if(ECRANG.GetValue() == 0x00){max_range = (max_range * 1000);}
-            if(ECRANG.GetValue() == 0x02){max_range = (max_range * 100);}
+            if (ECRANG.GetValue() == 0x00) {
+                max_range = (max_range * 1000);
+            }
+            if (ECRANG.GetValue() == 0x02) {
+                max_range = (max_range * 100);
+            }
             disdata.datas[0].range_info = "(0-" + max_range + ")";
             disdata.datas[4].unit = SALT_UNIT_STRING[this.SALTRANGE.GetValue()];
         }
@@ -172,13 +176,13 @@ public class ECDevice extends AbsDevice {
         CLODATA.SetValue(oradata[0]);
         CLTDATA.SetValue(caldata[0]);
         this.CLSTART.SetValue(oradata.length);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLODATA, CLTDATA, CLSTART);
+        this.SetREG(CLODATA, CLTDATA, CLSTART);
     }
 
     private void CalTemer(float caltemper) throws Exception {
         this.CLTEMPER.SetValue(caltemper);
         this.CLTEMPERSTART.SetValue(0x01);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMPER, CLTEMPERSTART);
+        this.SetREG(CLTEMPER, CLTEMPERSTART);
     }
     // </editor-fold> 
 

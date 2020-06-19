@@ -151,7 +151,7 @@ public class OSA_XTest {
             assertEquals(dev_mock.NCLPARA[i].GetValue().toString(), "12.0");
             assertEquals(dev_mock.NCLPARB[i].GetValue().toString(), "13.0");
             assertEquals(dev_mock.NCLPARC[i].GetValue().toString(), "13.0");
-            assertEquals((int) (OSA_X.AMPPAR / dev_mock.NAMPLIFY[i].GetValue()) + "", "2");
+            assertEquals((int) (0.5 + (float)OSA_X.AMPPAR / dev_mock.NAMPLIFY[i].GetValue()) + "", "2");
         }
     }
     // </editor-fold> 

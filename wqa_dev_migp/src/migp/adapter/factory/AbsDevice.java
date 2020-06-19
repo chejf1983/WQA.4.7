@@ -98,7 +98,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         }
         return list.toArray(new DataInfo[0]);
     }
-    
+
     public boolean IsOverVersion(int version_threshold) {
         if (this.eiainfo.ESWVER.GetValue().startsWith("D")) {
             try {
@@ -131,12 +131,53 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         return disdata;
     }
 
+    private void SortMEG(MEG[] megs) {
+        for (int i = 0; i < megs.length; i++) {
+            for (int j = i; j < megs.length; j++) {
+                if (megs[i].GetMEM().addr > megs[j].GetMEM().addr) {
+                    MEG tmp = megs[i];
+                    megs[i] = megs[j];
+                    megs[j] = tmp;
+                }
+            }
+        }
+    }
+
+    private int max_num = 30;
+
     protected void ReadMEG(MEG... megs) throws Exception {
-        this.base_drv.ReadMEG(DEF_RETRY, DEF_TIMEOUT, megs);
+        if (megs.length > max_num) {
+            SortMEG(megs);
+        }
+
+        for (int i = 0; i < megs.length; i += max_num) {
+            MEG[] tmp;
+            if (megs.length - i < max_num) {
+                tmp = new MEG[megs.length - i];
+            } else {
+                tmp = new MEG[max_num];
+            }
+
+            System.arraycopy(megs, i, tmp, 0, tmp.length);
+            this.base_drv.ReadMEG(DEF_RETRY, DEF_TIMEOUT, tmp);
+        }
     }
 
     protected void SetMEG(MEG... megs) throws Exception {
-        this.base_drv.SetMEG(DEF_RETRY, DEF_TIMEOUT, megs);
+        if (megs.length > max_num) {
+            SortMEG(megs);
+        }
+        for (int i = 0; i < megs.length; i += max_num) {
+            MEG[] tmp;
+            if (megs.length - i < max_num) {
+                tmp = new MEG[megs.length - i];
+            } else {
+                tmp = new MEG[max_num];
+            }
+
+            System.arraycopy(megs, i, tmp, 0, tmp.length);
+            this.base_drv.SetMEG(DEF_RETRY, DEF_TIMEOUT, tmp);
+        }
     }
     // </editor-fold>     
 

@@ -43,7 +43,7 @@ public class DODevice extends AbsDevice {
     public void InitDevice() throws Exception {
         super.InitDevice();
         //获取盐度//获取大气压//平均次数
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, PASCA, SALT, AVR);
+        this.ReadREG(PASCA, SALT, AVR);
     }
 
     // <editor-fold defaultstate="collapsed" desc="溶氧额外设置"> 
@@ -79,8 +79,8 @@ public class DODevice extends AbsDevice {
     @Override
     public CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, ALARM, DO, DOPEC, TEMPER, ODO);
-        this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, OTEMPER);
+        this.ReadREG(ALARM, DO, DOPEC, TEMPER, ODO);
+        this.ReadREG(OTEMPER);
 
         disdata.datas[0].mainData = NahonConvert.TimData(DO.GetValue(), 3);
         disdata.datas[1].mainData = NahonConvert.TimData(DOPEC.GetValue(), 2);
@@ -128,7 +128,7 @@ public class DODevice extends AbsDevice {
         }
 
         this.CLSTART.SetValue(oradata.length);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLODATA[0], CLODATA[1], CLSTART);
+        this.SetREG(CLODATA[0], CLODATA[1], CLSTART);
 //        byte[] data = new byte[oradata.length * 8];
 //        for (int i = 0; i < oradata.length; i++) {
 //            System.arraycopy(NahonConvert.FloatToByteArray(oradata[i]), 0, data, i * 8, 4);
@@ -142,7 +142,7 @@ public class DODevice extends AbsDevice {
     private void CalTemer(float caltemper) throws Exception {
         this.CLTEMPER.SetValue(caltemper);
         this.CLTEMPERSTART.SetValue(0x01);
-        this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, CLTEMPER, CLTEMPERSTART);
+        this.SetREG(CLTEMPER, CLTEMPERSTART);
     }
     // </editor-fold>     
 }

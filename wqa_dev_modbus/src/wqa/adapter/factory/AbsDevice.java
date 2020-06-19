@@ -20,7 +20,7 @@ import wqa.dev.intf.*;
  */
 public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 
-    protected ModeBusNode base_drv;
+    private ModeBusNode base_drv;
     public static int DEF_TIMEOUT = 300;
     public static int RETRY_TIME = 3;
     //波特率范围
@@ -52,7 +52,6 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 //        if (GetDevInfo().dev_type != DEVTYPE.GetValue()) {
 //            throw new Exception("探头信息不匹配");
 //        }
-        
         this.sinfo.serial_num = SERIANUM.GetValue();
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
         DEVADDR.SetValue((int) this.GetDevInfo().dev_addr);
@@ -210,6 +209,55 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
     }
     // </editor-fold>  
 
+    private void SortMEG(REG[] megs) {
+        for (int i = 0; i < megs.length; i++) {
+            for (int j = i; j < megs.length; j++) {
+                if (megs[i].RegAddr() > megs[j].RegAddr()) {
+                    REG tmp = megs[i];
+                    megs[i] = megs[j];
+                    megs[j] = tmp;
+                }
+            }
+        }
+    }
+
+    private int max_num = 30;
+
+    public void ReadREG(REG... megs) throws Exception {
+        if (megs.length > max_num) {
+            SortMEG(megs);
+        }
+
+        for (int i = 0; i < megs.length; i += max_num) {
+            REG[] tmp;
+            if (megs.length - i < max_num) {
+                tmp = new REG[megs.length - i];
+            } else {
+                tmp = new REG[max_num];
+            }
+
+            System.arraycopy(megs, i, tmp, 0, tmp.length);
+            this.base_drv.ReadREG(RETRY_TIME, DEF_TIMEOUT, tmp);
+        }
+    }
+
+    public void SetREG(REG... megs) throws Exception {
+        if (megs.length > max_num) {
+            SortMEG(megs);
+        }
+        for (int i = 0; i < megs.length; i += max_num) {
+            REG[] tmp;
+            if (megs.length - i < max_num) {
+                tmp = new REG[megs.length - i];
+            } else {
+                tmp = new REG[max_num];
+            }
+
+            System.arraycopy(megs, i, tmp, 0, tmp.length);
+            this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, tmp);
+        }
+    }
+    
     @Override
     public IConfigList[] GetConfigLists() {
         return new IConfigList[]{
