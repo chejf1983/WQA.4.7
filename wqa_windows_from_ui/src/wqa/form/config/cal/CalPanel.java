@@ -73,7 +73,7 @@ public class CalPanel extends javax.swing.JPanel {
                     //获取原始值
                     SDataElement data_o = event.GetEvent().GetOraDataElement(selecttype);
                     //原始值不为空显示
-                    if (data != null) {
+                    if (data != null && data_o != null) {
                         //设置值
                         itemlist.forEach((item) -> {
                             item.SetValue(data_o.mainData, data.mainData);
