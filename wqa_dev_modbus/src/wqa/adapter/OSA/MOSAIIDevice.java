@@ -11,8 +11,6 @@ import modebus.pro.NahonConvert;
 import modebus.register.FREG;
 import modebus.register.IREG;
 import wqa.adapter.factory.AbsDevice;
-import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
-import static wqa.adapter.factory.AbsDevice.RETRY_TIME;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.CollectData;
@@ -123,7 +121,7 @@ public class MOSAIIDevice extends AbsDevice {
         String[] data_names = this.GetDataNames();
         list.add(SConfigItem.CreateSItem(data_names[0] + RANGE1.toString(), get_range_string(this.RANGE1.GetValue()), "", range_strings1));
         list.add(SConfigItem.CreateRWItem(data_names[0] + AVR1.toString(), AVR1.GetValue().toString(), ""));
-        list.add(SConfigItem.CreateSItem(data_names[1] + RANGE2.toString(), get_range_string(this.RANGE2.GetValue()), "", range_strings2));
+        list.add(SConfigItem.CreateSItem(data_names[1] + RANGE2.toString(), get_range_string2(this.RANGE2.GetValue()), "", range_strings2));
         list.add(SConfigItem.CreateRWItem(data_names[1] + AVR2.toString(), AVR2.GetValue().toString(), ""));
         return list;
     }

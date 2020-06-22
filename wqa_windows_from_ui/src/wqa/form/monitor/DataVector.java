@@ -150,7 +150,7 @@ public class DataVector {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="TableData">  
-    public static int[] column_len = new int[]{100, 145, 105};
+    public static int[] column_len = new int[]{110, 140, 100};
     public AbstractTableModel table_model = new DataTableModel();
 
     private class DataTableModel extends AbstractTableModel {
