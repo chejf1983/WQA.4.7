@@ -9,7 +9,6 @@ import base.migp.mem.MDA;
 import base.migp.mem.NVPA;
 import base.migp.mem.SRA;
 import base.migp.mem.VPA;
-import base.migp.reg.DMEG;
 import base.migp.reg.FMEG;
 import base.migp.reg.IMEG;
 import base.migp.reg.MEG;
@@ -18,7 +17,7 @@ import base.migp.reg.MEG;
  *
  * @author chejf
  */
-public class DOMock extends DevMock {
+public class ESCDOMock extends DevMock {
 
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     public FMEG NA = new FMEG(new NVPA(16, 4), "定标参数A");
@@ -54,7 +53,7 @@ public class DOMock extends DevMock {
     public FMEG SR7 = new FMEG(new SRA(24, 4), "参考红光幅值");
     // </editor-fold> 
 
-    public DOMock() {
+    public ESCDOMock() {
         super();
         this.client.RegisterREGS(NB, NA, NCLTEMPER, NPASCA, NSALT,  NPTEMPER,
                 VDRANGE_MIN, VDRANGE_MAX, VTRANGE_MIN, VTRANGE_MAX, 
@@ -77,7 +76,7 @@ public class DOMock extends DevMock {
 
         VDEVTYPE.SetValue(0x0110);
         ///////////////////////////////////////////////////////////        
-//        VVATOKEN.SetValue(1);
+//        VVATOKEN.SetValue(0);
         MALARM.SetValue(0);
         WriteREGS();
     }

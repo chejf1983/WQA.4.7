@@ -8,7 +8,7 @@ package migp.adapter.ESA;
 import base.migp.reg.MEG;
 import java.util.ArrayList;
 import migp.adapter.factory.MIGPDevFactory;
-import migp.adapter.mock.DOMock;
+import migp.adapter.mock.ESCDOMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import wqa.adapter.model.ABS_Test;
@@ -32,11 +32,11 @@ public class ESA_DOTest {
 
     // <editor-fold defaultstate="collapsed" desc="初始化">
     public static ESA_DO instance;
-    public static DOMock dev_mock;
+    public static ESCDOMock dev_mock;
     public static ABS_Test commontest;
 
     private void InitDevice() throws Exception {
-        dev_mock = new DOMock();
+        dev_mock = new ESCDOMock();
         dev_mock.ResetREGS();
         MOCKIO io = new MOCKIO(dev_mock.client);
         io.Open();

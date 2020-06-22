@@ -10,7 +10,7 @@ import base.migp.reg.MEG;
 import java.util.ArrayList;
 import migp.adapter.OSA.*;
 import migp.adapter.factory.MIGPDevFactory;
-import migp.adapter.mock.DOMock;
+import migp.adapter.mock.ESCDOMock;
 import migp.adapter.mock.FDOIMock;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -128,21 +128,9 @@ public class OSA_FDOITest {
     public void test_readcalpar() throws Exception {
         commontest.check_configlist();
         ArrayList<SConfigItem> list = instance.GetCalParList();
-        commontest.check_item(list, dev_mock.NPTEMPER);
         commontest.check_item(list, dev_mock.NA);
         commontest.check_item(list, dev_mock.NB);
         commontest.check_item(list, dev_mock.NCLTEMPER);
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            commontest.check_item(list, dev_mock.NPA);
-            commontest.check_item(list, dev_mock.NPB);
-            commontest.check_item(list, dev_mock.NPC);
-            commontest.check_item(list, dev_mock.NPD);
-            commontest.check_item(list, dev_mock.NPE);
-            commontest.check_item(list, dev_mock.NPF);
-            commontest.check_item(list, dev_mock.NPG);
-            commontest.check_item(list, dev_mock.NDO100);
-            commontest.check_item(list, dev_mock.NDO0);
-        }
     }
     // </editor-fold> 
 
@@ -151,41 +139,17 @@ public class OSA_FDOITest {
     public void test_setcalpar() throws Exception {
         //设置配置
         ArrayList<SConfigItem> list = instance.GetCalParList();
-        commontest.set_item(list, dev_mock.NPTEMPER, "12.0");
         commontest.set_item(list, dev_mock.NA, "13.1");
         commontest.set_item(list, dev_mock.NB, "11.0");
         commontest.set_item(list, dev_mock.NCLTEMPER, "12.1");
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            commontest.set_item(list, dev_mock.NPA, "33.01");
-            commontest.set_item(list, dev_mock.NPB, "33.02");
-            commontest.set_item(list, dev_mock.NPC, "33.03");
-            commontest.set_item(list, dev_mock.NPD, "33.04");
-            commontest.set_item(list, dev_mock.NPE, "33.05");
-            commontest.set_item(list, dev_mock.NPF, "33.06");
-            commontest.set_item(list, dev_mock.NPG, "33.07");
-            commontest.set_item(list, dev_mock.NDO100, "333.03");
-            commontest.set_item(list, dev_mock.NDO0, "133.01");
-        }
 
         //下发
         instance.SetCalParList(list);
         dev_mock.ReadREGS();
 
-        assertEquals(dev_mock.NPTEMPER.GetValue().toString(), "12.0");
         assertEquals(dev_mock.NA.GetValue().toString(), "13.1");
         assertEquals(dev_mock.NB.GetValue().toString(), "11.0");
         assertEquals(dev_mock.NCLTEMPER.GetValue().toString(), "12.1");
-        if (dev_mock.VVATOKEN.GetValue() > 0) {
-            assertEquals(dev_mock.NPA.GetValue().toString(), "33.01");
-            assertEquals(dev_mock.NPB.GetValue().toString(), "33.02");
-            assertEquals(dev_mock.NPC.GetValue().toString(), "33.03");
-            assertEquals(dev_mock.NPD.GetValue().toString(), "33.04");
-            assertEquals(dev_mock.NPE.GetValue().toString(), "33.05");
-            assertEquals(dev_mock.NPF.GetValue().toString(), "33.06");
-            assertEquals(dev_mock.NPG.GetValue().toString(), "33.07");
-            assertEquals(dev_mock.NDO100.GetValue().toString(), "333.03");
-            assertEquals(dev_mock.NDO0.GetValue().toString(), "133.01");
-        }
     }
     // </editor-fold> 
 
@@ -227,7 +191,7 @@ public class OSA_FDOITest {
             PrintLog.println(info.data_name);
             if ("温度".equals(info.data_name)) {
                 instance.CalParameter(info.data_name, new float[]{34f}, new float[]{32f});
-                commontest.printREG(dev_mock.NPTEMPER);
+                commontest.printREG(dev_mock.NTEMPER_COM);
             } else {
                 for (int i = 1; i <= info.cal_num; i++) {
                     float[] oradata = new float[i];
