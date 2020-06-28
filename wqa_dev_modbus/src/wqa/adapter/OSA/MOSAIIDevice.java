@@ -35,6 +35,7 @@ public class MOSAIIDevice extends AbsDevice {
     private final IREG RANGE2 = new IREG(0x0A, 1, "量程");//R/W
     private final IREG AVR1 = new IREG(0x0B, 1, "平均次数", 1, 100);//R/W
     private final IREG AVR2 = new IREG(0x0C, 1, "平均次数", 1, 100);//R/W
+    private final FREG DOCOM = new FREG(0x0D, 2, "浊度补偿系数");//R/W
 
     private final IREG CLDTYPE = new IREG(0x2F, 1, "定标参数"); //R/W
     private final IREG CLRANGE = new IREG(0x30, 1, "定标量程"); //R/W
@@ -59,7 +60,7 @@ public class MOSAIIDevice extends AbsDevice {
 
         //初始化寄存器
         this.ReadREG(RANGNUM1, RANGN1[0], RANGN1[1], RANGN1[2], RANGN1[3], RANGNUM2, RANGN2[0], RANGN2[1], RANGN2[2], RANGN2[3]);
-        this.ReadREG(RANGE1, AVR1, RANGE2, AVR2);
+        this.ReadREG(RANGE1, AVR1, RANGE2, AVR2, DOCOM);
 
         //初始化最大量程信息
         this.range_strings1 = this.init_range_string();
@@ -123,6 +124,9 @@ public class MOSAIIDevice extends AbsDevice {
         list.add(SConfigItem.CreateRWItem(data_names[0] + AVR1.toString(), AVR1.GetValue().toString(), ""));
         list.add(SConfigItem.CreateSItem(data_names[1] + RANGE2.toString(), get_range_string2(this.RANGE2.GetValue()), "", range_strings2));
         list.add(SConfigItem.CreateRWItem(data_names[1] + AVR2.toString(), AVR2.GetValue().toString(), ""));
+        if (this.GetDevInfo().dev_type == 0x1110 || this.GetDevInfo().dev_type == 0x1111 || this.GetDevInfo().dev_type == 0x1112) {
+            list.add(SConfigItem.CreateRWItem(this.DOCOM.toString(), DOCOM.GetValue().toString(), ""));
+        }
         return list;
     }
 
@@ -147,11 +151,12 @@ public class MOSAIIDevice extends AbsDevice {
                     }
                 }
             }
-
+            if (item.IsKey(DOCOM.toString())) {
+                this.SetConfigREG(DOCOM, item.GetValue());
+            }
             //设置平均次数
             if (item.IsKey(data_names[1] + this.AVR2.toString())) {
                 this.SetConfigREG(AVR2, item.GetValue());
-
             }
 
             //设置量程范围

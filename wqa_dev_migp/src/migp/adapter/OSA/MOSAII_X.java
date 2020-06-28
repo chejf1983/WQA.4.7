@@ -91,6 +91,7 @@ public class MOSAII_X extends AbsDevice {
     FMEG[] NRANGE_MAX2 = new FMEG[]{new FMEG(new NVPA(285, 4), "量程上限1"), new FMEG(new NVPA(289, 4), "量程上限2"), new FMEG(new NVPA(293, 4), "量程上限3"), new FMEG(new NVPA(297, 4), "量程上限4")};
     //****************************************************************************************************************
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
+    FMEG NDOCOM_PAR = new FMEG(new NVPA(8, 4), "浊度补偿系数");
     public static int AMPPAR = 4095;
     // </editor-fold> 
     // </editor-fold> 
@@ -106,7 +107,7 @@ public class MOSAII_X extends AbsDevice {
                 VDRANGE_MAX2[0], VDRANGE_MAX2[1], VDRANGE_MAX2[2], VDRANGE_MAX2[3],
                 VTRANGE_MIN, VTRANGE_MAX);
         //NVPA初始化
-        this.ReadMEG(NRANGE, NAVR, NRANGE2, NAVR2,
+        this.ReadMEG(NRANGE, NAVR, NRANGE2, NAVR2, NDOCOM_PAR,
                 NCLTEMPER[0], NCLTEMPER[1], NCLTEMPER[2], NCLTEMPER[3],
                 NCLPARA[0], NCLPARA[1], NCLPARA[2], NCLPARA[3],
                 NCLPARB[0], NCLPARB[1], NCLPARB[2], NCLPARB[3],
@@ -171,6 +172,9 @@ public class MOSAII_X extends AbsDevice {
         item.add(SConfigItem.CreateSItem(data_names[1] + NRANGE2.toString(), this.get_range_string2(NRANGE2.GetValue()), "", this.get_range_string2()));
         item.add(SConfigItem.CreateRWItem(data_names[1] + NAVR2.toString(), NAVR2.GetValue().toString(), NAVR2.min + "-" + NAVR2.max));
         item.add(SConfigItem.CreateRWItem(data_names[1] + NTEMPER_COMP2.toString(), NTEMPER_COMP2.GetValue().toString(), ""));
+        if (this.GetDevInfo().dev_type == 0x1110 || this.GetDevInfo().dev_type == 0x1111 || this.GetDevInfo().dev_type == 0x1112) {
+            item.add(SConfigItem.CreateRWItem(this.NDOCOM_PAR.toString(), NDOCOM_PAR.GetValue().toString(), ""));
+        }
         return item;
     }
 
@@ -197,6 +201,9 @@ public class MOSAII_X extends AbsDevice {
                         break;
                     }
                 }
+            }
+            if (item.IsKey(NDOCOM_PAR.toString())) {
+                this.SetConfigREG(NDOCOM_PAR, item.GetValue());
             }
             if (item.IsKey(data_names[0] + NAVR.toString())) {
                 this.SetConfigREG(NAVR, item.GetValue());
@@ -236,7 +243,7 @@ public class MOSAII_X extends AbsDevice {
             if (NAMPLIFY[i].GetValue() == 0) {
                 item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), (int) (AMPPAR / NAMPLIFY[i].GetValue()) + "", ""));
+                item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), NahonConvert.TimData((float)AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }

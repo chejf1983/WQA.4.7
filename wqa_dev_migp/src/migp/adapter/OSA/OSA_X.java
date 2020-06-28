@@ -170,7 +170,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
             if (NAMPLIFY[i].GetValue() == 0) {
                 item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR / NAMPLIFY[i].GetValue()) + "", ""));
+                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float)AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }
