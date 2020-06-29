@@ -115,6 +115,13 @@ public class MTable extends javax.swing.JPanel {
 
     private void mTRow1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mTRow1MouseClicked
         index = (index + 1) % names.length;
+        while (names[index].startsWith("温度")) {
+            index = (index + 1);
+            if (index >= names.length) {
+                index = 0;
+                break;
+            }
+        }
         UpdateData();
     }//GEN-LAST:event_mTRow1MouseClicked
 

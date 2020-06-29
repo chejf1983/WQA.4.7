@@ -57,12 +57,12 @@ public class MonitorPane0 extends javax.swing.JPanel {
     public MonitorPane0(MonitorPaneDesk parent, DevMonitor dev, int index) {
         this.currentdev = dev;
         this.parent = parent;
-//        String[] temperteam = dev.GetArrayName(0); //温度数组
-//        String[] datateam = dev.GetArrayName(index); //数据数组
-//        String[] names = new String[temperteam.length + datateam.length];
-//        System.arraycopy(temperteam, 0, names, 0, temperteam.length);
-//        System.arraycopy(datateam, 0, names, temperteam.length, datateam.length);
-        this.data_vector = new DataVector0(dev.GetArrayName(index));
+        String[] temperteam = dev.GetArrayName(0); //温度数组
+        String[] datateam = dev.GetArrayName(index); //数据数组
+        String[] names = new String[temperteam.length + datateam.length];
+        System.arraycopy(datateam, 0, names, 0, datateam.length);
+        System.arraycopy(temperteam, 0, names, datateam.length, temperteam.length);
+        this.data_vector = new DataVector0(names);
 
         initComponents();
 
