@@ -14,7 +14,7 @@ import wqa.system.WQAPlatform;
  * @author chejf
  */
 public class DataHelper {
-    
+
     public static String[] GetSupportDataName(int dev_type) {
         //单位信息
         CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_type);
@@ -32,7 +32,7 @@ public class DataHelper {
         }
         return list.toArray(new String[0]);
     }
-    
+
     public static String[] GetAllData(int dev_type) {
         CDevDataTable.DevInfo d_infos = CDevDataTable.GetInstance().namemap.get(dev_type);
         ArrayList<String> list = new ArrayList();
@@ -52,5 +52,29 @@ public class DataHelper {
             }
         }
         return -1;
+    }
+
+    public static Integer[] GetSupportTeamNum(int dev_type) {
+        CDevDataTable.DataInfo[] d_infos = CDevDataTable.GetInstance().namemap.get(dev_type).data_list;
+        ArrayList<Integer> indexs = new ArrayList();
+        for (int i = 0; i < d_infos.length; i++) {
+            if (d_infos[i].internal_only && WQAPlatform.GetInstance().is_internal && !indexs.contains(d_infos[i].team)) {
+                indexs.add(d_infos[i].team);
+            } else if (!indexs.contains(d_infos[i].team)) {
+                indexs.add(d_infos[i].team);
+            }
+        }
+        return indexs.toArray(new Integer[0]);
+    }
+    
+    public static String[] GetTeamName(int dev_type, int index){
+        CDevDataTable.DataInfo[] d_infos = CDevDataTable.GetInstance().namemap.get(dev_type).data_list;
+        ArrayList<String> names = new ArrayList();
+        for (int i = 0; i < d_infos.length; i++) {
+            if(d_infos[i].team == index){
+                names.add(d_infos[i].data_name);
+            }
+        }
+        return names.toArray(new String[0]);
     }
 }

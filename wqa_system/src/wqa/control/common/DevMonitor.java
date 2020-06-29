@@ -5,6 +5,7 @@
  */
 package wqa.control.common;
 
+import java.util.ArrayList;
 import java.util.Date;
 import wqa.dev.data.CollectData;
 import wqa.dev.intf.ICollect;
@@ -12,6 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
+import wqa.adapter.factory.CDevDataTable;
 import wqa.control.DB.DataRecord;
 import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
@@ -91,10 +93,10 @@ public class DevMonitor {
         return this.parent;
     }
 
-    public String [] GetDisplayName(){
+    public String[] GetDisplayName() {
         return DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
     }
-    
+
     private DataRecord CreateDBData(CollectData data) {
         DataRecord tmp = new DataRecord();
         tmp.dev_info = new DevID(data.dev_type, data.dev_addr, data.serial_num);
@@ -114,12 +116,20 @@ public class DevMonitor {
         SDisplayData tmp = new SDisplayData(new DevID(data.dev_type, data.dev_addr, data.serial_num));
         tmp.time = data.time;
         tmp.alarm = data.alarm;
-        tmp.alram_info = data.alram_info;        
+        tmp.alram_info = data.alram_info;
         String[] display_datas = GetDisplayName();
         tmp.datas = new SDataElement[display_datas.length];
         for (int i = 0; i < display_datas.length; i++) {
             tmp.datas[i] = data.GetDataElement(display_datas[i]);
         }
         return tmp;
+    }
+
+    public Integer[] GetMaxDataSort() {
+        return DataHelper.GetSupportTeamNum(this.parent.GetDevID().dev_type);
+    }
+
+    public String[] GetArrayName(int index) {
+        return DataHelper.GetTeamName(this.parent.GetDevID().dev_type, index);
     }
 }
