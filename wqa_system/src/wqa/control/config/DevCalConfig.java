@@ -5,6 +5,7 @@
  */
 package wqa.control.config;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,11 +39,17 @@ public class DevCalConfig {
     //获取定标数据类型
     public String[] GetCalType() {
         CDevDataTable.DataInfo[] datalist = this.calbean.GetCalDataList();
-        String[] ret = new String[datalist.length];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = datalist[i].data_name;
+        ArrayList<String> ret = new ArrayList();
+        for (int i = 0; i < datalist.length; i++) {
+            if (datalist[i].internal_only) {
+                if (WQAPlatform.GetInstance().is_internal) {
+                    ret.add(datalist[i].data_name);
+                }
+            } else {
+                ret.add(datalist[i].data_name);
+            }
         }
-        return ret;
+        return ret.toArray(new String[0]);
     }
 
     private int GetIndex(String type) {
