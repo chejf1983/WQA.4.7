@@ -66,13 +66,19 @@ public class DataHelper {
         }
         return indexs.toArray(new Integer[0]);
     }
-    
-    public static String[] GetTeamName(int dev_type, int index){
+
+    public static String[] GetSupportTeamName(int dev_type, int index) {
         CDevDataTable.DataInfo[] d_infos = CDevDataTable.GetInstance().namemap.get(dev_type).data_list;
         ArrayList<String> names = new ArrayList();
         for (int i = 0; i < d_infos.length; i++) {
-            if(d_infos[i].team == index){
-                names.add(d_infos[i].data_name);
+            if (d_infos[i].team == index) {
+                if (d_infos[i].internal_only) {
+                    if (WQAPlatform.GetInstance().is_internal) {
+                        names.add(d_infos[i].data_name);
+                    }
+                } else {
+                    names.add(d_infos[i].data_name);
+                }
             }
         }
         return names.toArray(new String[0]);

@@ -8,6 +8,7 @@ package wqa.form.config;
 import java.awt.Frame;
 import java.util.ArrayList;
 import javax.swing.JTabbedPane;
+import javax.swing.table.AbstractTableModel;
 import nahon.comm.event.Event;
 import nahon.comm.event.EventListener;
 import wqa.control.config.DevConfigBean;
@@ -75,7 +76,7 @@ public class CommonConfigForm extends ConfigForm{
         return true;
     }
     
-    public void InitViewConfig(DataVector viewConfig) throws Exception{
+    public void InitViewConfig(AbstractTableModel viewConfig) throws Exception{
         TabbedPane.add("界面配置", new ViewConfigPane(viewConfig));
     }
     

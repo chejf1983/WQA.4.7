@@ -6,6 +6,7 @@
 package wqa.form.config;
 
 import javax.swing.JLabel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import wqa.form.monitor.DataVector;
 
@@ -18,11 +19,9 @@ public class ViewConfigPane extends javax.swing.JPanel {
     /**
      * Creates new form ViewConfig
      */
-    DataVector viewConfig;
 
-    public ViewConfigPane(DataVector viewConfig) {
+    public ViewConfigPane(AbstractTableModel viewConfig) {
         initComponents();
-        this.viewConfig = viewConfig;
         //this.TextField_inteval.setText(viewConfig.GetTimeInteval() + "");
         //int[] range = viewConfig.GetTimeRange();
         //this.Label_range.setText("量程" + range[0] + "-" + range[1] + "秒");
@@ -33,7 +32,7 @@ public class ViewConfigPane extends javax.swing.JPanel {
         r.setHorizontalAlignment(JLabel.CENTER); // 设置字体居中
         Table_view.setDefaultRenderer(Object.class, r);
         Table_view.getTableHeader().setDefaultRenderer(r);
-        this.Table_view.setModel(viewConfig.GetConfigTableModel());
+        this.Table_view.setModel(viewConfig);
     }
 
     /**

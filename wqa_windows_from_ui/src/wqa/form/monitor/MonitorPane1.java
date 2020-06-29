@@ -5,6 +5,7 @@
  */
 package wqa.form.monitor;
 
+import wqa.form.monitor0.MTable;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
@@ -58,7 +59,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
     public MonitorPane1(MonitorPaneDesk parent, DevMonitor dev) {
         this.currentdev = dev;
         this.parent = parent;
-        this.data_vector = new DataVector(dev);
+        this.data_vector = new DataVector(dev.GetDisplayName());
 
         initComponents();
 
@@ -129,11 +130,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="表格"> 
     //初始化数据表
     private void InitTable() {
-        if (!WQAPlatform.GetInstance().is_internal) {
-            this.DisplayArea.add("TABLE", init_mtabel());
-        } else {
-            this.DisplayArea.add("TABLE", initCommonTable());
-        }
+        this.DisplayArea.add("TABLE", initCommonTable());
     }
 
     private JComponent initCommonTable() {
@@ -160,12 +157,6 @@ public class MonitorPane1 extends javax.swing.JPanel {
             column.setWidth(DataVector.column_len[i]);
         }
         return scroll_pane;
-    }
-
-    private JComponent init_mtabel() {
-        MTable table = new MTable();
-        table.SetDataSet(data_vector);
-        return table;
     }
     // </editor-fold>
 
@@ -198,7 +189,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
                             break;
                         case DISCONNECT:
                             Lable_Title.setForeground(Color.RED);
-                            ChangeState(state.connect);
+                            ChangeState(state.disconnect);
                             break;
                         case CONFIG:
                             Lable_Title.setForeground(Color.GREEN);
@@ -528,9 +519,11 @@ public class MonitorPane1 extends javax.swing.JPanel {
         switch (st) {
             case connect:
                 png = "/wqa/form/monitor/resource/m_connect.png";
+                alarm_label.setText("连接正常");
                 break;
             case disconnect:
                 png = "/wqa/form/monitor/resource/disconnect_24.png";
+                alarm_label.setText("连接中断");
                 break;
             case config:
                 png = "/wqa/form/monitor/resource/m_config.png";
@@ -559,7 +552,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
         config_form = new CommonConfigForm(MainForm.main_parent, false, GetDevName());
         try {
             if (config_form.InitModel(config)) {
-                config_form.InitViewConfig(data_vector);
+                config_form.InitViewConfig(data_vector.GetConfigTableModel());
                 config_form.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent we) {

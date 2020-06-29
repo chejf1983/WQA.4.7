@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.adapter.factory.CDevDataTable;
 import wqa.control.DB.DataRecord;
 import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
@@ -129,7 +128,8 @@ public class DevMonitor {
         return DataHelper.GetSupportTeamNum(this.parent.GetDevID().dev_type);
     }
 
+    //温度数组通常为0
     public String[] GetArrayName(int index) {
-        return DataHelper.GetTeamName(this.parent.GetDevID().dev_type, index);
+        return DataHelper.GetSupportTeamName(this.parent.GetDevID().dev_type, index);
     }
 }

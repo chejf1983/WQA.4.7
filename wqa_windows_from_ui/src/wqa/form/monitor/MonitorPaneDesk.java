@@ -14,10 +14,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import nahon.comm.event.Event;
 import nahon.comm.event.EventListener;
 import wqa.control.common.DevControl;
 import wqa.control.common.DevControlManager.DevNumChange;
+import wqa.form.monitor0.MonitorPane0;
 import wqa.system.WQAPlatform;
 
 /**
@@ -42,14 +44,17 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
     private final ReentrantLock pan_lock = new ReentrantLock(true);
 
     private void SortAddAllPane() {
-        Collection<MonitorPane1> values = bookpanes.values();
-        ArrayList<MonitorPane1> mlist = new ArrayList(values);
-        Collections.sort(mlist, (MonitorPane1 m1, MonitorPane1 m2) -> {
-            return m1.currentdev.GetParent1().GetDevID().dev_addr > m2.currentdev.GetParent1().GetDevID().dev_addr ? 1 : -1;
+//        Collection<MonitorPane1> values = bookpanes.values();
+        ArrayList<DevControl> mlist = new ArrayList(bookpanes.keySet());
+        Collections.sort(mlist, (DevControl m1, DevControl m2) -> {
+            return m1.GetDevID().dev_addr > m2.GetDevID().dev_addr ? 1 : -1;
         });
-        for (MonitorPane1 m : mlist) {
-            Panel_desk.add(m);
-        }
+
+        mlist.forEach((m) -> {
+            for (JPanel pane : bookpanes.get(m)) {
+                Panel_desk.add(pane);
+            }
+        });
     }
 
     private void InitWorkDesk() {
@@ -79,7 +84,7 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
     }
 
     //设备和界面字典
-    private HashMap<DevControl, MonitorPane1> bookpanes = new HashMap();
+    private HashMap<DevControl, JPanel[]> bookpanes = new HashMap();
 
     //添加设备
     private void AddDataBook(DevControl dev) {
@@ -94,9 +99,21 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
                 return;
             }
 
-            //添加到设备界面字典
-            MonitorPane1 pane = new MonitorPane1(this, dev.GetCollector());
-            this.bookpanes.put(dev, pane);
+            if (WQAPlatform.GetInstance().is_internal) {
+                //添加到设备界面字典
+                MonitorPane1 pane = new MonitorPane1(this, dev.GetCollector());
+                this.bookpanes.put(dev, new JPanel[]{pane});
+            } else {
+                ArrayList<JPanel> lists = new ArrayList();
+                for (int i : dev.GetCollector().GetMaxDataSort()) {
+                    //添加到设备界面字典
+                    if (i != 0) {
+                        MonitorPane0 pane = new MonitorPane0(this, dev.GetCollector(), i);
+                        lists.add(pane);
+                    }
+                }
+                this.bookpanes.put(dev, lists.toArray(new JPanel[0]));
+            }
 
             //如果有全屏的界面，则不刷新界面
             if (is_mlayout) {
@@ -112,7 +129,7 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
     }
 
     //切换全屏界面
-    public void SwitchCard(MonitorPane1 pane) {
+    public void SwitchCard(JPanel pane) {
         if (is_mlayout) {
             java.awt.EventQueue.invokeLater(() -> {
                 Panel_desk.removeAll();
@@ -148,10 +165,12 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
                 return;
             }
 
-            MonitorPane1 pane = this.bookpanes.remove(dev);
-            if (pane != null) {
+            JPanel[] panes = this.bookpanes.remove(dev);
+            if (panes != null) {
                 java.awt.EventQueue.invokeLater(() -> {
-                    Panel_desk.remove(pane);
+                    for (JPanel pane : panes) {
+                        Panel_desk.remove(pane);
+                    }
                     Panel_desk.updateUI();
                 });
             }

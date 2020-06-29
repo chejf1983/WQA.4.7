@@ -7,13 +7,10 @@ package wqa.form.monitor;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
 import javax.swing.table.AbstractTableModel;
 import nahon.comm.event.EventCenter;
-import nahon.comm.faultsystem.LogCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
-import wqa.control.common.DevMonitor;
 import wqa.control.common.SDisplayData;
 import wqa.dev.data.SDataElement;
 
@@ -22,23 +19,19 @@ import wqa.dev.data.SDataElement;
  * @author chejf
  */
 public class DataVector {
-
     private final ReentrantLock datalist_lock = new ReentrantLock();
     private final ArrayList<SDisplayData> datasource = new ArrayList();
     private boolean[] visable = new boolean[0];
     private String[] data_names = new String[0];
     private final int maxlen = 1800;
-    public final DevMonitor dev_monitor;
 
-    public DataVector(DevMonitor dev_type) {
-        this.dev_monitor = dev_type;
-        data_names = dev_type.GetDisplayName();
+    public DataVector(String[] names) {
+        data_names = names;
         visable = new boolean[data_names.length];
         for (int i = 0; i < data_names.length; i++) {
             visable[i] = true;
         }
         select_name = data_names[0];
-//        ElementChange.CreateEvent(null);
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
@@ -54,11 +47,6 @@ public class DataVector {
 
     //输入数据
     public void InputData(SDisplayData data) {
-        if (data.dev_id.dev_type != this.dev_monitor.GetParent1().GetDevID().dev_type) {
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, "异常数据,无法显示");
-            return;
-        }
-
         datalist_lock.lock();
         try {
             while (datasource.size() > this.maxlen) {
@@ -160,8 +148,8 @@ public class DataVector {
             SDisplayData lastdata = GetLastData();
             rows.clear();
             if (lastdata != null) {
-                for (int i = 0; i < lastdata.datas.length; i++) {
-                    SDataElement data = lastdata.datas[i];
+                for (int i = 0; i < data_names.length; i++) {
+                    SDataElement data = lastdata.GetDataElement(data_names[i]);
                     if (visable[i]) {
                         this.rows.add(new Object[]{data.name, data.mainData + data.unit, data.range_info});
                     }

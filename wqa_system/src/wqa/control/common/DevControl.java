@@ -44,9 +44,9 @@ public class DevControl {
     public void ChangeState(ControlState state, String info) {
         if (this.state != state) {
             this.state = state;
-            this.StateChange.CreateEvent(state, info);
             LogCenter.Instance().PrintLog(Level.SEVERE, "切换状态->" + state);
         }
+        this.StateChange.CreateEvent(state, info);
     }
 
     public void ChangeState(ControlState state) {
