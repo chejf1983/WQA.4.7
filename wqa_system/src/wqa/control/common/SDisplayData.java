@@ -5,6 +5,7 @@
  */
 package wqa.control.common;
 
+import java.util.ArrayList;
 import java.util.Date;
 import static wqa.adapter.factory.CDevDataTable.ORA_Flag;
 import wqa.control.data.DevID;
@@ -25,6 +26,7 @@ public class SDisplayData {
     public SDataElement[] datas = new SDataElement[0];
     public int alarm = 0;
     public String alram_info = "";
+    private ArrayList<SDataElement>[] data_arrays;
 
     public String[] GetNames() {
         String[] ret = new String[datas.length];
@@ -32,6 +34,34 @@ public class SDisplayData {
             ret[i] = datas[i].name;
         }
         return ret;
+    }
+
+    public void Sort() {
+        int max = 0;
+        for (int i = 0; i < datas.length; i++) {
+            if (datas[i].team > max) {
+                datas[i].team = max;
+            }
+        }
+        
+        data_arrays = new ArrayList[max + 1];
+        for (int i = 0; i < datas.length; i++) {
+            if (data_arrays[datas[i].team] == null) {
+                data_arrays[datas[i].team] = new ArrayList();
+            }
+            data_arrays[datas[i].team].add(datas[i]);
+        }
+    }
+    
+    public int GetMaxDataSort(){
+        return this.data_arrays.length;
+    }
+    
+    public SDataElement[] GetArray(int index){
+        if(index < this.GetMaxDataSort() && index >= 0){
+            return this.data_arrays[index].toArray(new SDataElement[0]);
+        }
+        return new SDataElement[0];
     }
 
     public SDataElement GetDataElement(String nametype) {
