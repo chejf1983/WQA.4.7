@@ -44,7 +44,7 @@ public class MTable extends javax.swing.JPanel {
         });
 
         int mask = 0xFFFF;
-        int devtype = table_model.dev_type.GetParent1().GetDevID().dev_type & mask;
+        int devtype = table_model.dev_monitor.GetParent1().GetDevID().dev_type & mask;
         is_do = (devtype == 0x0110 || devtype == 0x0210 || devtype == 0x0201);
     }
 

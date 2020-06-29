@@ -28,10 +28,17 @@ public class DataVector {
     private boolean[] visable = new boolean[0];
     private String[] data_names = new String[0];
     private final int maxlen = 1800;
-    public final DevMonitor dev_type;
+    public final DevMonitor dev_monitor;
 
     public DataVector(DevMonitor dev_type) {
-        this.dev_type = dev_type;
+        this.dev_monitor = dev_type;
+        data_names = dev_type.GetDisplayName();
+        visable = new boolean[data_names.length];
+        for (int i = 0; i < data_names.length; i++) {
+            visable[i] = true;
+        }
+        select_name = data_names[0];
+//        ElementChange.CreateEvent(null);
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
@@ -47,20 +54,11 @@ public class DataVector {
 
     //输入数据
     public void InputData(SDisplayData data) {
-        if (data.dev_id.dev_type != this.dev_type.GetParent1().GetDevID().dev_type) {
+        if (data.dev_id.dev_type != this.dev_monitor.GetParent1().GetDevID().dev_type) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "异常数据,无法显示");
             return;
-        } else {
-            if (this.GetLastData() == null) {
-                data_names = data.GetNames();
-                visable = new boolean[data_names.length];
-                for (int i = 0; i < data_names.length; i++) {
-                    visable[i] = true;
-                }
-                select_name = data_names[0];
-                ElementChange.CreateEvent(null);
-            }
         }
+
         datalist_lock.lock();
         try {
             while (datasource.size() > this.maxlen) {

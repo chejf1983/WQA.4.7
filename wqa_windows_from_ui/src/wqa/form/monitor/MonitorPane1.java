@@ -104,13 +104,13 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
         //显示到展示区
         this.DisplayArea.add("CHART", this.m_chart);
-//        m_chart.setVisible(false);
+        UpdateComboBox();
     }
 
     private void UpdateComboBox() {
         m_chart.GetComboBox().removeAllItems();
         //初始化曲线下拉框
-//        String[] names = DataHelper.GetSupportDataName(currentdev.GetParent1().GetDevID().dev_type);
+//        String[] names = DataHelper.GetSupportDataName(currentdev.GetParent1().GetDevID().dev_monitor);
         String[] names = data_vector.GetVisableName();
         for (String name : names) {
             m_chart.GetComboBox().addItem(name);

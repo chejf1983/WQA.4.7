@@ -5,6 +5,7 @@
  */
 package wqa.dev.data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
@@ -35,7 +36,17 @@ public class CollectData {
                 datas[i].name = data_list[i].data_name;
                 datas[i].unit = data_list[i].data_unit;
                 datas[i].range_info = data_list[i].data_range[0];
+                datas[i].team = data_list[i].team;
             }
+
+            //分组
+//            data_arrays = new ArrayList[max + 1];
+//            for (int i = 0; i < data_list.length; i++) {
+//                if (data_arrays[data_list[i].team] == null) {
+//                    data_arrays[data_list[i].team] = new ArrayList();
+//                }                
+//                data_arrays[data_list[i].team].add(datas[i]);
+//            }
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         }
@@ -46,6 +57,7 @@ public class CollectData {
     public String serial_num;
     public Date time;
     public SDataElement[] datas = new SDataElement[0];
+//    public ArrayList<SDataElement>[] data_arrays = new ArrayList[0];
     public int alarm = 0;
     public String alram_info = "";
 

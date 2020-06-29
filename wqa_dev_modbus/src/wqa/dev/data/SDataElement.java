@@ -15,6 +15,7 @@ public class SDataElement {
     public float mainData = 0;
     public String unit = "";
     public String range_info = "";
+    public int team;
 
     public SDataElement() {
     }
@@ -24,5 +25,6 @@ public class SDataElement {
         this.mainData = other.mainData;
         this.unit = other.unit;
         this.range_info = other.range_info;
+        this.team = other.team;
     }
 }

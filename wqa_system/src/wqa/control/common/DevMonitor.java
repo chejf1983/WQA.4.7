@@ -91,6 +91,10 @@ public class DevMonitor {
         return this.parent;
     }
 
+    public String [] GetDisplayName(){
+        return DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
+    }
+    
     private DataRecord CreateDBData(CollectData data) {
         DataRecord tmp = new DataRecord();
         tmp.dev_info = new DevID(data.dev_type, data.dev_addr, data.serial_num);
@@ -111,7 +115,7 @@ public class DevMonitor {
         tmp.time = data.time;
         tmp.alarm = data.alarm;
         tmp.alram_info = data.alram_info;        
-        String[] display_datas = DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
+        String[] display_datas = GetDisplayName();
         tmp.datas = new SDataElement[display_datas.length];
         for (int i = 0; i < display_datas.length; i++) {
             tmp.datas[i] = data.GetDataElement(display_datas[i]);
