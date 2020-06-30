@@ -5,6 +5,7 @@
  */
 package wqa.form.monitor0;
 
+import java.util.ArrayList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import nahon.comm.event.Event;
@@ -47,7 +48,13 @@ public class MTable extends javax.swing.JPanel {
             }
         });
 
-        names = this.data_vector.GetVisableName();
+        ArrayList<String> tmp = new ArrayList();
+        for (String name : this.data_vector.GetVisableName()) {
+             if(!name.startsWith("温度")){
+                 tmp.add(name);
+             }
+        }
+        names = tmp.toArray(new String[0]);
     }
 
     private void UpdateData() {
@@ -115,13 +122,6 @@ public class MTable extends javax.swing.JPanel {
 
     private void mTRow1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mTRow1MouseClicked
         index = (index + 1) % names.length;
-        while (names[index].startsWith("温度")) {
-            index = (index + 1);
-            if (index >= names.length) {
-                index = 0;
-                break;
-            }
-        }
         UpdateData();
     }//GEN-LAST:event_mTRow1MouseClicked
 

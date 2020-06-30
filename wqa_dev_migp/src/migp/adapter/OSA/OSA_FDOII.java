@@ -164,10 +164,12 @@ public class OSA_FDOII extends ESADEV {
         disdata.datas[4].mainData = NahonConvert.TimData(SR2.GetValue(), 2);     //温度原始值
 
         disdata.datas[5].mainData = NahonConvert.TimData(SR3.GetValue(), 4); //相位差
-        disdata.datas[6].mainData = NahonConvert.TimData(SR4.GetValue(), 4); //蓝光相位
-        disdata.datas[7].mainData = NahonConvert.TimData(SR5.GetValue(), 4); //参考蓝光相位
-        disdata.datas[8].mainData = NahonConvert.TimData(SR6.GetValue(), 4); //红光相位
-        disdata.datas[9].mainData = NahonConvert.TimData(SR7.GetValue(), 4); //参考红光相位
+        disdata.datas[6].mainData = NahonConvert.TimData(SR4.GetValue(), 4); //蓝光峰值
+        disdata.datas[7].mainData = NahonConvert.TimData(SR5.GetValue(), 4); //激发信号
+        disdata.datas[8].mainData = NahonConvert.TimData(SR6.GetValue(), 4); //红光峰值
+        disdata.datas[9].mainData = NahonConvert.TimData(SR7.GetValue(), 4); //信号偏置
+        disdata.datas[10].mainData = 2 * NahonConvert.TimData(disdata.datas[6].mainData - disdata.datas[9].mainData, 4); //蓝光幅值=(蓝光峰值 -信号偏置)*2
+        disdata.datas[11].mainData = 2 * NahonConvert.TimData(disdata.datas[8].mainData - disdata.datas[9].mainData, 4); //红光幅值=(红光峰值 -信号偏置)*2
 
         disdata.alarm = MALARM.GetValue(); //报警信息
         String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
