@@ -243,7 +243,7 @@ public class MOSAII_X extends AbsDevice {
             if (NAMPLIFY[i].GetValue() == 0) {
                 item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), NahonConvert.TimData((float)AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
+                item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }
@@ -261,7 +261,7 @@ public class MOSAII_X extends AbsDevice {
             if (NAMPLIFY2[i].GetValue() == 0) {
                 item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NAMPLIFY2[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NAMPLIFY2[i].toString(), (int) (AMPPAR / NAMPLIFY2[i].GetValue()) + "", ""));
+                item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NAMPLIFY2[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY2[i].GetValue(), 2) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }
@@ -347,6 +347,7 @@ public class MOSAII_X extends AbsDevice {
                         famply = AMPPAR / Float.valueOf(item.GetValue());
                     }
                     int amply = (int) (famply + 0.5);
+                    amply = amply > AMPPAR ? AMPPAR : amply;
                     this.SetConfigREG(NAMPLIFY2[i], String.valueOf(amply));
                 }
             }
