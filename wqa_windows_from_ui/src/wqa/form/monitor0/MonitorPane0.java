@@ -167,17 +167,10 @@ public class MonitorPane0 extends javax.swing.JPanel {
                 java.awt.EventQueue.invokeLater(() -> {
                     switch (event.GetEvent()) {
                         case CONNECT:
-                            Lable_Title.setText(GetDevName());
-                            Lable_Title.setForeground(Color.WHITE);
                             ChangeState(state.connect);
                             break;
                         case DISCONNECT:
-                            Lable_Title.setForeground(Color.RED);
                             ChangeState(state.disconnect);
-                            break;
-                        case CONFIG:
-                            Lable_Title.setForeground(Color.GREEN);
-                            ChangeState(state.config);
                             break;
                         case ALARM:
                             ChangeState(state.warning);
@@ -493,7 +486,6 @@ public class MonitorPane0 extends javax.swing.JPanel {
     private enum state {
         connect,
         disconnect,
-        config,
         warning
     }
 
@@ -501,15 +493,21 @@ public class MonitorPane0 extends javax.swing.JPanel {
         String png = "";
         switch (st) {
             case connect:
+                Lable_Title.setText(GetDevName());
+                Lable_Title.setForeground(Color.WHITE);
                 png = "/wqa/form/monitor/resource/m_connect.png";
                 alarm_label.setText("连接正常");
                 break;
             case disconnect:
+                Lable_Title.setForeground(Color.RED);
+                if (this.config_form != null) {
+                    this.config_form.dispose();
+                }
+                if (this.cal_form != null) {
+                    this.cal_form.dispose();
+                }
                 png = "/wqa/form/monitor/resource/disconnect_24.png";
                 alarm_label.setText("连接中断");
-                break;
-            case config:
-                png = "/wqa/form/monitor/resource/m_config.png";
                 break;
             case warning:
                 png = "/wqa/form/monitor/resource/warning_24p.png";
@@ -528,49 +526,42 @@ public class MonitorPane0 extends javax.swing.JPanel {
 
     private CommonConfigForm config_form;
     private void Button_ConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_ConfigActionPerformed
-        DevConfigBean config = currentdev.GetParent1().StartConfig();
+        DevConfigBean config = currentdev.GetParent1().GetConfig();
         if (config == null) {
             return;
         }
-        config_form = new CommonConfigForm(MainForm.main_parent, false, GetDevName());
-        try {
-            if (config_form.InitModel(config)) {
+        if (config_form == null) {
+            config_form = new CommonConfigForm(MainForm.main_parent, false, GetDevName());
+            try {
+                config_form.InitModel(config);
                 config_form.InitViewConfig(data_vector.GetConfigTableModel());
-                config_form.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent we) {
-                        config_form.Close();
-                    }
-                });
-                config_form.setVisible(true);
+            } catch (Exception ex) {
+                config_form = null;
+                LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+                return;
             }
-        } catch (Exception ex) {
-            config.Quit();
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         }
+        config_form.Refresh();
+        config_form.setVisible(true);
     }//GEN-LAST:event_Button_ConfigActionPerformed
 
     private CalConfigForm cal_form;
     private void ButtonCalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCalActionPerformed
-        DevConfigBean config = currentdev.GetParent1().StartConfig();
+        DevConfigBean config = currentdev.GetParent1().GetConfig();
         if (config == null) {
             return;
         }
-        cal_form = new CalConfigForm(MainForm.main_parent, false, GetDevName());
-        try {
-            if (cal_form.InitModel(config)) {
-                cal_form.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent we) {
-                        cal_form.Close();
-                    }
-                });
-                cal_form.setVisible(true);
+        if (cal_form == null) {
+            cal_form = new CalConfigForm(MainForm.main_parent, false, GetDevName());
+            try {
+                cal_form.InitModel(config);
+            } catch (Exception ex) {
+                cal_form = null;
+                LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+                return;
             }
-        } catch (Exception ex) {
-            config.Quit();
-            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         }
+        cal_form.setVisible(true);
     }//GEN-LAST:event_ButtonCalActionPerformed
 
     private void Button_minActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_minActionPerformed

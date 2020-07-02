@@ -9,12 +9,9 @@ import java.awt.Frame;
 import java.util.ArrayList;
 import javax.swing.JTabbedPane;
 import javax.swing.table.AbstractTableModel;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
 import wqa.control.config.DevConfigBean;
 import wqa.control.config.DevConfigTable;
 import wqa.form.config.brush.BrushConfig;
-import wqa.form.monitor.DataVector;
 
 /**
  *
@@ -30,7 +27,7 @@ public class CommonConfigForm extends ConfigForm{
     private JTabbedPane TabbedPane = new JTabbedPane();
     private DevConfigBean config;
 
-    public boolean InitModel(DevConfigBean config) throws Exception{
+    public void InitModel(DevConfigBean config) throws Exception{
         this.config = config;
 
         config.SetMessageImple((String msg) -> {
@@ -46,44 +43,20 @@ public class CommonConfigForm extends ConfigForm{
             TabbedPane.add(table.GetListName(), configTablePane);
         }
 
-//        config.UpdateConfigEvent.RegeditListener(new EventListener() {
-//            @Override
-//            public void recevieEvent(Event event) {
-//                pane.forEach(pane -> {
-//                    pane.Refresh();
-//                });
-//            }
-//        });
-
-//        if (this.config.GetDevCalConfig() != null) {
-//            TabbedPane.add("校准", new CalPanel(this.config.GetDevCalConfig()));
-//            TabbedPane.addChangeListener((ChangeEvent ce) -> {
-//                config.GetDevCalConfig().SetStartGetData("校准".equals(TabbedPane.getTitleAt(TabbedPane.getSelectedIndex())));
-//            });
-//        }
         if (config.GetMotorConfig() != null) {
             TabbedPane.add("清扫设置", new BrushConfig(config.GetMotorConfig()));
         }
 
-        this.AddPane(this.TabbedPane);
-        
-        this.config.CloseEvent.RegeditListener(new EventListener() {
-            @Override
-            public void recevieEvent(Event event) {
-                CommonConfigForm.this.dispose();    
-            }
-        });
-        return true;
+        this.AddPane(this.TabbedPane);     
+    }
+    
+    public void Refresh(){
+        for(ConfigTablePane pane1 : pane){
+            pane1.Refresh();
+        }
     }
     
     public void InitViewConfig(AbstractTableModel viewConfig) throws Exception{
         TabbedPane.add("界面配置", new ViewConfigPane(viewConfig));
-    }
-    
-    @Override
-    public void Close() {
-        config.Quit();
-        super.Close(); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    } 
 }

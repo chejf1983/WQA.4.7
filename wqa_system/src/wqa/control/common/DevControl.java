@@ -29,8 +29,7 @@ public class DevControl {
     public enum ControlState {
         CONNECT,
         ALARM,
-        DISCONNECT,
-        CONFIG
+        DISCONNECT
     }
 
     private ControlState state = ControlState.DISCONNECT;
@@ -59,6 +58,8 @@ public class DevControl {
 
     public DevControl(IDevice device) {
         this.device = device;
+        this.configmodel = new DevConfigBean(this);
+        this.configmodel.InitDevConfig(this.device);
     }
 
     public DevID GetDevID() {
@@ -77,49 +78,28 @@ public class DevControl {
 
     // <editor-fold defaultstate="collapsed" desc="动作"> 
     private void KeepAlive() throws Exception {
-        //其他状态下，开心跳检查重连设备
-        //在断开情况下
-        if (GetState() == ControlState.DISCONNECT) {
-            //检查到一次成功，就重连设备
-            if (ReConnect(1)) {
-                device.InitDevice();
-                ChangeState(ControlState.CONNECT);
-            }
-        } else {
-            //在配置状态下，重连3次失败才认为设备断开
-            if (!ReConnect(3)) {
-                //心跳包多一次检查
-                ChangeState(ControlState.DISCONNECT);
-                StopConfig();
-            }
+        //检查到一次成功，就重连设备
+        if (this.device.ReTestType(1)) {
+            device.InitDevice();
+            ChangeState(ControlState.CONNECT);
         }
-    }
-
-    public boolean ReConnect(int retry) {
-        return this.device.ReTestType(retry);
     }
 
     private void MainAction() {
         try {
             ((ShareIO) device.GetDevInfo().io).Lock();
             //连接状态下，获取数据
-            if (GetState() == ControlState.CONNECT) {
-                if (!GetCollector().CollectData(this.LastTime)) {
-                    ChangeState(ControlState.DISCONNECT);
-                }
-            } else if (GetState() == ControlState.ALARM) {
-                if (!GetCollector().CollectData(this.LastTime)) {
-                    ChangeState(ControlState.DISCONNECT);
-                }
-            } else if (GetState() == ControlState.DISCONNECT) {
+            if (GetState() == ControlState.DISCONNECT) {
                 KeepAlive();
                 if (GetState() == ControlState.CONNECT) {
                     if (!GetCollector().CollectData(this.LastTime)) {
                         ChangeState(ControlState.DISCONNECT);
                     }
                 }
-            } else if (GetState() == ControlState.CONFIG) {
-                KeepAlive();
+            } else {
+                if (!GetCollector().CollectData(this.LastTime)) {
+                    ChangeState(ControlState.DISCONNECT);
+                }
             }
         } catch (Exception ex) {
             ChangeState(ControlState.DISCONNECT);
@@ -140,17 +120,21 @@ public class DevControl {
         public void run() {
             LastTime.setTime(((long) (new Date().getTime() / 1000)) * 1000);
             while (is_start) {
-                state_lock.lock();
-                try {
-                    if (new Date().getTime() >= LastTime.getTime()) {
-                        //更新时间
-                        while (new Date().getTime() >= LastTime.getTime()) {
-                            LastTime.setTime(LastTime.getTime() + 2 * 1000);
-                        }
-                        MainAction();
+                if (new Date().getTime() >= LastTime.getTime()) {
+                    //更新时间
+                    while (new Date().getTime() >= LastTime.getTime()) {
+                        LastTime.setTime(LastTime.getTime() + 2 * 1000);
                     }
-                } finally {
-                    state_lock.unlock();
+                    state_lock.lock();
+                    try {
+                        if (this.is_start) {
+                            MainAction();
+                        } else {
+                            break;
+                        }
+                    } finally {
+                        state_lock.unlock();
+                    }
                 }
 
                 try {
@@ -171,49 +155,7 @@ public class DevControl {
         try {
             if (this.run_process == null) {
                 run_process = new Process();
-//                this.ChangeState(ControlState.CONNECT);
                 WQAPlatform.GetInstance().GetThreadPool().submit(run_process);
-            }
-        } finally {
-            state_lock.unlock();
-        }
-    }
-
-    private DevConfigBean configmodel;
-
-    //开始配置
-    public DevConfigBean StartConfig() {
-        state_lock.lock();
-        try {
-            if (this.GetState() == ControlState.CONNECT
-                    || this.GetState() == ControlState.ALARM) {
-                configmodel = new DevConfigBean(this);
-                configmodel.InitDevConfig(this.device);
-                ChangeState(ControlState.CONFIG);
-                return configmodel;
-            } else {
-                return null;
-            }
-        } finally {
-            state_lock.unlock();
-        }
-    }
-
-    //关闭配置
-    public void StopConfig() {
-        state_lock.lock();
-        try {
-            if (this.configmodel != null) {
-//                this.configmodel.GetDevCalConfig()
-                if (this.configmodel.GetDevCalConfig() != null) {
-                    this.configmodel.GetDevCalConfig().SetStartGetData(false);
-                }
-                this.configmodel.CloseEvent.CreateEvent(null);
-
-                if (this.GetState() == DevControl.ControlState.CONFIG) {
-                    this.ChangeState(DevControl.ControlState.CONNECT);
-                }
-                this.configmodel = null;
             }
         } finally {
             state_lock.unlock();
@@ -225,7 +167,6 @@ public class DevControl {
         state_lock.lock();
         try {
             if (this.run_process != null) {
-                this.StopConfig();
                 this.ChangeState(ControlState.DISCONNECT);
                 run_process.is_start = false;
                 run_process = null;
@@ -244,6 +185,22 @@ public class DevControl {
             this.collect_instance = new DevMonitor(this, (ICollect) this.device);
         }
         return this.collect_instance;
+    }
+
+    DevConfigBean configmodel = new DevConfigBean(this);
+
+    //开始配置
+    public DevConfigBean GetConfig() {
+        state_lock.lock();
+        try {
+            if (this.GetState() != ControlState.DISCONNECT) {
+                return configmodel;
+            } else {
+                return null;
+            }
+        } finally {
+            state_lock.unlock();
+        }
     }
     // </editor-fold>   
 

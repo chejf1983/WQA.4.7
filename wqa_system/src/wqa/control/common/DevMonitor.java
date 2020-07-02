@@ -50,6 +50,10 @@ public class DevMonitor {
                 parent.ChangeState(DevControl.ControlState.CONNECT);
             }
             DataEvent.CreateEvent(display_data);
+            
+            if(parent.configmodel.GetDevCalConfig() != null){
+                parent.configmodel.GetDevCalConfig().CalDataEvent.CreateEvent(display_data);
+            }
             return true;
         } catch (Exception ex) {
             LogCenter.Instance().PrintLog(Level.SEVERE, "采集数据失败", ex);

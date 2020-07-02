@@ -8,7 +8,6 @@ package wqa.form.config;
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import wqa.form.monitor.DataVector;
 
 /**
  *
@@ -18,6 +17,7 @@ public class ViewConfigPane extends javax.swing.JPanel {
 
     /**
      * Creates new form ViewConfig
+     * @param viewConfig
      */
 
     public ViewConfigPane(AbstractTableModel viewConfig) {

@@ -17,7 +17,6 @@ import wqa.control.DB.DataRecord;
 import wqa.control.DB.IDataHelper;
 import wqa.control.DB.SDataRecordResult;
 import wqa.control.common.DataHelper;
-import wqa.control.common.SDisplayData;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;
 

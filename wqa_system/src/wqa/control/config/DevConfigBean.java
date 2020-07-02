@@ -5,7 +5,6 @@
  */
 package wqa.control.config;
 
-import nahon.comm.event.EventCenter;
 import wqa.bill.log.DevLog;
 import wqa.dev.data.LogNode;
 import wqa.control.common.DevControl;
@@ -50,9 +49,7 @@ public class DevConfigBean {
         }
 
         return true;
-    }
-    
-    public EventCenter CloseEvent = new EventCenter();
+    }    
 
     // <editor-fold defaultstate="collapsed" desc="配置模块"> 
     //基本配置
@@ -75,7 +72,6 @@ public class DevConfigBean {
     public DevMotorConfig GetMotorConfig() {
         return motorconfig;
     }
-
     // </editor-fold>   
     
     // <editor-fold defaultstate="collapsed" desc="显示消息提示"> 
@@ -99,8 +95,4 @@ public class DevConfigBean {
         msg_instance = instance;
     }
     // </editor-fold>  
-
-    public void Quit() {
-        this.mother.StopConfig();
-    }
 }
