@@ -11,6 +11,7 @@ import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.adapter.factory.CDevDataTable;
+import wqa.bill.log.DevLog;
 import wqa.control.common.SDisplayData;
 import wqa.dev.data.LogNode;
 import wqa.dev.intf.ICalibrate;
@@ -92,10 +93,10 @@ public class DevCalConfig {
             ((ShareIO) calbean.GetDevInfo().io).Lock();
             LogNode cal_ret = this.calbean.CalParameter(type, oradata, testdata);
             this.msg_instance.SetMessage("校准成功");
-            this.msg_instance.PrintDevLog(condition, cal_ret);
+            DevLog.Instance().AddLog(msg_instance.mother.GetDevID(), new LogNode[]{condition, cal_ret});
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, "校准失败", ex);
-            this.msg_instance.PrintDevLog(condition, LogNode.CALFAIL());
+            DevLog.Instance().AddLog(msg_instance.mother.GetDevID(), new LogNode[]{condition,  LogNode.CALFAIL()});
         } finally {
             ((ShareIO) calbean.GetDevInfo().io).UnLock();
         }

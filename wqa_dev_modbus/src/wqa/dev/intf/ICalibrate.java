@@ -7,7 +7,6 @@ package wqa.dev.intf;
 
 import wqa.adapter.factory.CDevDataTable;
 import wqa.dev.data.LogNode;
-import wqa.dev.data.CollectData;
 
 /**
  *
@@ -20,8 +19,6 @@ public interface ICalibrate  extends IDevice{
     //max_num && 0xFF00 == 2 只有原始值，没有采样值 温度没有原始值
     public CDevDataTable.DataInfo[] GetCalDataList();
     
-    public CollectData CollectData() throws Exception;
-
     //输入定标数据
     public LogNode CalParameter(String type, float[] oradata, float[] testdata) throws Exception;
 }

@@ -21,7 +21,7 @@ public class DevConfigBean {
 
     //设备适配器
     private IDevice dev;
-    private DevControl mother;
+    DevControl mother;
 
     public DevConfigBean(DevControl mother) {
         this.mother = mother;
@@ -49,7 +49,7 @@ public class DevConfigBean {
         }
 
         return true;
-    }    
+    }
 
     // <editor-fold defaultstate="collapsed" desc="配置模块"> 
     //基本配置
@@ -73,23 +73,18 @@ public class DevConfigBean {
         return motorconfig;
     }
     // </editor-fold>   
-    
+
     // <editor-fold defaultstate="collapsed" desc="显示消息提示"> 
-    public void PrintDevLog(LogNode... nodes) {
-        DevLog.Instance().AddLog(this.mother.GetDevID(), nodes);
-    }
-
     public interface MessageInterface {
-
         public void SetMessage(String msg);
     }
 
     public void SetMessage(String message) {
+        if (this.msg_instance != null);
         this.msg_instance.SetMessage(message);
     }
 
-    private MessageInterface msg_instance = (String msg) -> {
-    };
+    private MessageInterface msg_instance;
 
     public void SetMessageImple(MessageInterface instance) {
         msg_instance = instance;
