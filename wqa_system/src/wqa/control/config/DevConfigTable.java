@@ -42,7 +42,6 @@ public class DevConfigTable {
         try {
             ((ShareIO)dev.GetDevInfo().io).Lock();
             this.dev.InitDevice();
-//            this.msg_instance.UpdateConfigEvent.CreateEvent(null);
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {

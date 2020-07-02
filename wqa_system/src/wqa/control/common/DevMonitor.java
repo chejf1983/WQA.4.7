@@ -54,6 +54,7 @@ public class DevMonitor {
             if(parent.configmodel.GetDevCalConfig() != null){
                 parent.configmodel.GetDevCalConfig().CalDataEvent.CreateEvent(display_data);
             }
+            last_data = display_data;
             return true;
         } catch (Exception ex) {
             LogCenter.Instance().PrintLog(Level.SEVERE, "采集数据失败", ex);
@@ -96,8 +97,9 @@ public class DevMonitor {
         return this.parent;
     }
 
-    public String[] GetDisplayName() {
-        return DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
+    private SDisplayData last_data;
+    public SDisplayData GetLastData(){
+        return last_data;
     }
 
     private DataRecord CreateDBData(CollectData data) {
@@ -128,6 +130,10 @@ public class DevMonitor {
         return tmp;
     }
 
+    // <editor-fold defaultstate="collapsed" desc="数据信息"> 
+    public String[] GetDisplayName() {
+        return DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
+    }
     public Integer[] GetMaxDataSort() {
         return DataHelper.GetSupportTeamNum(this.parent.GetDevID().dev_type);
     }
@@ -136,4 +142,5 @@ public class DevMonitor {
     public String[] GetArrayName(int index) {
         return DataHelper.GetSupportTeamName(this.parent.GetDevID().dev_type, index);
     }
+    // </editor-fold>   
 }
