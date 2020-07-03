@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.control.DB.DataRecord;
+import wqa.control.common.DevControl.ControlState;
 import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
 import wqa.system.WQAPlatform;
@@ -44,15 +45,19 @@ public class DevMonitor {
             this.tmpdata = CreateDBData(CollectData);
             SDisplayData display_data = CreateDisplayData(CollectData);
             this.SaveAlarmInfo(display_data);
-            if (display_data.alarm != 0) {
-                parent.ChangeState(DevControl.ControlState.ALARM, display_data.alram_info);
-            } else {
-                parent.ChangeState(DevControl.ControlState.CONNECT);
-            }
+
             DataEvent.CreateEvent(display_data);
-            
-            if(parent.configmodel.GetDevCalConfig() != null){
-                parent.configmodel.GetDevCalConfig().CalDataEvent.CreateEvent(display_data);
+
+            if (parent.GetState() == ControlState.CONFIG) {
+                if (parent.configmodel.GetDevCalConfig() != null) {
+                    parent.configmodel.GetDevCalConfig().InputCalData(display_data);
+                }
+            } else {
+                if (display_data.alarm != 0) {
+                    parent.ChangeState(DevControl.ControlState.ALARM, display_data.alram_info);
+                } else {
+                    parent.ChangeState(DevControl.ControlState.CONNECT);
+                }
             }
             last_data = display_data;
             return true;
@@ -98,7 +103,8 @@ public class DevMonitor {
     }
 
     private SDisplayData last_data;
-    public SDisplayData GetLastData(){
+
+    public SDisplayData GetLastData() {
         return last_data;
     }
 
@@ -134,6 +140,7 @@ public class DevMonitor {
     public String[] GetDisplayName() {
         return DataHelper.GetSupportDataName(parent.GetDevID().dev_type);
     }
+
     public Integer[] GetMaxDataSort() {
         return DataHelper.GetSupportTeamNum(this.parent.GetDevID().dev_type);
     }

@@ -6,8 +6,8 @@
 package wqa.form.config;
 
 import java.awt.Frame;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import wqa.control.config.DevConfigBean;
 import wqa.form.config.cal.CalPanel;
 
@@ -19,6 +19,13 @@ public class CalConfigForm extends ConfigForm {
 
     public CalConfigForm(Frame parent, boolean modal, String name) {
         super(parent, modal, name);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                config.Close();
+            }
+        });
     }
 
     private DevConfigBean config;

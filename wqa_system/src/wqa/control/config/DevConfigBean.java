@@ -50,6 +50,10 @@ public class DevConfigBean {
 
         return true;
     }
+    
+    public void Close(){
+        this.mother.ReleasConfig();
+    }
 
     // <editor-fold defaultstate="collapsed" desc="配置模块"> 
     //基本配置

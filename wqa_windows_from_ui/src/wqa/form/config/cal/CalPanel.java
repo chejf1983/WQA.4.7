@@ -63,7 +63,7 @@ public class CalPanel extends javax.swing.JPanel {
         this.Cal_Panel.setLayout(new ListFlowLayout(FlowLayout.LEADING, 1, 5, true, false));
 
         //注册定标采集数据响应
-        this.calbean.CalDataEvent.RegeditListener(new EventListener<SDisplayData>() {
+        this.calbean.RegisterCalListener(new EventListener<SDisplayData>() {
             @Override
             public void recevieEvent(Event<SDisplayData> event) {
                 /* Create and display the dialog */

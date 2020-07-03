@@ -175,6 +175,9 @@ public class MonitorPane0 extends javax.swing.JPanel {
                         case ALARM:
                             ChangeState(state.warning);
                             break;
+                        case CONFIG:
+                            ChangeState(state.config);
+                            break;
                         default:
                             throw new AssertionError(event.GetEvent().name());
                     }
@@ -486,7 +489,8 @@ public class MonitorPane0 extends javax.swing.JPanel {
     private enum state {
         connect,
         disconnect,
-        warning
+        warning, 
+        config
     }
 
     private void ChangeState(state st) {
@@ -512,6 +516,10 @@ public class MonitorPane0 extends javax.swing.JPanel {
             case warning:
                 png = "/wqa/form/monitor/resource/warning_24p.png";
                 break;
+            case config:
+                Lable_Title.setForeground(Color.GREEN);
+                png = "/wqa/form/monitor/resource/config_24p.png";
+                break;
             default:
                 throw new AssertionError(st.name());
         }
@@ -530,17 +538,18 @@ public class MonitorPane0 extends javax.swing.JPanel {
         if (config == null) {
             return;
         }
-        if (config_form == null) {
-            config_form = new CommonConfigForm(MainForm.main_parent, false, GetDevName());
-            try {
-                config_form.InitModel(config);
-                config_form.InitViewConfig(data_vector.GetConfigTableModel());
-            } catch (Exception ex) {
-                config_form = null;
-                LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
-                return;
-            }
+
+        config_form = new CommonConfigForm(MainForm.main_parent, false, GetDevName());
+        try {
+            config_form.InitModel(config);
+            config_form.InitViewConfig(data_vector.GetConfigTableModel());
+        } catch (Exception ex) {
+            currentdev.GetParent1().ReleasConfig();
+            config_form = null;
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+            return;
         }
+
         config_form.Refresh();
         config_form.setVisible(true);
     }//GEN-LAST:event_Button_ConfigActionPerformed
@@ -551,15 +560,14 @@ public class MonitorPane0 extends javax.swing.JPanel {
         if (config == null) {
             return;
         }
-        if (cal_form == null) {
-            cal_form = new CalConfigForm(MainForm.main_parent, false, GetDevName());
-            try {
-                cal_form.InitModel(config);
-            } catch (Exception ex) {
-                cal_form = null;
-                LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
-                return;
-            }
+        cal_form = new CalConfigForm(MainForm.main_parent, false, GetDevName());
+        try {
+            cal_form.InitModel(config);
+        } catch (Exception ex) {
+            currentdev.GetParent1().ReleasConfig();
+            cal_form = null;
+            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
+            return;
         }
         cal_form.setVisible(true);
     }//GEN-LAST:event_ButtonCalActionPerformed

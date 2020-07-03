@@ -17,7 +17,7 @@ import wqa.system.WQAPlatform;
  *
  * @author chejf
  */
-public class ConfigForm extends javax.swing.JDialog {
+public class ConfigForm extends javax.swing.JDialog{
 
     /**
      * Creates new form CommonDialog
@@ -33,6 +33,7 @@ public class ConfigForm extends javax.swing.JDialog {
         //居中显示
         setLocationRelativeTo(parent);
 
+//        this.addWindowListener((WindowListener) this);
         this.setTitle(name);
 
         this.getContentPane().setBackground(new Color(34, 88, 149));
@@ -119,7 +120,7 @@ public class ConfigForm extends javax.swing.JDialog {
 
         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
             Label_life.setText("");
-            while (life_time < -3) {
+            while (life_time > -3) {
                 try {
                     //检查窗体活性
                     CheckForm();
@@ -151,7 +152,7 @@ public class ConfigForm extends javax.swing.JDialog {
     }
 
     public void Close() {
-        if (life_time > 0) {
+        if (life_time >= -1) {
             life_time = -10;
             this.dispose();
         }
@@ -160,7 +161,7 @@ public class ConfigForm extends javax.swing.JDialog {
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
         this.time_lock.lock();
         try {
-            if (this.life_time < max_liftime / 10) {
+            if (this.life_time < max_liftime / 2) {
                 this.life_time = max_liftime;
                 this.Label_life.setText("");
             }

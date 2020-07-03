@@ -6,6 +6,8 @@
 package wqa.form.config;
 
 import java.awt.Frame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.JTabbedPane;
 import javax.swing.table.AbstractTableModel;
@@ -21,6 +23,12 @@ public class CommonConfigForm extends ConfigForm{
     
     public CommonConfigForm(Frame parent, boolean modal, String name) {
         super(parent, modal, name);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                config.Close();
+            }
+        });
     }
     
     private ArrayList<ConfigTablePane> pane = new ArrayList();

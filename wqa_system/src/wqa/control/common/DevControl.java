@@ -29,7 +29,8 @@ public class DevControl {
     public enum ControlState {
         CONNECT,
         ALARM,
-        DISCONNECT
+        DISCONNECT,
+        CONFIG
     }
 
     private ControlState state = ControlState.DISCONNECT;
@@ -58,8 +59,6 @@ public class DevControl {
 
     public DevControl(IDevice device) {
         this.device = device;
-        this.configmodel = new DevConfigBean(this);
-        this.configmodel.InitDevConfig(this.device);
     }
 
     public DevID GetDevID() {
@@ -193,10 +192,25 @@ public class DevControl {
     public DevConfigBean GetConfig() {
         state_lock.lock();
         try {
-            if (this.GetState() != ControlState.DISCONNECT) {
+            if (this.GetState() != ControlState.DISCONNECT
+                    && this.GetState() != ControlState.CONFIG) {
+                this.configmodel = new DevConfigBean(this);
+                this.configmodel.InitDevConfig(this.device);
+                this.ChangeState(ControlState.CONFIG);
                 return configmodel;
             } else {
                 return null;
+            }
+        } finally {
+            state_lock.unlock();
+        }
+    }
+
+    public void ReleasConfig() {
+        state_lock.lock();
+        try {
+            if (this.GetState() == ControlState.CONFIG) {
+                this.ChangeState(ControlState.CONNECT);
             }
         } finally {
             state_lock.unlock();
