@@ -89,11 +89,12 @@ public class ModeBusNode {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="内存读写"> 
+    //临时缓存
+    byte[] tmpbuffer = new byte[100];
+
     private int RecieveData(byte[] rcbuffer, int timeout) throws Exception {
         //时间戳
         long start_time = System.currentTimeMillis();
-        //临时缓存
-        byte[] tmpbuffer = new byte[100];
         //接收到的数据个数
         int ret_len = 0;
         while (System.currentTimeMillis() - start_time < timeout) {
@@ -126,15 +127,16 @@ public class ModeBusNode {
         return ret_len;
     }
 
+    //ModeBus一包最大255个数据长度，所以接收缓存只需要1K就足够了
+    private byte[] rcbuffer_area = new byte[max_pack_len];
+
     //读内存
     private byte[] readmemory(int memaddr, int mem_num, int timeout) throws Exception {
         //发送读取命令
         this.io.SendData(ReadPacket(this.addr, memaddr, mem_num));
 
-        //ModeBus一包最大255个数据长度，所以接收缓存只需要1K就足够了
-        byte[] rcbuffer = new byte[max_pack_len];
         //收数据
-        int ret_len = this.RecieveData(rcbuffer, timeout);
+        int ret_len = this.RecieveData(rcbuffer_area, timeout);
 
         //检查长度，长度至少包含1个地址+ 1个命令字+1长度字+2个CRC
         if (ret_len < 5) {
@@ -142,13 +144,13 @@ public class ModeBusNode {
         }
 
         //检查返回命令
-        if (rcbuffer[1] == READCMD) {
+        if (rcbuffer_area[1] == READCMD) {
             //获取返回内容长度
-            int len = rcbuffer[2];
+            int len = rcbuffer_area[2];
             byte[] ret = new byte[len];
 
             //将内容复制出来
-            System.arraycopy(rcbuffer, 3, ret, 0, len);
+            System.arraycopy(rcbuffer_area, 3, ret, 0, len);
             return ret;
         } else {
             //String packet = "";
