@@ -101,7 +101,9 @@ public class DevControlManager {
             process.Finish(true);
         }
     }
+    // </editor-fold> 
 
+    // <editor-fold defaultstate="collapsed" desc="自动搜索"> 
     private String AUTOMAX = "AUTOMAX";
     private int max_auto_num = 14;
 
