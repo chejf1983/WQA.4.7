@@ -17,6 +17,7 @@ import nahon.comm.event.Event;
 import nahon.comm.event.EventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.ModBusDevFactory;
+import wqa.bill.io.IOManager;
 import wqa.system.WQAPlatform;
 
 /**
@@ -28,7 +29,7 @@ public class StartFlash extends javax.swing.JFrame {
     /**
      * Creates new form StartFlash
      */
-    public StartFlash() {      
+    public StartFlash() {
         //去除对话框标题栏
         initComponents();
         ToolTipManager.sharedInstance().setInitialDelay(1000);
@@ -54,6 +55,8 @@ public class StartFlash extends javax.swing.JFrame {
             try {
                 //初始化系统
                 WQAPlatform.GetInstance().InitSystem();
+                //iolog设置10000条
+                IOManager.MaxLogNum = 10000;
                 //注册弹出窗口
                 LogCenter.Instance().RegisterFaultEvent(new EventListener<Level>() {
                     @Override

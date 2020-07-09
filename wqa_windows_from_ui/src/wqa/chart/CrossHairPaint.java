@@ -322,6 +322,10 @@ public class CrossHairPaint {
         //坐标轴的50分之一作为有效距离
         double distance = (axis.getUpperBound() - axis.getLowerBound()) / 40;
         for (Crosshair crosshair : crosshairs) {
+            if(crosshair.getValue() < axis.getLowerBound()){
+                ret = crosshair;
+                break;
+            }
             //当前位置与标线的绝对距离
             double tmpdistance = Math.abs(crosshair.getValue() - value);
             //绝对距离小于有效距离且绝对距离最小的标线有效

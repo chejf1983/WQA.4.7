@@ -13,6 +13,7 @@ import migp.adapter.ESA.ESADEV;
 import static migp.adapter.factory.AbsDevice.DMask;
 import migp.adapter.factory.TemperCalibrateCalculate;
 import wqa.adapter.factory.CErrorTable;
+import static wqa.adapter.factory.CErrorTable.FDO_E;
 import wqa.dev.data.*;
 import wqa.dev.intf.SConfigItem;
 
@@ -172,7 +173,7 @@ public class OSA_FDOII extends ESADEV {
         disdata.datas[11].mainData = 2 * NahonConvert.TimData(disdata.datas[8].mainData - disdata.datas[9].mainData, 4); //红光幅值=(红光峰值 -信号偏置)*2
 
         disdata.alarm = MALARM.GetValue(); //报警信息
-        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(FDO_E | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

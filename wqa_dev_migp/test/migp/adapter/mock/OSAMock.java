@@ -111,6 +111,9 @@ public class OSAMock extends DevMock {
         NRANGE.SetValue(1);
         NCMODE.SetValue(1);
         NRANGE_NUM.SetValue(3);
+        byte[] mem = new byte[]{0x00,0x68,(byte)0xC7,(byte)0xEE};
+        SR3.LoadBytes(mem, 0);
+        SR4.LoadBytes(mem, 2);
         ///////////////////////////////////////////////////////////        
         MALARM.SetValue(0);
         WriteREGS();

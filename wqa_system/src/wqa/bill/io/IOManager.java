@@ -151,7 +151,7 @@ public class IOManager {
     }
 
     private final ArrayList<String> temp_log = new ArrayList();
-    private static int MaxLogNum = 1000;
+    public static int MaxLogNum = 1000;
 
     public ArrayList<String> GetLaterLog() {
         return this.temp_log;

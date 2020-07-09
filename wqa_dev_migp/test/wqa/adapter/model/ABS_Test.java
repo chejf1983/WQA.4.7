@@ -24,7 +24,7 @@ public class ABS_Test {
     public DevMock absdev_mock;
 
     public void SetPar(AbsDevice instance, DevMock dev_mock) throws Exception {
-        PrintLog.SetPrintlevel(PrintLog.PRINTLOG);
+        PrintLog.SetPrintlevel(PrintLog.IOLOG | PrintLog.PRINTLOG);
         absinstance = instance;
         absdev_mock = dev_mock;
     }

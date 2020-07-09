@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import migp.adapter.factory.TemperCalibrateCalculate;
 import wqa.dev.data.*;
 import wqa.adapter.factory.CErrorTable;
+import static wqa.adapter.factory.CErrorTable.FDO_E;
 import wqa.dev.intf.*;
 
 /**
@@ -110,7 +111,7 @@ public class ESA_DO extends ESADEV {
         disdata.datas[4].mainData = NahonConvert.TimData(SR2.GetValue(), 2);     //温度原始值
 
         disdata.alarm = MALARM.GetValue(); //报警信息
-        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(FDO_E | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

@@ -28,6 +28,7 @@ public class CErrorTable {
     public static int OSA_E = 0x010000;
     public static int ESA_E = 0x020000;
     public static int ISA_E = 0x030000;
+    public static int FDO_E = 0x040000;
 
     //获取出错信息
     public String GetErrorString(int error_code) {
@@ -103,5 +104,23 @@ public class CErrorTable {
         this.ErrorCode.put(ISA_E | 0x2000, "");
         this.ErrorCode.put(ISA_E | 0x4000, "");
         this.ErrorCode.put(ISA_E | 0x8000, "");
+                
+        this.ErrorCode.put(FDO_E, "");
+        this.ErrorCode.put(FDO_E | 0x0001, "温度超出测量范围");
+        this.ErrorCode.put(FDO_E | 0x0002, "溶解氧参数超出测量范围");
+        this.ErrorCode.put(FDO_E | 0x0004, "荧光信号超出测量范围");
+        this.ErrorCode.put(FDO_E | 0x0008, "");
+        this.ErrorCode.put(FDO_E | 0x0010, "");
+        this.ErrorCode.put(FDO_E | 0x0020, "");
+        this.ErrorCode.put(FDO_E | 0x0040, "");
+        this.ErrorCode.put(FDO_E | 0x0080, "");
+        this.ErrorCode.put(FDO_E | 0x0100, "温度传感器故障");
+        this.ErrorCode.put(FDO_E | 0x0200, "内部电压基准故障");
+        this.ErrorCode.put(FDO_E | 0x0400, "膜帽异常");
+        this.ErrorCode.put(FDO_E | 0x0800, "");
+        this.ErrorCode.put(FDO_E | 0x1000, "");
+        this.ErrorCode.put(FDO_E | 0x2000, "");
+        this.ErrorCode.put(FDO_E | 0x4000, "");
+        this.ErrorCode.put(FDO_E | 0x8000, "");
     }
 }

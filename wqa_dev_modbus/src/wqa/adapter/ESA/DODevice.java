@@ -9,9 +9,8 @@ import wqa.adapter.factory.AbsDevice;
 import java.util.ArrayList;
 import modebus.pro.NahonConvert;
 import modebus.register.*;
-import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
-import static wqa.adapter.factory.AbsDevice.RETRY_TIME;
 import wqa.adapter.factory.*;
+import static wqa.adapter.factory.CErrorTable.FDO_E;
 import wqa.dev.data.*;
 import wqa.dev.intf.*;
 
@@ -90,12 +89,7 @@ public class DODevice extends AbsDevice {
         disdata.datas[4].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
 
         disdata.alarm = ALARM.GetValue();
-        int tmptype = 0;
-        if ((this.GetDevInfo().dev_type & 0xFF) == 0x10) {
-            tmptype = CErrorTable.OSA_E;
-        } else {
-            tmptype = CErrorTable.ESA_E;
-        }
+        int tmptype = FDO_E;
         String info = CErrorTable.GetInstance().GetErrorString(tmptype | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
