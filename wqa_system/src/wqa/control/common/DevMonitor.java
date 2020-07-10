@@ -5,7 +5,6 @@
  */
 package wqa.control.common;
 
-import java.util.ArrayList;
 import java.util.Date;
 import wqa.dev.data.CollectData;
 import wqa.dev.intf.ICollect;
@@ -36,30 +35,40 @@ public class DevMonitor {
 
     // <editor-fold defaultstate="collapsed" desc="采集数据"> 
     public EventCenter<SDisplayData> DataEvent = new EventCenter();
+    private int last_alarm = -1;
+    private DataRecord tmpdata = null;
 
     public boolean CollectData(Date time) {
         data_lock.lock();
         try {
+            //采集数据
             CollectData CollectData = this.dev.CollectData();
+            //修正时间
             CollectData.time.setTime(time.getTime());
+            //保存数据库
             this.tmpdata = CreateDBData(CollectData);
-            SDisplayData display_data = CreateDisplayData(CollectData);
-            this.SaveAlarmInfo(display_data);
 
+            //显示数据
+            SDisplayData display_data = CreateDisplayData(CollectData);
             DataEvent.CreateEvent(display_data);
+
+            //保存报警信息
+            this.SaveAlarmInfo(display_data);
 
             if (parent.GetState() == ControlState.CONFIG) {
                 if (parent.configmodel.GetDevCalConfig() != null) {
-                    parent.configmodel.GetDevCalConfig().InputCalData(display_data);
+                    //配置状态下，创建定标数据（定标数据必须包括所有数据内容)
+                    parent.configmodel.GetDevCalConfig().InputCalData(CreateCalData(CollectData));
                 }
             } else {
+                //其他状态下，需要刷新设备的报警状态
                 if (display_data.alarm != 0) {
                     parent.ChangeState(DevControl.ControlState.ALARM, display_data.alram_info);
                 } else {
                     parent.ChangeState(DevControl.ControlState.CONNECT);
                 }
             }
-            last_data = display_data;
+//            last_data = display_data;
             return true;
         } catch (Exception ex) {
             LogCenter.Instance().PrintLog(Level.SEVERE, "采集数据失败", ex);
@@ -68,8 +77,6 @@ public class DevMonitor {
             data_lock.unlock();
         }
     }
-
-    private DataRecord tmpdata = null;
 
     public DataRecord ReceiveByDB() {
         data_lock.lock();
@@ -82,8 +89,6 @@ public class DevMonitor {
         }
     }
 
-    private int last_alarm = -1;
-
     private void SaveAlarmInfo(SDisplayData data) {
         if (data.alarm != this.last_alarm) {
             //ainfo.SaveTo(db_instance);
@@ -95,17 +100,6 @@ public class DevMonitor {
                 WQAPlatform.GetInstance().GetDBHelperFactory().GetAlarmDB().SaveAlarmInfo(data);
             }
         }
-    }
-    // </editor-fold>   
-
-    public DevControl GetParent1() {
-        return this.parent;
-    }
-
-    private SDisplayData last_data;
-
-    public SDisplayData GetLastData() {
-        return last_data;
     }
 
     private DataRecord CreateDBData(CollectData data) {
@@ -136,6 +130,26 @@ public class DevMonitor {
         return tmp;
     }
 
+    private SDisplayData CreateCalData(CollectData data) {
+        SDisplayData tmp = new SDisplayData(new DevID(data.dev_type, data.dev_addr, data.serial_num));
+        tmp.time = data.time;
+        tmp.alarm = data.alarm;
+        tmp.alram_info = data.alram_info;
+        tmp.datas = new SDataElement[data.datas.length];
+        System.arraycopy(data.datas, 0, tmp.datas, 0, data.datas.length);
+        return tmp;
+    }
+    // </editor-fold>   
+
+    public DevControl GetParent1() {
+        return this.parent;
+    }
+
+//    private SDisplayData last_data;
+//
+//    public SDisplayData GetLastData() {
+//        return last_data;
+//    }
     // <editor-fold defaultstate="collapsed" desc="数据信息"> 
     public String[] GetDisplayName() {
         return DataHelper.GetSupportDataName(parent.GetDevID().dev_type);

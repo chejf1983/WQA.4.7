@@ -94,7 +94,7 @@ public class ESA_CHL extends ESADEV {
         //读取数据
         this.ReadMEG(MALARM, MPAR1, MPAR2, MPAR3);
         //原始数据
-        this.ReadMEG(SR1, SR2);
+        this.ReadMEG(SR1, SR2, SR3);
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //余氯
         disdata.datas[0].range_info = this.GetMainRangeString(); //余氯量程
         disdata.datas[1].mainData = NahonConvert.TimData(SR1.GetValue(), 2); //余氯原始值
@@ -102,9 +102,9 @@ public class ESA_CHL extends ESADEV {
         disdata.datas[2].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //PH值
         disdata.datas[3].mainData = NahonConvert.TimData(SR3.GetValue(), 2); //PH原始值
 
-        disdata.datas[2].mainData = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
-        disdata.datas[2].range_info = this.GetTemperRangeString(); //量程
-        disdata.datas[3].mainData = NahonConvert.TimData(SR2.GetValue(), 2); //温度原始值
+        disdata.datas[4].mainData = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
+        disdata.datas[4].range_info = this.GetTemperRangeString(); //量程
+        disdata.datas[5].mainData = NahonConvert.TimData(SR2.GetValue(), 2); //温度原始值
 
         disdata.alarm = MALARM.GetValue(); //报警信息
         String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
