@@ -48,6 +48,7 @@ public class COMPane extends javax.swing.JPanel {
 
     private void UpdateState() {
         this.ToggleButton_Open.setSelected(IsAvailable());
+        this.ComboBox_bandrate.setEnabled(!ToggleButton_Open.isSelected());
         if (!IsAvailable()) {
             Label_State.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/iolist/resource/disconnect_32p.png"))); // NOI18N
         } else {
@@ -87,6 +88,7 @@ public class COMPane extends javax.swing.JPanel {
         Label_State.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wqa/form/iolist/resource/connect_32p.png"))); // NOI18N
 
         ComboBox_bandrate.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ComboBox_bandrate.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -112,9 +114,7 @@ public class COMPane extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ComboBox_bandrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(Label_State)
@@ -123,9 +123,10 @@ public class COMPane extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.CENTER, layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(ComboBox_bandrate, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(Lable_ComName, javax.swing.GroupLayout.Alignment.CENTER))
-                        .addGap(12, 12, 12)))
+                        .addGap(6, 6, 6)))
                 .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents

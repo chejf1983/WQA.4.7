@@ -32,7 +32,15 @@ public class CDevDataTable {
         DataInfo[] data_list = CDevDataTable.GetInstance().namemap.get(dev_type).data_list;
         ArrayList<DataInfo> data_names = new ArrayList();
         for (int i = 0; i < data_list.length; i++) {
-            if (!data_list[i].internal_only) {
+            if (!need_internal) {
+                if (!data_list[i].internal_only) {
+                    data_names.add(data_list[i]);
+                }
+            } else if (!need_ora) {
+                if (!data_list[i].data_name.endsWith(ORA_Flag)) {
+                    data_names.add(data_list[i]);
+                }
+            } else {
                 data_names.add(data_list[i]);
             }
         }
