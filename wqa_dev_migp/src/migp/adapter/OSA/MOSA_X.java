@@ -169,7 +169,7 @@ public class MOSA_X extends AbsDevice {
             if (NAMPLIFY[i].GetValue() == 0) {
                 item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float)AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
+                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }
@@ -236,9 +236,15 @@ public class MOSA_X extends AbsDevice {
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //OSA值
         disdata.datas[0].range_info = get_range_string(NRANGE.GetValue());         //量程
         disdata.datas[1].mainData = this.SR3.GetValue(); //OSA原始值(光强高电平-低电平)
+        if (this.GetDevInfo().dev_type == 0x1103 || this.GetDevInfo().dev_type == 0x1104) {
+            if (disdata.datas[0].range_info.length() > "(0-20000)".length()) {
+                disdata.datas[0].unit = "细胞/ml";
+            }
+        }
 
         disdata.datas[2].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //温度值
         disdata.datas[2].range_info = "(" + this.VTRANGE_MIN.GetValue() + "-" + this.VTRANGE_MAX.GetValue() + ")"; //量程
+
         disdata.datas[3].mainData = NahonConvert.TimData(SR5.GetValue(), 2); //温度原始值
 
         disdata.alarm = MALARM.GetValue(); //报警信息

@@ -367,10 +367,20 @@ public class MOSAII_X extends AbsDevice {
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //OSA值1
         disdata.datas[0].range_info = get_range_string(NRANGE.GetValue());       //量程1
         disdata.datas[1].mainData = this.SR3.GetValue(); //OSA原始值1
-
+        if (this.GetDevInfo().dev_type == 0x1111 || this.GetDevInfo().dev_type == 0x1112) {
+            if (disdata.datas[0].range_info.length() > "(0-20000)".length()) {
+                disdata.datas[0].unit = "细胞/ml";
+            }
+        }
+        
         disdata.datas[2].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //OSA值2
         disdata.datas[2].range_info = get_range_string2(NRANGE2.GetValue());       //量程2
         disdata.datas[3].mainData = this.SR4.GetValue(); //OSA原始值2
+        if (this.GetDevInfo().dev_type == 0x1113 || this.GetDevInfo().dev_type == 0x1114) {
+            if (disdata.datas[2].range_info.length() > "(0-20000)".length()) {
+                disdata.datas[2].unit = "细胞/ml";
+            }
+        }
 
         disdata.datas[4].mainData = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
         disdata.datas[4].range_info = "(" + this.VTRANGE_MIN.GetValue() + "-" + this.VTRANGE_MAX.GetValue() + ")"; //量程

@@ -22,7 +22,7 @@ import wqa.dev.intf.*;
  * @author chejf
  */
 public class OSA_X extends AbsDevice implements IDevMotorConfig {
-    
+
     // <editor-fold defaultstate="collapsed" desc="寄存器">
     // <editor-fold defaultstate="collapsed" desc="VPA"> 
     FMEG[] VDRANGE_MIN = new FMEG[]{new FMEG(new VPA(0x02, 4), "主参数1量程下限"), new FMEG(new VPA(0x0A, 4), "主参数2量程下限"),
@@ -56,7 +56,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
     IMEG NCTIME = new IMEG(new NVPA(6, 2), "清扫次数", 1, 100);
     IMEG NCINTERVAL = new IMEG(new NVPA(8, 2), "清扫间隔(分钟)", 1, 24 * 60);
     IMEG NCBRUSH = new IMEG(new NVPA(10, 2), "清扫刷偏移量", 0, 1000);
-    
+
     FMEG[] NCLTEMPER = new FMEG[]{new FMEG(new NVPA(12, 4), "定标温度1"), new FMEG(new NVPA(40, 4), "定标温度2"), new FMEG(new NVPA(68, 4), "定标温度3"), new FMEG(new NVPA(96, 4), "定标温度4")};
     DMEG[] NCLPARA = new DMEG[]{new DMEG(new NVPA(16, 8), "定标系数A1"), new DMEG(new NVPA(44, 8), "定标系数A2"), new DMEG(new NVPA(72, 8), "定标系数A3"), new DMEG(new NVPA(100, 8), "定标系数A4")};
     DMEG[] NCLPARB = new DMEG[]{new DMEG(new NVPA(24, 8), "定标系数B1"), new DMEG(new NVPA(52, 8), "定标系数B2"), new DMEG(new NVPA(80, 8), "定标系数B3"), new DMEG(new NVPA(108, 8), "定标系数B4")};
@@ -79,7 +79,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
         super(devinfo);
     }
 
-     @Override
+    @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
 
@@ -96,7 +96,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
                 NAMPLIFY[0], NAMPLIFY[1], NAMPLIFY[2], NAMPLIFY[3],
                 NRANGE_MAX[0], NRANGE_MAX[1], NRANGE_MAX[2], NRANGE_MAX[3]);
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="量程数据"> 
     //获取量程字符串描述（量程档位）
     String get_range_string(int index) {
@@ -170,7 +170,7 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
             if (NAMPLIFY[i].GetValue() == 0) {
                 item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
             } else {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float)AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
+                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
             }
             item.add(SConfigItem.CreateInfoItem(""));
         }
@@ -236,6 +236,11 @@ public class OSA_X extends AbsDevice implements IDevMotorConfig {
 
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //OSA值
         disdata.datas[0].range_info = get_range_string(NRANGE.GetValue());         //量程
+        if (this.GetDevInfo().dev_type == 0x0108) {
+            if (disdata.datas[0].range_info.length() > "(0-20000)".length()) {
+                disdata.datas[0].unit = "细胞/ml";
+            }
+        }
 
         disdata.datas[1].mainData = NahonConvert.TimData(this.SR3.GetValue() - SR4.GetValue(), 2); //OSA原始值(光强高电平-低电平)
 

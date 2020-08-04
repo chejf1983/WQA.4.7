@@ -11,8 +11,6 @@ import modebus.pro.NahonConvert;
 import modebus.register.FREG;
 import modebus.register.IREG;
 import wqa.adapter.factory.AbsDevice;
-import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
-import static wqa.adapter.factory.AbsDevice.RETRY_TIME;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.CollectData;
@@ -31,7 +29,7 @@ public class MOSADevice extends AbsDevice {
     private final FREG TEMPER = new FREG(0x03, 2, "当前温度");//R
     private final IREG ODATA = new IREG(0x05, 1, "原始光强数据");//R
 
-    private final IREG RANGE = new IREG(0x06, 1, "量程");//R/W
+    final IREG RANGE = new IREG(0x06, 1, "量程");//R/W
     private final IREG AVR = new IREG(0x07, 1, "平均次数", 1, 100);//R/W
 
     private final IREG CLRANGE = new IREG(0x30, 1, "定标量程"); //R/W
@@ -42,7 +40,7 @@ public class MOSADevice extends AbsDevice {
     private final IREG CLTEMPERSTART = new IREG(0x3D, 1, "温度启动定标");//R/W
 
     private final IREG RANGNUM = new IREG(0x50, 1, "量程个数"); //R
-    private final FREG[] RANGN = new FREG[]{new FREG(0x51, 2, "量程1"), new FREG(0x53, 2, "量程2"), new FREG(0x55, 2, "量程3"), new FREG(0x57, 2, "量程4")}; //R
+    final FREG[] RANGN = new FREG[]{new FREG(0x51, 2, "量程1"), new FREG(0x53, 2, "量程2"), new FREG(0x55, 2, "量程3"), new FREG(0x57, 2, "量程4")}; //R
 
     public MOSADevice(SDevInfo info) {
         super(info);
@@ -132,6 +130,11 @@ public class MOSADevice extends AbsDevice {
 
         disdata.datas[0].mainData = NahonConvert.TimData(MDATA.GetValue(), 2);
         disdata.datas[0].range_info = this.get_range_string(this.RANGE.GetValue());
+        if (this.GetDevInfo().dev_type == 0x0108 || this.GetDevInfo().dev_type == 0x1103 || this.GetDevInfo().dev_type == 0x1104) {
+            if (disdata.datas[0].range_info.length() > "(0-20000)".length()) {
+                disdata.datas[0].unit = "细胞/ml";
+            }
+        }
 
         disdata.datas[1].mainData = NahonConvert.TimData(ODATA.GetValue(), 2);
         disdata.datas[2].mainData = NahonConvert.TimData(TEMPER.GetValue(), 2);

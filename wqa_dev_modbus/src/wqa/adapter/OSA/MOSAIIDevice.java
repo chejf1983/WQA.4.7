@@ -183,11 +183,21 @@ public class MOSAIIDevice extends AbsDevice {
         disdata.datas[0].mainData = NahonConvert.TimData(MDATA1.GetValue(), 2);
         disdata.datas[0].range_info = this.get_range_string(this.RANGE1.GetValue());
         disdata.datas[1].mainData = NahonConvert.TimData(ODATA1.GetValue(), 2);
+        if (this.GetDevInfo().dev_type == 0x1111 || this.GetDevInfo().dev_type == 0x1112) {
+            if (disdata.datas[0].range_info.length() > "(0-20000)".length()) {
+                disdata.datas[0].unit = "细胞/ml";
+            }
+        }
 
         disdata.datas[2].mainData = NahonConvert.TimData(MDATA2.GetValue(), 2);
         disdata.datas[2].range_info = this.get_range_string(this.RANGE2.GetValue());
         disdata.datas[3].mainData = NahonConvert.TimData(ODATA2.GetValue(), 2);
-
+        if (this.GetDevInfo().dev_type == 0x1113 || this.GetDevInfo().dev_type == 0x1114) {
+            if (disdata.datas[2].range_info.length() > "(0-20000)".length()) {
+                disdata.datas[2].unit = "细胞/ml";
+            }
+        }
+        
         disdata.datas[4].mainData = NahonConvert.TimData(TEMPER.GetValue(), 2);
         disdata.datas[5].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
 
