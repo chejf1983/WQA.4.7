@@ -41,6 +41,7 @@ public class ModbusClient {
             return;
         }
 
+        //功能吗
         int cmd = input[1];
         int reg_addr = NahonConvert.ByteArrayToUShort(input, 2);
         int reg_num = NahonConvert.ByteArrayToUShort(input, 4);
@@ -56,6 +57,7 @@ public class ModbusClient {
             //读内存
             System.arraycopy(this.ReadReg(reg_addr, reg_num), 0, rec_buffer, 3, rec_buffer[2]);
         } else {
+            //字节计数器
             int len = input[6];
             byte[] mem = new byte[len];
             System.arraycopy(input, 7, mem, 0, len);

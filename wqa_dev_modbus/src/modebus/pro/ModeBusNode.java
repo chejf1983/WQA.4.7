@@ -20,6 +20,7 @@ public class ModeBusNode {
     public final int max_pack_len = 1024;
     public static byte READCMD = 0x03;
     public static byte WRITECMD = 0x10;
+    private MCRC16 crc16 = new MCRC16();
 
     public ModeBusNode(IMAbstractIO io, byte addr) {
         this.io = io;
@@ -41,7 +42,6 @@ public class ModeBusNode {
         tmp[1] = READCMD; // 读寄存器命令字
         System.arraycopy(NahonConvert.UShortToByteArray(memaddr), 0, tmp, 2, 2);
         System.arraycopy(NahonConvert.UShortToByteArray(mem_num), 0, tmp, 4, 2);
-        MCRC16 crc16 = new MCRC16();
         int crc = crc16.getCrc(tmp, tmp.length - 2);
         System.arraycopy(NahonConvert.UShortToByteArray(crc), 0, tmp, 6, 2);
         return tmp;
@@ -55,7 +55,7 @@ public class ModeBusNode {
         System.arraycopy(NahonConvert.UShortToByteArray(mem_num), 0, tmp, 4, 2);
         tmp[6] = (byte) (par.length);
         System.arraycopy(par, 0, tmp, 7, par.length);
-        MCRC16 crc16 = new MCRC16();
+//        MCRC16 crc16 = new MCRC16();
         int crc = crc16.getCrc(tmp, tmp.length - 2);
         System.arraycopy(NahonConvert.UShortToByteArray(crc), 0, tmp, tmp.length - 2, 2);
         return tmp;
@@ -66,7 +66,7 @@ public class ModeBusNode {
             return false;
         }
 
-        MCRC16 crc16 = new MCRC16();
+//        MCRC16 crc16 = new MCRC16();
         int crc = crc16.getCrc(buffer, buffer_len - 2);
         byte[] a_crc = NahonConvert.UShortToByteArray(crc);
         return a_crc[0] == buffer[buffer_len - 2] && a_crc[1] == buffer[buffer_len - 1];
