@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.db.JDBHelper;
 import wqa.control.common.DevControl;
-import wqa.control.common.SDisplayData;
 import wqa.system.WQAPlatform;
 
 /**
