@@ -5,16 +5,18 @@
  */
 package wqa.dev.intf;
 
+import nahon.comm.io.AbstractIO;
+
 /**
  *
  * @author chejf
  */
 public interface IDeviceSearch {
-    public IDevice[] SearchDevice(IMAbstractIO io);
+    public IDevice[] SearchDevice(AbstractIO io);
     
-    public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception;
+    public IDevice SearchOneDev(AbstractIO io, byte addr) throws Exception;
 
-    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception;
+    public IDevice BuildDevice(AbstractIO io, byte addr, int DevType) throws Exception;
     
     public String ProType();
 }

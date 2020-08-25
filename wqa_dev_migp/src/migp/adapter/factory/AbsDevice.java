@@ -10,6 +10,7 @@ import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.*;
 import java.util.ArrayList;
+import nahon.comm.io.IOInfo;
 import wqa.adapter.factory.CDevDataTable;
 import wqa.adapter.factory.CDevDataTable.DataInfo;
 import wqa.dev.intf.*;
@@ -30,7 +31,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 //    public final IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");  //R  
 
     public AbsDevice(SDevInfo devinfo) {
-        this.base_drv = new MIGP_CmdSend(MIGPDevFactory.Convert(devinfo.io), (byte) 0xF0, (byte) devinfo.dev_addr);
+        this.base_drv = new MIGP_CmdSend(devinfo.io, (byte) 0xF0, (byte) devinfo.dev_addr);
         this.sinfo = devinfo;
     }
 
@@ -47,8 +48,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
 //            throw new Exception("探头信息不匹配");
 //        }
         sinfo.serial_num = this.eiainfo.EBUILDSER.GetValue();
-        MIOInfo comm_info = this.GetDevInfo().io.GetIOInfo();
-        if (comm_info.iotype.equals(MIOInfo.COM)) {
+        IOInfo comm_info = this.GetDevInfo().io.GetConnectInfo();
+        if (comm_info.iotype.equals(IOInfo.COM)) {
             //串口的情况下，参数1表示波特率
             String sbandrate = comm_info.par[1];
             for (int i = 0; i < BANDRATE_STRING.length; i++) {
@@ -263,7 +264,7 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         }
 
         if (devaddr != this.base_drv.GetDstAddr()) {
-            MIGP_CmdSend base = new MIGP_CmdSend(MIGPDevFactory.Convert(this.GetDevInfo().io), (byte) 0xF0, (byte) devaddr);
+            MIGP_CmdSend base = new MIGP_CmdSend(this.GetDevInfo().io, (byte) 0xF0, (byte) devaddr);
             VPA devtype = new VPA(0x00, 2);
             try {
                 base.GetMEM(devtype, devtype.length, 1, DEF_TIMEOUT);

@@ -5,16 +5,14 @@
  */
 package wqa.winio.adapter;
 
-import comm.absractio.WAbstractIO;
-import comm.absractio.WIOInfo;
 import comm.win.io.WindowsIOFactory;
 import gnu.io.CommPortIdentifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.io.IAbstractIO;
-import wqa.bill.io.SIOInfo;
+import nahon.comm.io.AbstractIO;
+import nahon.comm.io.IOInfo;
 import wqa.bill.io.ShareIO;
 import wqa.system.WQAPlatform;
 
@@ -55,10 +53,10 @@ public class WComManager {
         system_coms = new ShareIO[ComList.length];
         for (int i = 0; i < system_coms.length; i++) {
             //查找配置文件当中的信息
-            SIOInfo ioinfo = WQAPlatform.GetInstance().GetIOManager().GetIOConfig(ComList[i]);
+            IOInfo ioinfo = WQAPlatform.GetInstance().GetIOManager().GetIOConfig(ComList[i]);
             if (ioinfo == null) {
                 //如果没有找到配置文件，新建一个9600的串口信息
-                ioinfo = new SIOInfo(SIOInfo.COM, ComList[i], "9600");
+                ioinfo = new IOInfo(IOInfo.COM, ComList[i], "9600");
                 //如果不存在，保存配置信息
                 WQAPlatform.GetInstance().GetIOManager().SaveIOConfig(ComList[i], ioinfo);
             }
@@ -72,7 +70,7 @@ public class WComManager {
     }
 
     //只根据串口号来查找IO
-    private ShareIO FindIO(SIOInfo info) {
+    private ShareIO FindIO(IOInfo info) {
         for (ShareIO io : WQAPlatform.GetInstance().GetIOManager().GetAllIO()) {
             if (io.GetConnectInfo().par[0].contentEquals(info.par[0])) {
                 return io;
@@ -96,57 +94,8 @@ public class WComManager {
         return ionames.toArray(new String[0]);
     }
 
-    private IAbstractIO Convert(WAbstractIO io) {
-        return new IAbstractIO() {
-            @Override
-            public boolean IsClosed() {
-                return io.IsClosed();
-            }
-
-            @Override
-            public void Open() throws Exception {
-                io.Open();
-            }
-
-            @Override
-            public void Close() {
-                io.Close();
-            }
-
-            @Override
-            public void SendData(byte[] data) throws Exception {
-                io.SendData(data);
-            }
-
-            @Override
-            public int ReceiveData(byte[] data, int timeout) throws Exception {
-                return io.ReceiveData(data, timeout);
-            }
-
-            @Override
-            public SIOInfo GetConnectInfo() {
-                WIOInfo info = io.GetConnectInfo();
-                return new SIOInfo(info.iotype, info.par);
-            }
-
-            @Override
-            public int MaxBuffersize() {
-                return io.MaxBuffersize();
-            }
-
-            @Override
-            public void SetConnectInfo(SIOInfo info) {
-                io.SetConnectInfo(new WIOInfo(info.iotype, info.par));
-            }
-        };
-    }
-
-    public IAbstractIO CreateIO(SIOInfo ioinfo) {
-        WAbstractIO wio = WindowsIOFactory.CreateIO(new WIOInfo(ioinfo.iotype, ioinfo.par));
-        if (wio == null) {
-            return null;
-        }
-        return Convert(wio);
+    public AbstractIO CreateIO(IOInfo ioinfo) {
+        return WindowsIOFactory.CreateIO(ioinfo);
     }
     // </editor-fold>   
 
@@ -160,7 +109,7 @@ public class WComManager {
             }
         }
 
-        SIOInfo ioinfo = new SIOInfo(SIOInfo.COM, com, "9600");
+        IOInfo ioinfo = new IOInfo(IOInfo.COM, com, "9600");
         //查找配置文件当中的信息
         ShareIO io = FindIO(ioinfo);
         if (io == null) {
@@ -174,7 +123,7 @@ public class WComManager {
 
     // <editor-fold defaultstate="collapsed" desc="修改波特率"> 
     public void ChangeBandrate(ShareIO ioinstance, String bandrate) throws Exception {
-        SIOInfo ioinfo = ioinstance.GetConnectInfo();
+        IOInfo ioinfo = ioinstance.GetConnectInfo();
         ioinfo.par[1] = bandrate;
         ioinstance.SetConnectInfo(ioinfo);
         WQAPlatform.GetInstance().GetIOManager().SaveIOConfig(ioinfo.par[0], ioinfo);

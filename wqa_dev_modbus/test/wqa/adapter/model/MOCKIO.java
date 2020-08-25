@@ -5,14 +5,14 @@
  */
 package wqa.adapter.model;
 
-import wqa.dev.data.*;
-import wqa.dev.intf.*;
+import nahon.comm.io.AbstractIO;
+import nahon.comm.io.IOInfo;
 
 /**
  *
  * @author chejf
  */
-public class MOCKIO implements IMAbstractIO {
+public class MOCKIO implements AbstractIO {
 
     private boolean isclosed = true;
     private ModbusClient client = null;
@@ -59,12 +59,21 @@ public class MOCKIO implements IMAbstractIO {
     }
 
     @Override
-    public MIOInfo GetIOInfo() {
-        return new MIOInfo("COM", new String[]{"COM9", "9600"});
+    public IOInfo GetConnectInfo() {
+        return new IOInfo("COM", new String[]{"COM9", "9600"});
     }
 
     @Override
     public int MaxBuffersize() {
         return 65535;
+    }
+
+    @Override
+    public void Cancel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void SetConnectInfo(IOInfo ioinfo) {
     }
 }

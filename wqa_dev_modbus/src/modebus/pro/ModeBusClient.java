@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modebus.register.REG;
-import wqa.dev.intf.IMAbstractIO;
+import nahon.comm.io.AbstractIO;
 
 /**
  *
@@ -39,10 +37,10 @@ public class ModeBusClient {
 
     private byte[] memory = new byte[1024];
     private byte address;
-    private IMAbstractIO io_instance;
+    private AbstractIO io_instance;
     private MCRC16 crc16 = new MCRC16();
 
-    public ModeBusClient(IMAbstractIO io, byte addr) {
+    public ModeBusClient(AbstractIO io, byte addr) {
         io_instance = io;
         this.address = addr;
     }

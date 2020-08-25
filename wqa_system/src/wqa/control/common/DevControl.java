@@ -71,7 +71,7 @@ public class DevControl {
 
     public String ToString() {
         //获取数据key
-        return this.GetDevID().ToChineseString() + "(" + device.GetDevInfo().io.GetIOInfo().par[0] + ")";
+        return this.GetDevID().ToChineseString() + "(" + device.GetDevInfo().io.GetConnectInfo().par[0] + ")";
     }
     // </editor-fold>    
 

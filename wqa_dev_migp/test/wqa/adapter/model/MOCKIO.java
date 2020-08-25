@@ -5,14 +5,15 @@
  */
 package wqa.adapter.model;
 
-import wqa.dev.data.MIOInfo;
-import wqa.dev.intf.IMAbstractIO;
+import nahon.comm.io.AbstractIO;
+import nahon.comm.io.IOInfo;
+
 
 /**
  *
  * @author chejf
  */
-public class MOCKIO implements IMAbstractIO {
+public class MOCKIO implements AbstractIO {
 
     private boolean isclosed = true;
     private MigpClient client = null;
@@ -26,10 +27,12 @@ public class MOCKIO implements IMAbstractIO {
         return isclosed;
     }
 
+    @Override
     public void Open() throws Exception {
         this.isclosed = false;
     }
 
+    @Override
     public void Close() {
         this.isclosed = true;
     }
@@ -59,12 +62,22 @@ public class MOCKIO implements IMAbstractIO {
     }
 
     @Override
-    public MIOInfo GetIOInfo() {
-        return new MIOInfo(MIOInfo.COM, "COM9", "9600");
+    public IOInfo GetConnectInfo() {
+        return new IOInfo(IOInfo.COM, "COM9", "9600");
     }
 
     @Override
     public int MaxBuffersize() {
         return 65535;
+    }
+
+    @Override
+    public void Cancel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void SetConnectInfo(IOInfo ioinfo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -11,8 +11,8 @@ import java.awt.FlowLayout;
 import java.util.logging.Level;
 import migp.adapter.factory.MIGPDevFactory;
 import nahon.comm.faultsystem.LogCenter;
+import nahon.comm.io.IOInfo;
 import wqa.adapter.factory.ModBusDevFactory;
-import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
 import wqa.dev.intf.IDeviceSearch;
 import wqa.system.WQAPlatform;
@@ -72,7 +72,7 @@ public class IOConfigDialog extends javax.swing.JDialog {
         WComManager.GetInstance().InitAllCom();
         ShareIO[] iolist = WComManager.GetInstance().GetAllCom();
         for (ShareIO iolist1 : iolist) {
-            if (SIOInfo.COM.equals(iolist1.GetConnectInfo().iotype)) {
+            if (IOInfo.COM.equals(iolist1.GetConnectInfo().iotype)) {
                 COMPane com = new COMPane();
                 com.SetIO(iolist1);
                 this.IO_PaneDesk.add(com);

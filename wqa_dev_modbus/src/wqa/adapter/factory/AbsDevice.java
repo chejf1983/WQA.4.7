@@ -8,8 +8,8 @@ package wqa.adapter.factory;
 import java.util.ArrayList;
 import modebus.pro.ModeBusNode;
 import modebus.register.*;
+import nahon.comm.io.IOInfo;
 import wqa.adapter.factory.CDevDataTable.DataInfo;
-import wqa.dev.data.MIOInfo;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.data.CollectData;
 import wqa.dev.intf.*;
@@ -56,8 +56,8 @@ public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
         //赋值设备地址，按照搜索出来的结果赋值，设备读出来不准确
         DEVADDR.SetValue((int) this.GetDevInfo().dev_addr);
         //波特率序号也根据IO信息来，设备读出来不准确
-        MIOInfo comm_info = this.base_drv.GetIO().GetIOInfo();
-        if (comm_info.iotype.equals(MIOInfo.COM)) {
+        IOInfo comm_info = this.base_drv.GetIO().GetConnectInfo();
+        if (comm_info.iotype.equals(IOInfo.COM)) {
             String sbandrate = comm_info.par[1];
             for (int i = 0; i < this.SBandRate.length; i++) {
                 if (sbandrate.contentEquals(this.SBandRate[i])) {

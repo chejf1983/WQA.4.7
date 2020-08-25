@@ -8,8 +8,6 @@ package migp.adapter.factory;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.IMEG;
-import base.pro.absractio.AbstractIO;
-import base.pro.absractio.IOInfo;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +17,7 @@ import java.util.logging.Logger;
 import migp.adapter.ESA.*;
 import migp.adapter.ISA.*;
 import migp.adapter.OSA.*;
+import nahon.comm.io.AbstractIO;
 import wqa.dev.data.*;
 import wqa.dev.intf.*;
 
@@ -88,7 +87,7 @@ public class MIGPDevFactory implements IDeviceSearch {
     // <editor-fold defaultstate="collapsed" desc="搜索设备">
     //搜索指定物理口
     @Override
-    public IDevice[] SearchDevice(IMAbstractIO io) {
+    public IDevice[] SearchDevice(AbstractIO io) {
         //尝试打开IO口
         ArrayList<IDevice> devlist = new ArrayList();
 
@@ -109,17 +108,17 @@ public class MIGPDevFactory implements IDeviceSearch {
 
     IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");
     IMEG VDOATOKEN = new IMEG(new VPA(0x14, 2), "溶氧A版本标志");
-    IMAbstractIO lastio;
+    AbstractIO lastio;
     MIGP_CmdSend base;
 
     //搜索一个设备
     @Override
-    public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception {
+    public IDevice SearchOneDev(AbstractIO io, byte addr) throws Exception {
         if (lastio == io) {
             base.SetDstAddr(addr);
         } else {
             //创建一个基础协议包
-            base = new MIGP_CmdSend(Convert(io), (byte) 0xF0, addr);
+            base = new MIGP_CmdSend((io), (byte) 0xF0, addr);
             lastio = io;
         }
 
@@ -145,7 +144,7 @@ public class MIGPDevFactory implements IDeviceSearch {
 
     //创建设备
     @Override
-    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
+    public IDevice BuildDevice(AbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {
@@ -169,53 +168,53 @@ public class MIGPDevFactory implements IDeviceSearch {
             return null;
         }
     }
-
-    public static AbstractIO Convert(IMAbstractIO io) {
-        return new AbstractIO() {
-            private final IMAbstractIO instance = io;
-
-            @Override
-            public boolean IsClosed() {
-                return instance.IsClosed();
-//                return false;
-            }
-
-            @Override
-            public void Open() throws Exception {
-//                this.instance.Open();
-            }
-
-            @Override
-            public void Close() {
-//                this.instance.Close();
-            }
-
-            @Override
-            public void SendData(byte[] data) throws Exception {
-                this.instance.SendData(data);
-            }
-
-            @Override
-            public int ReceiveData(byte[] data, int timeout) throws Exception {
-
-                int len = this.instance.ReceiveData(data, timeout);
-//                System.out.println("收到" + len);
-                return len;
-            }
-
-            @Override
-            public IOInfo GetConnectInfo() {
-                MIOInfo ioinfo = this.instance.GetIOInfo();
-                return new IOInfo(ioinfo.iotype, ioinfo.par);
-            }
-
-            @Override
-            public int MaxBuffersize() {
-                return this.instance.MaxBuffersize();
-//                return 65535;
-            }
-        };
-    }
+//
+//    public static AbstractIO Convert(AbstractIO io) {
+//        return new AbstractIO() {
+//            private final IMAbstractIO instance = io;
+//
+//            @Override
+//            public boolean IsClosed() {
+//                return instance.IsClosed();
+////                return false;
+//            }
+//
+//            @Override
+//            public void Open() throws Exception {
+////                this.instance.Open();
+//            }
+//
+//            @Override
+//            public void Close() {
+////                this.instance.Close();
+//            }
+//
+//            @Override
+//            public void SendData(byte[] data) throws Exception {
+//                this.instance.SendData(data);
+//            }
+//
+//            @Override
+//            public int ReceiveData(byte[] data, int timeout) throws Exception {
+//
+//                int len = this.instance.ReceiveData(data, timeout);
+////                System.out.println("收到" + len);
+//                return len;
+//            }
+//
+//            @Override
+//            public IOInfo GetConnectInfo() {
+//                MIOInfo ioinfo = this.instance.GetIOInfo();
+//                return new IOInfo(ioinfo.iotype, ioinfo.par);
+//            }
+//
+//            @Override
+//            public int MaxBuffersize() {
+//                return this.instance.MaxBuffersize();
+////                return 65535;
+//            }
+//        };
+//    }
 
     @Override
     public String ProType() {

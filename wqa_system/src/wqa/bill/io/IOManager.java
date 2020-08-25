@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import nahon.comm.event.Event;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
+import nahon.comm.io.AbstractIO;
+import nahon.comm.io.IOInfo;
 import wqa.system.WQAPlatform;
 
 /**
@@ -25,7 +27,7 @@ public class IOManager {
     // <editor-fold defaultstate="collapsed" desc="IO管理"> 
     private ArrayList<ShareIO> localio = new ArrayList();
 
-    public ShareIO FindIO(SIOInfo info) {
+    public ShareIO FindIO(IOInfo info) {
         for (ShareIO io : localio) {
             if (io.GetConnectInfo().equalto(info)) {
                 return io;
@@ -35,7 +37,7 @@ public class IOManager {
     }
 
     //创建共享IO口
-    public ShareIO ADDShareIO(IAbstractIO io) {
+    public ShareIO ADDShareIO(AbstractIO io) {
         //创建IO
         if (io != null) {
             ShareIO sio = new ShareIO(io);
@@ -162,11 +164,11 @@ public class IOManager {
     private int par_num = 2;
 
     public void SaveIOConfig(String Key, ShareIO io) {
-        SIOInfo sioInfo = io.GetConnectInfo();
+        IOInfo sioInfo = io.GetConnectInfo();
         this.SaveIOConfig(Key, sioInfo);
     }
 
-    public void SaveIOConfig(String Key, SIOInfo sioInfo) {
+    public void SaveIOConfig(String Key, IOInfo sioInfo) {
         WQAPlatform.GetInstance().GetConfig().setProperty(Key, sioInfo.iotype);
         for (int i = 0; i < par_num; i++) {
             if (sioInfo.par.length > i) {
@@ -177,7 +179,7 @@ public class IOManager {
         }
     }
 
-    public SIOInfo GetIOConfig(String Key) {
+    public IOInfo GetIOConfig(String Key) {
         String iotype = WQAPlatform.GetInstance().GetConfig().getProperty(Key, "NON");
         if (iotype.contentEquals("NON")) {
             return null;
@@ -193,7 +195,7 @@ public class IOManager {
             }
         }
 
-        return new SIOInfo(iotype, pars.toArray(new String[0]));
+        return new IOInfo(iotype, pars.toArray(new String[0]));
     }
     // </editor-fold>   
 }

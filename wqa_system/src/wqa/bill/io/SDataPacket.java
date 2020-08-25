@@ -6,6 +6,7 @@
 package wqa.bill.io;
 
 import java.util.Date;
+import nahon.comm.io.IOInfo;
 
 /**
  *
@@ -17,7 +18,7 @@ public class SDataPacket {
         Receive
     }
 
-    public SDataPacket(SIOInfo info, IOEvent type, byte[] data){
+    public SDataPacket(IOInfo info, IOEvent type, byte[] data){
         this.info = info;
         this.type = type;
         this.data = data;
@@ -25,7 +26,7 @@ public class SDataPacket {
     }
     
     public Date time;
-    public SIOInfo info;
+    public IOInfo info;
     public IOEvent type;
     public byte[] data;
 }

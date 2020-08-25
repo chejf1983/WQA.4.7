@@ -6,7 +6,7 @@
 package modebus.pro;
 
 import modebus.register.REG;
-import wqa.dev.intf.IMAbstractIO;
+import nahon.comm.io.AbstractIO;
 
 /**
  *
@@ -14,7 +14,7 @@ import wqa.dev.intf.IMAbstractIO;
  */
 public class ModeBusNode {
 
-    protected IMAbstractIO io;
+    protected AbstractIO io;
     public byte addr = 0x00;
     public final int def_timeout = 400;
     public final int max_pack_len = 1024;
@@ -22,13 +22,13 @@ public class ModeBusNode {
     public static byte WRITECMD = 0x10;
     private MCRC16 crc16 = new MCRC16();
 
-    public ModeBusNode(IMAbstractIO io, byte addr) {
+    public ModeBusNode(AbstractIO io, byte addr) {
         this.io = io;
         this.addr = addr;
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口"> 
-    public IMAbstractIO GetIO() {
+    public AbstractIO GetIO() {
         return this.io;
     }
 

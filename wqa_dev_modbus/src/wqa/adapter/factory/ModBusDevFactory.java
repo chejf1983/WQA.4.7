@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import modebus.pro.ModeBusNode;
 import modebus.register.IREG;
+import nahon.comm.io.AbstractIO;
 import wqa.adapter.ESA.*;
 import wqa.adapter.ISA.AMMODevice;
 import wqa.adapter.OSA.*;
@@ -27,7 +28,7 @@ public class ModBusDevFactory implements IDeviceSearch {
 
     //搜索指定物理口
     @Override
-    public IDevice[] SearchDevice(IMAbstractIO io) {
+    public IDevice[] SearchDevice(AbstractIO io) {
         ArrayList<IDevice> devlist = new ArrayList();
 
         for (int i = 1; i < 0x20; i++) {
@@ -46,12 +47,12 @@ public class ModBusDevFactory implements IDeviceSearch {
     }
 
     IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
-    IMAbstractIO lastio;
+    AbstractIO lastio;
     ModeBusNode base;
     //搜索一个设备
 
     @Override
-    public IDevice SearchOneDev(IMAbstractIO io, byte addr) throws Exception {
+    public IDevice SearchOneDev(AbstractIO io, byte addr) throws Exception {
         //创建一个基础协议包
         if (lastio == io) {
             base.addr = (addr);
@@ -72,7 +73,7 @@ public class ModBusDevFactory implements IDeviceSearch {
 
     //创建设备
     @Override
-    public IDevice BuildDevice(IMAbstractIO io, byte addr, int DevType) throws Exception {
+    public IDevice BuildDevice(AbstractIO io, byte addr, int DevType) throws Exception {
         //根据设备类型创建设备类
         String class_name = class_map.get(DevType);
         if (class_name != null) {

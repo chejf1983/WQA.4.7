@@ -7,7 +7,6 @@ package wqa.form.iolist;
 
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.io.SIOInfo;
 import wqa.bill.io.ShareIO;
 import wqa.system.WQAPlatform;
 import wqa.winio.adapter.WComManager;

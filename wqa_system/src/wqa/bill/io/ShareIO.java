@@ -7,22 +7,22 @@ package wqa.bill.io;
 
 import java.util.concurrent.locks.ReentrantLock;
 import nahon.comm.event.EventCenter;
+import nahon.comm.io.AbstractIO;
+import nahon.comm.io.IOInfo;
 import wqa.bill.io.SDataPacket.IOEvent;
-import wqa.dev.data.MIOInfo;
-import wqa.dev.intf.IMAbstractIO;
 
 /**
  *
  * @author chejf
  */
-public class ShareIO implements IMAbstractIO {
+public class ShareIO implements AbstractIO {
 
-    private IAbstractIO io;
+    private AbstractIO io;
     private final ReentrantLock share_lock = new ReentrantLock(true);
 
     public EventCenter<SDataPacket> SendReceive = new EventCenter();
 
-    public ShareIO(IAbstractIO io) {
+    public ShareIO(AbstractIO io) {
         this.io = io;
     }
 
@@ -37,19 +37,23 @@ public class ShareIO implements IMAbstractIO {
         }
     }
 
+    @Override
     public void Open() throws Exception {
         this.io.Open();
     }
 
+    @Override
     public void Close() {
         this.io.Close();
     }
 
-    public SIOInfo GetConnectInfo() {
+    @Override
+    public IOInfo GetConnectInfo() {
         return this.io.GetConnectInfo();
     }
 
-    public void SetConnectInfo(SIOInfo info) {
+    @Override
+    public void SetConnectInfo(IOInfo info) {
         this.io.SetConnectInfo(info);
     }
     // </editor-fold>  
@@ -86,14 +90,13 @@ public class ShareIO implements IMAbstractIO {
     }
 
     @Override
-    public MIOInfo GetIOInfo() {
-        SIOInfo info = this.io.GetConnectInfo();
-        return new MIOInfo(info.iotype, info.par);
-    }
-
-    @Override
     public int MaxBuffersize() {
         return this.io.MaxBuffersize();
     }
     // </editor-fold>  
+
+    @Override
+    public void Cancel() {
+        this.io.Cancel();
+    }
 }

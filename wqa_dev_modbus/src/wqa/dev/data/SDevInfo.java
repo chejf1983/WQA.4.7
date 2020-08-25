@@ -5,7 +5,8 @@
  */
 package wqa.dev.data;
 
-import wqa.dev.intf.IMAbstractIO;
+import nahon.comm.io.AbstractIO;
+
 
 
 /**
@@ -18,7 +19,7 @@ public class SDevInfo {
         MIGP,MODEBUS
     }
     
-    public IMAbstractIO io;
+    public AbstractIO io;
     public int dev_type;
     public int dev_addr;
     public String serial_num;
