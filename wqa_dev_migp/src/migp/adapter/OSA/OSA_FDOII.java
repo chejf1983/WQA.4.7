@@ -51,6 +51,7 @@ public class OSA_FDOII extends ESADEV {
     IMEG NAVR = new IMEG(new NVPA(100, 2), "平均次数");
 
     // </editor-fold>
+    
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
