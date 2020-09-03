@@ -7,7 +7,6 @@ package wqa.control.common;
 
 import java.util.Date;
 import wqa.dev.data.CollectData;
-import wqa.dev.intf.ICollect;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
@@ -16,6 +15,7 @@ import wqa.control.DB.DataRecord;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
+import wqa.dev.intf.IDevice;
 import wqa.system.WQAPlatform;
 
 /**
@@ -24,11 +24,11 @@ import wqa.system.WQAPlatform;
  */
 public class DevMonitor {
 
-    private final ICollect dev;
+    private final IDevice dev;
     private final DevControl parent;
     private final ReentrantLock data_lock = new ReentrantLock();
 
-    public DevMonitor(DevControl parent, ICollect dev) {
+    public DevMonitor(DevControl parent, IDevice dev) {
         this.dev = dev;
         this.parent = parent;
     }

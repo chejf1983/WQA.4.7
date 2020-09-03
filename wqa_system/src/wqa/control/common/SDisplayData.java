@@ -5,7 +5,6 @@
  */
 package wqa.control.common;
 
-import java.util.ArrayList;
 import java.util.Date;
 import static wqa.adapter.factory.CDevDataTable.ORA_Flag;
 import wqa.control.data.DevID;

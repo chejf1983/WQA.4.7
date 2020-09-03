@@ -18,7 +18,7 @@ import wqa.dev.intf.*;
  *
  * @author chejf
  */
-public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
+public abstract class AbsDevice implements IDevice {
 
     private ModeBusNode base_drv;
     public static int DEF_TIMEOUT = 300;

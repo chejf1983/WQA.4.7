@@ -64,7 +64,7 @@ public class ShareIO implements AbstractIO {
         if (!this.io.IsClosed()) {
             byte[] tmp = new byte[data.length];
             System.arraycopy(data, 0, tmp, 0, data.length);
-            this.SendReceive.CreateEventAsync(new SDataPacket(this.io.GetConnectInfo(), IOEvent.Send, tmp));
+            this.SendReceive.CreateEvent(new SDataPacket(this.io.GetConnectInfo(), IOEvent.Send, tmp));
             this.io.SendData(data);
         }
     }
@@ -76,7 +76,7 @@ public class ShareIO implements AbstractIO {
             if (reclen > 0) {
                 byte[] tmp = new byte[reclen];
                 System.arraycopy(data, 0, tmp, 0, reclen);
-                this.SendReceive.CreateEventAsync(new SDataPacket(this.io.GetConnectInfo(), IOEvent.Receive, tmp));
+                this.SendReceive.CreateEvent(new SDataPacket(this.io.GetConnectInfo(), IOEvent.Receive, tmp));
             }
             return reclen;
         } else {

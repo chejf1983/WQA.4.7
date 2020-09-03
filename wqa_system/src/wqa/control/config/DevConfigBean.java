@@ -5,10 +5,7 @@
  */
 package wqa.control.config;
 
-import wqa.bill.log.DevLog;
-import wqa.dev.data.LogNode;
 import wqa.control.common.DevControl;
-import wqa.dev.intf.ICalibrate;
 import wqa.dev.intf.IConfigList;
 import wqa.dev.intf.IDevMotorConfig;
 import wqa.dev.intf.IDevice;
@@ -39,9 +36,7 @@ public class DevConfigBean {
         }
 
         //初始化定标配置
-        if (this.dev instanceof ICalibrate) {
-            calconfig = new DevCalConfig((ICalibrate) this.dev, this);
-        }
+        calconfig = new DevCalConfig(this.dev, this);
 
         //初始化电机配置
         if (this.dev instanceof IDevMotorConfig) {
@@ -50,8 +45,8 @@ public class DevConfigBean {
 
         return true;
     }
-    
-    public void Close(){
+
+    public void Close() {
         this.mother.ReleasConfig();
     }
 
@@ -80,6 +75,7 @@ public class DevConfigBean {
 
     // <editor-fold defaultstate="collapsed" desc="显示消息提示"> 
     public interface MessageInterface {
+
         public void SetMessage(String msg);
     }
 

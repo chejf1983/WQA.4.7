@@ -15,7 +15,7 @@ import wqa.adapter.factory.CDevDataTable;
 import wqa.bill.log.DevLog;
 import wqa.control.common.SDisplayData;
 import wqa.dev.data.LogNode;
-import wqa.dev.intf.ICalibrate;
+import wqa.dev.intf.IDevice;
 import wqa.system.WQAPlatform;
 
 /**
@@ -24,10 +24,10 @@ import wqa.system.WQAPlatform;
  */
 public class DevCalConfig {
 
-    private final ICalibrate calbean;
+    private final IDevice calbean;
     private DevConfigBean msg_instance;
 
-    public DevCalConfig(ICalibrate calbean, DevConfigBean msg_instance) {
+    public DevCalConfig(IDevice calbean, DevConfigBean msg_instance) {
         this.calbean = calbean;
         this.msg_instance = msg_instance;
     }

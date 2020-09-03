@@ -15,7 +15,6 @@ import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.control.data.DevID;
-import wqa.dev.intf.ICollect;
 import wqa.dev.intf.IDevice;
 import wqa.system.WQAPlatform;
 
@@ -181,7 +180,7 @@ public class DevControl {
 
     public DevMonitor GetCollector() {
         if (this.collect_instance == null) {
-            this.collect_instance = new DevMonitor(this, (ICollect) this.device);
+            this.collect_instance = new DevMonitor(this, this.device);
         }
         return this.collect_instance;
     }

@@ -20,7 +20,7 @@ import wqa.dev.data.*;
  *
  * @author chejf
  */
-public abstract class AbsDevice implements IDevice, ICalibrate, ICollect {
+public abstract class AbsDevice implements IDevice {
 
     protected MIGP_CmdSend base_drv;
     public static int DEF_TIMEOUT = 300; //ms

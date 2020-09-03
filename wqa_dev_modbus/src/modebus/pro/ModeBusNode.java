@@ -147,6 +147,10 @@ public class ModeBusNode {
         if (rcbuffer_area[1] == READCMD) {
             //获取返回内容长度
             int len = rcbuffer_area[2];
+            //返回长度和要求长度不一致
+            if (len != mem_num * 2) {
+                return new byte[0];
+            }
             byte[] ret = new byte[len];
 
             //将内容复制出来
