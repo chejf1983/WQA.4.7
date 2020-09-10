@@ -90,7 +90,7 @@ public class ModeBusNode {
 
     // <editor-fold defaultstate="collapsed" desc="内存读写"> 
     //临时缓存
-    byte[] tmpbuffer = new byte[100];
+    byte[] tmpbuffer = new byte[1024];
 
     private int RecieveData(byte[] rcbuffer, int timeout) throws Exception {
         //时间戳

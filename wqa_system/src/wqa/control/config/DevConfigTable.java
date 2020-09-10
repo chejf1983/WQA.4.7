@@ -38,14 +38,14 @@ public class DevConfigTable {
         return "";
     }
 
-    public void InitConfigTable(){
+    public void InitConfigTable() {
         try {
-            ((ShareIO)dev.GetDevInfo().io).Lock();
+            ((ShareIO) dev.GetDevInfo().io).Lock();
             this.dev.InitDevice();
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {
-            ((ShareIO)dev.GetDevInfo().io).UnLock();
+            ((ShareIO) dev.GetDevInfo().io).UnLock();
         }
     }
 
@@ -64,21 +64,18 @@ public class DevConfigTable {
 
     public void SetConfigList(SConfigItem[] list) {
         try {
-            ((ShareIO)dev.GetDevInfo().io).Lock();
+            ((ShareIO) dev.GetDevInfo().io).Lock();
 
             ArrayList<SConfigItem> changelist = new ArrayList();
             for (int i = 0; i < list.length; i++) {
-                if (list[i].IsChanged()) {
-                    changelist.add(list[i]);
-                    list[i].Updated();
-                }
+                changelist.add(list[i]);
             }
             configlist.SetItemList(changelist);
             this.msg_instance.SetMessage("设置成功");
         } catch (Exception ex) {
             LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
         } finally {
-            ((ShareIO)dev.GetDevInfo().io).UnLock();
+            ((ShareIO) dev.GetDevInfo().io).UnLock();
         }
     }
 

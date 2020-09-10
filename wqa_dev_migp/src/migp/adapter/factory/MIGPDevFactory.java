@@ -220,6 +220,11 @@ public class MIGPDevFactory implements IDeviceSearch {
     public String ProType() {
         return SDevInfo.ProType.MIGP.toString();
     }
-    // </editor-fold> 
 
+    // </editor-fold> 
+    
+    @Override
+    public void SetDefTimeout(int timeout) {
+        AbsDevice.DEF_TIMEOUT = timeout;
+    }
 }

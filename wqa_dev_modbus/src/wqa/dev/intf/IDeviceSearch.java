@@ -19,4 +19,6 @@ public interface IDeviceSearch {
     public IDevice BuildDevice(AbstractIO io, byte addr, int DevType) throws Exception;
     
     public String ProType();
+    
+    public void SetDefTimeout(int timeout);
 }

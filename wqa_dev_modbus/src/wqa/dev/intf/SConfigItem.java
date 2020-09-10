@@ -44,16 +44,6 @@ public class SConfigItem {
         return data_name.contentEquals(key);
     }
 
-    private boolean ischanged = false;
-
-    public boolean IsChanged() {
-        return this.ischanged;
-    }
-
-    //已更新
-    public void Updated() {
-        this.ischanged = false;
-    }
 
     public String GetValue(){
         return this.value;
@@ -61,7 +51,6 @@ public class SConfigItem {
     
     //设置
     public void SetValue(String newvalue) {
-        this.ischanged = !this.value.contentEquals(newvalue);
         this.value = newvalue;
     }
 

@@ -149,4 +149,9 @@ public class ModBusDevFactory implements IDeviceSearch {
     }
     // </editor-fold> 
 
+    @Override
+    public void SetDefTimeout(int timeout) {
+        AbsDevice.DEF_TIMEOUT = timeout;
+    }
+
 }

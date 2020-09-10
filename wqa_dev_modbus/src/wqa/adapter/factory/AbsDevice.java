@@ -163,9 +163,12 @@ public abstract class AbsDevice implements IDevice {
             //修改设备地址
             if (item.IsKey(DEVADDR.toString())) {
                 try {
-                    ModeBusNode base = new ModeBusNode(this.base_drv.GetIO(), Integer.valueOf(item.GetValue()).byteValue());
-                    base.ReadMemory(DEVADDR.RegAddr(), DEVADDR.RegNum(), 1, DEF_TIMEOUT);
-                    throw new Exception("该地址已经存在!");
+                    byte addr = Integer.valueOf(item.GetValue()).byteValue();
+                    if (this.base_drv.addr != addr) {
+                        ModeBusNode base = new ModeBusNode(this.base_drv.GetIO(), addr);
+                        base.ReadMemory(DEVADDR.RegAddr(), DEVADDR.RegNum(), 1, DEF_TIMEOUT);
+                        throw new Exception("该地址已经存在!");
+                    }
                 } catch (Exception ex) {
                     this.SetConfigREG(DEVADDR, item.GetValue());
                     this.base_drv.addr = DEVADDR.GetValue().byteValue();
@@ -257,7 +260,7 @@ public abstract class AbsDevice implements IDevice {
             this.base_drv.SetREG(RETRY_TIME, DEF_TIMEOUT, tmp);
         }
     }
-    
+
     @Override
     public IConfigList[] GetConfigLists() {
         return new IConfigList[]{
