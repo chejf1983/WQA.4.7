@@ -158,22 +158,29 @@ public abstract class AbsDevice implements IDevice {
         return list;
     }
 
+    private void setaddr(byte addr) throws Exception {
+        if (this.base_drv.addr != addr) {
+            try {
+                IREG DEVTYPE = new IREG(0x25, 1, "设备类型", 1, 32);//R
+                ModeBusNode base = new ModeBusNode(this.base_drv.GetIO(), addr);
+                base.ReadMemory(DEVTYPE.RegAddr(), DEVTYPE.RegNum(), 1, DEF_TIMEOUT);
+            } catch (Exception ex) {
+                this.SetConfigREG(DEVADDR, addr + "");
+                this.base_drv.addr = DEVADDR.GetValue().byteValue();
+                this.sinfo.dev_addr = this.base_drv.addr;
+                return;
+            }
+            
+            throw new Exception("该地址已经存在!");
+        }
+    }
+
     public void SetConfigList(ArrayList<SConfigItem> list) throws Exception {
         for (SConfigItem item : list) {
             //修改设备地址
             if (item.IsKey(DEVADDR.toString())) {
-                try {
-                    byte addr = Integer.valueOf(item.GetValue()).byteValue();
-                    if (this.base_drv.addr != addr) {
-                        ModeBusNode base = new ModeBusNode(this.base_drv.GetIO(), addr);
-                        base.ReadMemory(DEVADDR.RegAddr(), DEVADDR.RegNum(), 1, DEF_TIMEOUT);
-                        throw new Exception("该地址已经存在!");
-                    }
-                } catch (Exception ex) {
-                    this.SetConfigREG(DEVADDR, item.GetValue());
-                    this.base_drv.addr = DEVADDR.GetValue().byteValue();
-                    this.sinfo.dev_addr = this.base_drv.addr;
-                }
+                byte addr = Integer.valueOf(item.GetValue()).byteValue();
+                setaddr(addr);
             }
 
             //修改波特率

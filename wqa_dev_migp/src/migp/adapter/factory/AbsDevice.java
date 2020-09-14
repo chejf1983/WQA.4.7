@@ -268,12 +268,13 @@ public abstract class AbsDevice implements IDevice {
             VPA devtype = new VPA(0x00, 2);
             try {
                 base.GetMEM(devtype, devtype.length, 1, DEF_TIMEOUT);
-                throw new Exception("该地址已经存在!");
             } catch (Exception ex) {
                 new MIGPBoot(this.base_drv).SetDevNum((byte) devaddr);
                 this.base_drv.SetDstAddr((byte) devaddr);
                 this.sinfo.dev_addr = devaddr;
+                return;
             }
+            throw new Exception("该地址已经存在!");
         }
     }
 
