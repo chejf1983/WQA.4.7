@@ -17,12 +17,12 @@ import wqa.dev.data.*;
  */
 public class ECHLORI extends AbsDevice {
 
-    private final IREG ALARM = new IREG(0x00, 1, "报警码"); //R
-    private final FREG CHL = new FREG(0x01, 2, "余氯");       //R
-    private final FREG PH = new FREG(0x03, 2, "PH");       //R
-    private final FREG TEMPER = new FREG(0x05, 2, "温度数据");   //R
-    private final FREG OCHL = new FREG(0x07, 2, "余氯原始信号(mv)");   //R(mv)
-    private final FREG OPH = new FREG(0x09, 2, "PH原始信号(mv)");   //R/W
+    protected final IREG ALARM = new IREG(0x00, 1, "报警码"); //R
+    protected final FREG CHL = new FREG(0x01, 2, "余氯");       //R
+    protected final FREG PH = new FREG(0x03, 2, "PH");       //R
+    protected FREG TEMPER = new FREG(0x05, 2, "温度数据");   //R
+    protected FREG OCHL = new FREG(0x07, 2, "余氯原始信号(mv)");   //R(mv)
+    protected FREG OPH = new FREG(0x09, 2, "PH原始信号(mv)");   //R/W
 
     private final IREG CTYPE = new IREG(0x30, 1, "参数类型"); //R0x00余氯，0x01PH
     private final FREG[] CLODATA = new FREG[]{new FREG(0x31, 2, "原始数据1"), new FREG(0x35, 2, "原始数据2")};  //R/W
@@ -68,11 +68,16 @@ public class ECHLORI extends AbsDevice {
             CLTDATA[i].SetValue(caldata[i]);
         }
 
-        if (type.contentEquals(this.GetDataNames()[0])) {
-            CTYPE.SetValue(0);
-        } else {
-            CTYPE.SetValue(1);
+        for (int i = 0; i < this.GetDataNames().length; i++) {
+            if (type.contentEquals(this.GetCalDataList()[i].data_name)) {
+                CTYPE.SetValue(i);
+            }
         }
+//        if (type.contentEquals(this.GetDataNames()[0])) {
+//            CTYPE.SetValue(0);
+//        } else {
+//            CTYPE.SetValue(1);
+//        }
         this.CLSTART.SetValue(oradata.length);
         this.SetREG(CTYPE, CLODATA[0], CLODATA[1], CLTDATA[0], CLTDATA[1], CLSTART);
     }
