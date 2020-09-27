@@ -8,6 +8,7 @@ package migp.adapter.ESA;
 import base.migp.mem.NVPA;
 import base.migp.reg.DMEG;
 import base.migp.reg.FMEG;
+import base.migp.reg.MEG;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import migp.adapter.factory.TemperCalibrateCalculate;
@@ -23,6 +24,12 @@ public class ESA_CHL extends ESADEV {
 
     public ESA_CHL(SDevInfo devinfo) {
         super(devinfo);
+
+        CalList.add(N0);
+        CalList.add(NS);
+        CalList.add(NT);
+        CalList.add(NPH0);
+        CalList.add(NPHA);
     }
 
     // <editor-fold defaultstate="collapsed" desc="内存表"> 
@@ -33,6 +40,8 @@ public class ESA_CHL extends ESADEV {
     DMEG NPH0 = new DMEG(new NVPA(12, 8), "PH参数E0");
     DMEG NPHA = new DMEG(new NVPA(20, 8), "PH参数A");
     FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
+
+    protected ArrayList<MEG> CalList = new ArrayList();
     // </editor-fold> 
     // </editor-fold> 
 
@@ -41,7 +50,8 @@ public class ESA_CHL extends ESADEV {
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
 
-        this.ReadMEG(N0, NS, NT, NPH0, NPHA, NTEMP_CAL);
+//        this.ReadMEG(N0, NS, NT, NPH0, NPHA);
+        this.ReadMEG(CalList.toArray(new MEG[0]));
         this.ReadMEG(NTEMP_CAL);
     }
     // </editor-fold> 
@@ -51,11 +61,14 @@ public class ESA_CHL extends ESADEV {
     public ArrayList<SConfigItem> GetCalParList() {
         ArrayList<SConfigItem> item = super.GetCalParList(); //To change body of generated methods, choose Tools | Templates.
         item.add(SConfigItem.CreateRWItem(NTEMP_CAL.toString(), this.NTEMP_CAL.GetValue() + "", ""));
-        item.add(SConfigItem.CreateRWItem(N0.toString(), N0.GetValue() + "", ""));
-        item.add(SConfigItem.CreateRWItem(NS.toString(), NS.GetValue() + "", ""));
-        item.add(SConfigItem.CreateRWItem(NT.toString(), NT.GetValue() + "", ""));
-        item.add(SConfigItem.CreateRWItem(NPH0.toString(), NPH0.GetValue() + "", ""));
-        item.add(SConfigItem.CreateRWItem(NPHA.toString(), NPHA.GetValue() + "", ""));
+        this.CalList.forEach((reg) -> {
+            item.add(SConfigItem.CreateRWItem(reg.toString(), reg.GetValue() + "", ""));
+        });
+//        item.add(SConfigItem.CreateRWItem(N0.toString(), N0.GetValue() + "", ""));
+//        item.add(SConfigItem.CreateRWItem(NS.toString(), NS.GetValue() + "", ""));
+//        item.add(SConfigItem.CreateRWItem(NT.toString(), NT.GetValue() + "", ""));
+//        item.add(SConfigItem.CreateRWItem(NPH0.toString(), NPH0.GetValue() + "", ""));
+//        item.add(SConfigItem.CreateRWItem(NPHA.toString(), NPHA.GetValue() + "", ""));
         return item;
     }
     // </editor-fold> 
@@ -65,21 +78,12 @@ public class ESA_CHL extends ESADEV {
     public void SetCalParList(ArrayList<SConfigItem> list) throws Exception {
         super.SetCalParList(list);
         for (SConfigItem item : list) {
-            if (item.IsKey(N0.toString())) {
-                this.SetConfigREG(N0, item.GetValue());
-            }
-            if (item.IsKey(NS.toString())) {
-                this.SetConfigREG(NS, item.GetValue());
-            }
-            if (item.IsKey(NT.toString())) {
-                this.SetConfigREG(NT, item.GetValue());
-            }
-            if (item.IsKey(NPH0.toString())) {
-                this.SetConfigREG(NPH0, item.GetValue());
-            }
-            if (item.IsKey(NPHA.toString())) {
-                this.SetConfigREG(NPHA, item.GetValue());
-            }
+            for (MEG reg : this.CalList) {
+                if (item.IsKey(reg.toString())) {
+                    this.SetConfigREG(reg, item.GetValue());
+                }
+            };
+            
             if (item.IsKey(NTEMP_CAL.toString())) {
                 this.SetConfigREG(NTEMP_CAL, item.GetValue());
             }
@@ -138,7 +142,7 @@ public class ESA_CHL extends ESADEV {
     }
 
     // <editor-fold defaultstate="collapsed" desc="定标chl"> 
-    private void calchl(float[] oradata, float[] testdata) throws Exception {
+    protected void calchl(float[] oradata, float[] testdata) throws Exception {
         float temper = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
         if (oradata.length == 1) {
             this.calchl_single(oradata[0], testdata[0], temper);
@@ -147,7 +151,7 @@ public class ESA_CHL extends ESADEV {
         }
     }
 
-    private void calchl_single(float oradata, float testdata, float temper) throws Exception {
+    protected void calchl_single(float oradata, float testdata, float temper) throws Exception {
         double fT = temper + 273.15;
         double temp = 1 + Math.pow(10, (MPAR2.GetValue() - ((3000.0 / fT) - 10.0686 + (0.0253 * fT))));
         if (testdata == 0) {
@@ -160,7 +164,7 @@ public class ESA_CHL extends ESADEV {
         this.SetConfigREG(NT, temper + "");
     }
 
-    private void calchl_double(float[] oradata, float[] testdata, float temper) throws Exception {
+    protected void calchl_double(float[] oradata, float[] testdata, float temper) throws Exception {
         double fT = temper + 273.15;
         double temp = 1 + Math.pow(10, (MPAR2.GetValue() - ((3000.0 / fT) - 10.0686 + (0.0253 * fT))));
         if (testdata[0] == 0) {
@@ -183,7 +187,7 @@ public class ESA_CHL extends ESADEV {
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="定标ph"> 
-    private void calph(float[] oradata, float[] testdata) throws Exception {
+    protected void calph(float[] oradata, float[] testdata) throws Exception {
         float temper = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
         if (oradata.length == 1) {
             this.calph_single(oradata[0], testdata[0], temper);
@@ -192,13 +196,13 @@ public class ESA_CHL extends ESADEV {
         }
     }
 
-    private void calph_single(float oradata, float testdata, float temper) throws Exception {
+    protected void calph_single(float oradata, float testdata, float temper) throws Exception {
         double tE0 = (testdata - 7) * NPHA.GetValue() * (temper + 273.15) + oradata;
 //        this.setE0(tE0);
         this.SetConfigREG(NPH0, tE0 + "");
     }
 
-    private void calph_double(float[] oradata, float[] testdata, float temper) throws Exception {
+    protected void calph_double(float[] oradata, float[] testdata, float temper) throws Exception {
         double tA = (oradata[0] - oradata[1]) / (testdata[1] - testdata[0]);
         tA = tA / (temper + 273.15);
         double tE0 = oradata[1] * (testdata[0] - 7) - oradata[0] * (testdata[1] - 7);

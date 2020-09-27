@@ -25,10 +25,11 @@ public abstract class ESADEV extends AbsDevice{
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="MDA"> 
-    public IMEG MALARM = new IMEG(new MDA(0x00, 2), "报警码");  //  PH   |    DO   |     EC_I    |    EC_II    |  ORP 
-    public FMEG MPAR1 = new FMEG(new MDA(0x02, 4), "参数1");    //  PH     溶氧mg/L   电导率us/cm   电导率us/cm   ORPmv       
-    public FMEG MPAR2 = new FMEG(new MDA(0x06, 4), "参数2");    //  --      溶氧%       盐度ppt        盐度ppt     --         
-    public FMEG MPAR3 = new FMEG(new MDA(0x0A, 4), "参数3");    //  温度     温度         温度          温度       温度    
+    public IMEG MALARM = new IMEG(new MDA(0x00, 2), "报警码");  //  PH   |    DO   |     EC_I    |    EC_II    |  ORP    |  AMMO   |  CHLI  |  CHLII
+    public FMEG MPAR1 = new FMEG(new MDA(0x02, 4), "参数1");    //  PH     溶氧mg/L   电导率us/cm   电导率us/cm   ORPmv    氨氮mg/L   余氯ppm   余氯ppm
+    public FMEG MPAR2 = new FMEG(new MDA(0x06, 4), "参数2");    //  --      溶氧%       盐度ppt        盐度ppt     --        --        PH        PH      
+    public FMEG MPAR3 = new FMEG(new MDA(0x0A, 4), "参数3");    //  温度     温度         温度          温度       温度      温度      温度       温度     
+    public FMEG MPAR4 = new FMEG(new MDA(0x0E, 4), "参数4");    //  __        __           __           __         __       --        --        ORP
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="SRA"> 
