@@ -127,7 +127,7 @@ public class ESA_ORP extends ESADEV {
 
     private void cal_double(float[] oradata, float[] testdata) throws Exception {
         float newA = 1;
-        if (oradata[0] - oradata[1] == 0) {
+        if (oradata[0] - oradata[1] != 0) {
             newA = (testdata[0] - testdata[1]) / (oradata[0] - oradata[1]);
         }
         float newB = testdata[0] - newA * oradata[0];

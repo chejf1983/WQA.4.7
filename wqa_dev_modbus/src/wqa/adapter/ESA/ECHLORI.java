@@ -33,6 +33,7 @@ public class ECHLORI extends AbsDevice {
 
     public ECHLORI(SDevInfo info) {
         super(info);
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="采集接口"> 
