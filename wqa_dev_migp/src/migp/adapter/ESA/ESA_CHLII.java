@@ -23,6 +23,8 @@ public class ESA_CHLII extends ESA_CHL {
 
         this.CalList.add(NORPA);
         this.CalList.add(NORPB);
+        this.N0.setInfo("余氯参数A");
+        this.NS.setInfo("余氯参数B");
     }
 
     // <editor-fold defaultstate="collapsed" desc="内存表"> 
@@ -84,11 +86,61 @@ public class ESA_CHLII extends ESA_CHL {
         } else {
             //参数定标
             this.cal_orp(oradata, testdata);
-            ret.children.add(new LogNode(NPH0.toString(), this.NPH0.GetValue()));
-            ret.children.add(new LogNode(NPHA.toString(), this.NPHA.GetValue()));
+            ret.children.add(new LogNode(NORPA.toString(), this.NORPA.GetValue()));
+            ret.children.add(new LogNode(NORPB.toString(), this.NORPB.GetValue()));
         }
         return ret;
     }
+
+    // <editor-fold defaultstate="collapsed" desc="定标chl"> 
+    @Override
+    protected void calchl(float[] oradata, float[] testdata) throws Exception {
+        float temper = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
+        if (oradata.length == 1) {
+            this.calchl_single(oradata[0], testdata[0], temper);
+        } else if (oradata.length == 2) {
+            this.calchl_double(oradata, testdata, temper);
+        }
+    }
+
+    @Override
+    protected void calchl_single(float oradata, float testdata, float temper) throws Exception {
+        double fT = temper + 273.15;
+        double temp = 1 + Math.pow(10, (MPAR2.GetValue() - ((3000.0 / fT) - 10.0686 + (0.0253 * fT))));
+        if (testdata == 0) {
+            testdata = 0.001f;
+        }
+        double dHOCL = (testdata / temp);
+//        this.setE0(tE0);
+//        double TS = ((oradata - (N0.GetValue() * 1000))) / dHOCL;
+        double TS = dHOCL - N0.GetValue() * oradata;
+        this.SetConfigREG(NS, TS + "");
+        this.SetConfigREG(NT, temper + "");
+    }
+
+    @Override
+    protected void calchl_double(float[] oradata, float[] testdata, float temper) throws Exception {
+        double fT = temper + 273.15;
+        double temp = 1 + Math.pow(10, (MPAR2.GetValue() - ((3000.0 / fT) - 10.0686 + (0.0253 * fT))));
+        if (testdata[0] == 0) {
+            testdata[0] = 0.001f;
+        }
+        if (testdata[1] == 0) {
+            testdata[1] = 0.001f;
+        }
+        double dHOCL0 = (testdata[0] / temp);
+        double dHOCL1 = (testdata[1] / temp);
+//        double temp2 = dHOCL1 / dHOCL0;
+//        this.setA(tA);
+//        double tZ = (oradata[1] - (temp2 * oradata[0])) / (1 - temp2) / 1000.0;
+//        double ts = ((oradata[0] - (tZ * 1000))) / dHOCL0;
+        double tZ = (dHOCL0 - dHOCL1) / (oradata[0] - oradata[1]);
+        double ts = dHOCL0 - oradata[0] * tZ;
+        this.SetConfigREG(N0, tZ + "");
+        this.SetConfigREG(NS, ts + "");
+        this.SetConfigREG(NT, temper + "");
+    }
+    // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="定标orp"> 
     private void cal_orp(float[] oradata, float[] testdata) throws Exception {
@@ -106,7 +158,7 @@ public class ESA_CHLII extends ESA_CHL {
 
     private void cal_double(float[] oradata, float[] testdata) throws Exception {
         float newA = 1;
-        if (oradata[0] - oradata[1] == 0) {
+        if (oradata[0] - oradata[1] != 0) {
             newA = (testdata[0] - testdata[1]) / (oradata[0] - oradata[1]);
         }
         float newB = testdata[0] - newA * oradata[0];
