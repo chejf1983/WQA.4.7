@@ -170,63 +170,21 @@ public class MIGPDevFactory implements IDeviceSearch {
             return null;
         }
     }
-//
-//    public static AbstractIO Convert(AbstractIO io) {
-//        return new AbstractIO() {
-//            private final IMAbstractIO instance = io;
-//
-//            @Override
-//            public boolean IsClosed() {
-//                return instance.IsClosed();
-////                return false;
-//            }
-//
-//            @Override
-//            public void Open() throws Exception {
-////                this.instance.Open();
-//            }
-//
-//            @Override
-//            public void Close() {
-////                this.instance.Close();
-//            }
-//
-//            @Override
-//            public void SendData(byte[] data) throws Exception {
-//                this.instance.SendData(data);
-//            }
-//
-//            @Override
-//            public int ReceiveData(byte[] data, int timeout) throws Exception {
-//
-//                int len = this.instance.ReceiveData(data, timeout);
-////                System.out.println("收到" + len);
-//                return len;
-//            }
-//
-//            @Override
-//            public IOInfo GetConnectInfo() {
-//                MIOInfo ioinfo = this.instance.GetIOInfo();
-//                return new IOInfo(ioinfo.iotype, ioinfo.par);
-//            }
-//
-//            @Override
-//            public int MaxBuffersize() {
-//                return this.instance.MaxBuffersize();
-////                return 65535;
-//            }
-//        };
-//    }
-
+    // </editor-fold> 
+    
     @Override
     public String ProType() {
         return SDevInfo.ProType.MIGP.toString();
     }
-
-    // </editor-fold> 
     
-    @Override
-    public void SetDefTimeout(int timeout) {
+    public static int getDefTimeout() {
+        return AbsDevice.DEF_TIMEOUT;
+    }
+
+    public static void setDefTimeout(int timeout) {
+        if (timeout < 100) {
+            timeout = 100;
+        }
         AbsDevice.DEF_TIMEOUT = timeout;
     }
 }

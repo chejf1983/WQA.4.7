@@ -26,6 +26,7 @@ import wqa.dev.intf.*;
  */
 public class ModBusDevFactory implements IDeviceSearch {
 
+    // <editor-fold defaultstate="collapsed" desc="搜索设备">
     //搜索指定物理口
     @Override
     public IDevice[] SearchDevice(AbstractIO io) {
@@ -96,11 +97,8 @@ public class ModBusDevFactory implements IDeviceSearch {
         }
     }
 
-    @Override
-    public String ProType() {
-        return SDevInfo.ProType.MODEBUS.toString();
-    }
-
+    // </editor-fold> 
+    
     // <editor-fold defaultstate="collapsed" desc="设备类目录">
     private final HashMap<Integer, String> class_map = new HashMap<>();
 
@@ -151,8 +149,18 @@ public class ModBusDevFactory implements IDeviceSearch {
     // </editor-fold> 
 
     @Override
-    public void SetDefTimeout(int timeout) {
-        AbsDevice.DEF_TIMEOUT = timeout;
+    public String ProType() {
+        return SDevInfo.ProType.MODEBUS.toString();
     }
 
+    public static int getDefTimeout() {
+        return AbsDevice.DEF_TIMEOUT;
+    }
+
+    public static void setDefTimeout(int timeout) {
+        if (timeout < 100) {
+            timeout = 100;
+        }
+        AbsDevice.DEF_TIMEOUT = timeout;
+    }
 }
