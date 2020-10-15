@@ -5,6 +5,7 @@
  */
 package migp.adapter.factory;
 
+import base.migp.impl.MIGPEia;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.IMEG;
@@ -18,9 +19,9 @@ import migp.adapter.ESA.*;
 import migp.adapter.ISA.*;
 import migp.adapter.OSA.*;
 import nahon.comm.io.AbstractIO;
+import wqa.adapter.factory.TestIO;
 import wqa.dev.data.*;
 import wqa.dev.intf.*;
-
 
 /**
  *
@@ -171,12 +172,13 @@ public class MIGPDevFactory implements IDeviceSearch {
         }
     }
     // </editor-fold> 
-    
+
+    // <editor-fold defaultstate="collapsed" desc="协议信息">
     @Override
     public String ProType() {
         return SDevInfo.ProType.MIGP.toString();
     }
-    
+
     public static int getDefTimeout() {
         return AbsDevice.DEF_TIMEOUT;
     }
@@ -184,7 +186,28 @@ public class MIGPDevFactory implements IDeviceSearch {
     public static void setDefTimeout(int timeout) {
         if (timeout < 100) {
             timeout = 100;
+        } else if (timeout > 1000) {
+            timeout = 1000;
         }
         AbsDevice.DEF_TIMEOUT = timeout;
+    }
+    // </editor-fold> 
+
+    public static void main(String... args) {
+        MockDev dev = new MockDev((byte) 0x00);
+        MIGPEia eiainfo = new MIGPEia(null);
+        try {
+            eiainfo.EBUILDSER.SetValue("NAQ0309120337776");
+            eiainfo.EDEVNAME.SetValue("AVVOR9000");
+            eiainfo.EBUILDDATE.SetValue("20200911");
+        } catch (Exception ex) {
+            Logger.getLogger(MIGPDevFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//        dev.GETMEG(eiainfo.ESWVER);
+//        dev.GETMEG(eiainfo.EBUILDDATE);
+        dev.GETMEG(eiainfo.EDEVNAME);
+        dev.SETMEG(eiainfo.EDEVNAME,eiainfo.EBUILDSER,eiainfo.EBUILDDATE);
+
     }
 }
