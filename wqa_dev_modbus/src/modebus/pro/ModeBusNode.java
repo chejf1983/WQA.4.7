@@ -36,6 +36,8 @@ public class ModeBusNode {
         return this.addr;
     }
 
+    //发送:地址(1)+命令字(1)(固定是03)+寄存器地址(2)+寄存器个数(2)+CRC值(2)
+    //返回:地址(1)+命令字(1)(固定是03)+长度(2)+...内容...+CRC值(2)
     private byte[] ReadPacket(byte devaddr, int memaddr, int mem_num) throws Exception {
         byte[] tmp = new byte[1 + 1 + 2 + 2 + 2];
         tmp[0] = devaddr;
@@ -46,7 +48,9 @@ public class ModeBusNode {
         System.arraycopy(NahonConvert.UShortToByteArray(crc), 0, tmp, 6, 2);
         return tmp;
     }
-
+    
+    //发送:地址(1)+命令字(1)(固定是10)+寄存器地址(2)+寄存器个数(2+字节个数(1) + .内容. + CRC值(2)  
+    //返回:地址(1)+命令字(1)(固定是10)+CRC值(2)  
     private byte[] WriterPacket(byte devaddr, int memaddr, int mem_num, byte[] par) throws Exception {
         byte[] tmp = new byte[1 + 1 + 2 + 2 + 1 + par.length + 2];
         tmp[0] = devaddr;

@@ -18,6 +18,17 @@ public class SDevInfo {
     public enum ProType{
         MIGP,MODEBUS
     }
+
+    public SDevInfo(AbstractIO io, int dev_type, int dev_addr, String serial_num, ProType protype) {
+        this.io = io;
+        this.dev_type = dev_type;
+        this.dev_addr = dev_addr;
+        this.serial_num = serial_num;
+        this.protype = protype;
+    }
+
+    public SDevInfo() {
+    }
     
     public AbstractIO io;
     public int dev_type;

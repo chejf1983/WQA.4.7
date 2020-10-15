@@ -160,7 +160,29 @@ public class ModBusDevFactory implements IDeviceSearch {
     public static void setDefTimeout(int timeout) {
         if (timeout < 100) {
             timeout = 100;
+        }else if(timeout > 1000){
+            timeout = 1000;
         }
         AbsDevice.DEF_TIMEOUT = timeout;
+    }
+    
+     public static void main(String... args) throws Exception {
+        MockDev dev = new MockDev((byte) 0x00);
+        dev.DEVNAME.SetValue("AVVOR9000");
+        dev.GETMEG(dev.DEVNAME);
+//        MIGPEia eiainfo = new MIGPEia(null);
+//        try {
+//            eiainfo.EBUILDSER.SetValue("NAQ0309120337776");
+//            eiainfo.EDEVNAME.SetValue("AVVOR9000");
+//            eiainfo.EBUILDDATE.SetValue("20200911");
+//        } catch (Exception ex) {
+//            Logger.getLogger(ModBusDevFactory.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+////        dev.GETMEG(eiainfo.ESWVER);
+////        dev.GETMEG(eiainfo.EBUILDDATE);
+//        dev.GETMEG(eiainfo.EDEVNAME);
+//        dev.SETMEG(eiainfo.EDEVNAME,eiainfo.EBUILDSER,eiainfo.EBUILDDATE);
+
     }
 }
