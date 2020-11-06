@@ -276,6 +276,55 @@ public class ESA_DO extends ESADEV {
         this.SetConfigREG(NCLTEMPER, fTemp + "");
     }
 
+//float fZeroOxygen:  零点相位标准信号
+//float fSaturatedOxygen:  饱和氧相位标准信号
+//float fOriginalSaturated:  饱和氧相位原始信号
+    private void ESADOOnePointCalib(float fZeroOxygen, float fSaturatedOxygen,
+            float fOriginalSaturated) throws Exception {
+        float fX1, fX2, fY1, fY2;
+
+        fX1 = fZeroOxygen;
+        fX2 = fOriginalSaturated;
+        fY1 = fZeroOxygen;
+        fY2 = fSaturatedOxygen;
+
+        float A = (fY2 - fY1) / (fX2 - fX1);
+        float B = fY2 - (A * fX2);
+
+        this.SetConfigREG(NA, A + "");
+        this.SetConfigREG(NB, B + "");
+    }
+
+//    float fZeroOxygen:  零点相位标准信号
+//float fSaturatedOxygen:  饱和氧相位标准信号
+//float fOriginalZero:  零点相位原始信号
+//float fOriginalSaturated:  饱和氧相位原始信号
+    private void ESADOTwoPointCalib(
+            float fZeroOxygen, float fSaturatedOxygen,
+            float fOriginalZero, float fOriginalSaturated) throws Exception {
+
+        float fX1, fX2, fY1, fY2;
+        double dTemp = 0;
+
+        if (fOriginalZero < fOriginalSaturated) {
+            fX2 = fOriginalZero;
+            fX1 = fOriginalSaturated;
+        } else {
+            fX2 = fOriginalSaturated;
+            fX1 = fOriginalZero;
+        }
+
+        fY1 = fZeroOxygen;
+        fY2 = fSaturatedOxygen;
+
+        float A = (fY2 - fY1) / (fX2 - fX1);
+        float B = fY2 - (A * fX2);
+
+        this.SetConfigREG(NA, A + "");
+        this.SetConfigREG(NB, B + "");
+    }
+
+    
     @Override
     public LogNode CalParameter(String type, float[] oradata, float[] testdata) throws Exception {
         LogNode ret = LogNode.CALOK();
