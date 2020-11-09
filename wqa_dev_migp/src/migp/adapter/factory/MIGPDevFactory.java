@@ -19,7 +19,6 @@ import migp.adapter.ESA.*;
 import migp.adapter.ISA.*;
 import migp.adapter.OSA.*;
 import nahon.comm.io.AbstractIO;
-import wqa.adapter.factory.TestIO;
 import wqa.dev.data.*;
 import wqa.dev.intf.*;
 
