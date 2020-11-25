@@ -74,7 +74,7 @@ public class ECDevice extends AbsDevice {
         disdata.datas[2].mainData = NahonConvert.TimData(TEMPER.GetValue(), 2);
         disdata.datas[3].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
         //盐度
-        disdata.datas[4].mainData = NahonConvert.TimData(SALT.GetValue(), 2);
+        disdata.datas[4].mainData = NahonConvert.TimData(SALT.GetValue(), 3);
 
         if (this.IsOverVersion(104)) {
             disdata.datas[0].unit = EC_UNIT_STRING[this.ECRANG.GetValue()];
@@ -87,6 +87,10 @@ public class ECDevice extends AbsDevice {
             }
             disdata.datas[0].range_info = "(0-" + max_range + ")";
             disdata.datas[4].unit = SALT_UNIT_STRING[this.SALTRANGE.GetValue()];
+            if (this.SALTRANGE.GetValue() == 2) {
+//                disdata.datas[4].name = "TDS";
+                disdata.datas[4].range_info = "(0-10000)";
+            }
         }
 
         disdata.alarm = ALARM.GetValue();

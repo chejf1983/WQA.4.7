@@ -100,7 +100,7 @@ public class ESA_EC extends ESADEV {
         disdata.datas[2].range_info = this.GetTemperRangeString(); //量程
         disdata.datas[3].mainData = NahonConvert.TimData(SR2.GetValue(), 2); //温度原始值
 
-        disdata.datas[4].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //盐度值
+        disdata.datas[4].mainData = NahonConvert.TimData(MPAR2.GetValue(), 3);   //盐度值
 
         disdata.alarm = MALARM.GetValue(); //报警信息
         String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
