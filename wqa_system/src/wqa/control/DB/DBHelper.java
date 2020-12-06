@@ -5,11 +5,12 @@
  */
 package wqa.control.DB;
 
+import wqa.control.DB.data.DataRecord;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.bill.db.JDBHelper;
+import wqa.control.DB.impl.JDBHelper;
 import wqa.control.common.DevControl;
 import wqa.system.WQAPlatform;
 

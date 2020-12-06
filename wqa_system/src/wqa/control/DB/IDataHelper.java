@@ -5,6 +5,8 @@
  */
 package wqa.control.DB;
 
+import wqa.control.DB.data.DataRecord;
+import wqa.control.DB.data.SDataRecordResult;
 import java.util.Date;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;

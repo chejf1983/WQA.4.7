@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.bill.db;
+package wqa.control.DB.impl;
 
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import wqa.bill.db.H2DBSaver;
 import wqa.control.DB.IAlarmHelper;
 import wqa.control.DB.IDBFix;
 import wqa.control.DB.IDataHelper;

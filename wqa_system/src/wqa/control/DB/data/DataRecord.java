@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.control.DB;
+package wqa.control.DB.data;
 
 import java.util.Date;
 import wqa.control.data.DevID;

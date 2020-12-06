@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.bill.db;
+package wqa.control.DB.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,9 +13,11 @@ import java.util.logging.Level;
 import nahon.comm.exl2.XlsSheetWriter;
 import nahon.comm.exl2.xlsTable_W;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.control.DB.DataRecord;
+import wqa.bill.db.H2DBSaver;
+import wqa.bill.db.JDBDataTable;
+import wqa.control.DB.data.DataRecord;
 import wqa.control.DB.IDataHelper;
-import wqa.control.DB.SDataRecordResult;
+import wqa.control.DB.data.SDataRecordResult;
 import wqa.control.common.DataHelper;
 import wqa.control.data.DevID;
 import wqa.control.data.IMainProcess;

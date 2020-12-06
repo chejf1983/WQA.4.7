@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import wqa.control.DB.DataRecord;
+import wqa.control.DB.data.DataRecord;
 import wqa.control.common.DataHelper;
 import wqa.control.data.DevID;
 

@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import nahon.comm.event.EventCenter;
 import nahon.comm.faultsystem.LogCenter;
-import wqa.control.DB.DataRecord;
+import wqa.control.DB.data.DataRecord;
 import wqa.control.common.DevControl.ControlState;
 import wqa.control.data.DevID;
 import wqa.dev.data.SDataElement;
