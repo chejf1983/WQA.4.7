@@ -5,15 +5,10 @@
  */
 package wqa.form.monitor;
 
-import wqa.form.monitor0.MTable;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -53,7 +48,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
      */
     private final MonitorPaneDesk parent;
     private final DataVector data_vector;
-    JLabel alarm_label = new JLabel("连接正常");
+    JLabel alarm_label = new JLabel("信息:连接正常");
     javax.swing.Popup pop = null;
 
     public MonitorPane1(MonitorPaneDesk parent, DevMonitor dev) {
@@ -221,9 +216,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private void UpdateData(SDisplayData data) {
         //刷新报警界面
         if (data.alarm != 0) {
-            alarm_label.setText(data.alram_info);
+            alarm_label.setText("信息:" + data.alram_info);
         } else {
-            alarm_label.setText("连接正常");
+            alarm_label.setText("信息:连接正常");
         }
 
         dsiplay_lock.lock();
@@ -469,8 +464,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
         this.Label_AlarmInfo.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseClicked(MouseEvent me
-            ) {
+            public void mouseClicked(MouseEvent me) {
                 if (me.getButton() == MouseEvent.BUTTON1) {
                     if (pop != null) {
                         pop.hide();
@@ -533,7 +527,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
                 alarm_label.setText("连接中断");
                 break;
             case warning:
-                png = "/wqa/form/monitor/resource/warning_24p.png";       
+                png = "/wqa/form/monitor/resource/warning_24p.png";
                 break;
             case config:
                 Lable_Title.setForeground(Color.GREEN);
