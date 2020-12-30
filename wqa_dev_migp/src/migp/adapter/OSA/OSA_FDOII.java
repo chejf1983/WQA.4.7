@@ -404,7 +404,8 @@ public class OSA_FDOII extends ESADEV {
 //            }
             this.ReadMEG(MPAR3);
             float temp = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
-            if (oradata.length == 1) {
+            if (oradata.length == 1) {                
+                //一点就是饱和氧
                 this.do_single_cal(oradata[0], temp);
             } else {
                 //界面输入是 {饱和氧,无氧}的顺序,需要交换顺序
