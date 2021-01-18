@@ -55,7 +55,7 @@ public class DataReadHelper implements IDataHelper {
     }
     // </editor-fold>  
 
-    // <editor-fold defaultstate="collapsed" desc="数据读取接口"> 
+    // <editor-fold defaultstate="collapsed" desc="数据搜索接口"> 
     //搜索数据
     private ResultSet SearchData(DevID table_name, Date start, Date stop) throws Exception {
         db_instance.dbLock.lock();
@@ -160,7 +160,8 @@ public class DataReadHelper implements IDataHelper {
                     //添加EXCEL行
                     table.WriterLine(ret);
                     //更新进度条
-                    if (tmp_index++ % 100 == 0) {
+                    if (tmp_index % 100 == 0) {
+//                        System.out.println(tmp_index);
                         process.SetValue((100 * tmp_index) / data_count);
                     }
                 }
@@ -175,6 +176,7 @@ public class DataReadHelper implements IDataHelper {
     }
     // </editor-fold>  
 
+    // <editor-fold defaultstate="collapsed" desc="数据存储"> 
     private DataRecord BuildRecord(DevID id, ResultSet set) throws SQLException {
         DataRecord record = new DataRecord();
         //读取时间
@@ -213,4 +215,5 @@ public class DataReadHelper implements IDataHelper {
             this.db_instance.dbLock.unlock();
         }
     }
+    // </editor-fold>  
 }
