@@ -127,7 +127,7 @@ public class DataReadHelper implements IDataHelper {
             ret_set.last();
             long data_count = ret_set.getRow();
             ret_set.beforeFirst();
-            int tmp_index = 0;
+            long tmp_index = 0;
 
             String sheet_name = table_name.ToChineseString();
             //创建excel文件
