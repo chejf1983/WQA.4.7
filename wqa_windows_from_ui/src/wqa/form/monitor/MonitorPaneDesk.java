@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventListener;
 import wqa.control.common.DevControl;
 import wqa.control.common.DevControlManager.DevNumChange;
 import wqa.form.monitor0.MonitorPane0;
@@ -62,9 +62,9 @@ public class MonitorPaneDesk extends javax.swing.JPanel {
         this.Panel_desk.setLayout(mlayout);
 
         //注册设备添加删除事件
-        WQAPlatform.GetInstance().GetManager().StateChange.RegeditListener(new EventListener<DevNumChange>() {
+        WQAPlatform.GetInstance().GetManager().StateChange.RegeditListener(new NEventListener<DevNumChange>() {
             @Override
-            public void recevieEvent(Event<DevNumChange> event) {
+            public void recevieEvent(NEvent<DevNumChange> event) {
                 if (event.GetEvent() == DevNumChange.ADD) {
                     AddDataBook((DevControl) event.Info());
                 }

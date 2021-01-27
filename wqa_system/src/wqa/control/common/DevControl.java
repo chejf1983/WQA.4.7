@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import wqa.control.config.DevConfigBean;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.control.data.DevID;
@@ -38,7 +38,7 @@ public class DevControl {
     public ControlState GetState() {
         return this.state;
     }
-    public EventCenter<ControlState> StateChange = new EventCenter();
+    public NEventCenter<ControlState> StateChange = new NEventCenter();
 
     public void ChangeState(ControlState state, String info) {
         if (this.state != state) {

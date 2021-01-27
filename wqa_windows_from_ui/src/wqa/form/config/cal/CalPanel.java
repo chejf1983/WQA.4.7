@@ -9,8 +9,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.common.ListFlowLayout;
 import wqa.control.common.SDisplayData;
@@ -63,9 +63,9 @@ public class CalPanel extends javax.swing.JPanel {
         this.Cal_Panel.setLayout(new ListFlowLayout(FlowLayout.LEADING, 1, 5, true, false));
 
         //注册定标采集数据响应
-        this.calbean.RegisterCalListener(new EventListener<SDisplayData>() {
+        this.calbean.RegisterCalListener(new NEventListener<SDisplayData>() {
             @Override
-            public void recevieEvent(Event<SDisplayData> event) {
+            public void recevieEvent(NEvent<SDisplayData> event) {
                 /* Create and display the dialog */
                 java.awt.EventQueue.invokeLater(() -> {
                     //获取采样值

@@ -7,8 +7,8 @@ package wqa.control.config;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
-import nahon.comm.event.EventCenter;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEventCenter;
+import nahon.comm.event.NEventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.adapter.factory.CDevDataTable;
@@ -109,11 +109,11 @@ public class DevCalConfig {
         CalDataEvent.CreateEvent(data);
     }
     
-    public void RegisterCalListener(EventListener<SDisplayData> list ){
+    public void RegisterCalListener(NEventListener<SDisplayData> list ){
         CalDataEvent.RemoveAllListenner();
         CalDataEvent.RegeditListener(list);
     }
-    private EventCenter<SDisplayData> CalDataEvent = new EventCenter();      
+    private NEventCenter<SDisplayData> CalDataEvent = new NEventCenter();      
     // </editor-fold> 
 
 }

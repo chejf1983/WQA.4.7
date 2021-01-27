@@ -8,7 +8,7 @@ package wqa.form.monitor0;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.table.AbstractTableModel;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEventCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import wqa.control.common.SDisplayData;
@@ -84,7 +84,7 @@ public class DataVector0 {
             datalist_lock.unlock();
         }
     }
-    public EventCenter NewData = new EventCenter();
+    public NEventCenter NewData = new NEventCenter();
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="MainData Line">  
@@ -130,7 +130,7 @@ public class DataVector0 {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Config Table">  
-    public EventCenter ElementChange = new EventCenter();
+    public NEventCenter ElementChange = new NEventCenter();
 
     public AbstractTableModel GetConfigTableModel() {
         return new AbstractTableModel() {

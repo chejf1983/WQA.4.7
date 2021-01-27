@@ -6,7 +6,7 @@
 package wqa.bill.io;
 
 import java.util.concurrent.locks.ReentrantLock;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEventCenter;
 import nahon.comm.io.AbstractIO;
 import nahon.comm.io.IOInfo;
 import wqa.bill.io.SDataPacket.IOEvent;
@@ -20,7 +20,7 @@ public class ShareIO implements AbstractIO {
     private AbstractIO io;
     private final ReentrantLock share_lock = new ReentrantLock(true);
 
-    public EventCenter<SDataPacket> SendReceive = new EventCenter();
+    public NEventCenter<SDataPacket> SendReceive = new NEventCenter();
 
     public ShareIO(AbstractIO io) {
         this.io = io;

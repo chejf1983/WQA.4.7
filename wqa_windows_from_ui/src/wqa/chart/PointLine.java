@@ -13,8 +13,8 @@ import java.awt.geom.Point2D;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventListener;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.XYItemLabelGenerator;
@@ -53,9 +53,9 @@ public class PointLine {
         }
 
         //注册主曲线刷新响应
-        this.parent.UpdateMainDataEvent.RegeditListener(new EventListener() {
+        this.parent.UpdateMainDataEvent.RegeditListener(new NEventListener() {
             @Override
-            public void recevieEvent(Event event) {
+            public void recevieEvent(NEvent event) {
                 Update();
             }
         });

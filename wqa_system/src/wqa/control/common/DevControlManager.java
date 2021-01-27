@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.ShareIO;
 import wqa.control.data.IMainProcess;
@@ -236,7 +236,7 @@ public class DevControlManager {
         DEL
     }
     //增减设备事件
-    public EventCenter<DevNumChange> StateChange = new EventCenter();
+    public NEventCenter<DevNumChange> StateChange = new NEventCenter();
     //设备数组
     private ArrayList<DevControl> control_list = new ArrayList();
     private final ReentrantLock list_lock = new ReentrantLock(true);

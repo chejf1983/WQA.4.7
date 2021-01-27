@@ -13,7 +13,7 @@ import java.awt.GradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEventCenter;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
@@ -173,7 +173,7 @@ public class DataChart extends javax.swing.JPanel {
         return describe;
     }
 
-    public EventCenter<TimeSeries> UpdateMainDataEvent = new EventCenter();
+    public NEventCenter<TimeSeries> UpdateMainDataEvent = new NEventCenter();
 
     public void PaintMainLine(TimeSeries main_line, String[] describe) {
         this.main_line = main_line;
@@ -235,7 +235,7 @@ public class DataChart extends javax.swing.JPanel {
         UpdateSnapShotDataEvent.CreateEvent(lines);
     }
 
-    public EventCenter<TimeSeries[]> UpdateSnapShotDataEvent = new EventCenter();
+    public NEventCenter<TimeSeries[]> UpdateSnapShotDataEvent = new NEventCenter();
     // </editor-fold>
 
     /**

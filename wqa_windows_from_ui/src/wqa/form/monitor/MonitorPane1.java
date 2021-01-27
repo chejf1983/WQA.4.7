@@ -20,8 +20,8 @@ import javax.swing.PopupFactory;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventListener;
 import nahon.comm.faultsystem.LogCenter;
 import org.jfree.chart.axis.DateAxis;
 import wqa.chart.DataChart;
@@ -161,9 +161,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
 
     private void initDevice() {
         //初始化数据刷新监听
-        this.currentdev.DataEvent.RegeditListener(new EventListener<SDisplayData>() {
+        this.currentdev.DataEvent.RegeditListener(new NEventListener<SDisplayData>() {
             @Override
-            public void recevieEvent(Event<SDisplayData> event) {
+            public void recevieEvent(NEvent<SDisplayData> event) {
                 /* Create and display the dialog */
                 java.awt.EventQueue.invokeLater(() -> {
                     UpdateData(event.GetEvent());
@@ -172,9 +172,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
         });
 
         //初始化状态刷新监听
-        this.currentdev.GetParent1().StateChange.RegeditListener(new EventListener<ControlState>() {
+        this.currentdev.GetParent1().StateChange.RegeditListener(new NEventListener<ControlState>() {
             @Override
-            public void recevieEvent(Event<ControlState> event) {
+            public void recevieEvent(NEvent<ControlState> event) {
                 java.awt.EventQueue.invokeLater(() -> {
                     switch (event.GetEvent()) {
                         case CONNECT:
@@ -198,9 +198,9 @@ public class MonitorPane1 extends javax.swing.JPanel {
         });
 
         //初始化数据容器跟新消息
-        this.data_vector.ElementChange.RegeditListener(new EventListener() {
+        this.data_vector.ElementChange.RegeditListener(new NEventListener() {
             @Override
-            public void recevieEvent(Event event) {
+            public void recevieEvent(NEvent event) {
                 dsiplay_lock.lock();
                 try {
                     data_vector.RefreshData();

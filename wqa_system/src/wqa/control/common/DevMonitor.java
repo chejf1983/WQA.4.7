@@ -9,7 +9,7 @@ import java.util.Date;
 import wqa.dev.data.CollectData;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.control.DB.data.DataRecord;
 import wqa.control.common.DevControl.ControlState;
@@ -34,7 +34,7 @@ public class DevMonitor {
     }
 
     // <editor-fold defaultstate="collapsed" desc="采集数据"> 
-    public EventCenter<SDisplayData> DataEvent = new EventCenter();
+    public NEventCenter<SDisplayData> DataEvent = new NEventCenter();
     private int last_alarm = -1;
     private DataRecord tmpdata = null;
 

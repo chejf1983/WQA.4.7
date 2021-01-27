@@ -8,8 +8,8 @@ package wqa.form.monitor0;
 import java.util.ArrayList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventListener;
 import wqa.common.JImagePane;
 import wqa.control.common.SDisplayData;
 import wqa.dev.data.SDataElement;
@@ -41,9 +41,9 @@ public class MTable extends javax.swing.JPanel {
 
     public void SetDataSet(DataVector0 table_model) {
         this.data_vector = table_model;
-        this.data_vector.NewData.RegeditListener(new EventListener() {
+        this.data_vector.NewData.RegeditListener(new NEventListener() {
             @Override
-            public void recevieEvent(Event event) {
+            public void recevieEvent(NEvent event) {
                 UpdateData();
             }
         });

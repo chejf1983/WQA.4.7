@@ -13,8 +13,8 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.adapter.factory.ModBusDevFactory;
 import wqa.bill.io.IOManager;
@@ -58,9 +58,9 @@ public class StartFlash extends javax.swing.JFrame {
                 //iolog设置10000条
                 IOManager.MaxLogNum = 10000;
                 //注册弹出窗口
-                LogCenter.Instance().RegisterFaultEvent(new EventListener<Level>() {
+                LogCenter.Instance().RegisterFaultEvent(new NEventListener<Level>() {
                     @Override
-                    public void recevieEvent(Event<Level> event) {
+                    public void recevieEvent(NEvent<Level> event) {
                         WQAPlatform.GetInstance().GetThreadPool().submit(() -> {
                             //JOptionPane.showm
                             MsgBoxFactory.Instance().ShowMsgBox(event.Info().toString());

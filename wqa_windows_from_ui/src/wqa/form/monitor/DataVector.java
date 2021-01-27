@@ -8,7 +8,7 @@ package wqa.form.monitor;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.table.AbstractTableModel;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEventCenter;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import wqa.control.common.SDisplayData;
@@ -187,7 +187,7 @@ public class DataVector {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Config Table">  
-    public EventCenter ElementChange = new EventCenter();
+    public NEventCenter ElementChange = new NEventCenter();
 
     public AbstractTableModel GetConfigTableModel() {
         return new AbstractTableModel() {

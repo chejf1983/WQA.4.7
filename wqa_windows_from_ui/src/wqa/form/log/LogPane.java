@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventListener;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventListener;
 import nahon.comm.faultsystem.LogCenter;
 import wqa.bill.io.SDataPacket;
 import wqa.common.InitPaneHelper;
@@ -55,9 +55,9 @@ public class LogPane extends javax.swing.JPanel {
             }
         });
 
-        WQAPlatform.GetInstance().GetIOManager().SendReceive.RegeditListener(new EventListener<String>() {
+        WQAPlatform.GetInstance().GetIOManager().SendReceive.RegeditListener(new NEventListener<String>() {
             @Override
-            public void recevieEvent(Event<String> event) {
+            public void recevieEvent(NEvent<String> event) {
                 java.awt.EventQueue.invokeLater(() -> {
                     //刷新数据列表
                     if (!ToggleButton_Pause.isSelected() && LogPane.this.isVisible()) {

@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nahon.comm.event.Event;
-import nahon.comm.event.EventCenter;
+import nahon.comm.event.NEvent;
+import nahon.comm.event.NEventCenter;
 import nahon.comm.faultsystem.LogCenter;
 import nahon.comm.io.AbstractIO;
 import nahon.comm.io.IOInfo;
@@ -42,9 +42,9 @@ public class IOManager {
         if (io != null) {
             ShareIO sio = new ShareIO(io);
             //添加IO监听数据
-            sio.SendReceive.RegeditListener(new nahon.comm.event.EventListener<SDataPacket>() {
+            sio.SendReceive.RegeditListener(new nahon.comm.event.NEventListener<SDataPacket>() {
                 @Override
-                public void recevieEvent(Event<SDataPacket> event) {
+                public void recevieEvent(NEvent<SDataPacket> event) {
                     WriterData(event.GetEvent());
                 }
             });
@@ -82,7 +82,7 @@ public class IOManager {
     // <editor-fold defaultstate="collapsed" desc="IOlog处理"> 
     private final ReentrantLock log_lock = new ReentrantLock();
 
-    public EventCenter<String> SendReceive = new EventCenter();
+    public NEventCenter<String> SendReceive = new NEventCenter();
 
     private ArrayList<String> buffer_A = new ArrayList();
     private ArrayList<String> buffer_B = new ArrayList();
