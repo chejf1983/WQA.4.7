@@ -2,20 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/monitor0/MonitorPane0.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/db/DataSearch.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/db/ManualRangeDialog.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/config/cal/CalPanel.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/chart/CrossHairPaint.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/monitor/resource/config_24p.png</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/monitor/MonitorPane1.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/db/DBChart.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/monitor/DataVector.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/chart/PointLine.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/form/monitor/MonitorPaneDesk.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/chart/ChartRangePaint.java</file>
-            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_windows_from_ui/src/wqa/chart/DataChart.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
