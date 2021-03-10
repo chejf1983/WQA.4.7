@@ -5,6 +5,7 @@
  */
 package modebus.pro;
 
+import java.util.concurrent.TimeUnit;
 import modebus.register.REG;
 import nahon.comm.io.AbstractIO;
 import nahon.comm.tool.convert.MyConvert;
@@ -21,6 +22,7 @@ public class ModeBusNode {
     public final int max_pack_len = 1024;
     public static byte READCMD = 0x03;
     public static byte WRITECMD = 0x10;
+    private int timelag = 20;
     private MCRC16 crc16 = new MCRC16();
 
     public ModeBusNode(AbstractIO io, byte addr) {
@@ -140,7 +142,9 @@ public class ModeBusNode {
 
     //读内存
     private byte[] readmemory(int memaddr, int mem_num, int timeout) throws Exception {
-        //发送读取命令
+        //避免485连续操作
+        TimeUnit.MILLISECONDS.sleep(this.timelag);
+       //发送读取命令
         this.io.SendData(ReadPacket(this.addr, memaddr, mem_num));
 
         //收数据
@@ -214,6 +218,8 @@ public class ModeBusNode {
 
     //写内存
     private boolean writermemory(int memaddr, int mem_num, byte[] memorys, int timeout) throws Exception {
+        //避免485连续操作
+        TimeUnit.MILLISECONDS.sleep(this.timelag);
         //发送读取命令
         this.io.SendData(WriterPacket(this.addr, memaddr, mem_num, memorys));
         //ModeBus一包最大255个数据长度，所以接收缓存只需要1K就足够了
