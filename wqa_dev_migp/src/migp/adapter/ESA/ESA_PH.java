@@ -29,7 +29,7 @@ public class ESA_PH extends ESADEV {
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     DMEG NE0 = new DMEG(new NVPA(0, 8), "PH系数E0");
     DMEG NA = new DMEG(new NVPA(8, 8), "PH系数A");
-    private FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
+    FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
     // </editor-fold> 
     // </editor-fold> 
 

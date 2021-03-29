@@ -25,9 +25,9 @@ public class ESA_EC extends ESADEV {
     }
 
     // <editor-fold defaultstate="collapsed" desc="NVPA">   
-    private FMEG NA = new FMEG(new NVPA(36, 4), "电导率参数A");
-    private FMEG NTEMP_COM = new FMEG(new NVPA(40, 4), "温度补偿系数");
-    private FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
+    FMEG NA = new FMEG(new NVPA(36, 4), "电导率参数A");
+    FMEG NTEMP_COM = new FMEG(new NVPA(40, 4), "温度补偿系数");
+    FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
     // </editor-fold> 
 
     @Override

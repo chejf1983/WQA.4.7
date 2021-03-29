@@ -28,7 +28,7 @@ public class ESA_ORP extends ESADEV {
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     FMEG NA = new FMEG(new NVPA(0, 4), "ORP系数A");
     FMEG NB = new FMEG(new NVPA(4, 4), "ORP系数B");
-    private FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
+    FMEG NTEMP_CAL = new FMEG(new NVPA(96, 4), "温度系数");
     // </editor-fold> 
     // </editor-fold> 
     

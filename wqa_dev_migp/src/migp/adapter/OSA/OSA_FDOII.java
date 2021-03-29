@@ -49,6 +49,12 @@ public class OSA_FDOII extends ESADEV {
     FMEG NPTEMPER = new FMEG(new NVPA(96, 4), "温度校准系数");
     IMEG NAVR = new IMEG(new NVPA(100, 2), "平均次数");
 
+    
+    FMEG SR3 = new FMEG(new SRA(0x08, 4), "相位差");
+    FMEG SR4 = new FMEG(new SRA(12, 4), "蓝光幅值");
+    FMEG SR5 = new FMEG(new SRA(16, 4), "参考蓝光幅值");
+    FMEG SR6 = new FMEG(new SRA(20, 4), "红光幅值");
+    FMEG SR7 = new FMEG(new SRA(24, 4), "参考红光幅值");
     // </editor-fold>
     
     @Override

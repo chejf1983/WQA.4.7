@@ -14,7 +14,6 @@ import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static migp.adapter.OSA.OSA_X.AMPPAR;
-import migp.adapter.factory.TemperCalibrateCalculate;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.SConfigItem;

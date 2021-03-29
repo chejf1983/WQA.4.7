@@ -6,6 +6,7 @@
 package migp.adapter.ESA;
 
 import base.migp.mem.NVPA;
+import base.migp.mem.SRA;
 import base.migp.reg.FMEG;
 import base.pro.convert.NahonConvert;
 import migp.adapter.factory.TemperCalibrateCalculate;
@@ -31,7 +32,10 @@ public class ESA_CHLII extends ESA_CHL {
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     FMEG NORPA = new FMEG(new NVPA(28, 4), "ORP参数A");
     FMEG NORPB = new FMEG(new NVPA(32, 4), "ORP参数B");
-    // </editor-fold> 
+    // </editor-fold>
+        
+    public FMEG SR3 = new FMEG(new SRA(0x08, 4), "PH原始值");
+    public FMEG SR4 = new FMEG(new SRA(12, 4), "ORP原始值");
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="采集接口">     

@@ -6,6 +6,7 @@
 package migp.adapter.ESA;
 
 import base.migp.mem.NVPA;
+import base.migp.mem.SRA;
 import base.migp.reg.DMEG;
 import base.migp.reg.FMEG;
 import base.migp.reg.MEG;
@@ -43,6 +44,8 @@ public class ESA_CHL extends ESADEV {
 
     protected ArrayList<MEG> CalList = new ArrayList();
     // </editor-fold> 
+    
+    public FMEG SR3 = new FMEG(new SRA(0x08, 4), "PH原始值");
     // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="初始化"> 
