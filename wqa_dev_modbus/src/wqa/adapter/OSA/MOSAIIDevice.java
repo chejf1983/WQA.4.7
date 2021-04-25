@@ -190,7 +190,7 @@ public class MOSAIIDevice extends AbsDevice {
         }
 
         disdata.datas[2].mainData = NahonConvert.TimData(MDATA2.GetValue(), 2);
-        disdata.datas[2].range_info = this.get_range_string(this.RANGE2.GetValue());
+        disdata.datas[2].range_info = this.get_range_string2(this.RANGE2.GetValue());
         disdata.datas[3].mainData = NahonConvert.TimData(ODATA2.GetValue(), 2);
         if (this.GetDevInfo().dev_type == 0x1113 || this.GetDevInfo().dev_type == 0x1114) {
             if (disdata.datas[2].range_info.length() > "(0-20000)".length()) {
