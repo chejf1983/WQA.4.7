@@ -259,7 +259,7 @@ public class MOSAII_X extends AbsDevice {
             item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NCLPARA2[i].toString(), NCLPARA2[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NCLPARB2[i].toString(), NCLPARB2[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NCLPARC2[i].toString(), NCLPARC2[i].GetValue().toString(), ""));
-            item.add(SConfigItem.CreateRWItem(GetDataNames[0] + NAMPLIFY[i].toString(), this.getAmplyfy(NAMPLIFY2[i].GetValue()) + "", ""));
+            item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NAMPLIFY2[i].toString(), this.getAmplyfy(NAMPLIFY2[i].GetValue()) + "", ""));
 //            if (NAMPLIFY2[i].GetValue() == 0) {
 //                item.add(SConfigItem.CreateRWItem(GetDataNames[1] + NAMPLIFY2[i].toString(), (int) (AMPPAR) + "", ""));
 //            } else {
