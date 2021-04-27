@@ -9,6 +9,7 @@ import base.migp.impl.*;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
 import base.migp.reg.*;
+import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import nahon.comm.io.IOInfo;
 import wqa.adapter.factory.CDevDataTable;
@@ -111,8 +112,28 @@ public abstract class AbsDevice implements IDevice {
         }
         return false;
     }
-    // </editor-fold> 
+    public static int AMPPAR = 4095;
 
+    public SConfigItem getAmplfyItem(IMEG reg) {
+        if (reg.GetValue() == 0) {
+            return (SConfigItem.CreateRWItem(reg.toString(), AMPPAR + "", ""));
+        } else {
+            return (SConfigItem.CreateRWItem(reg.toString(), NahonConvert.TimData((float) AMPPAR / reg.GetValue(), 2) + "", ""));
+        }
+    }
+
+    public void setAmplyfyItem(MEG reg, String value) throws Exception {
+        float tmp = Float.valueOf(value);
+        float famply = AMPPAR;
+        if (tmp != 0) {
+            famply = AMPPAR / Float.valueOf(value);
+        }
+        int amply = (int) (famply + 0.5);
+        amply = amply > AMPPAR ?  AMPPAR : amply;
+        this.SetConfigREG(reg, String.valueOf(amply));
+    }
+
+    // </editor-fold> 
     // <editor-fold defaultstate="collapsed" desc="内部接口">
     //只返回不同测量类型的数据(没有原始值这个标志的数据)
     protected String[] GetDataNames() {

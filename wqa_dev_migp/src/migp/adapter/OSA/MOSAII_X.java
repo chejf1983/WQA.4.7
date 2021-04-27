@@ -92,7 +92,6 @@ public class MOSAII_X extends AbsDevice {
     //****************************************************************************************************************
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
     FMEG NDOCOM_PAR = new FMEG(new NVPA(8, 4), "浊度补偿系数");
-    public static int AMPPAR = 4095;
     // </editor-fold> 
     // </editor-fold> 
 

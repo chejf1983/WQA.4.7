@@ -65,7 +65,6 @@ public class OSA_NX extends AbsDevice {
     FMEG NTEMPER_COMP = new FMEG(new NVPA(124, 4), "温度补偿系数");
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
 
-    public static float AMPPAR = 4095;
     IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"),
         new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
 

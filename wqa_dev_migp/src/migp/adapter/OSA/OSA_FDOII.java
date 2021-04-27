@@ -27,6 +27,9 @@ public class OSA_FDOII extends ESADEV {
     }
 
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
+    IMEG NPGAB = new IMEG(new NVPA(12, 2), "蓝光PGA"); //4095
+    IMEG NPGAR = new IMEG(new NVPA(14, 2), "红光PGA");
+
     FMEG NA = new FMEG(new NVPA(16, 4), "校准参数A");
     FMEG NB = new FMEG(new NVPA(20, 4), "校准参数B");
     FMEG NCLTEMPER = new FMEG(new NVPA(24, 4), "校准点温度");
@@ -49,19 +52,18 @@ public class OSA_FDOII extends ESADEV {
     FMEG NPTEMPER = new FMEG(new NVPA(96, 4), "温度校准系数");
     IMEG NAVR = new IMEG(new NVPA(100, 2), "平均次数");
 
-    
     FMEG SR3 = new FMEG(new SRA(0x08, 4), "相位差");
     FMEG SR4 = new FMEG(new SRA(12, 4), "蓝光幅值");
     FMEG SR5 = new FMEG(new SRA(16, 4), "参考蓝光幅值");
     FMEG SR6 = new FMEG(new SRA(20, 4), "红光幅值");
     FMEG SR7 = new FMEG(new SRA(24, 4), "参考红光幅值");
     // </editor-fold>
-    
+
     @Override
     public void InitDevice() throws Exception {
         super.InitDevice(); //To change body of generated methods, choose Tools | Templates.
 //        this.ReadMEG(VVATOKEN);
-        this.ReadMEG(NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPTEMPER, NAVR);
+        this.ReadMEG(NPGAB, NPGAR, NA, NB, NCLTEMPER, NPASCA, NSALT, NTEMPER_COM, NPA, NPB, NPC, NPD, NPE, NPF, NPTEMPER, NAVR);
     }
 
     //获取设备类型
@@ -113,7 +115,7 @@ public class OSA_FDOII extends ESADEV {
     }
     // </editor-fold> 
 
-    // <editor-fold defaultstate="collapsed" desc="系数"> 
+    // <editor-fold defaultstate="collapsed" desc="系数">    
     @Override
     public ArrayList<SConfigItem> GetCalParList() {
         ArrayList<SConfigItem> item = super.GetCalParList(); //To change body of generated methods, choose Tools | Templates.
@@ -130,6 +132,8 @@ public class OSA_FDOII extends ESADEV {
         item.add(SConfigItem.CreateRWItem(NPD.toString(), NPD.GetValue().toString(), ""));
         item.add(SConfigItem.CreateRWItem(NPE.toString(), NPE.GetValue().toString(), ""));
         item.add(SConfigItem.CreateRWItem(NPF.toString(), NPF.GetValue().toString(), ""));
+        item.add(getAmplfyItem(NPGAB));
+        item.add(getAmplfyItem(NPGAR));
 //        item.add(SConfigItem.CreateRWItem(NPA2.toString(), NPA2.GetValue().toString(), ""));
 //        item.add(SConfigItem.CreateRWItem(NPB2.toString(), NPB2.GetValue().toString(), ""));
 
@@ -146,6 +150,15 @@ public class OSA_FDOII extends ESADEV {
             for (MEG mem : reglist) {
                 if (item.IsKey(mem.toString())) {
                     this.SetConfigREG(mem, item.GetValue());
+                    break;
+                }
+            }
+        }
+        MEG[] reglist2 = new MEG[]{NPGAB, NPGAR};
+        for (SConfigItem item : list) {
+            for (MEG mem : reglist2) {
+                if (item.IsKey(mem.toString())) {
+                    this.setAmplyfyItem(mem, item.GetValue());
                     break;
                 }
             }
@@ -410,7 +423,7 @@ public class OSA_FDOII extends ESADEV {
 //            }
             this.ReadMEG(MPAR3);
             float temp = NahonConvert.TimData(MPAR3.GetValue(), 2);   //温度值
-            if (oradata.length == 1) {                
+            if (oradata.length == 1) {
                 //一点就是饱和氧
                 this.do_single_cal(oradata[0], temp);
             } else {
