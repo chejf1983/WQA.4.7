@@ -166,11 +166,12 @@ public class OSA_NX extends AbsDevice {
             item.add(SConfigItem.CreateRWItem(NCLPARA[i].toString(), NCLPARA[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARB[i].toString(), NCLPARB[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARC[i].toString(), NCLPARC[i].GetValue().toString(), ""));
-            if (NAMPLIFY[i].GetValue() == 0) {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
-            } else {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
-            }
+            item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), this.getAmplyfy(NAMPLIFY[i].GetValue()) + "", ""));
+//            if (NAMPLIFY[i].GetValue() == 0) {
+//                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
+//            } else {
+//                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
+//            }
             item.add(SConfigItem.CreateInfoItem(""));
         }
         return item;
@@ -210,14 +211,15 @@ public class OSA_NX extends AbsDevice {
                     this.SetConfigREG(NCLPARC[i], item.GetValue());
                 }
                 if (item.IsKey(NAMPLIFY[i].toString())) {
-                    float tmp = Float.valueOf(item.GetValue());
-                    float famply = AMPPAR;
-                    if (tmp != 0) {
-                        famply = AMPPAR / Float.valueOf(item.GetValue());
-                    }
-                    int amply = (int) (famply + 0.5);
-                    amply = amply > AMPPAR ? (int)AMPPAR : amply;
-                    this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
+//                    float tmp = Float.valueOf(item.GetValue());
+//                    float famply = AMPPAR;
+//                    if (tmp != 0) {
+//                        famply = AMPPAR / Float.valueOf(item.GetValue());
+//                    }
+//                    int amply = (int) (famply + 0.5);
+//                    amply = amply > AMPPAR ? (int) AMPPAR : amply;
+//                    this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
+                    this.SetConfigREG(NAMPLIFY[i], String.valueOf(this.setAmplyfy(Float.valueOf(item.GetValue()))));
                 }
             }
         }

@@ -132,8 +132,8 @@ public class OSA_FDOII extends ESADEV {
         item.add(SConfigItem.CreateRWItem(NPD.toString(), NPD.GetValue().toString(), ""));
         item.add(SConfigItem.CreateRWItem(NPE.toString(), NPE.GetValue().toString(), ""));
         item.add(SConfigItem.CreateRWItem(NPF.toString(), NPF.GetValue().toString(), ""));
-        item.add(getAmplfyItem(NPGAB));
-        item.add(getAmplfyItem(NPGAR));
+        item.add(SConfigItem.CreateRWItem(NPGAB.toString(), getAmplyfy(NPGAB.GetValue()) + "", ""));
+        item.add(SConfigItem.CreateRWItem(NPGAR.toString(), getAmplyfy(NPGAR.GetValue()) + "", ""));
 //        item.add(SConfigItem.CreateRWItem(NPA2.toString(), NPA2.GetValue().toString(), ""));
 //        item.add(SConfigItem.CreateRWItem(NPB2.toString(), NPB2.GetValue().toString(), ""));
 
@@ -158,7 +158,7 @@ public class OSA_FDOII extends ESADEV {
         for (SConfigItem item : list) {
             for (MEG mem : reglist2) {
                 if (item.IsKey(mem.toString())) {
-                    this.setAmplyfyItem(mem, item.GetValue());
+                    this.SetConfigREG(mem, setAmplyfy(Float.valueOf(item.GetValue())) + "");
                     break;
                 }
             }

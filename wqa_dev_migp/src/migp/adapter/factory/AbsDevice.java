@@ -114,24 +114,42 @@ public abstract class AbsDevice implements IDevice {
     }
     public static int AMPPAR = 4095;
 
-    public SConfigItem getAmplfyItem(IMEG reg) {
-        if (reg.GetValue() == 0) {
-            return (SConfigItem.CreateRWItem(reg.toString(), AMPPAR + "", ""));
+    public float getAmplyfy(int value) {
+        if (value == 0) {
+            return AMPPAR;
         } else {
-            return (SConfigItem.CreateRWItem(reg.toString(), NahonConvert.TimData((float) AMPPAR / reg.GetValue(), 2) + "", ""));
+            return NahonConvert.TimData((float) AMPPAR / value, 2);
         }
     }
 
-    public void setAmplyfyItem(MEG reg, String value) throws Exception {
-        float tmp = Float.valueOf(value);
+    public int setAmplyfy(float value) {
         float famply = AMPPAR;
-        if (tmp != 0) {
-            famply = AMPPAR / Float.valueOf(value);
+        if (value != 0) {
+            famply = AMPPAR / value;
         }
         int amply = (int) (famply + 0.5);
-        amply = amply > AMPPAR ?  AMPPAR : amply;
-        this.SetConfigREG(reg, String.valueOf(amply));
+        amply = amply > AMPPAR ? AMPPAR : amply;
+        return amply;
     }
+
+//    public SConfigItem getAmplfyItem(IMEG reg) {
+//        if (reg.GetValue() == 0) {
+//            return (SConfigItem.CreateRWItem(reg.toString(), AMPPAR + "", ""));
+//        } else {
+//            return (SConfigItem.CreateRWItem(reg.toString(), NahonConvert.TimData((float) AMPPAR / reg.GetValue(), 2) + "", ""));
+//        }
+//    }
+//
+//    public void setAmplyfyItem(MEG reg, String value) throws Exception {
+//        float tmp = Float.valueOf(value);
+//        float famply = AMPPAR;
+//        if (tmp != 0) {
+//            famply = AMPPAR / Float.valueOf(value);
+//        }
+//        int amply = (int) (famply + 0.5);
+//        amply = amply > AMPPAR ? AMPPAR : amply;
+//        this.SetConfigREG(reg, String.valueOf(amply));
+//    }
 
     // </editor-fold> 
     // <editor-fold defaultstate="collapsed" desc="内部接口">

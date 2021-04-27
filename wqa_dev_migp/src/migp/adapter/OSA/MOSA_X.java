@@ -21,7 +21,7 @@ import wqa.dev.intf.SConfigItem;
  * @author chejf
  */
 public class MOSA_X extends AbsDevice {
-
+    
     public MOSA_X(SDevInfo devinfo) {
         super(devinfo);
     }
@@ -62,17 +62,17 @@ public class MOSA_X extends AbsDevice {
     // <editor-fold defaultstate="collapsed" desc="NVPA"> 
     IMEG NRANGE = new IMEG(new NVPA(0, 2), "量程档位", 0, 3);
     IMEG NAVR = new IMEG(new NVPA(2, 2), "平均次数", 1, 100);
-
+    
     FMEG[] NCLTEMPER = new FMEG[]{new FMEG(new NVPA(12, 4), "定标温度1"), new FMEG(new NVPA(40, 4), "定标温度2"), new FMEG(new NVPA(68, 4), "定标温度3"), new FMEG(new NVPA(96, 4), "定标温度4")};
     DMEG[] NCLPARA = new DMEG[]{new DMEG(new NVPA(16, 8), "定标系数A1"), new DMEG(new NVPA(44, 8), "定标系数A2"), new DMEG(new NVPA(72, 8), "定标系数A3"), new DMEG(new NVPA(100, 8), "定标系数A4")};
     DMEG[] NCLPARB = new DMEG[]{new DMEG(new NVPA(24, 8), "定标系数B1"), new DMEG(new NVPA(52, 8), "定标系数B2"), new DMEG(new NVPA(80, 8), "定标系数B3"), new DMEG(new NVPA(108, 8), "定标系数B4")};
     DMEG[] NCLPARC = new DMEG[]{new DMEG(new NVPA(32, 8), "定标系数C1"), new DMEG(new NVPA(60, 8), "定标系数C2"), new DMEG(new NVPA(88, 8), "定标系数C3"), new DMEG(new NVPA(116, 8), "定标系数C4")};
-
+    
     FMEG NTEMPER_COMP = new FMEG(new NVPA(124, 4), "温度补偿系数");
     FMEG NTEMPER_PAR = new FMEG(new NVPA(128, 4), "温度定标系数");
     IMEG NRANGE_NUM = new IMEG(new NVPA(132, 1), "量程数量", 0, 3);
     FMEG[] NRANGE_MAX = new FMEG[]{new FMEG(new NVPA(141, 4), "量程上限1"), new FMEG(new NVPA(145, 4), "量程上限2"), new FMEG(new NVPA(149, 4), "量程上限3"), new FMEG(new NVPA(153, 4), "量程上限4")};
-
+    
     IMEG[] NAMPLIFY = new IMEG[]{new IMEG(new NVPA(133, 2), "放大倍数1"), new IMEG(new NVPA(135, 2), "放大倍数2"), new IMEG(new NVPA(137, 2), "放大倍数3"), new IMEG(new NVPA(139, 2), "放大倍数4")};
     // </editor-fold> 
     // </editor-fold> 
@@ -110,7 +110,7 @@ public class MOSA_X extends AbsDevice {
         for (int i = 0; i < tmp.length; i++) {
             tmp[i] = get_range_string(i);
         }
-
+        
         return tmp;
     }
     // </editor-fold> 
@@ -124,11 +124,11 @@ public class MOSA_X extends AbsDevice {
         item.add(SConfigItem.CreateRWItem(NTEMPER_COMP.toString(), NTEMPER_COMP.GetValue().toString(), ""));
         return item;
     }
-
+    
     @Override
     public void SetConfigList(ArrayList<SConfigItem> list) throws Exception {
         super.SetConfigList(list);
-
+        
         for (SConfigItem item : list) {
             if (item.IsKey(NRANGE.toString())) {
                 String[] _range_string = this.get_range_string();
@@ -146,7 +146,7 @@ public class MOSA_X extends AbsDevice {
                 this.SetConfigREG(NTEMPER_COMP, item.GetValue());
             }
         }
-
+        
     }
     // </editor-fold> 
 
@@ -158,27 +158,28 @@ public class MOSA_X extends AbsDevice {
         item.add(SConfigItem.CreateRWItem(NRANGE_NUM.toString(), (NRANGE_NUM.GetValue() + 1) + "", (NRANGE_NUM.min + 1) + "-" + (NRANGE_NUM.max + 1)));
         item.add(SConfigItem.CreateRWItem(NTEMPER_PAR.toString(), NTEMPER_PAR.GetValue().toString(), ""));
         item.add(SConfigItem.CreateInfoItem(""));
-
+        
         for (int i = 0; i < this.NAMPLIFY.length; i++) {
             item.add(SConfigItem.CreateRWItem(NRANGE_MAX[i].toString(), NRANGE_MAX[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLTEMPER[i].toString(), NCLTEMPER[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARA[i].toString(), NCLPARA[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARB[i].toString(), NCLPARB[i].GetValue().toString(), ""));
             item.add(SConfigItem.CreateRWItem(NCLPARC[i].toString(), NCLPARC[i].GetValue().toString(), ""));
-            if (NAMPLIFY[i].GetValue() == 0) {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
-            } else {
-                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
-            }
+            item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), this.getAmplyfy(NAMPLIFY[i].GetValue()) + "", ""));
+//            if (NAMPLIFY[i].GetValue() == 0) {
+//                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), (int) (AMPPAR) + "", ""));
+//            } else {
+//                item.add(SConfigItem.CreateRWItem(NAMPLIFY[i].toString(), NahonConvert.TimData((float) AMPPAR / NAMPLIFY[i].GetValue(), 2) + "", ""));
+//            }
             item.add(SConfigItem.CreateInfoItem(""));
         }
         return item;
     }
-
+    
     @Override
     public void SetCalParList(ArrayList<SConfigItem> list) throws Exception {
         super.SetConfigList(list);
-
+        
         for (SConfigItem item : list) {
             if (item.IsKey(NRANGE_NUM.toString())) {
                 int num = Integer.valueOf(item.GetValue());
@@ -191,7 +192,7 @@ public class MOSA_X extends AbsDevice {
             if (item.IsKey(NTEMPER_PAR.toString())) {
                 this.SetConfigREG(NTEMPER_PAR, item.GetValue());
             }
-
+            
             for (int i = 0; i < this.NAMPLIFY.length; i++) {
                 if (item.IsKey(NRANGE_MAX[i].toString())) {
                     this.SetConfigREG(NRANGE_MAX[i], item.GetValue());
@@ -209,14 +210,15 @@ public class MOSA_X extends AbsDevice {
                     this.SetConfigREG(NCLPARC[i], item.GetValue());
                 }
                 if (item.IsKey(NAMPLIFY[i].toString())) {
-                    float tmp = Float.valueOf(item.GetValue());
-                    float famply = AMPPAR;
-                    if (tmp != 0) {
-                        famply = AMPPAR / Float.valueOf(item.GetValue());
-                    }
-                    int amply = (int) (famply + 0.5);
-                    amply = amply > AMPPAR ? AMPPAR : amply;
-                    this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
+//                    float tmp = Float.valueOf(item.GetValue());
+//                    float famply = AMPPAR;
+//                    if (tmp != 0) {
+//                        famply = AMPPAR / Float.valueOf(item.GetValue());
+//                    }
+//                    int amply = (int) (famply + 0.5);
+//                    amply = amply > AMPPAR ? AMPPAR : amply;
+//                    this.SetConfigREG(NAMPLIFY[i], String.valueOf(amply));
+                    this.SetConfigREG(NAMPLIFY[i], String.valueOf(this.setAmplyfy(Float.valueOf(item.GetValue()))));
                 }
             }
         }
@@ -231,7 +233,7 @@ public class MOSA_X extends AbsDevice {
         this.ReadMEG(MALARM, MPAR1, MPAR2);
         //原始数据
         this.ReadMEG(SR3, SR4, SR5);
-
+        
         disdata.datas[0].mainData = NahonConvert.TimData(MPAR1.GetValue(), 2);   //OSA值
         disdata.datas[0].range_info = get_range_string(NRANGE.GetValue());         //量程
         disdata.datas[1].mainData = this.SR3.GetValue(); //OSA原始值(光强高电平-低电平)
@@ -240,7 +242,7 @@ public class MOSA_X extends AbsDevice {
                 disdata.datas[0].unit = "细胞/ml";
             }
         }
-
+        
         disdata.datas[2].mainData = NahonConvert.TimData(MPAR2.GetValue(), 2);   //温度值
         disdata.datas[2].range_info = "(" + this.VTRANGE_MIN.GetValue() + "-" + this.VTRANGE_MAX.GetValue() + ")"; //量程
 
@@ -265,12 +267,12 @@ public class MOSA_X extends AbsDevice {
         }
         return ret;
     }
-
+    
     private LogNode[] CalDevice(float[] oradata, float[] caldata) throws Exception {
         if (SCLODATA.length < oradata.length) {
             throw new Exception("定标个数异常");
         }
-
+        
         SCLRANG.SetValue(this.NRANGE.GetValue());
         for (int i = 0; i < oradata.length; i++) {
             SCLODATA[i].SetValue(oradata[i]);
@@ -284,14 +286,14 @@ public class MOSA_X extends AbsDevice {
                 NCLPARA[0], NCLPARA[1], NCLPARA[2], NCLPARA[3],
                 NCLPARB[0], NCLPARB[1], NCLPARB[2], NCLPARB[3],
                 NCLPARC[0], NCLPARC[1], NCLPARC[2], NCLPARC[3]);
-
+        
         return new LogNode[]{new LogNode("当前量程", get_range_string(NRANGE.GetValue())),
             new LogNode(NCLTEMPER[NRANGE.GetValue()].toString(), NCLTEMPER[NRANGE.GetValue()]),
             new LogNode(NCLPARA[NRANGE.GetValue()].toString(), NCLPARA[NRANGE.GetValue()]),
             new LogNode(NCLPARB[NRANGE.GetValue()].toString(), NCLPARB[NRANGE.GetValue()]),
             new LogNode(NCLPARC[NRANGE.GetValue()].toString(), NCLPARC[NRANGE.GetValue()])};
     }
-
+    
     private LogNode[] CalTemer(float caltemper) throws Exception {
         this.SCLTEMPER.SetValue(caltemper);
         this.SCLTEMPERSTART.SetValue(0x01);
