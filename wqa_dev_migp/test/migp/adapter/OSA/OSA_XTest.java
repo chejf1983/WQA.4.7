@@ -10,6 +10,7 @@ import base.migp.mem.VPA;
 import base.migp.reg.FMEG;
 import base.migp.reg.MEG;
 import java.util.ArrayList;
+import static migp.adapter.factory.AbsDevice.AMPPAR;
 import migp.adapter.factory.MIGPDevFactory;
 import migp.adapter.mock.OSAMock;
 import org.junit.Test;
@@ -119,7 +120,7 @@ public class OSA_XTest {
             commontest.check_item(list, dev_mock.NCLPARA[i]);
             commontest.check_item(list, dev_mock.NCLPARB[i]);
             commontest.check_item(list, dev_mock.NCLPARC[i]);
-            commontest.check_item(list, dev_mock.NAMPLIFY[i], (int) (OSA_X.AMPPAR / dev_mock.NAMPLIFY[i].GetValue()) + "");
+            commontest.check_item(list, dev_mock.NAMPLIFY[i], (int) (AMPPAR / dev_mock.NAMPLIFY[i].GetValue()) + "");
         }
     }
     // </editor-fold> 
