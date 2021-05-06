@@ -78,24 +78,6 @@ public class ModeBusNode {
         return a_crc[0] == buffer[buffer_len - 2] && a_crc[1] == buffer[buffer_len - 1];
     }
 
-    public static void main(String... args) throws Exception {
-        
-        //00 43   15 58 C8 00   00 00 00 41   80 61 88 46 47 27 59
-        float salt = MyConvert.ByteArrayToFloat(new byte[]{0,0,0,0x41}, 0);
-        System.out.println("Salt:" + salt);
-        ModeBusNode node = new ModeBusNode(null, (byte) 0);
-        byte[] ret = node.WriterPacket((byte) 0x02, 0x30, 01, new byte[]{(byte) 2});
-        for (int i = 0; i < ret.length; i++) {
-            System.out.print(String.format("%02x ", ret[i]));
-        }
-        System.out.println();
-        ret = node.ReadPacket((byte) 0x2, 0x30, 01);
-        for (int i = 0; i < ret.length; i++) {
-            System.out.print(String.format("%02x ", ret[i]));
-        }
-
-        //读取设备地址 00 03 00 23 00 01 74 11
-    }
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="内存读写"> 
@@ -282,4 +264,24 @@ public class ModeBusNode {
         this.WriterMemory(min_reg.RegAddr(), memory.length / 2, memory, retry_time, timeout);
     }
     // </editor-fold>  
+    
+    
+    public static void main(String... args) throws Exception {
+        
+        //07 10 00 24 00 01 02 00 01 4a d4
+        float salt = MyConvert.ByteArrayToFloat(new byte[]{0,0,0,0x41}, 0);
+        System.out.println("Salt:" + salt);
+        ModeBusNode node = new ModeBusNode(null, (byte) 0);
+        byte[] ret = node.WriterPacket((byte) 0x07, 0x24, 1, new byte[]{0, (byte) 1});
+        for (int i = 0; i < ret.length; i++) {
+            System.out.print(String.format("%02x ", ret[i]));
+        }
+        System.out.println();
+        ret = node.ReadPacket((byte) 0x2, 0x30, 01);
+        for (int i = 0; i < ret.length; i++) {
+            System.out.print(String.format("%02x ", ret[i]));
+        }
+
+        //读取设备地址 00 03 00 23 00 01 74 11
+    }
 }
