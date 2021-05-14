@@ -7,13 +7,6 @@ package migp.adapter.OSA;
 
 import base.migp.mem.*;
 import base.migp.reg.*;
-import base.pro.convert.NahonConvert;
-import java.util.ArrayList;
-import java.util.Arrays;
-import migp.adapter.factory.AbsDevice;
-import static migp.adapter.factory.AbsDevice.DMask;
-import migp.adapter.factory.TemperCalibrateCalculate;
-import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.*;
 import wqa.dev.intf.*;
 

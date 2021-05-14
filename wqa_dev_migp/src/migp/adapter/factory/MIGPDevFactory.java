@@ -84,6 +84,13 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x0311, ISA_X.class.getName());
         class_map.put(0x0312, ISA_X.class.getName());
         class_map.put(0x0320, ISA_X.class.getName());
+        //ECA
+        class_map.put(0x2100, ESA_PH.class.getName());
+        class_map.put(0x2101, ESA_ORP.class.getName());
+        class_map.put(0x2102, ESA_EC.class.getName());
+        class_map.put(0x2103, MOSA_FDO.class.getName());
+        class_map.put(0x2104, OSA_NX.class.getName());
+        class_map.put(0x2105, OSA_NX.class.getName());
     }
     // </editor-fold> 
 

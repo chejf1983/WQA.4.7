@@ -146,6 +146,15 @@ public class ModBusDevFactory implements IDeviceSearch {
         //ISA
         class_map.put(0x0300, AMMODevice.class.getName());
         class_map.put(0x0301, AMMODevice.class.getName());
+        
+        //ECA
+        class_map.put(0x2100, PHDevice.class.getName());
+        class_map.put(0x2101, PHDevice.class.getName());
+        class_map.put(0x2102, ECDevice.class.getName());
+        class_map.put(0x2103, DODevice.class.getName());
+        class_map.put(0x2104, MOSADevice.class.getName());
+        class_map.put(0x2105, MOSADevice.class.getName());
+        
     }
     // </editor-fold> 
 
