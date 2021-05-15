@@ -170,7 +170,7 @@ public abstract class AbsDevice implements IDevice {
                 this.sinfo.dev_addr = this.base_drv.addr;
                 return;
             }
-            
+
             throw new Exception("该地址已经存在!");
         }
     }

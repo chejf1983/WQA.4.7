@@ -266,7 +266,7 @@ public abstract class AbsDevice implements IDevice {
     // </editor-fold>  
 
     // <editor-fold defaultstate="collapsed" desc="设备配置接口"> 
-    public static final String[] BANDRATE_STRING = new String[]{"9600", "19200", "38400", "57600", "115200"};
+    public static final String[] BANDRATE_STRING = new String[]{"4800","9600", "19200", "38400", "57600", "115200"};
 
     public static String SDevAddr = "设备地址";
     public static String SBandRate = "波特率";
