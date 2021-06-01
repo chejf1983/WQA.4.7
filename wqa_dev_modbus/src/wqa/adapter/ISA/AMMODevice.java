@@ -8,7 +8,6 @@ package wqa.adapter.ISA;
 import modebus.pro.NahonConvert;
 import modebus.register.*;
 import wqa.adapter.factory.AbsDevice;
-import static wqa.adapter.factory.AbsDevice.DEF_TIMEOUT;
 import wqa.adapter.factory.*;
 import wqa.dev.data.*;
 
