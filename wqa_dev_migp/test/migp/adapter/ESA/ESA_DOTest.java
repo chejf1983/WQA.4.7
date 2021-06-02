@@ -5,6 +5,7 @@
  */
 package migp.adapter.ESA;
 
+import migp.adapter.DO.ESA_DO;
 import base.migp.reg.MEG;
 import java.util.ArrayList;
 import migp.adapter.factory.MIGPDevFactory;

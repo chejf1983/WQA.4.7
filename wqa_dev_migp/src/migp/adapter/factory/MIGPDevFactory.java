@@ -5,6 +5,7 @@
  */
 package migp.adapter.factory;
 
+import migp.adapter.DO.ESA_DO;
 import migp.adapter.AMMO.ISA_X;
 import migp.adapter.AMMO.ESA_AMMO;
 import migp.adapter.DO.MOSA_FDO;

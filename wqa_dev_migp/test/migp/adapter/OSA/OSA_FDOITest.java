@@ -5,6 +5,7 @@
  */
 package migp.adapter.OSA;
 
+import migp.adapter.DO.OSA_FDOI;
 import migp.adapter.ESA.*;
 import base.migp.reg.MEG;
 import java.util.ArrayList;

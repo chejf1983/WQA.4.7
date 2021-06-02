@@ -5,6 +5,7 @@
  */
 package migp.adapter.ISA;
 
+import migp.adapter.AMMO.ISA_X;
 import base.migp.reg.MEG;
 import java.util.ArrayList;
 import migp.adapter.factory.MIGPDevFactory;

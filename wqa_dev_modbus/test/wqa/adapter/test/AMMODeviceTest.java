@@ -7,7 +7,7 @@ package wqa.adapter.test;
 
 import modebus.register.FREG;
 import org.junit.Test;
-import wqa.adapter.ISA.AMMODevice;
+import wqa.adapter.AMMO.AMMODevice;
 import static org.junit.Assert.*;
 import wqa.adapter.devmock.AMMODevMock;
 import wqa.adapter.factory.ModBusDevFactory;
