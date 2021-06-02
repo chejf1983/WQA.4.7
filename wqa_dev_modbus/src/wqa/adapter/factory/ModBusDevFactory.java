@@ -5,6 +5,7 @@
  */
 package wqa.adapter.factory;
 
+import wqa.adapter.AMMO.EAMMODevice;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import modebus.pro.ModeBusNode;
 import modebus.register.IREG;
 import nahon.comm.io.AbstractIO;
 import wqa.adapter.ESA.*;
-import wqa.adapter.ISA.AMMODevice;
+import wqa.adapter.AMMO.AMMODevice;
 import wqa.adapter.MPA.MPACBDevice;
 import wqa.adapter.OSA.*;
 import wqa.dev.data.SDevInfo;

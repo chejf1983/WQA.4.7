@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.adapter.ESA;
+package wqa.adapter.AMMO;
 
 import java.util.ArrayList;
 import wqa.adapter.factory.AbsDevice;

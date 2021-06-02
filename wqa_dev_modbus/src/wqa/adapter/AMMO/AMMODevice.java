@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wqa.adapter.ISA;
+package wqa.adapter.AMMO;
 
 import modebus.pro.NahonConvert;
 import modebus.register.*;
