@@ -19,6 +19,7 @@ import wqa.dev.data.SDataElement;
  * @author chejf
  */
 public class DataVector {
+
     private final ReentrantLock datalist_lock = new ReentrantLock();
     private final ArrayList<SDisplayData> datasource = new ArrayList();
     private boolean[] visable = new boolean[0];
@@ -31,7 +32,11 @@ public class DataVector {
         for (int i = 0; i < data_names.length; i++) {
             visable[i] = true;
         }
-        select_name = data_names[0];
+        if (data_names.length > 0) {
+            select_name = data_names[0];
+        }else{
+            select_name = "";
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
@@ -120,7 +125,8 @@ public class DataVector {
             try {
                 //遍历数据，找到只当类型的值，添加曲线
                 for (int i = 0; i < this.datasource.size(); i++) {
-                    if (!Float.isNaN(this.datasource.get(i).GetDataElement(select_name).mainData)) {
+                    if (this.datasource.get(i).GetDataElement(select_name) != null && 
+                            !Float.isNaN(this.datasource.get(i).GetDataElement(select_name).mainData)) {
                         SDataElement e_data = this.datasource.get(i).GetDataElement(select_name);
                         mainline.addOrUpdate(new Second(this.datasource.get(i).time), e_data.mainData);
                         describe.add(e_data.range_info + e_data.unit);

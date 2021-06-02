@@ -22,11 +22,12 @@ import wqa.dev.intf.SConfigItem;
 public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
 
     private final IREG ALARM = new IREG(0x00, 1, "报警码");//R
-    
+
     protected final IREG CMODE = new IREG(0x08, 1, "清扫模式", 0, 2);//R/W
     protected final IREG CTIME = new IREG(0x09, 1, "清扫次数", 1, 100);//R/W
     protected final IREG CINTVAL = new IREG(0x0A, 1, "清扫间隔", 10, 60 * 24);//R/W
-    
+    protected final IREG CBRUSH = new IREG(0x0B, 1, "清扫刷偏移量", 0, 1000);//R/W
+
     public MPACBDevice(SDevInfo info) {
         super(info);
     }
@@ -38,7 +39,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
         //初始化寄存器
         this.ReadREG(CMODE, CTIME, CINTVAL);
     }
-    
+
     @Override
     public wqa.dev.data.CollectData CollectData() throws Exception {
         CollectData disdata = this.BuildDisplayData();
@@ -53,8 +54,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
     public LogNode CalParameter(String type, float[] oradata, float[] testdata) throws Exception {
         throw new Exception("不能定标"); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
     // <editor-fold defaultstate="collapsed" desc="电机控制"> 
     @Override
     public SMotorParameter GetMotoPara() {
@@ -62,25 +62,29 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
                 this.CMODE.GetValue() == 00 ? SMotorParameter.CleanMode.Auto : SMotorParameter.CleanMode.Manu,
                 new SConfigItem[]{
                     SConfigItem.CreateRWItem(this.CTIME.toString(), CTIME.GetValue().toString(), CTIME.min + "-" + CTIME.max),
-                    SConfigItem.CreateRWItem(this.CINTVAL.toString(), CINTVAL.GetValue().toString(), CINTVAL.min + "-" + CINTVAL.max + "(min)")},
-                new SConfigItem[0]);
+                    SConfigItem.CreateRWItem(this.CINTVAL.toString(), CINTVAL.GetValue().toString(), CINTVAL.min + "-" + CINTVAL.max + "(min)"),
+                    SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max)},
+                new SConfigItem[]{
+                    SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max)
+                });
         return par;
     }
 
     @Override
     public void SetMotoPara(SMotorParameter par) throws Exception {
         //设置参数
-//        MotorInfo tminfo = new MotorInfo();
-
-        for (SConfigItem item : par.auto_config) {
+        SConfigItem[] list = par.mode == SMotorParameter.CleanMode.Auto ? par.auto_config : par.manu_config;
+        for (SConfigItem item : list) {
             if (item.IsKey(CTIME.toString())) {
                 this.CTIME.SetValue(Integer.valueOf(item.GetValue()));
-
             }
             if (item.IsKey(CINTVAL.toString())) {
                 CINTVAL.SetValue(Integer.valueOf(item.GetValue()));
             }
-        }
+            if (item.IsKey(CBRUSH.toString())) {
+                CBRUSH.SetValue(Integer.valueOf(item.GetValue()));
+            }
+        }        
 
         //设置模式
         this.CMODE.SetValue(par.mode == SMotorParameter.CleanMode.Auto ? 0 : 1);

@@ -38,6 +38,10 @@ public class CalPanel extends javax.swing.JPanel {
         //初始化数据类型选择框
         ComboBox_DataType.removeAllItems();
 
+        if (this.calbean.GetCalType().length == 0) {
+            return;
+        }
+
         //遍历可定标类型
         for (String type : this.calbean.GetCalType()) {
             if (!type.contains("温度")) {

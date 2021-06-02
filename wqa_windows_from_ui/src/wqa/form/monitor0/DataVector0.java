@@ -19,6 +19,7 @@ import wqa.dev.data.SDataElement;
  * @author chejf
  */
 public class DataVector0 {
+
     private final ReentrantLock datalist_lock = new ReentrantLock();
     private final ArrayList<SDisplayData> datasource = new ArrayList();
     private boolean[] visable = new boolean[0];
@@ -31,7 +32,12 @@ public class DataVector0 {
         for (int i = 0; i < data_names.length; i++) {
             visable[i] = true;
         }
-        select_name = data_names[0];
+        
+        if (data_names.length > 0) {
+            select_name = data_names[0];
+        } else {
+            select_name = "";
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="公共接口">  
@@ -53,7 +59,7 @@ public class DataVector0 {
                 datasource.remove(0);
             }
             datasource.add(data);
-            
+
             NewData.CreateEvent(null);
         } finally {
             datalist_lock.unlock();
