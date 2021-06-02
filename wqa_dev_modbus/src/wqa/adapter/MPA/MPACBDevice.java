@@ -26,7 +26,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
     protected final IREG CMODE = new IREG(0x08, 1, "清扫模式", 0, 2);//R/W
     protected final IREG CTIME = new IREG(0x09, 1, "清扫次数", 1, 100);//R/W
     protected final IREG CINTVAL = new IREG(0x0A, 1, "清扫间隔", 10, 60 * 24);//R/W
-    protected final IREG CBRUSH = new IREG(0x0B, 1, "清扫刷偏移量", 0, 1000);//R/W
+    protected final IREG CBRUSH = new IREG(0x0B, 1, "清扫刷偏移量", 0, 360);//R/W
 
     public MPACBDevice(SDevInfo info) {
         super(info);
@@ -37,7 +37,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
         super.InitDevice();
 
         //初始化寄存器
-        this.ReadREG(CMODE, CTIME, CINTVAL);
+        this.ReadREG(CMODE, CTIME, CINTVAL, CBRUSH);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
                     SConfigItem.CreateRWItem(this.CINTVAL.toString(), CINTVAL.GetValue().toString(), CINTVAL.min + "-" + CINTVAL.max + "(min)"),
                     SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max)},
                 new SConfigItem[]{
-                    SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max)
+                    SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max + " 度")
                 });
         return par;
     }

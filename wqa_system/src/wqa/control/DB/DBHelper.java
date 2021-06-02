@@ -90,7 +90,7 @@ public class DBHelper {
                         if (new Date().getTime() >= LastTime.getTime()) {
                             //更新时间
                             while (new Date().getTime() >= LastTime.getTime()) {
-                                LastTime.setTime(LastTime.getTime() + 2 * 1000);
+                                LastTime.setTime(LastTime.getTime() + time_span * 1000);
                             }
 
                             CollectData();
@@ -116,7 +116,7 @@ public class DBHelper {
             //获取DB缓存栈
             DataRecord data = control.GetCollector().ReceiveByDB();
             //如果没有数据，不保存
-            if (data == null) {
+            if (data == null || data.names.length == 0) {
                 continue;
             }
 

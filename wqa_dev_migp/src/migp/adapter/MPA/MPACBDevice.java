@@ -27,7 +27,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
     IMEG NCMODE = new IMEG(new NVPA(4, 2), "清扫模式", 0, 2);
     IMEG NCTIME = new IMEG(new NVPA(6, 2), "清扫次数", 1, 100);
     IMEG NCINTERVAL = new IMEG(new NVPA(8, 2), "清扫间隔(分钟)", 1, 24 * 60);
-    IMEG NCBRUSH = new IMEG(new NVPA(10, 2), "清扫刷偏移量", 0, 1000);
+    IMEG NCBRUSH = new IMEG(new NVPA(10, 2), "清扫刷偏移量", 0, 360);
     // </editor-fold>  
 
     IMEG MALARM = new IMEG(new MDA(0x00, 2), "报警码");  // OSA_TURB | OSA_TSS | OSA_SS | OSA_CHLA | OSA_CYANO_I | OSA_OIL_I | OSA_MLSS | OSA_FDO
@@ -73,7 +73,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
                 new SConfigItem[]{
                     SConfigItem.CreateRWItem(NCTIME.toString(), NCTIME.GetValue().toString(), NCTIME.min + "-" + NCTIME.max),
                     SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max),
-                    SConfigItem.CreateRWItem(NCBRUSH.toString(), NCBRUSH.GetValue().toString(), NCBRUSH.min + "-" + NCBRUSH.max)});
+                    SConfigItem.CreateRWItem(NCBRUSH.toString(), NCBRUSH.GetValue().toString(), NCBRUSH.min + "-" + NCBRUSH.max + " 度")});
         return par;
     }
 

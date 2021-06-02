@@ -570,7 +570,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
     private CalConfigForm cal_form;
     private void ButtonCalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCalActionPerformed
         DevConfigBean config = currentdev.GetParent1().GetConfig();
-        if (config == null && config.GetDevCalConfig().GetCalType().length == 0) {
+        if (config == null || config.GetDevCalConfig().GetCalType().length == 0) {
             return;
         }
         cal_form = new CalConfigForm(MainForm.main_parent, false, GetDevName());

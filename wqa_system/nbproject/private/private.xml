@@ -2,6 +2,10 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_system/src/wqa/control/common/DevControl.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_system/src/wqa/control/common/DevControlManager.java</file>
+            <file>file:/D:/GitHub/singlebranch/WQA/WQA.4.7/wqa_system/src/wqa/control/config/DevCalConfig.java</file>
+        </group>
     </open-files>
 </project-private>
