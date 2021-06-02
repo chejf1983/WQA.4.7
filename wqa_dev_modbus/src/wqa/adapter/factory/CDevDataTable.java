@@ -169,9 +169,8 @@ public class CDevDataTable {
             new DevInfo(0x2105, "ECA_SS", "悬浮物", new DataInfo("悬浮物", 1, "mg/L", 3, "(0-20000)"), new DataInfo("悬浮物" + ORA_Flag, 1, "", 0, true, ""), new DataInfo("温度", 0, "℃", 1, "(0-60)"), new DataInfo("温度" + ORA_Flag, 0, "", 0, true, "")),
             //MISA0x13系列
             //MPA-CB 
-            new DevInfo(0x1400, "MPA_CB", "清理模块", new DataInfo[0]),           
-            };
-          
+            new DevInfo(0x1400, "MPA_CB", "清理模块", new DataInfo[0]),};
+
         for (DevInfo info : d_list) {
             this.namemap.put(info.dev_type, info);
         }
@@ -179,6 +178,8 @@ public class CDevDataTable {
 
     public static void main(String... args) {
 
+        System.out.println(String.format("0X%x:", 0x0012));
+        /*
         for (Integer key : CDevDataTable.GetInstance().namemap.keySet()) {
             DevInfo dev = CDevDataTable.instance.namemap.get(key);
             System.out.println("设备:" + dev.dev_name);
@@ -204,7 +205,7 @@ public class CDevDataTable {
                 }
                 System.out.println();
             }
-        }
+        }*/
     }
     // </editor-fold> 
 }

@@ -37,7 +37,9 @@ public class CErrorTable {
         int error_h = error_code & 0xFF0000;
         int error_l = ((error_code & 0x00FF) << 8) | ((error_code & 0xFF00) >> 8); //error_code 在modebus中反下高低位
 
-        error_info += String.format("0X%X:", error_l);
+        if (error_l != 0) {
+            error_info += String.format("0X%x:", error_l);
+        }
         for (int key : this.ErrorCode.keySet()) {
             int table_h = key & 0xFF0000;
             int table_l = key & 0xFFFF;
@@ -51,8 +53,8 @@ public class CErrorTable {
     public int TranslateErrorCode(int error_code) {
         return ((error_code & 0x00FF) << 8) | ((error_code & 0xFF00) >> 8); //error_code 在modebus中反下高低位
     }
-    
-    private void init_error_table(){
+
+    private void init_error_table() {
         this.ErrorCode.put(OSA_E, "");
         this.ErrorCode.put(OSA_E | 0x0001, "主参数超量程");
         this.ErrorCode.put(OSA_E | 0x0002, "");
@@ -106,7 +108,7 @@ public class CErrorTable {
         this.ErrorCode.put(ISA_E | 0x2000, "");
         this.ErrorCode.put(ISA_E | 0x4000, "");
         this.ErrorCode.put(ISA_E | 0x8000, "");
-                
+
         this.ErrorCode.put(FDO_E, "");
         this.ErrorCode.put(FDO_E | 0x0001, "温度超出测量范围");
         this.ErrorCode.put(FDO_E | 0x0002, "溶解氧参数超出测量范围");
@@ -124,7 +126,7 @@ public class CErrorTable {
         this.ErrorCode.put(FDO_E | 0x2000, "");
         this.ErrorCode.put(FDO_E | 0x4000, "");
         this.ErrorCode.put(FDO_E | 0x8000, "");
-        
+
         this.ErrorCode.put(MPA_E | 0x0020, "状态提示");
         this.ErrorCode.put(MPA_E | 0x0100, "故障报警");
     }
