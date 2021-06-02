@@ -11,7 +11,6 @@ import migp.adapter.factory.AbsDevice;
 import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import java.util.HashMap;
-import static migp.adapter.factory.AbsDevice.DMask;
 import wqa.dev.data.*;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.intf.*;
@@ -246,7 +245,7 @@ public class ISA_X extends AbsDevice {
         disdata.datas[disdata.datas.length - 2].range_info = "(" + this.VTRANGE_MIN.GetValue() + "-" + this.VTRANGE_MAX.GetValue() + ")"; //量程
 
         disdata.alarm = MALARM.GetValue(); //报警信息
-        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(wqa.adapter.factory.CErrorTable.ISA_E | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

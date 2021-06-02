@@ -27,7 +27,6 @@ public abstract class AbsDevice implements IDevice {
     public static int DEF_TIMEOUT = 300; //ms
     public static int DEF_RETRY = 3;
 
-    public static int DMask = 0xFF00;
     MIGPEia eiainfo = new MIGPEia(this.base_drv);
 //    public final IMEG VDEVTYPE = new IMEG(new VPA(0x00, 2), "设备类型");  //R  
 
@@ -152,6 +151,7 @@ public abstract class AbsDevice implements IDevice {
 //    }
 
     // </editor-fold> 
+    
     // <editor-fold defaultstate="collapsed" desc="内部接口">
     //只返回不同测量类型的数据(没有原始值这个标志的数据)
     protected String[] GetDataNames() {

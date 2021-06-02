@@ -11,7 +11,6 @@ import base.pro.convert.NahonConvert;
 import java.util.ArrayList;
 import java.util.Arrays;
 import migp.adapter.factory.AbsDevice;
-import static migp.adapter.factory.AbsDevice.DMask;
 import wqa.adapter.factory.CErrorTable;
 import wqa.dev.data.*;
 import wqa.dev.intf.SConfigItem;
@@ -249,7 +248,7 @@ public class MOSA_X extends AbsDevice {
         disdata.datas[3].mainData = NahonConvert.TimData(SR5.GetValue(), 2); //温度原始值
 
         disdata.alarm = MALARM.GetValue(); //报警信息
-        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(wqa.adapter.factory.CErrorTable.OSA_E| disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

@@ -61,7 +61,7 @@ public class ESA_CHLII extends ESA_CHL {
         disdata.datas[7].mainData = NahonConvert.TimData(SR2.GetValue(), 2); //温度原始值
 
         disdata.alarm = MALARM.GetValue(); //报警信息
-        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & DMask) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(wqa.adapter.factory.CErrorTable.ESA_E | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

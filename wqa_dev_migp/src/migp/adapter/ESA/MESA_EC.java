@@ -5,8 +5,6 @@
  */
 package migp.adapter.ESA;
 
-import base.pro.convert.NahonConvert;
-import migp.adapter.factory.TemperCalibrateCalculate;
 import wqa.dev.data.LogNode;
 import wqa.dev.data.SDevInfo;
 
@@ -19,6 +17,7 @@ public class MESA_EC extends ESA_EC{
     public MESA_EC(SDevInfo devinfo) {
         super(devinfo);
     }
+    
     // <editor-fold defaultstate="collapsed" desc="定标接口"> 
     @Override
     public LogNode CalParameter(String type, float[] oradata, float[] testdata) throws Exception {

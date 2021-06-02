@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import migp.adapter.ESA.*;
 import migp.adapter.ISA.*;
+import migp.adapter.MPA.*;
 import migp.adapter.OSA.*;
 import nahon.comm.io.AbstractIO;
 import wqa.dev.data.*;
@@ -91,6 +92,8 @@ public class MIGPDevFactory implements IDeviceSearch {
         class_map.put(0x2103, MOSA_FDO.class.getName());
         class_map.put(0x2104, OSA_NX.class.getName());
         class_map.put(0x2105, OSA_NX.class.getName());
+        //MPA
+        class_map.put(0x1400, MPACBDevice.class.getName());
     }
     // </editor-fold> 
 
