@@ -5,6 +5,11 @@
  */
 package migp.adapter.factory;
 
+import migp.adapter.AMMO.ISA_X;
+import migp.adapter.AMMO.ESA_AMMO;
+import migp.adapter.DO.MOSA_FDO;
+import migp.adapter.DO.OSA_FDOII;
+import migp.adapter.DO.OSA_FDOI;
 import base.migp.impl.MIGPEia;
 import base.migp.mem.VPA;
 import base.migp.node.MIGP_CmdSend;
@@ -16,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import migp.adapter.ESA.*;
-import migp.adapter.ISA.*;
 import migp.adapter.MPA.*;
 import migp.adapter.OSA.*;
 import nahon.comm.io.AbstractIO;

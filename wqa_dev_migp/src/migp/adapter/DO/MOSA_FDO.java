@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package migp.adapter.OSA;
+package migp.adapter.DO;
 
 import base.migp.mem.SRA;
 import base.migp.reg.FMEG;
