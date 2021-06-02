@@ -16,6 +16,7 @@ import modebus.register.IREG;
 import nahon.comm.io.AbstractIO;
 import wqa.adapter.ESA.*;
 import wqa.adapter.ISA.AMMODevice;
+import wqa.adapter.MPA.MPACBDevice;
 import wqa.adapter.OSA.*;
 import wqa.dev.data.SDevInfo;
 import wqa.dev.intf.*;
@@ -155,6 +156,8 @@ public class ModBusDevFactory implements IDeviceSearch {
         class_map.put(0x2103, DODevice.class.getName());
         class_map.put(0x2104, MOSADevice.class.getName());
         class_map.put(0x2105, MOSADevice.class.getName());
+        //MPA
+        class_map.put(0x1400, MPACBDevice.class.getName());
         
     }
     // </editor-fold> 

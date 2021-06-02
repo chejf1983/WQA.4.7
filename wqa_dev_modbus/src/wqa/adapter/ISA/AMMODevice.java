@@ -60,7 +60,7 @@ public class AMMODevice extends AbsDevice {
         disdata.datas[disdata.datas.length - 1].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
 
         disdata.alarm = ALARM.GetValue();
-        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & 0xFF00) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(CErrorTable.ISA_E | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

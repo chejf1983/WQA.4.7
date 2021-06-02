@@ -141,7 +141,7 @@ public class MOSADevice extends AbsDevice {
         disdata.datas[3].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
 
         disdata.alarm = ALARM.GetValue();
-        String info = CErrorTable.GetInstance().GetErrorString(((this.GetDevInfo().dev_type & 0xFF00) << 8) | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(CErrorTable.OSA_E | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

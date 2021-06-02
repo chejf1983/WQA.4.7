@@ -89,8 +89,7 @@ public class DODevice extends AbsDevice {
         disdata.datas[4].mainData = NahonConvert.TimData(OTEMPER.GetValue(), 2);
 
         disdata.alarm = ALARM.GetValue();
-        int tmptype = FDO_E;
-        String info = CErrorTable.GetInstance().GetErrorString(tmptype | disdata.alarm);
+        String info = CErrorTable.GetInstance().GetErrorString(FDO_E | disdata.alarm);
         disdata.alram_info = info == null ? "" : info;
         return disdata;
     }

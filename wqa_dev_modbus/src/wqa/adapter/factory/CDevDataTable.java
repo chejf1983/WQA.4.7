@@ -166,9 +166,12 @@ public class CDevDataTable {
             new DevInfo(0x2102, "ECA_EC", "电导率", new DataInfo("电导率", 1, "uS/cm", 1, "(0-500000)"), new DataInfo("电导率" + ORA_Flag, 1, "", 0, true, ""), new DataInfo("温度", 0, "℃", 1, "(0-60)"), new DataInfo("温度" + ORA_Flag, 0, "", 0, true, ""), new DataInfo("盐度", 1, "ppt", 0, "(0-75)")),
             new DevInfo(0x2103, "ECA_DO", "溶解氧", new DataInfo("溶解氧", 2, "mg/L", 0x02, "(0-20)"), new DataInfo("溶解氧百分比", 2, "%", 0, ""), new DataInfo("溶解氧" + ORA_Flag, 1, "", 0, true, ""), new DataInfo("温度", 0, "℃", 1, "(0-60)"), new DataInfo("温度" + ORA_Flag, 0, "", 0, true, ""), new DataInfo("相位差", 1, "度", 0, true, ""), new DataInfo("蓝光峰值", 1, "", 0, true, ""), new DataInfo("激发信号", 1, "", 0, true, ""), new DataInfo("红光峰值", 1, "", 0, true, ""), new DataInfo("信号偏置", 1, "", 0, true, ""), new DataInfo("蓝光幅值", 1, "", 0, true, ""), new DataInfo("红光幅值", 1, "", 0, true, "")),
             new DevInfo(0x2104, "ECA_TURB", "浊度", new DataInfo("浊度", 1, "NTU", 3, "(0-100)", "(0-500)", "(0-2000)", "(0-4000)"), new DataInfo("浊度" + ORA_Flag, 1, "", 0, true, ""), new DataInfo("温度", 0, "℃", 1, "(0-60)"), new DataInfo("温度" + ORA_Flag, 0, "", 0, true, "")),
-            new DevInfo(0x2105, "ECA_SS", "悬浮物", new DataInfo("悬浮物", 1, "mg/L", 3, "(0-20000)"), new DataInfo("悬浮物" + ORA_Flag, 1, "", 0, true, ""), new DataInfo("温度", 0, "℃", 1, "(0-60)"), new DataInfo("温度" + ORA_Flag, 0, "", 0, true, "")),};
-        //MISA0x13系列
-
+            new DevInfo(0x2105, "ECA_SS", "悬浮物", new DataInfo("悬浮物", 1, "mg/L", 3, "(0-20000)"), new DataInfo("悬浮物" + ORA_Flag, 1, "", 0, true, ""), new DataInfo("温度", 0, "℃", 1, "(0-60)"), new DataInfo("温度" + ORA_Flag, 0, "", 0, true, "")),
+            //MISA0x13系列
+            //MPA-CB 
+            new DevInfo(0x1400, "MPA_CB", "清理模块", new DataInfo[0]),           
+            };
+          
         for (DevInfo info : d_list) {
             this.namemap.put(info.dev_type, info);
         }
