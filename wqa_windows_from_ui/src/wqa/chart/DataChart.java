@@ -45,11 +45,16 @@ public class DataChart extends javax.swing.JPanel {
 
         this.CreateMainLine();
 
+        this.initSnapShot();
+        
         //初始化图标大小调节
         this.chart_range = new ChartRangePaint(this);
         this.crosshair = new CrossHairPaint(this);
         this.crosshair.EnableCrossHairPaint(true);
-
+        this.crosshair.Event = (value -> {
+            this.linerender.UpdateSelect(value, new TimeSeries[]{this.main_line});
+            this.linerender2.UpdateSelect(value, snapshot);
+        });
     }
 
     // <editor-fold defaultstate="collapsed" desc="Init Chart Component">  
@@ -75,7 +80,7 @@ public class DataChart extends javax.swing.JPanel {
 
         //chart背景
         dataChart.setBackgroundPaint(new Color(241, 244, 247));
-        
+
         //xyplot背景
         this.xyplot.setBackgroundPaint(gradientpaint);
 
@@ -140,7 +145,7 @@ public class DataChart extends javax.swing.JPanel {
     private int series_index = -1;
 
     public int ApplyIndex() {
-        series_index++;        
+        series_index++;
 //        System.out.println(series_index);
         return series_index;
     }
@@ -148,7 +153,8 @@ public class DataChart extends javax.swing.JPanel {
 
     // <editor-fold defaultstate="collapsed" desc="MainData Line"> 
     public int main_line_index;
-    TimeSeries main_line;
+    TimeSeries main_line = new TimeSeries("");
+    XYTimeLabelRender linerender;
 
     private void CreateMainLine() {
         main_line_index = this.ApplyIndex();
@@ -158,7 +164,7 @@ public class DataChart extends javax.swing.JPanel {
         xySeriesCollection.addSeries(main_line);
         xyplot.setDataset(main_line_index, xySeriesCollection);
 
-        XYLineAndShapeRenderer linerender = new XYLineAndShapeRenderer(false, true);
+        linerender = new XYTimeLabelRender(this.xyplot.getRangeAxis(), this.xyplot.getDomainAxis(), false, true);
         linerender.setSeriesShape(0, new java.awt.geom.Rectangle2D.Float(-1, -1, 2, 2));
         linerender.setSeriesPaint(0, new Color(19, 140, 228));//new Color(0x7C, 0xFC, 0x00, 150);
         this.xyplot.setRenderer(series_index, linerender);
@@ -167,9 +173,10 @@ public class DataChart extends javax.swing.JPanel {
     public TimeSeries GetMainLine() {
         return main_line;
     }
-    
+
     private String[] describe = new String[0];
-    public String[] GetMainLineDescribe(){
+
+    public String[] GetMainLineDescribe() {
         return describe;
     }
 
@@ -181,7 +188,7 @@ public class DataChart extends javax.swing.JPanel {
         TimeSeriesCollection data_set = (TimeSeriesCollection) xyplot.getDataset(main_line_index);
         data_set.removeAllSeries();
         data_set.addSeries(main_line);
-        
+
 //        this.xyplot.mapDatasetToRangeAxis(main_line_index, 0);
 //        ValueAxisPlot vap = (ValueAxisPlot)this.xyplot.getRangeAxis().getPlot();
 ////        this.xyplot.getRangeAxis().getPlot()
@@ -196,9 +203,9 @@ public class DataChart extends javax.swing.JPanel {
 //        System.out.println(this.xyplot.getRendererForDataset(d2).findRangeBounds(d2));
 ////        System.out.println(this.xyplot.getRendererForDataset(d3).findRangeBounds(d3));
 //        System.out.println(vap.getDataRange(this.xyplot.getRangeAxis()));
-                //        TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
-                //        xySeriesCollection.addSeries(main_line);
-                //        xyplot.setDataset(main_line_index, xySeriesCollection);
+        //        TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
+        //        xySeriesCollection.addSeries(main_line);
+        //        xyplot.setDataset(main_line_index, xySeriesCollection);
         UpdateMainDataEvent.CreateEvent(main_line);
     }
     // </editor-fold>
@@ -206,26 +213,26 @@ public class DataChart extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="SnapShot Line"> 
     public final Color[] line_color = new Color[]{Color.GREEN, Color.RED, Color.ORANGE, Color.YELLOW, Color.BLACK};
     private int snapshot_index = -1;
+    private XYTimeLabelRender linerender2;
 
     private void initSnapShot() {
         snapshot_index = this.ApplyIndex();
-        XYLineAndShapeRenderer linerender = new XYLineAndShapeRenderer(false, true);
+        linerender2 = new XYTimeLabelRender(this.xyplot.getRangeAxis(), this.xyplot.getDomainAxis(), false, true);
         for (int i = 0; i < line_color.length; i++) {
-            linerender.setSeriesShape(i, new java.awt.geom.Rectangle2D.Float(-1, -1, 2, 2));
-            linerender.setSeriesPaint(i, line_color[i]);//new Color(0x7C, 0xFC, 0x00, 150);
+            linerender2.setSeriesShape(i, new java.awt.geom.Rectangle2D.Float(-1, -1, 2, 2));
+            linerender2.setSeriesPaint(i, line_color[i]);//new Color(0x7C, 0xFC, 0x00, 150);
         }
-        this.xyplot.setRenderer(series_index, linerender);
+        this.xyplot.setRenderer(series_index, linerender2);
 
         TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
         xyplot.setDataset(series_index, xySeriesCollection);
     }
 
-    TimeSeries[] snapshot;
+    TimeSeries[] snapshot = new TimeSeries[0];
 
     public void PaintSnapShot(TimeSeries[] lines) {
-        if (this.snapshot_index < 0) {
-            this.initSnapShot();
-        }
+//        if (this.snapshot_index < 0) {
+//        }
         TimeSeriesCollection data_set = (TimeSeriesCollection) this.xyplot.getDataset(series_index);
         data_set.removeAllSeries();
         for (TimeSeries line : lines) {

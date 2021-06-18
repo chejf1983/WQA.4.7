@@ -50,11 +50,8 @@ public class CrossHairPaint {
         //添加标线图层
         this.parent.dataChartPane.addOverlay(crosshairoverlay);
 
-        //初始化标线
-        initLable();
-
         this.parent.dataChartPane.setZoomTriggerDistance(20);
-                
+
         //鼠标移动事件
         this.parent.dataChartPane.addMouseMotionListener(new MouseMotionListener() {
 
@@ -65,7 +62,7 @@ public class CrossHairPaint {
                     if (selectedhair != null) {
                         MoveSelectCrossHairTo(GetMouseSlectedDomainValue(e));
                         //重新计算选中标线对应最近的点
-                        lable_cal.Update();
+                        Update();
 //                        XYPlot xyplot = (XYPlot) parent.dataChart.getPlot();
 //                        XYItemRenderer linerender = xyplot.getRenderer();
 //                        linerender.setBaseItemLabelsVisible(Lable_enable);
@@ -146,13 +143,12 @@ public class CrossHairPaint {
     }
 
     // <editor-fold defaultstate="collapsed" desc="显示点值">
-    public PointLine lable_cal;
-
-    private void initLable() {
-        lable_cal = new PointLine(this.parent, this.x_crosshairs);
-    }
+//    public PointLine lable_cal;
+//
+//    private void initLable() {
+//        lable_cal = new PointLine(this.parent, this.x_crosshairs);
+//    }
     // </editor-fold>
-
     // <editor-fold defaultstate="collapsed" desc="XY轴切换">
     private boolean is_x_enable = true;
 
@@ -220,8 +216,6 @@ public class CrossHairPaint {
             //添加标线
             this.crosshairoverlay.addDomainCrosshair(crosshair);
             this.x_crosshairs.add(crosshair);
-            //标线点搜索添加标线
-            this.lable_cal.Update();
         } else {
 //            //设置标线上的标签
 //            crosshair.setLabelGenerator((Crosshair crshr) -> {
@@ -231,6 +225,8 @@ public class CrossHairPaint {
             this.crosshairoverlay.addRangeCrosshair(crosshair);
             this.y_crosshairs.add(crosshair);
         }
+        //标线点搜索添加标线
+        Update();
     }
 
     //删除标线(选中的标线)
@@ -239,8 +235,6 @@ public class CrossHairPaint {
             if (this.x_crosshairs.size() > 0) {
                 if (this.x_crosshairs.remove(selecthair)) {
                     this.crosshairoverlay.removeDomainCrosshair(selecthair);
-                    //标线点搜索删除标线
-                    this.lable_cal.Update();
                 }
             }
         } else {
@@ -250,6 +244,8 @@ public class CrossHairPaint {
                 }
             }
         }
+        //标线点搜索删除标线
+        Update();
     }
 
     //清除所有标线
@@ -265,7 +261,7 @@ public class CrossHairPaint {
         this.x_crosshairs.clear();
         this.y_crosshairs.clear();
         //标线点搜索删除标线
-        this.lable_cal.Update();
+        Update();
     }
     // </editor-fold>
 
@@ -301,7 +297,7 @@ public class CrossHairPaint {
     public Crosshair GetNearestCrossHair(java.awt.event.MouseEvent evt) {
         return GetNearestCrossHair(GetMouseSlectedDomainValue(evt));
     }
-    
+
     //根据坐标点，获取最近的标线值
     private Crosshair GetNearestCrossHair(MousePoint p) {
         ArrayList<Crosshair> crosshairs;
@@ -322,7 +318,7 @@ public class CrossHairPaint {
         //坐标轴的50分之一作为有效距离
         double distance = (axis.getUpperBound() - axis.getLowerBound()) / 40;
         for (Crosshair crosshair : crosshairs) {
-            if(crosshair.getValue() < axis.getLowerBound()){
+            if (crosshair.getValue() < axis.getLowerBound()) {
                 ret = crosshair;
                 break;
             }
@@ -346,6 +342,31 @@ public class CrossHairPaint {
                 selectedhair.setValue(p.y);
             }
         }
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="标线动态刷新">
+    public UPDataEvent Event = (value) -> {
+    };
+
+    private void Update() {
+        long[] ret;
+        ArrayList<Crosshair> haires;
+        if (this.is_x_enable) {
+            haires = x_crosshairs;
+        } else {
+            haires = y_crosshairs;
+        }
+
+        ret = new long[haires.size()];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = (long) haires.get(i).getValue();
+        }
+        Event.Update(ret);
+    }
+
+    public interface UPDataEvent {
+        public void Update(long[] slectvalue);
     }
     // </editor-fold>
 }
