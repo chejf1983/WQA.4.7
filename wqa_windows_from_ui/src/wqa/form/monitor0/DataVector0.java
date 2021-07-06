@@ -101,16 +101,16 @@ public class DataVector0 {
         this.select_name = name;
     }
 
-    private ArrayList<String> describe = new ArrayList();
-
-    public String[] GetDataTimeDescribe() {
-        return describe.toArray(new String[0]);
-    }
+//    private ArrayList<String> describe = new ArrayList();
+//
+//    public String[] GetDataTimeDescribe() {
+//        return describe.toArray(new String[0]);
+//    }
 
     public TimeSeries GetdateTimeSeries() {
         SDisplayData lastdata = this.GetLastData();
         TimeSeries mainline = new TimeSeries("");
-        describe.clear();
+//        describe.clear();
         //清空数据
 //        mainline.clear();
         //检查数据是否为空
@@ -123,7 +123,7 @@ public class DataVector0 {
                     if (!Float.isNaN(this.datasource.get(i).GetDataElement(select_name).mainData)) {
                         SDataElement e_data = this.datasource.get(i).GetDataElement(select_name);
                         mainline.addOrUpdate(new Second(this.datasource.get(i).time), e_data.mainData);
-                        describe.add(e_data.range_info + e_data.unit);
+//                        describe.add(e_data.range_info + e_data.unit);
                     }
                 }
             } finally {

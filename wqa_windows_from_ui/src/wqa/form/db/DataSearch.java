@@ -464,15 +464,15 @@ public class DataSearch extends javax.swing.JPanel {
                 return;
             }
             TimeSeries mainline = new TimeSeries(data_name);
-            ArrayList<String> describe = new ArrayList();
+//            ArrayList<String> describe = new ArrayList();
             try {
                 for (DataRecord data_ret1 : data_set) {
                     if (!Float.isNaN(data_ret1.values[index])) {
                         mainline.addOrUpdate(new Second(data_ret1.time), data_ret1.values[index]);
-                        describe.add(data_ret1.value_strings[index]);
+//                        describe.add(data_ret1.value_strings[index]);
                     }
                 }
-                DataChart.PaintLine(mainline, describe.toArray(new String[0]));
+                DataChart.PaintLine(mainline);
             } catch (Exception ex) {
                 LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
             }

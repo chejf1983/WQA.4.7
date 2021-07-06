@@ -41,7 +41,7 @@ public class DBChart extends javax.swing.JPanel {
 
     private TimeSeries mainline = null;
 
-    public void PaintLine(TimeSeries mainline, String[] describe) {
+    public void PaintLine(TimeSeries mainline) {
         this.mainline = mainline;
 //        ArrayList<String> describe = new ArrayList();
 //        try {
@@ -55,7 +55,7 @@ public class DBChart extends javax.swing.JPanel {
 //        } catch (Exception ex) {
 //            LogCenter.Instance().SendFaultReport(Level.SEVERE, ex);
 //        }
-        this.chart.PaintMainLine(mainline, describe);
+        this.chart.PaintMainLine(mainline);
     }
 
     // <editor-fold defaultstate="collapsed" desc="SnapShot Line"> 

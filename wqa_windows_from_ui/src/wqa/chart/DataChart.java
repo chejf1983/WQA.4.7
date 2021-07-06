@@ -123,7 +123,7 @@ public class DataChart extends javax.swing.JPanel {
         MenuItem_Del.addActionListener((java.awt.event.ActionEvent evt) -> {
             crosshair.ClearAllHair();
             main_line.clear();
-            PaintMainLine(main_line, new String[0]);
+            PaintMainLine(main_line);
         });
 
         javax.swing.JPopupMenu PopupMenu = new javax.swing.JPopupMenu();
@@ -174,17 +174,10 @@ public class DataChart extends javax.swing.JPanel {
         return main_line;
     }
 
-    private String[] describe = new String[0];
-
-    public String[] GetMainLineDescribe() {
-        return describe;
-    }
-
     public NEventCenter<TimeSeries> UpdateMainDataEvent = new NEventCenter();
 
-    public void PaintMainLine(TimeSeries main_line, String[] describe) {
+    public void PaintMainLine(TimeSeries main_line) {
         this.main_line = main_line;
-        this.describe = describe;
         TimeSeriesCollection data_set = (TimeSeriesCollection) xyplot.getDataset(main_line_index);
         data_set.removeAllSeries();
         data_set.addSeries(main_line);

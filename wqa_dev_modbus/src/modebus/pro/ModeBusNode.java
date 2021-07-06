@@ -51,6 +51,7 @@ public class ModeBusNode {
         System.arraycopy(NahonConvert.UShortToByteArray(crc), 0, tmp, 6, 2);
         return tmp;
     }
+
     //发送:地址(1)+命令字(1)(固定是10)+寄存器地址(2)+寄存器个数(2+字节个数(1) + .内容. + CRC值(2)  
     //返回:地址(1)+命令字(1)(固定是10)+CRC值(2)  
     private byte[] WriterPacket(byte devaddr, int memaddr, int mem_num, byte[] par) throws Exception {
@@ -79,7 +80,6 @@ public class ModeBusNode {
     }
 
     // </editor-fold>  
-
     // <editor-fold defaultstate="collapsed" desc="内存读写"> 
     //临时缓存
     byte[] tmpbuffer = new byte[1024];
@@ -112,7 +112,7 @@ public class ModeBusNode {
         }
 
         //检查地址
-        if (rcbuffer[0] != this.addr) {
+        if (rcbuffer[0] != this.addr && this.addr != 0) {
             return 0;
         }
 
@@ -126,7 +126,7 @@ public class ModeBusNode {
     private byte[] readmemory(int memaddr, int mem_num, int timeout) throws Exception {
         //避免485连续操作
         TimeUnit.MILLISECONDS.sleep(this.timelag);
-       //发送读取命令
+        //发送读取命令
         this.io.SendData(ReadPacket(this.addr, memaddr, mem_num));
 
         //收数据
@@ -264,12 +264,11 @@ public class ModeBusNode {
         this.WriterMemory(min_reg.RegAddr(), memory.length / 2, memory, retry_time, timeout);
     }
     // </editor-fold>  
-    
-    
+
     public static void main(String... args) throws Exception {
-        
+
         //07 10 00 24 00 01 02 00 01 4a d4
-        float salt = MyConvert.ByteArrayToFloat(new byte[]{0,0,0,0x41}, 0);
+        float salt = MyConvert.ByteArrayToFloat(new byte[]{0, 0, 0, 0x41}, 0);
         System.out.println("Salt:" + salt);
         ModeBusNode node = new ModeBusNode(null, (byte) 0);
         byte[] ret = node.WriterPacket((byte) 0x07, 0x24, 1, new byte[]{0, (byte) 1});

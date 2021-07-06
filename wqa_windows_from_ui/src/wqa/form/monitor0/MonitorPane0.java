@@ -10,19 +10,12 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.PopupFactory;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 import nahon.comm.event.NEvent;
 import nahon.comm.event.NEventListener;
 import nahon.comm.faultsystem.LogCenter;
@@ -96,7 +89,7 @@ public class MonitorPane0 extends javax.swing.JPanel {
         this.m_chart.GetComboBox().addItemListener((java.awt.event.ItemEvent evt) -> {
             if (m_chart.GetComboBox().getSelectedItem() != null) {
                 data_vector.SetSelectName(m_chart.GetComboBox().getSelectedItem().toString());
-                chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries(), this.data_vector.GetDataTimeDescribe());
+                chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries());
             }
         });
 
@@ -128,7 +121,7 @@ public class MonitorPane0 extends javax.swing.JPanel {
             m_chart.GetComboBox().setSelectedItem("");
         }
         //显示曲线
-        this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries(), this.data_vector.GetDataTimeDescribe());
+        this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries());
     }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="表格"> 
@@ -213,7 +206,7 @@ public class MonitorPane0 extends javax.swing.JPanel {
         try {
             //刷新数据列表
             this.data_vector.InputData(data);
-            this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries(), this.data_vector.GetDataTimeDescribe());
+            this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries());
         } finally {
             dsiplay_lock.unlock();
         }

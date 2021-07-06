@@ -90,7 +90,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
         this.m_chart.GetComboBox().addItemListener((java.awt.event.ItemEvent evt) -> {
             if (m_chart.GetComboBox().getSelectedItem() != null) {
                 data_vector.SetSelectName(m_chart.GetComboBox().getSelectedItem().toString());
-                chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries(), this.data_vector.GetDataTimeDescribe());
+                chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries());
             }
         });
 
@@ -119,7 +119,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
             data_vector.SetSelectName("");
             m_chart.GetComboBox().setSelectedItem("");
         }
-        this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries(), this.data_vector.GetDataTimeDescribe());
+        this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries());
     }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="表格"> 
@@ -225,7 +225,7 @@ public class MonitorPane1 extends javax.swing.JPanel {
         try {
             //刷新数据列表
             this.data_vector.InputData(data);
-            this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries(), this.data_vector.GetDataTimeDescribe());
+            this.chartPane1.PaintMainLine(this.data_vector.GetdateTimeSeries());
         } finally {
             dsiplay_lock.unlock();
         }
