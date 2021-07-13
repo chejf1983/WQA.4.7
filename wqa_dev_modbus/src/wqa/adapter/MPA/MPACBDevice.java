@@ -56,39 +56,41 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
     }
 
     // <editor-fold defaultstate="collapsed" desc="电机控制"> 
+    //获取电机设置
     @Override
     public SMotorParameter GetMotoPara() {
         SMotorParameter par = new SMotorParameter(
                 this.CMODE.GetValue() == 00 ? SMotorParameter.CleanMode.Auto : SMotorParameter.CleanMode.Manu,
                 new SConfigItem[]{
                     SConfigItem.CreateRWItem(this.CTIME.toString(), CTIME.GetValue().toString(), CTIME.min + "-" + CTIME.max),
-                    SConfigItem.CreateRWItem(this.CINTVAL.toString(), CINTVAL.GetValue().toString(), CINTVAL.min + "-" + CINTVAL.max + "(min)"),
-                    SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max)},
+                    SConfigItem.CreateRWItem(this.CINTVAL.toString(), CINTVAL.GetValue().toString(), CINTVAL.min + "-" + CINTVAL.max + "(min)")},
                 new SConfigItem[]{
-                    SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max + " 度")
-                });
+                    SConfigItem.CreateRWItem(this.CTIME.toString(), CTIME.GetValue().toString(), CTIME.min + "-" + CTIME.max),
+                    SConfigItem.CreateRWItem(this.CINTVAL.toString(), CINTVAL.GetValue().toString(), CINTVAL.min + "-" + CINTVAL.max + "(min)"),
+                    SConfigItem.CreateRWItem(this.CBRUSH.toString(), CBRUSH.GetValue().toString(), CBRUSH.min + "-" + CBRUSH.max + " 度")});
         return par;
     }
 
+    //设置电机设置
     @Override
     public void SetMotoPara(SMotorParameter par) throws Exception {
         //设置参数
         SConfigItem[] list = par.mode == SMotorParameter.CleanMode.Auto ? par.auto_config : par.manu_config;
         for (SConfigItem item : list) {
             if (item.IsKey(CTIME.toString())) {
-                this.CTIME.SetValue(Integer.valueOf(item.GetValue()));
+                this.SetConfigREG(CTIME, item.GetValue());
             }
             if (item.IsKey(CINTVAL.toString())) {
-                CINTVAL.SetValue(Integer.valueOf(item.GetValue()));
+                this.SetConfigREG(CINTVAL, item.GetValue());
             }
             if (item.IsKey(CBRUSH.toString())) {
-                CBRUSH.SetValue(Integer.valueOf(item.GetValue()));
+                this.SetConfigREG(CBRUSH, item.GetValue());
             }
-        }        
+        }
 
         //设置模式
-        this.CMODE.SetValue(par.mode == SMotorParameter.CleanMode.Auto ? 0 : 1);
-        this.SetREG(CMODE, CTIME, CINTVAL);
+        int tmode = par.mode == SMotorParameter.CleanMode.Auto ? 0 : 1;
+        this.SetConfigREG(CBRUSH, tmode + "");
     }
 
     @Override

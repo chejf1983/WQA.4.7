@@ -48,8 +48,6 @@ public class OSADevice extends MOSADevice implements IDevMotorConfig {
     @Override
     public void SetMotoPara(SMotorParameter par) throws Exception {
         //设置参数
-//        MotorInfo tminfo = new MotorInfo();
-
         for (SConfigItem item : par.auto_config) {
             if (item.IsKey(CTIME.toString())) {
                 this.CTIME.SetValue(Integer.valueOf(item.GetValue()));

@@ -43,7 +43,6 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
         //点击刷，初始化
         this.ReadMEG(NCMODE, NCTIME, NCINTERVAL, NCBRUSH);
     }
-    
 
     @Override
     public wqa.dev.data.CollectData CollectData() throws Exception {
@@ -69,10 +68,10 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
                 this.NCMODE.GetValue() == 00 ? SMotorParameter.CleanMode.Auto : SMotorParameter.CleanMode.Manu,
                 new SConfigItem[]{
                     SConfigItem.CreateRWItem(NCTIME.toString(), NCTIME.GetValue().toString(), NCTIME.min + "-" + NCTIME.max),
-                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max)},
+                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max + "(min)")},
                 new SConfigItem[]{
                     SConfigItem.CreateRWItem(NCTIME.toString(), NCTIME.GetValue().toString(), NCTIME.min + "-" + NCTIME.max),
-                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max),
+                    SConfigItem.CreateRWItem(NCINTERVAL.toString(), NCINTERVAL.GetValue().toString(), NCINTERVAL.min + "-" + NCINTERVAL.max + "(min)"),
                     SConfigItem.CreateRWItem(NCBRUSH.toString(), NCBRUSH.GetValue().toString(), NCBRUSH.min + "-" + NCBRUSH.max + " 度")});
         return par;
     }
@@ -80,6 +79,7 @@ public class MPACBDevice extends AbsDevice implements IDevMotorConfig {
     //设置电机设置
     @Override
     public void SetMotoPara(SMotorParameter par) throws Exception {
+        //设置参数
         SConfigItem[] list = par.mode == SMotorParameter.CleanMode.Auto ? par.auto_config : par.manu_config;
         for (SConfigItem item : list) {
             if (item.IsKey(NCTIME.toString())) {
